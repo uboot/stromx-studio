@@ -32,7 +32,7 @@ add_executable(stromx_studio_test
 
 target_link_libraries(stromx_studio_test
     ${QT_LIBRARIES}
-    ${STROMX_LIBRARY}
+    ${STROMX_CORE_LIBRARY}
     ${CPPUNIT_LIBRARY}
     ${CMAKE_DL_LIBS}
 )

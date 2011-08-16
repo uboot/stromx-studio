@@ -45,7 +45,7 @@ add_executable(stromx-studio
 
 target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
-    ${STROMX_LIBRARY}
+    ${STROMX_CORE_LIBRARY}
 )
 
 
