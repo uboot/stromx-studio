@@ -1,5 +1,5 @@
 /* 
-*  Copyright 2011 Matthias Fuchs
+*  Copyright 2011 xxx yyy
 *
 *  This file is part of stromx-studio.
 *
@@ -17,17 +17,23 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STREAMEDITOR_H
-#define STREAMEDITOR_H
+#ifndef STREAMEDITORSCENE_H
+#define STREAMEDITORSCENE_H
 
-#include <QGraphicsView>
+#include <QGraphicsScene>
 
-class StreamEditor : public QGraphicsView
+class QGraphicsSceneDragDropEvent;
+
+class StreamEditorScene : public QGraphicsScene
 {
     Q_OBJECT
 
 public:
-    explicit StreamEditor(QWidget *parent = 0);
+    explicit StreamEditorScene(QObject *parent = 0);
+    
+    virtual void dropEvent(QGraphicsSceneDragDropEvent* event);
+    virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event);
+    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
 };
 
 #endif // STREAMEDITOR_H
