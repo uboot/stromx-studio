@@ -4,6 +4,7 @@
 #include "../Exception.h"
 #include "../OperatorLibraryModel.h"
 #include <stromx/core/Factory.h>
+#include <stromx/core/Operator.h>
 #include <QModelIndex>
 
 
@@ -141,6 +142,18 @@ void OperatorLibraryModelTest::testIsOperator()
     CPPUNIT_ASSERT_EQUAL(true, m_model->isOperator(index));
 }
 
-
-
-
+void OperatorLibraryModelTest::testNewOperator()
+{
+    // second package
+    stromx::core::Operator* op = 0;
+    QModelIndex index = m_model->createIndex(0, 0, 1);
+    CPPUNIT_ASSERT_NO_THROW(op = m_model->newOperator(index));
+    CPPUNIT_ASSERT(! op);
+    
+    // second operator of second package
+    index = m_model->createIndex(1, 0, 3);
+    CPPUNIT_ASSERT_NO_THROW(op = m_model->newOperator(index));
+    CPPUNIT_ASSERT(op);
+    CPPUNIT_ASSERT_EQUAL(std::string("Base"), op->info().package());
+    CPPUNIT_ASSERT_EQUAL(std::string("Buffer"), op->info().type());
+}

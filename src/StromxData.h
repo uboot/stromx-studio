@@ -21,6 +21,7 @@
 #define STROMXDATA_H
 
 #include <QMimeData>
+#include <QSet>
 
 namespace stromx 
 {
@@ -35,14 +36,14 @@ class StromxData : public QMimeData
     Q_OBJECT
     
 public:
-    StromxData(const QList<stromx::core::Operator*> & operators);
+    StromxData(const QSet<stromx::core::Operator*> & operators);
     StromxData(stromx::core::Operator* const op);
-    virtual ~StromxData();
     
-    const QList<stromx::core::Operator*> useOperators();
+    void deleteData();
+    const QSet<stromx::core::Operator*> & operators() const { return m_operators; }
     
 private:
-    QList<stromx::core::Operator*> m_operators;
+    QSet<stromx::core::Operator*> m_operators;
 };
 
 #endif // STROMXDATA_H

@@ -232,7 +232,16 @@ const bool OperatorLibraryModel::isOperator(const QModelIndex& index) const
 
 stromx::core::Operator* OperatorLibraryModel::newOperator(const QModelIndex& index) const
 {
-    return 0;
+    if(! isOperator(index))
+        return 0;
+    
+    unsigned int id = index.internalId();
+    unsigned int packageId = id - m_package2TypeMap.size();
+    QString package = m_index2PackageMap.value(packageId, "");
+    QStringList ops = m_package2TypeMap.value(package, QStringList());
+    QString type = ops[index.row()];
+    
+    return m_factory->newOperator(package.toStdString(), type.toStdString());
 }
 
 

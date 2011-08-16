@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QMouseEvent>
 #include "OperatorLibraryModel.h"
+#include "StromxData.h"
 
 OperatorLibraryList::OperatorLibraryList(QWidget* parent)
   : QTreeView(parent),
@@ -39,12 +40,15 @@ void OperatorLibraryList::startDrag()
     
     if(index.isValid() && m_model->isOperator(index))
     {
-        QMimeData* mimeData = new QMimeData;
-        mimeData->setText("Test");
+        // obtain a new operator from the factory
+        stromx::core::Operator* op = m_model->newOperator(index);
+        StromxData* data = new StromxData(op);
         
         QDrag* drag = new QDrag(this);
-        drag->setMimeData(mimeData);
-        if(drag->exec(Qt::CopyAction, Qt::CopyAction) == Qt::CopyAction)
-            int i = 3 + 5;// delete data
+        drag->setMimeData(data);
+        
+        // if the drag failed delete the operator in the drag object
+        if(! drag->exec(Qt::CopyAction, Qt::CopyAction) == Qt::CopyAction)
+           data->deleteData();
     }
 }

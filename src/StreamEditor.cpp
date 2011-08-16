@@ -1,5 +1,8 @@
 #include "StreamEditor.h"
+
 #include <QDropEvent>
+#include <stromx/core/Operator.h>
+#include "StromxData.h"
 
 StreamEditor::StreamEditor(QWidget* parent)
   : QGraphicsView(parent)
@@ -9,16 +12,29 @@ StreamEditor::StreamEditor(QWidget* parent)
 
 void StreamEditor::dragEnterEvent(QDragEnterEvent* event)
 {
-    event->setDropAction(Qt::CopyAction);
-    event->accept();
+    const QMimeData* data = qobject_cast<const StromxData*>(event->mimeData());
     
-//     QGraphicsView::dragEnterEvent(event);
+    if(data)
+    {  
+        event->setDropAction(Qt::CopyAction);
+        event->accept();
+    }
 }
 
 void StreamEditor::dropEvent(QDropEvent* event)
 {
-    event->setDropAction(Qt::CopyAction);
-    event->accept();
+    const StromxData* data = qobject_cast<const StromxData*>(event->mimeData());
     
-    //QGraphicsView::dropEvent(event);
+    if(data)
+    {  
+        for(QSet<stromx::core::Operator*>::const_iterator iter = data->operators().begin();
+            iter != data->operators().end();
+            ++iter)
+        {  
+            delete *iter;
+        }
+        
+        event->setDropAction(Qt::CopyAction);
+        event->accept();
+    }
 }

@@ -2,7 +2,7 @@
 
 #include <stromx/core/Operator.h>
 
-StromxData::StromxData(const QList< stromx::core::Operator* >& operators)
+StromxData::StromxData(const QSet< stromx::core::Operator* >& operators)
   : m_operators(operators)
 {
 
@@ -10,21 +10,12 @@ StromxData::StromxData(const QList< stromx::core::Operator* >& operators)
 
 StromxData::StromxData(stromx::core::Operator*const op)
 {
-    m_operators.append(op);
+    m_operators.insert(op);
 }
 
-
-const QList< stromx::core::Operator* > StromxData::useOperators()
+void StromxData::deleteData()
 {
-    QList< stromx::core::Operator* > operators = m_operators;
-    m_operators.clear();
-    
-    return operators;
-}
-
-StromxData::~StromxData()
-{
-    for(QList< stromx::core::Operator* >::iterator iter = m_operators.begin();
+    for(QSet< stromx::core::Operator* >::iterator iter = m_operators.begin();
         iter != m_operators.end();
         ++iter)
     {
