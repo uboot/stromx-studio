@@ -1,0 +1,36 @@
+# Sets the following variables:
+#  STROMX_FOUND       - Set to false, or undefined, if stromx isn't found.
+#  STROMX_INCLUDE_DIR - The stromx include directory.
+#  STROMX_LIBRARY     - The stromx library to link against.
+
+SET(STROMX_POSSIBLE_INCLUDE_DIRS
+    ~/include
+)
+
+FIND_PATH(STROMX_INCLUDE_DIR 
+    NAMES stromx/core/Core.h
+    PATHS ${STROMX_POSSIBLE_INCLUDE_DIRS}
+)
+
+SET(STROMX_POSSIBLE_LIBRARY_DIRS
+    ~/lib
+)
+
+FIND_LIBRARY(STROMX_LIBRARY
+    NAMES stromx_core
+    PATHS ${STROMX_POSSIBLE_LIBRARY_DIRS}
+)
+
+IF (STROMX_INCLUDE_DIR AND STROMX_LIBRARY)
+   SET(STROMX_FOUND TRUE)
+ENDIF (STROMX_INCLUDE_DIR AND STROMX_LIBRARY)
+
+IF (STROMX_FOUND)
+   IF (NOT CppUnit_FIND_QUIETLY)
+      MESSAGE(STATUS "Found stromx: ${STROMX_LIBRARY}")
+   ENDIF (NOT CppUnit_FIND_QUIETLY)
+ELSE (STROMX_FOUND)
+   IF (stromx_FIND_REQUIRED)
+      MESSAGE(FATAL_ERROR "Could not find stromx")
+   ENDIF (stromx_FIND_REQUIRED)
+ENDIF (STROMX_FOUND)
