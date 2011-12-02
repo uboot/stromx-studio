@@ -3,10 +3,6 @@
 
 #include <QMainWindow>
 
-namespace Ui {
-    class MainWindow;
-}
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -16,7 +12,11 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    void createActions();
+    void createMenus();
+    void createToolBars();
+    void createStatusBar();
+    void createDockWindows();
 };
 
 #endif // MAINWINDOW_H
