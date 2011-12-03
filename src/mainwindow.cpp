@@ -17,18 +17,23 @@
 *  along with stromx-gui.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QLabel>
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
 {
-     createActions();
-     createMenus();
-     createToolBars();
-     createStatusBar();
-     createDockWindows();
+    QLabel* label = new QLabel;
+    label->setPixmap(QPixmap(":/images/stromx.png"));
+    setCentralWidget(label);
+     
+    createActions();
+    createMenus();
+    createToolBars();
+    createStatusBar();
+    createDockWindows();
 
-     setWindowTitle(tr("Stromx GUI"));
+    setWindowTitle(tr("Stromx GUI"));
 }
 
 MainWindow::~MainWindow()
