@@ -3,9 +3,6 @@
 #  STROMX_INCLUDE_DIR - The stromx include directory.
 #  STROMX_LIBRARY     - The stromx library to link against.
 
-
-option(STROMX_ROOT_DIR "Stromx root dir" "")
-
 set(STROMX_POSSIBLE_INCLUDE_DIRS
     ~/include
 )
