@@ -1,27 +1,27 @@
-set(stromxgui_SOURCES main.cpp mainwindow.cpp)
-set(stromxgui_HEADERS mainwindow.h)
+set(stromxstudio_SOURCES main.cpp mainwindow.cpp)
+set(stromxstudio_HEADERS mainwindow.h)
 #set(stromxgui_FORMS mainwindow.ui)
-set(stromxgui_RESOURCES stromxgui.qrc)
+set(stromxstudio_RESOURCES stromx-studio.qrc)
 
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
-qt4_wrap_cpp(stromxgui_HEADERS_MOC ${stromxgui_HEADERS})
-#qt4_wrap_ui(stromxgui_FORMS_HEADERS ${stromxgui_FORMS})
-qt4_add_resources(stromxgui_RESOURCES_RCC ${stromxgui_RESOURCES})
+qt4_wrap_cpp(stromxstudio_HEADERS_MOC ${stromxstudio_HEADERS})
+#qt4_wrap_ui(stromxstudio_FORMS_HEADERS ${stromxstudio_FORMS})
+qt4_add_resources(stromxstudio_RESOURCES_RCC ${stromxstudio_RESOURCES})
 
 include_directories(
     ${STROMX_INCLUDE_DIR}
 )
 
-add_executable(stromx-gui 
-    ${stromxgui_SOURCES} 
-    ${stromxgui_HEADERS_MOC} 
-#    ${stromxgui_FORMS_HEADERS} 
-    ${stromxgui_RESOURCES_RCC}
+add_executable(stromx-studio 
+    ${stromxstudio_SOURCES} 
+    ${stromxstudio_HEADERS_MOC} 
+#    ${stromxstudio_FORMS_HEADERS} 
+    ${stromxstudio_RESOURCES_RCC}
 )
 
-target_link_libraries(stromx-gui
+target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
     ${STROMX_LIBRARY}
 )
