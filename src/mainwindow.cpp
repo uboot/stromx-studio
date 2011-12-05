@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     createStatusBar();
     createDockWindows();
 
-    setWindowTitle(tr("Stromx GUI"));
+    setWindowTitle(tr("Stromx Studio"));
 }
 
 MainWindow::~MainWindow()
