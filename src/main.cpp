@@ -24,6 +24,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    
+    // look here for a transparent splash screen without background:
+    // http://developer.qt.nokia.com/wiki/Custom_splashscreen_with_text
     QPixmap pixmap(":/images/stromx.png");
     QSplashScreen splash(pixmap);
     splash.show();

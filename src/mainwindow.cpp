@@ -23,8 +23,7 @@
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
 {
-    QLabel* label = new QLabel;
-    label->setPixmap(QPixmap(":/images/stromx.png"));
+    QLabel* label = new QLabel("Welcome to stromx studio!");
     setCentralWidget(label);
      
     createActions();
