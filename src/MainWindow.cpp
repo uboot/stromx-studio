@@ -3,18 +3,18 @@
 *
 *  This file is part of stromx-studio.
 *
-*  Stromx-gui is free software: you can redistribute it and/or modify
+*  Stromx-studio is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
 *  the Free Software Foundation, either version 3 of the License, or
 *  (at your option) any later version.
 *
-*  Stromx-gui is distributed in the hope that it will be useful,
+*  Stromx-studio is distributed in the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *  GNU General Public License for more details.
 *
 *  You should have received a copy of the GNU General Public License
-*  along with stromx-gui.  If not, see <http://www.gnu.org/licenses/>.
+*  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <QAction>
@@ -75,8 +75,23 @@ void MainWindow::createActions()
      
      m_saveAct = new QAction(tr("&Save..."), this);
      m_saveAct->setShortcuts(QKeySequence::Save);
-     m_saveAct->setStatusTip(tr("Save the current form letter"));
+     m_saveAct->setStatusTip(tr("Save the current stream"));
      connect(m_saveAct, SIGNAL(triggered()), this, SLOT(save()));
+     
+     m_saveAsAct = new QAction(tr("&Save..."), this);
+     m_saveAsAct->setShortcuts(QKeySequence::SaveAs);
+     m_saveAsAct->setStatusTip(tr("Save the current stream as"));
+     connect(m_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
+     
+     m_openAct = new QAction(tr("&Open"), this);
+     m_openAct->setShortcuts(QKeySequence::Open);
+     m_openAct->setStatusTip(tr("Open a stream"));
+     connect(m_openAct, SIGNAL(triggered()), this, SLOT(open()));
+     
+     m_closeAct = new QAction(tr("&Close"), this);
+     m_closeAct->setShortcuts(QKeySequence::Close);
+     m_closeAct->setStatusTip(tr("Close the current stream"));
+     connect(m_closeAct, SIGNAL(triggered()), this, SLOT(closeStream()));
 
      m_quitAct = new QAction(tr("&Quit"), this);
      m_quitAct->setShortcuts(QKeySequence::Quit);
@@ -107,7 +122,10 @@ void MainWindow::createDockWindows()
 void MainWindow::createMenus()
 {
      m_fileMenu = menuBar()->addMenu(tr("&File"));
+     m_fileMenu->addAction(m_openAct);
      m_fileMenu->addAction(m_saveAct);
+     m_fileMenu->addAction(m_saveAsAct);
+     m_fileMenu->addAction(m_closeAct);
      m_fileMenu->addSeparator();
      m_fileMenu->addAction(m_quitAct);
 
@@ -152,5 +170,18 @@ void MainWindow::start()
 void MainWindow::stop()
 {
 }
+
+void MainWindow::open()
+{
+}
+
+void MainWindow::closeStream()
+{
+}
+
+void MainWindow::saveAs()
+{
+}
+
 
 
