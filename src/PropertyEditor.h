@@ -1,7 +1,7 @@
 /* 
-*  Copyright 2011 Matthias Fuchs
+*  Copyright 2011 xxx yyy
 *
-*  This file is part of stromx-gui.
+*  This file is part of stromx-studio.
 *
 *  Stromx-gui is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -17,44 +17,17 @@
 *  along with stromx-gui.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QLabel>
-#include "mainwindow.h"
+#ifndef PROPERTYEDITOR_H
+#define PROPERTYEDITOR_H
 
-MainWindow::MainWindow(QWidget *parent)
-  : QMainWindow(parent)
+#include <QDockWidget>
+
+class PropertyEditor : public QDockWidget
 {
-    QLabel* label = new QLabel("Welcome to stromx studio!");
-    setCentralWidget(label);
-     
-    createActions();
-    createMenus();
-    createToolBars();
-    createStatusBar();
-    createDockWindows();
+    Q_OBJECT
 
-    setWindowTitle(tr("Stromx Studio"));
-}
+public:
+    explicit PropertyEditor(QWidget *parent = 0);
+};
 
-MainWindow::~MainWindow()
-{
-}
-
-void MainWindow::createActions()
-{
-}
-
-void MainWindow::createDockWindows()
-{
-}
-
-void MainWindow::createMenus()
-{
-}
-
-void MainWindow::createStatusBar()
-{
-}
-
-void MainWindow::createToolBars()
-{
-}
+#endif // PROPERTYEDITOR_H

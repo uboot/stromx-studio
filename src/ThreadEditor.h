@@ -1,7 +1,7 @@
 /* 
-*  Copyright 2011 Matthias Fuchs
+*  Copyright 2011 xxx yyy
 *
-*  This file is part of stromx-gui.
+*  This file is part of stromx-studio.
 *
 *  Stromx-gui is free software: you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -17,24 +17,17 @@
 *  along with stromx-gui.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QtGui/QApplication>
-#include <QtGui/QSplashScreen>
-#include "MainWindow.h"
+#ifndef THREADEDITOR_H
+#define THREADEDITOR_H
 
-int main(int argc, char *argv[])
+#include <QWidget>
+
+class ThreadEditor : public QWidget
 {
-    QApplication a(argc, argv);
-    a.setWindowIcon(QIcon(":/images/icon.png"));
-    
-    // look here for a transparent splash screen without background:
-    // http://developer.qt.nokia.com/wiki/Custom_splashscreen_with_text
-    QPixmap pixmap(":/images/stromx.png");
-    QSplashScreen splash(pixmap);
-    splash.show();
-    a.processEvents();
-    
-    MainWindow w;
-    w.show();
+    Q_OBJECT
 
-    return a.exec();
-}
+public:
+    explicit ThreadEditor(QWidget *parent = 0);
+};
+
+#endif // THREADEDITOR_H

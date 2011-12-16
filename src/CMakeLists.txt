@@ -1,5 +1,22 @@
-set(stromxstudio_SOURCES main.cpp mainwindow.cpp)
-set(stromxstudio_HEADERS mainwindow.h)
+set(stromxstudio_SOURCES
+    main.cpp
+    MainWindow.cpp
+    ObserverEditor.cpp
+    OperatorLibrary.cpp
+    PropertyEditor.cpp
+    StreamEditor.cpp
+    ThreadEditor.cpp
+)
+
+set(stromxstudio_HEADERS
+    MainWindow.h
+    ObserverEditor.h
+    OperatorLibrary.h
+    PropertyEditor.h
+    StreamEditor.h
+    ThreadEditor.h
+)
+
 #set(stromxgui_FORMS mainwindow.ui)
 set(stromxstudio_RESOURCES stromx-studio.qrc)
 
