@@ -26,6 +26,7 @@
 #include <QSplitter>
 #include <QToolBar>
 #include <QUndoStack>
+#include <QSettings>
 #include "MainWindow.h"
 #include "ObserverEditor.h"
 #include "OperatorLibrary.h"
@@ -182,6 +183,17 @@ void MainWindow::closeStream()
 void MainWindow::saveAs()
 {
 }
+
+void MainWindow::readSettings()
+{
+    QSettings settings("stromx", "stromx-studio");
+}
+
+void MainWindow::writeSettings()
+{
+    QSettings settings("stromx", "stromx-studio");
+}
+
 
 
 

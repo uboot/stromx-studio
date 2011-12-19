@@ -44,6 +44,8 @@ public:
     
     int rowCount(const QModelIndex & parent) const;
     int columnCount(const QModelIndex & parent) const;
+    
+    void loadLibrary(const QStringList & libraries);
 private:
     stromx::core::Factory* m_factory;
 };

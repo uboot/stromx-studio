@@ -55,6 +55,9 @@ private:
     void createStatusBar();
     void createDockWindows();
     
+    void readSettings();
+    void writeSettings();
+    
     QAction* m_openAct;
     QAction* m_saveAct;
     QAction* m_saveAsAct;

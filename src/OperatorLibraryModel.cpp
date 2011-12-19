@@ -83,4 +83,10 @@ int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
     return 0;
 }
 
+void OperatorLibraryModel::loadLibrary(const QStringList& libraries)
+{
+
+}
+
+
 
