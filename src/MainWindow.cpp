@@ -51,7 +51,6 @@ MainWindow::MainWindow(QWidget *parent)
     createToolBars();
     createStatusBar();
     createDockWindows();
-
     
     splitter->addWidget(m_streamEditor);
     splitter->addWidget(m_threadEditor);
@@ -63,6 +62,8 @@ MainWindow::MainWindow(QWidget *parent)
     addDockWidget(Qt::RightDockWidgetArea, m_observerEditor);
     setCentralWidget(splitter);
     setWindowTitle(tr("stromx-studio"));
+    
+    readSettings();
 }
 
 MainWindow::~MainWindow()
@@ -74,17 +75,17 @@ void MainWindow::createActions()
      m_undoAct = m_undoStack->createUndoAction(this);
      m_redoAct = m_undoStack->createRedoAction(this);
      
-     m_saveAct = new QAction(tr("&Save..."), this);
+     m_saveAct = new QAction(tr("&Save"), this);
      m_saveAct->setShortcuts(QKeySequence::Save);
      m_saveAct->setStatusTip(tr("Save the current stream"));
      connect(m_saveAct, SIGNAL(triggered()), this, SLOT(save()));
      
-     m_saveAsAct = new QAction(tr("&Save..."), this);
+     m_saveAsAct = new QAction(tr("Save &As..."), this);
      m_saveAsAct->setShortcuts(QKeySequence::SaveAs);
      m_saveAsAct->setStatusTip(tr("Save the current stream as"));
      connect(m_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
      
-     m_openAct = new QAction(tr("&Open"), this);
+     m_openAct = new QAction(tr("&Open..."), this);
      m_openAct->setShortcuts(QKeySequence::Open);
      m_openAct->setStatusTip(tr("Open a stream"));
      connect(m_openAct, SIGNAL(triggered()), this, SLOT(open()));
@@ -93,6 +94,10 @@ void MainWindow::createActions()
      m_closeAct->setShortcuts(QKeySequence::Close);
      m_closeAct->setStatusTip(tr("Close the current stream"));
      connect(m_closeAct, SIGNAL(triggered()), this, SLOT(closeStream()));
+     
+     m_loadLibrariesAct = new QAction(tr("&Load Libraries..."), this);
+     m_loadLibrariesAct->setStatusTip(tr("Load operator libraries"));
+     connect(m_loadLibrariesAct, SIGNAL(triggered()), this, SLOT(loadLibraries()));
 
      m_quitAct = new QAction(tr("&Quit"), this);
      m_quitAct->setShortcuts(QKeySequence::Quit);
@@ -128,6 +133,8 @@ void MainWindow::createMenus()
      m_fileMenu->addAction(m_saveAsAct);
      m_fileMenu->addAction(m_closeAct);
      m_fileMenu->addSeparator();
+     m_fileMenu->addAction(m_loadLibrariesAct);
+     m_fileMenu->addSeparator();
      m_fileMenu->addAction(m_quitAct);
 
      m_editMenu = menuBar()->addMenu(tr("&Edit"));
@@ -150,6 +157,7 @@ void MainWindow::createStatusBar()
 void MainWindow::createToolBars()
 {    
      m_streamToolBar = addToolBar(tr("Stream"));
+     m_streamToolBar->setObjectName("StreamToolbar");
      m_streamToolBar->addAction(m_startAct);
      m_streamToolBar->addAction(m_stopAct);
 }
@@ -187,12 +195,28 @@ void MainWindow::saveAs()
 void MainWindow::readSettings()
 {
     QSettings settings("stromx", "stromx-studio");
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("windowState").toByteArray());
 }
 
 void MainWindow::writeSettings()
 {
     QSettings settings("stromx", "stromx-studio");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("windowState", saveState());
 }
+
+void MainWindow::loadLibraries()
+{
+
+}
+
+void MainWindow::closeEvent(QCloseEvent* e)
+{ 
+    writeSettings();
+    QWidget::closeEvent(e);
+}
+
 
 
 

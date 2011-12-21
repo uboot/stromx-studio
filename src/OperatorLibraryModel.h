@@ -21,6 +21,8 @@
 #define OPERATORLIBRARYMODEL_H
 
 #include <QAbstractItemModel>
+#include <QMap>
+#include <QStringList>
 
 namespace stromx 
 {
@@ -47,6 +49,9 @@ public:
     
     void loadLibrary(const QStringList & libraries);
 private:
+    void updateOperators();
+    
+    QMap<QString, QStringList> m_operators;
     stromx::core::Factory* m_factory;
 };
 

@@ -38,11 +38,15 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    
+protected:
+    virtual void closeEvent(QCloseEvent* e);
 
 private slots:
     void open();
     void saveAs();
     void closeStream();
+    void loadLibraries();
     void save();
     void about();
     void start();
@@ -62,6 +66,7 @@ private:
     QAction* m_saveAct;
     QAction* m_saveAsAct;
     QAction* m_closeAct;
+    QAction* m_loadLibrariesAct;
     QAction* m_undoAct;
     QAction* m_redoAct;
     QAction* m_quitAct;

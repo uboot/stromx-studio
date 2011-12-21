@@ -3,5 +3,4 @@
 StreamEditor::StreamEditor(QWidget* parent)
   : QGraphicsView(parent)
 {
-
 }

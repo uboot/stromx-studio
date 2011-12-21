@@ -9,6 +9,7 @@ OperatorLibrary::OperatorLibrary(QWidget* parent)
     m_treeView(0)
 {
     setWindowTitle(tr("Operator Library"));
+    setObjectName("OperatorLibrary");
     
     m_model = new OperatorLibraryModel(this);
     m_treeView = new QTreeView;
