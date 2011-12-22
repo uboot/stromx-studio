@@ -13,7 +13,6 @@ set(stromxstudio_HEADERS
     MainWindow.h
     ObserverEditor.h
     OperatorLibrary.h
-    OperatorLibraryModel.h
     PropertyEditor.h
     StreamEditor.h
     ThreadEditor.h
@@ -44,3 +43,7 @@ target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
     ${STROMX_LIBRARY}
 )
+
+if(BUILD_TESTS)
+    add_subdirectory(test)
+endif()
