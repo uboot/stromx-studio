@@ -26,10 +26,13 @@
 #include <QSplitter>
 #include <QToolBar>
 #include <QUndoStack>
+#include <QDir>
+#include <QFileDialog>
 #include <QSettings>
 #include "MainWindow.h"
 #include "ObserverEditor.h"
 #include "OperatorLibrary.h"
+#include "OperatorLibraryModel.h"
 #include "PropertyEditor.h"
 #include "StreamEditor.h"
 #include "ThreadEditor.h"
@@ -208,7 +211,13 @@ void MainWindow::writeSettings()
 
 void MainWindow::loadLibraries()
 {
-
+    QStringList files = QFileDialog::getOpenFileNames(
+                            this,
+                            "Select one or more stromx libraries to open",
+                            QDir::home().absolutePath(),
+                            "libraries (*.so)"); 
+    
+    m_operatorLibrary->model()->loadLibraries(files);
 }
 
 void MainWindow::closeEvent(QCloseEvent* e)

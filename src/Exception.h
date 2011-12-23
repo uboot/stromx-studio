@@ -51,8 +51,12 @@ public:
         m_libraries(libraries)
     {}
     
+    virtual ~LoadLibrariesFailed() throw() {}
+    
+    const QStringList & libraries() const { return m_libraries; }
+    
 private:
-    const QStringList& m_libraries;
+    const QStringList m_libraries;
 }; 
 
 

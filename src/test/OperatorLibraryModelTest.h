@@ -25,7 +25,13 @@ class OperatorLibraryModel;
 class OperatorLibraryModelTest : public CPPUNIT_NS :: TestFixture
 {
     CPPUNIT_TEST_SUITE (OperatorLibraryModelTest);
+    CPPUNIT_TEST(testLoadLibraries);
+    CPPUNIT_TEST(testLoadLibrariesWrongFile);
+    CPPUNIT_TEST(testLoadLibrariesDoubleData);
     CPPUNIT_TEST(testRowCount);
+    CPPUNIT_TEST(testParent);
+    CPPUNIT_TEST(testIndex);
+    CPPUNIT_TEST(testData);
     CPPUNIT_TEST_SUITE_END ();
 
 public:
@@ -35,7 +41,13 @@ public:
     void tearDown();
 
 protected:
+    void testLoadLibraries();
+    void testLoadLibrariesWrongFile();
+    void testLoadLibrariesDoubleData();
     void testRowCount();
+    void testParent();
+    void testIndex();
+    void testData();
         
 private:
     OperatorLibraryModel* m_model;

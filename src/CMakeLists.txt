@@ -14,7 +14,7 @@ set(stromxstudio_HEADERS
     ObserverEditor.h
     OperatorLibrary.h
     PropertyEditor.h
-    StreamEditor.h
+    StreamEditor.h 
     ThreadEditor.h
 )
 

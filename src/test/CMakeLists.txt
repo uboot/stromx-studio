@@ -10,6 +10,10 @@ set(stromxstudiotest_HEADERS
     ../OperatorLibraryModel.h
 )
 
+configure_file (
+  "${PROJECT_SOURCE_DIR}/Config.h.in"
+  "${PROJECT_SOURCE_DIR}/Config.h"
+)
 
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})

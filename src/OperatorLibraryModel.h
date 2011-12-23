@@ -22,6 +22,7 @@
 
 #include <QAbstractItemModel>
 #include <QMap>
+#include <QVector>
 #include <QStringList>
 
 namespace stromx 
@@ -35,6 +36,8 @@ namespace stromx
 class OperatorLibraryModel : public QAbstractItemModel
 {
 public:
+    friend class OperatorLibraryModelTest;
+    
     explicit OperatorLibraryModel(QObject *parent = 0);
     
     ~OperatorLibraryModel();
@@ -47,11 +50,13 @@ public:
     int rowCount(const QModelIndex & parent) const;
     int columnCount(const QModelIndex & parent) const;
     
-    void loadLibrary(const QStringList & libraries);
+    void loadLibraries(const QStringList & libraries);
 private:
     void updateOperators();
     
-    QMap<QString, QStringList> m_operators;
+    QMap<QString, QStringList> m_package2TypeMap;
+    QMap<unsigned int, QString> m_index2PackageMap;
+    QVector<void*> m_libraryHandles;
     stromx::core::Factory* m_factory;
 };
 

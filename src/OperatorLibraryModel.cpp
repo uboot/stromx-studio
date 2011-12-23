@@ -6,6 +6,7 @@
 #include <stromx/core/OperatorKernel.h>
 #include <dlfcn.h>
 #include <iostream>
+#include <QFileInfo>
 
 
 using namespace stromx::core;
@@ -23,32 +24,37 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
 OperatorLibraryModel::~OperatorLibraryModel()
 {
     delete m_factory;
+    
+    void* handle = 0;
+    foreach(handle, m_libraryHandles)
+        dlclose(handle);
 }
 
 
 QModelIndex OperatorLibraryModel::index(int row, int column, const QModelIndex& parent) const
 {
-    if(! m_factory)
-        return QModelIndex();
-    
+    // no parent
     if(! parent.isValid())
-        return createIndex(0, 0);
+        return createIndex(row, column, row);
     
-    OperatorKernel* op = static_cast<OperatorKernel*>(parent.internalPointer());
+    unsigned int id = parent.internalId();
     
-    if(op == 0)
-        return createIndex(row, column, (void*)(m_factory->availableOperators()[row]));
+    // parent is a package
+    if(id < m_package2TypeMap.size())
+        return createIndex(row, column, m_package2TypeMap.size() + id);
 }
 
 QModelIndex OperatorLibraryModel::parent(const QModelIndex& child) const
 {
+    unsigned int id = child.internalId();
     
-    OperatorKernel* op = static_cast<OperatorKernel*>(child.internalPointer());
-    
-    if(op == 0)
+    // child is a package
+    if(id < m_package2TypeMap.size())
         return QModelIndex();
     
-    return createIndex(0, 0);
+    // child is an operator
+    unsigned int packageId = id - m_package2TypeMap.size();
+    return createIndex(packageId, 0, packageId);
 }
 
 QVariant OperatorLibraryModel::data(const QModelIndex& index, int role) const
@@ -56,15 +62,17 @@ QVariant OperatorLibraryModel::data(const QModelIndex& index, int role) const
     if(role != Qt::DisplayRole)
         return QVariant();
         
-    if(! m_factory)
-        return QVariant();
+    unsigned int id = index.internalId();
     
-    OperatorKernel* op = static_cast<OperatorKernel*>(index.internalPointer());
+    // index is a package
+    if(id < m_package2TypeMap.size())
+        return m_index2PackageMap[id];
     
-    if(op == 0)
-        return "Core";
-        
-    return QVariant(op->type().c_str());
+    // index is an operator
+    unsigned int packageId = id - m_package2TypeMap.size();
+    QString package = m_index2PackageMap.value(packageId, "");
+    QStringList ops = m_package2TypeMap.value(package, QStringList());
+    return ops[index.row()];
 }
 
 int OperatorLibraryModel::columnCount(const QModelIndex& parent) const
@@ -74,21 +82,24 @@ int OperatorLibraryModel::columnCount(const QModelIndex& parent) const
 
 int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
 {
-    if(! m_factory)
-        return 0;
-    
+    // parent is invalid
     if(! parent.isValid())
-        return 1;
+        return m_package2TypeMap.size();
     
-    OperatorKernel* op = static_cast<OperatorKernel*>(parent.internalPointer());
-        
-    if(op == 0)
-        return m_factory->availableOperators().size();
+    unsigned int id = parent.internalId();
     
+    // parent is a package
+    if(id < m_package2TypeMap.size())
+    {
+        QString package = m_index2PackageMap[id];
+        return m_package2TypeMap[package].size();
+    }
+    
+    // parent is an operator type
     return 0;
 }
 
-void OperatorLibraryModel::loadLibrary(const QStringList& libraries)
+void OperatorLibraryModel::loadLibraries(const QStringList& libraries)
 {
     QStringList failedLibraries;
     
@@ -96,6 +107,19 @@ void OperatorLibraryModel::loadLibrary(const QStringList& libraries)
         iter != libraries.end();
         ++iter)
     {
+        QFileInfo info(*iter);
+        
+        QRegExp regEx("libstromx_(.+)");
+        if(regEx.indexIn(info.baseName()) == -1)
+        {
+            failedLibraries.append(*iter);
+            continue;
+        }
+        
+        QString registrationFunctionName = regEx.cap(1);
+        registrationFunctionName[0] = registrationFunctionName[0].toUpper();
+        registrationFunctionName.prepend("stromxRegister");
+        
         void* libHandle;
         void (*registrationFunction)(stromx::core::Registry& registry);
         char* error;
@@ -107,19 +131,9 @@ void OperatorLibraryModel::loadLibrary(const QStringList& libraries)
             failedLibraries.append(*iter);
             continue;
         }
-        
-        QRegExp regEx("libstromx_(\\c?).so\\c*");
-        if(regEx.indexIn(*iter) < 0)
-        {
-            failedLibraries.append(*iter);
-            dlclose(libHandle);
-            continue;
-        }
-        
-        QString libName("register" + regEx.cap(1));
 
         registrationFunction = reinterpret_cast<void (*)(stromx::core::Registry& registry)>
-            (dlsym(libHandle, libName.toStdString().c_str()));
+            (dlsym(libHandle, registrationFunctionName.toStdString().c_str()));
             
         if ((error = dlerror()) != NULL) 
         {
@@ -128,28 +142,47 @@ void OperatorLibraryModel::loadLibrary(const QStringList& libraries)
             continue;
         } 
         
-        (*registrationFunction)(*m_factory);
-
-        dlclose(libHandle);
+        // store library handle to unload the library after use
+        m_libraryHandles.append(libHandle);
         
-        if(failedLibraries.size())
-            throw LoadLibrariesFailed(failedLibraries);
+        // try to register the library
+        try
+        {
+            (*registrationFunction)(*m_factory);
+        }
+        catch(stromx::core::Exception&)
+        {
+            // even if an exception was thrown, parts of the library might 
+            // have been loaded
+            failedLibraries.append(*iter);
+            continue;
+        }
     }
+        
+    updateOperators();
+    reset();
+    
+    if(failedLibraries.size())
+        throw LoadLibrariesFailed(failedLibraries);
+    
 }
 
 void OperatorLibraryModel::updateOperators()
 {
-    m_operators.clear();
+    m_package2TypeMap.clear();
+    m_index2PackageMap.clear();
     
+    unsigned int i = 0;
     typedef std::vector<const stromx::core::OperatorKernel*> OperatorKernelList;
     for(OperatorKernelList::const_iterator iter = m_factory->availableOperators().begin();
         iter != m_factory->availableOperators().end();
-        ++iter)
+        ++iter, ++i)
     {
         QString package = QString::fromStdString((*iter)->package());
         QString type = QString::fromStdString((*iter)->type());
         
-        m_operators[package].append(type);
+        m_package2TypeMap[package].append(type);
+        m_index2PackageMap[i] = package;
     }
 }
 
