@@ -44,6 +44,7 @@ target_link_libraries(stromx-studio
     ${STROMX_LIBRARY}
 )
 
+
 if(BUILD_TESTS)
     add_subdirectory(test)
 endif()
