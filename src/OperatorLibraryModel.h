@@ -44,19 +44,22 @@ public:
     
     QModelIndex index(int row, int column, const QModelIndex & parent) const;
     QModelIndex parent(const QModelIndex & child) const;
-    
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
     int rowCount(const QModelIndex & parent) const;
     int columnCount(const QModelIndex & parent) const;
     
     void loadLibraries(const QStringList & libraries);
+    void resetLibraries();
+    
 private:
     void updateOperators();
     
     QMap<QString, QStringList> m_package2TypeMap;
     QMap<unsigned int, QString> m_index2PackageMap;
     QVector<void*> m_libraryHandles;
+    QStringList m_loadedLibraries;
     stromx::core::Factory* m_factory;
 };
 

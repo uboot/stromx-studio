@@ -47,6 +47,7 @@ private slots:
     void saveAs();
     void closeStream();
     void loadLibraries();
+    void resetLibraries();
     void save();
     void about();
     void start();
@@ -67,6 +68,7 @@ private:
     QAction* m_saveAsAct;
     QAction* m_closeAct;
     QAction* m_loadLibrariesAct;
+    QAction* m_resetLibrariesAct;
     QAction* m_undoAct;
     QAction* m_redoAct;
     QAction* m_quitAct;

@@ -1,12 +1,13 @@
 #include "OperatorLibraryModel.h"
 
 #include "Exception.h"
+#include <QFileInfo>
+#include <QSettings>
 #include <stromx/core/Core.h>
 #include <stromx/core/Factory.h>
 #include <stromx/core/OperatorKernel.h>
 #include <dlfcn.h>
 #include <iostream>
-#include <QFileInfo>
 
 
 using namespace stromx::core;
@@ -18,7 +19,17 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
     m_factory = new stromx::core::Factory();
     stromxRegisterCore(*m_factory);
     
-    updateOperators();
+    
+    QSettings settings("stromx", "stromx-studio");
+    m_loadedLibraries = settings.value("loadedLibraries").toStringList();
+    
+    try
+    {
+        loadLibraries(m_loadedLibraries);
+    }
+    catch(LoadLibrariesFailed&)
+    {
+    }
 }
 
 OperatorLibraryModel::~OperatorLibraryModel()
@@ -28,6 +39,9 @@ OperatorLibraryModel::~OperatorLibraryModel()
     void* handle = 0;
     foreach(handle, m_libraryHandles)
         dlclose(handle);
+    
+    QSettings settings("stromx", "stromx-studio");
+    settings.setValue("loadedLibraries", m_loadedLibraries);
 }
 
 
@@ -157,14 +171,26 @@ void OperatorLibraryModel::loadLibraries(const QStringList& libraries)
             failedLibraries.append(*iter);
             continue;
         }
+        
+        // remember the library
+        m_loadedLibraries.append(*iter);
     }
         
     updateOperators();
-    reset();
     
     if(failedLibraries.size())
         throw LoadLibrariesFailed(failedLibraries);
+}
+
+void OperatorLibraryModel::resetLibraries()
+{
+    delete m_factory;
+    m_loadedLibraries.clear();
     
+    m_factory = new stromx::core::Factory();
+    stromxRegisterCore(*m_factory);
+    
+    updateOperators();
 }
 
 void OperatorLibraryModel::updateOperators()
@@ -184,7 +210,18 @@ void OperatorLibraryModel::updateOperators()
         m_package2TypeMap[package].append(type);
         m_index2PackageMap[i] = package;
     }
+    
+    reset();
 }
+
+QVariant OperatorLibraryModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if(orientation == Qt::Horizontal && role == Qt::DisplayRole && section == 0)
+        return tr("Operator");
+    
+    return QVariant();
+}
+
 
 
 

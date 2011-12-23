@@ -29,6 +29,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QSettings>
+#include <iostream>
 #include "MainWindow.h"
 #include "ObserverEditor.h"
 #include "OperatorLibrary.h"
@@ -36,6 +37,7 @@
 #include "PropertyEditor.h"
 #include "StreamEditor.h"
 #include "ThreadEditor.h"
+#include "Exception.h"
 
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
@@ -101,6 +103,10 @@ void MainWindow::createActions()
      m_loadLibrariesAct = new QAction(tr("&Load Libraries..."), this);
      m_loadLibrariesAct->setStatusTip(tr("Load operator libraries"));
      connect(m_loadLibrariesAct, SIGNAL(triggered()), this, SLOT(loadLibraries()));
+     
+     m_resetLibrariesAct = new QAction(tr("&Reset Libraries..."), this);
+     m_resetLibrariesAct->setStatusTip(tr("Reset operator libraries"));
+     connect(m_resetLibrariesAct, SIGNAL(triggered()), this, SLOT(resetLibraries()));
 
      m_quitAct = new QAction(tr("&Quit"), this);
      m_quitAct->setShortcuts(QKeySequence::Quit);
@@ -137,6 +143,7 @@ void MainWindow::createMenus()
      m_fileMenu->addAction(m_closeAct);
      m_fileMenu->addSeparator();
      m_fileMenu->addAction(m_loadLibrariesAct);
+     m_fileMenu->addAction(m_resetLibrariesAct);
      m_fileMenu->addSeparator();
      m_fileMenu->addAction(m_quitAct);
 
@@ -211,13 +218,45 @@ void MainWindow::writeSettings()
 
 void MainWindow::loadLibraries()
 {
+    QSettings settings("stromx", "stromx-studio");
+    QString lastDir = settings.value("lastLibraryDir", QDir::home().absolutePath()).toString();
+    
     QStringList files = QFileDialog::getOpenFileNames(
                             this,
-                            "Select one or more stromx libraries to open",
-                            QDir::home().absolutePath(),
-                            "libraries (*.so)"); 
+                            tr("Select one or more stromx libraries to open"),
+                            lastDir,
+                            tr("libraries (*.so)")); 
     
-    m_operatorLibrary->model()->loadLibraries(files);
+    // try to load libraries
+    try
+    {
+        m_operatorLibrary->model()->loadLibraries(files);
+    }
+    catch(LoadLibrariesFailed & e)
+    {
+        QString library;
+        foreach(library, e.libraries())
+            std::cout << "Failed to load '" << library.toStdString() << "'" << std::endl;
+    }
+    
+    // remember the last directory
+    if(files.size())
+    {
+        QString lastDir = QFileInfo(files.back()).dir().absolutePath();
+        settings.setValue("lastLibraryDir", lastDir);
+    }
+}
+
+void MainWindow::resetLibraries()
+{
+    QMessageBox msgBox;
+    msgBox.setText(tr("Do you want to reset the operator libraries?"));
+    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Cancel);
+    int ret = msgBox.exec();
+    
+    if(ret == QMessageBox::Ok)
+        m_operatorLibrary->model()->resetLibraries();
 }
 
 void MainWindow::closeEvent(QCloseEvent* e)
