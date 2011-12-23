@@ -21,11 +21,11 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
     
     
     QSettings settings("stromx", "stromx-studio");
-    m_loadedLibraries = settings.value("loadedLibraries").toStringList();
+    QStringList loadedLibraries = settings.value("loadedLibraries").toStringList();
     
     try
     {
-        loadLibraries(m_loadedLibraries);
+        loadLibraries(loadedLibraries);
     }
     catch(LoadLibrariesFailed&)
     {
