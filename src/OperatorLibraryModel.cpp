@@ -222,6 +222,18 @@ QVariant OperatorLibraryModel::headerData(int section, Qt::Orientation orientati
     return QVariant();
 }
 
+const bool OperatorLibraryModel::isOperator(const QModelIndex& index) const
+{
+    unsigned int id = index.internalId();
+    
+    return (id >= m_package2TypeMap.size());
+    
+}
+
+stromx::core::Operator* OperatorLibraryModel::newOperator(const QModelIndex& index) const
+{
+    return 0;
+}
 
 
 

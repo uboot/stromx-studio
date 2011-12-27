@@ -22,8 +22,8 @@
 
 #include <QDockWidget>
 
+class OperatorLibraryList;
 class OperatorLibraryModel;
-class QTreeView;
 
 class OperatorLibrary : public QDockWidget
 {
@@ -32,11 +32,10 @@ class OperatorLibrary : public QDockWidget
 public:
     explicit OperatorLibrary(QWidget *parent = 0);
     
-    OperatorLibraryModel* const model() const { return m_model; }
+    OperatorLibraryModel* const model() const;
     
 private:
-    OperatorLibraryModel* m_model;
-    QTreeView* m_treeView;
+    OperatorLibraryList* m_list;
 };
 
 #endif // OPERATORLIBRARY_H

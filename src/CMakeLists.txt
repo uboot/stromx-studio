@@ -3,6 +3,7 @@ set(stromxstudio_SOURCES
     MainWindow.cpp
     ObserverEditor.cpp
     OperatorLibrary.cpp
+    OperatorLibraryList.cpp
     OperatorLibraryModel.cpp
     PropertyEditor.cpp
     StreamEditor.cpp
@@ -13,6 +14,7 @@ set(stromxstudio_HEADERS
     MainWindow.h
     ObserverEditor.h
     OperatorLibrary.h
+    OperatorLibraryList.h
     PropertyEditor.h
     StreamEditor.h 
     ThreadEditor.h

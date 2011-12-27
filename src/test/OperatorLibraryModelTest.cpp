@@ -12,6 +12,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION (OperatorLibraryModelTest);
 void OperatorLibraryModelTest::setUp()
 {
     m_model = new OperatorLibraryModel();
+    m_model->resetLibraries();
     
     QStringList libraries;
     libraries << STROMX_BASE_LIBRARY;
@@ -25,15 +26,14 @@ void OperatorLibraryModelTest::tearDown()
 
 void OperatorLibraryModelTest::testLoadLibraries()
 {
-    OperatorLibraryModel* model = new OperatorLibraryModel;
+    m_model->resetLibraries();
+    
     QStringList libraries;
     libraries << STROMX_BASE_LIBRARY;
-    CPPUNIT_ASSERT_NO_THROW(model->loadLibraries(libraries));
+    CPPUNIT_ASSERT_NO_THROW(m_model->loadLibraries(libraries));
     
-    CPPUNIT_ASSERT_EQUAL((unsigned int)(12), (unsigned int)(model->m_factory->availableOperators().size()));
-    CPPUNIT_ASSERT_EQUAL(11, model->rowCount(model->createIndex(1, 0, 1)));
-
-    delete model;
+    CPPUNIT_ASSERT_EQUAL((unsigned int)(12), (unsigned int)(m_model->m_factory->availableOperators().size()));
+    CPPUNIT_ASSERT_EQUAL(11, m_model->rowCount(m_model->createIndex(1, 0, 1)));
 }
 
 void OperatorLibraryModelTest::testLoadLibrariesDoubleData()
@@ -129,6 +129,18 @@ void OperatorLibraryModelTest::testParent()
     CPPUNIT_ASSERT_EQUAL(1, parent.row());
     CPPUNIT_ASSERT_EQUAL(qint64(1), parent.internalId());
 }
+
+void OperatorLibraryModelTest::testIsOperator()
+{
+    // second package
+    QModelIndex index = m_model->createIndex(0, 0, 1);
+    CPPUNIT_ASSERT_EQUAL(false, m_model->isOperator(index));
+    
+    // first operator of first package
+    index = m_model->createIndex(0, 0, 2);
+    CPPUNIT_ASSERT_EQUAL(true, m_model->isOperator(index));
+}
+
 
 
 

@@ -1,19 +1,21 @@
 #include "OperatorLibrary.h"
 
-#include <QTreeView>
-#include "OperatorLibraryModel.h"
+#include "OperatorLibraryList.h"
 
 OperatorLibrary::OperatorLibrary(QWidget* parent)
   : QDockWidget(parent),
-    m_model(0),
-    m_treeView(0)
+    m_list(0)
 {
     setWindowTitle(tr("Operator Library"));
     setObjectName("OperatorLibrary");
     
-    m_model = new OperatorLibraryModel(this);
-    m_treeView = new QTreeView;
-    m_treeView->setModel(m_model);
+    m_list = new OperatorLibraryList;
     
-    setWidget(m_treeView);
+    setWidget(m_list);
+}
+
+
+OperatorLibraryModel* const OperatorLibrary::model() const
+{ 
+    return m_list->model();
 }

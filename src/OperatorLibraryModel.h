@@ -30,6 +30,7 @@ namespace stromx
     namespace core 
     {
         class Factory;
+        class Operator;
     }
 }
 
@@ -52,6 +53,9 @@ public:
     
     void loadLibraries(const QStringList & libraries);
     void resetLibraries();
+    
+    const bool isOperator(const QModelIndex & index) const;
+    stromx::core::Operator* newOperator(const QModelIndex & index) const;
     
 private:
     void updateOperators();
