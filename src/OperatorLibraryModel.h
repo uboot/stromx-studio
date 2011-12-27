@@ -41,21 +41,22 @@ public:
     
     explicit OperatorLibraryModel(QObject *parent = 0);
     
-    ~OperatorLibraryModel();
+    virtual ~OperatorLibraryModel();
     
-    QModelIndex index(int row, int column, const QModelIndex & parent) const;
-    QModelIndex parent(const QModelIndex & child) const;
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
+    virtual QModelIndex parent(const QModelIndex & child) const;
+    virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
-    int rowCount(const QModelIndex & parent) const;
-    int columnCount(const QModelIndex & parent) const;
+    virtual int rowCount(const QModelIndex & parent) const;
+    virtual int columnCount(const QModelIndex & parent) const;
+    
+    virtual const bool isOperator(const QModelIndex & index) const;
+    virtual stromx::core::Operator* newOperator(const QModelIndex & index) const;
     
     void loadLibraries(const QStringList & libraries);
     void resetLibraries();
     
-    const bool isOperator(const QModelIndex & index) const;
-    stromx::core::Operator* newOperator(const QModelIndex & index) const;
     
 private:
     void updateOperators();

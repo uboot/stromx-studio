@@ -1,5 +1,5 @@
 /* 
-*  Copyright 2011 xxx yyy
+*  Copyright 2011 Matthias Fuchs
 *
 *  This file is part of stromx-studio.
 *
@@ -17,30 +17,32 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OPERATORLIBRARYLIST_H
-#define OPERATORLIBRARYLIST_H
+#ifndef STROMXDATA_H
+#define STROMXDATA_H
 
-#include <QTreeView>
+#include <QMimeData>
 
-class OperatorLibraryModel;
+namespace stromx 
+{
+    namespace core 
+    {
+        class Operator;
+    }
+}
 
-class OperatorLibraryList : public QTreeView
+class StromxData : public QMimeData
 {
     Q_OBJECT
-
-public:
-    explicit OperatorLibraryList(QWidget *parent = 0);
-    OperatorLibraryModel* const model() const { return m_model; }   
     
-protected:
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void mouseMoveEvent(QMouseEvent *event);
+public:
+    StromxData(const QList<stromx::core::Operator*> & operators);
+    StromxData(stromx::core::Operator* const op);
+    virtual ~StromxData();
+    
+    const QList<stromx::core::Operator*> useOperators();
     
 private:
-    void startDrag();
-    
-    QPoint m_startPos;
-    OperatorLibraryModel* m_model;
+    QList<stromx::core::Operator*> m_operators;
 };
 
-#endif // OPERATORLIBRARYLIST_H
+#endif // STROMXDATA_H

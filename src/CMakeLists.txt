@@ -7,6 +7,7 @@ set(stromxstudio_SOURCES
     OperatorLibraryModel.cpp
     PropertyEditor.cpp
     StreamEditor.cpp
+    StromxData.cpp
     ThreadEditor.cpp
 )
 
@@ -17,6 +18,7 @@ set(stromxstudio_HEADERS
     OperatorLibraryList.h
     PropertyEditor.h
     StreamEditor.h 
+    StromxData.h
     ThreadEditor.h
 )
 
