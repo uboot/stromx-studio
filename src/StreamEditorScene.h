@@ -36,4 +36,4 @@ public:
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
 };
 
-#endif // STREAMEDITOR_H
+#endif // STREAMEDITORSCENE_H

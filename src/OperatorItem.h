@@ -1,5 +1,5 @@
 /* 
-*  Copyright 2011 Matthias Fuchs
+*  Copyright 2011 xxx yyy
 *
 *  This file is part of stromx-studio.
 *
@@ -17,17 +17,29 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STREAMEDITOR_H
-#define STREAMEDITOR_H
+#ifndef OPERATORITEM_H
+#define OPERATORITEM_H
 
-#include <QScrollArea>
+#include <QGraphicsRectItem>
 
-class StreamEditor : public QScrollArea
+namespace stromx
 {
-    Q_OBJECT
+    namespace core
+    {
+        class Operator;
+    }
+}
 
+class OperatorItem : public QGraphicsRectItem
+{
 public:
-    explicit StreamEditor(QWidget *parent = 0);
+    explicit OperatorItem(QGraphicsItem * parent = 0);
+    virtual ~OperatorItem();
+    
+    void setOperator(stromx::core::Operator* op);
+    
+private:
+    stromx::core::Operator* m_op;
 };
 
-#endif // STREAMEDITOR_H
+#endif // OPERATORITEM_H

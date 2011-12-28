@@ -2,6 +2,7 @@ set(stromxstudio_SOURCES
     main.cpp
     MainWindow.cpp
     ObserverEditor.cpp
+    OperatorItem.cpp
     OperatorLibrary.cpp
     OperatorLibraryList.cpp
     OperatorLibraryModel.cpp

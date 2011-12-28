@@ -3,6 +3,7 @@
 #include <QGraphicsSceneDragDropEvent>
 #include <stromx/core/Operator.h>
 #include "StromxData.h"
+#include "OperatorItem.h"
 
 StreamEditorScene::StreamEditorScene(QObject* parent)
   : QGraphicsScene(parent)
@@ -30,7 +31,10 @@ void StreamEditorScene::dropEvent(QGraphicsSceneDragDropEvent* event)
             iter != data->operators().end();
             ++iter)
         {  
-            delete *iter;
+            OperatorItem* item = new OperatorItem;
+            addItem(item);
+            item->setOperator(*iter);
+            item->setPos(event->scenePos());
         }
         
         event->setDropAction(Qt::CopyAction);
