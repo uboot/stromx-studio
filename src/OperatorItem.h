@@ -20,7 +20,7 @@
 #ifndef OPERATORITEM_H
 #define OPERATORITEM_H
 
-#include <QGraphicsRectItem>
+#include <QGraphicsObject>
 
 namespace stromx
 {
@@ -30,16 +30,22 @@ namespace stromx
     }
 }
 
-class OperatorItem : public QGraphicsRectItem
+class QGraphicsRectItem;
+
+class OperatorItem : public QGraphicsObject
 {
 public:
     explicit OperatorItem(QGraphicsItem * parent = 0);
     virtual ~OperatorItem();
     
+    virtual QRectF boundingRect() const;
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
+    
     void setOperator(stromx::core::Operator* op);
     
 private:
     stromx::core::Operator* m_op;
+    QGraphicsRectItem* m_rectItem;
 };
 
 #endif // OPERATORITEM_H

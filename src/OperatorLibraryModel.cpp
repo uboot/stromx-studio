@@ -195,6 +195,8 @@ void OperatorLibraryModel::resetLibraries()
 
 void OperatorLibraryModel::updateOperators()
 {
+    beginResetModel();
+    
     m_package2TypeMap.clear();
     m_index2PackageMap.clear();
     
@@ -211,7 +213,7 @@ void OperatorLibraryModel::updateOperators()
         m_index2PackageMap[i] = package;
     }
     
-    reset();
+    endResetModel();
 }
 
 QVariant OperatorLibraryModel::headerData(int section, Qt::Orientation orientation, int role) const

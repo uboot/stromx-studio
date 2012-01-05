@@ -9,9 +9,14 @@ OperatorLibraryList::OperatorLibraryList(QWidget* parent)
   : QTreeView(parent),
     m_model(0)
 {
-    m_model = new OperatorLibraryModel(this);
-    setModel(m_model);
 }
+
+void OperatorLibraryList::setOperatorLibraryModel(OperatorLibraryModel* model)
+{
+    m_model = model;
+    setModel(model);
+}
+
 
 void OperatorLibraryList::mouseMoveEvent(QMouseEvent* event)
 {

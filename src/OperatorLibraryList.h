@@ -30,7 +30,8 @@ class OperatorLibraryList : public QTreeView
 
 public:
     explicit OperatorLibraryList(QWidget *parent = 0);
-    OperatorLibraryModel* const model() const { return m_model; }   
+    
+    virtual void setOperatorLibraryModel(OperatorLibraryModel* model);
     
 protected:
     virtual void mousePressEvent(QMouseEvent *event);

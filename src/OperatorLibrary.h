@@ -36,6 +36,7 @@ public:
     
 private:
     OperatorLibraryList* m_list;
+    OperatorLibraryModel* m_model;
 };
 
 #endif // OPERATORLIBRARY_H
