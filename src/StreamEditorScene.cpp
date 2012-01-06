@@ -2,12 +2,17 @@
 
 #include <QGraphicsSceneDragDropEvent>
 #include <stromx/core/Operator.h>
-#include "StromxData.h"
 #include "OperatorItem.h"
+#include "StreamModel.h"
+#include "StromxData.h"
 
 StreamEditorScene::StreamEditorScene(QObject* parent)
-  : QGraphicsScene(parent)
+  : QGraphicsScene(parent),
+    m_model(0)
 {
+    m_model = new StreamModel(this);
+    
+    connect(m_model, SIGNAL(operatorAdded(OperatorModel*)), this, SLOT(addOperator(OperatorModel*)));
 }
 
 void StreamEditorScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
@@ -31,10 +36,7 @@ void StreamEditorScene::dropEvent(QGraphicsSceneDragDropEvent* event)
             iter != data->operators().end();
             ++iter)
         {  
-            OperatorItem* item = new OperatorItem;
-            addItem(item);
-            item->setOperator(*iter);
-            item->setPos(event->scenePos());
+            m_model->addOperator(*iter, event->scenePos());
         }
         
         event->setDropAction(Qt::CopyAction);
@@ -52,4 +54,11 @@ void StreamEditorScene::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
         event->accept();
     }
 }
+
+void StreamEditorScene::addOperator(OperatorModel* op)
+{
+    OperatorItem* opItem = new OperatorItem(op);
+    addItem(opItem);
+}
+
 

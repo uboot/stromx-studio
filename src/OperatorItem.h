@@ -22,31 +22,21 @@
 
 #include <QGraphicsObject>
 
-namespace stromx
-{
-    namespace core
-    {
-        class Operator;
-    }
-}
-
 class QGraphicsRectItem;
+class OperatorModel;
 
 class OperatorItem : public QGraphicsObject
 {
     Q_OBJECT
     
 public:
-    explicit OperatorItem(QGraphicsItem * parent = 0);
-    virtual ~OperatorItem();
+    explicit OperatorItem(OperatorModel* op, QGraphicsItem * parent = 0);
     
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     
-    void setOperator(stromx::core::Operator* op);
-    
 private:
-    stromx::core::Operator* m_op;
+    OperatorModel* m_op;
     QGraphicsRectItem* m_rectItem;
 };
 

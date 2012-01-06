@@ -20,16 +20,39 @@
 #ifndef OPERATORMODEL_H
 #define OPERATORMODEL_H
 
-#include <QObject>
+#include <QAbstractListModel>
+#include <QPointF>
 
-class OperatorModel : public QObject
+namespace stromx
+{
+    namespace core
+    { 
+        class Operator;
+    }
+}
+
+class OperatorModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QPointF pos READ pos WRITE setPos)
     
 public:
-    explicit OperatorModel(QObject *parent = 0);
+    explicit OperatorModel(stromx::core::Operator* const op, QObject *parent = 0);
+    
+    stromx::core::Operator* const op() const { return m_op; }
+    
+    int rowCount(const QModelIndex & index) const;
+    QVariant data(const QModelIndex & index, int role) const;
+    
+    const QPointF & pos() const { return m_pos; }
+    void setPos(const QPointF & pos);
+    
+signals:
+    void posChanged(const QPointF & pos);
     
 private:
+    stromx::core::Operator* m_op;
+    QPointF m_pos;
 };
 
 #endif // OPERATORMODEL_H

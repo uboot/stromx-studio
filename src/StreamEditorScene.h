@@ -23,6 +23,8 @@
 #include <QGraphicsScene>
 
 class QGraphicsSceneDragDropEvent;
+class OperatorModel;
+class StreamModel;
 
 class StreamEditorScene : public QGraphicsScene
 {
@@ -34,6 +36,12 @@ public:
     virtual void dropEvent(QGraphicsSceneDragDropEvent* event);
     virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event);
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
+    
+public slots:
+    void addOperator(OperatorModel* op);
+    
+private:
+    StreamModel* m_model;
 };
 
 #endif // STREAMEDITORSCENE_H

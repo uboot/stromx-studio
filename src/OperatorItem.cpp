@@ -2,27 +2,19 @@
 
 #include <QBrush>
 #include <stromx/core/Operator.h>
+#include "OperatorModel.h"
 
-OperatorItem::OperatorItem(QGraphicsItem* parent)
+OperatorItem::OperatorItem(OperatorModel* op, QGraphicsItem * parent)
   : QGraphicsObject(parent),
-    m_op(0)
+    m_op(op)
 {
     m_rectItem = new QGraphicsRectItem(this);
     m_rectItem->setRect(0, 0, 50, 50);
+    setPos(op->pos());
     
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
     setFlag(ItemIsFocusable, true);
-}
-
-OperatorItem::~OperatorItem()
-{
-    delete m_op;
-}
-
-void OperatorItem::setOperator(stromx::core::Operator* op)
-{
-    m_op = op;
 }
 
 QRectF OperatorItem::boundingRect() const

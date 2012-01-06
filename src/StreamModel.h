@@ -21,6 +21,18 @@
 #define STREAMMODEL_H
 
 #include <QObject>
+#include <QPointF>
+
+namespace stromx
+{
+    namespace core
+    { 
+        class Stream;
+        class Operator;
+    }
+}
+
+class OperatorModel;
 
 class StreamModel : public QObject
 {
@@ -29,7 +41,13 @@ class StreamModel : public QObject
 public:
     explicit StreamModel(QObject *parent = 0);
     
+    void addOperator(stromx::core::Operator* const op, const QPointF & pos);
+    
+signals:
+    void operatorAdded(OperatorModel* op);
+    
 private:
+    stromx::core::Stream* m_stream;
 };
 
 #endif // STREAMMODEL_H
