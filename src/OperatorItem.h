@@ -32,6 +32,8 @@ class OperatorItem : public QGraphicsObject
 public:
     explicit OperatorItem(OperatorModel* op, QGraphicsItem * parent = 0);
     
+    OperatorModel* op() const { return m_op; }
+    
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     

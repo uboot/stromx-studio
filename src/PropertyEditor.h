@@ -22,12 +22,21 @@
 
 #include <QDockWidget>
 
+class QAbstractTableModel;
+class QTableView;
+
 class PropertyEditor : public QDockWidget
 {
     Q_OBJECT
 
 public:
     explicit PropertyEditor(QWidget *parent = 0);
+    
+public slots:
+    void setModel(QAbstractTableModel* model);
+    
+private:
+    QTableView* m_table;
 };
 
 #endif // PROPERTYEDITOR_H

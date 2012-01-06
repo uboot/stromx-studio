@@ -20,7 +20,7 @@
 #ifndef OPERATORMODEL_H
 #define OPERATORMODEL_H
 
-#include <QAbstractListModel>
+#include <QAbstractTableModel>
 #include <QPointF>
 
 namespace stromx
@@ -31,7 +31,7 @@ namespace stromx
     }
 }
 
-class OperatorModel : public QAbstractListModel
+class OperatorModel : public QAbstractTableModel
 {
     Q_OBJECT
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
@@ -42,7 +42,9 @@ public:
     stromx::core::Operator* const op() const { return m_op; }
     
     int rowCount(const QModelIndex & index) const;
+    int columnCount(const QModelIndex & index) const;
     QVariant data(const QModelIndex & index, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
     const QPointF & pos() const { return m_pos; }
     void setPos(const QPointF & pos);

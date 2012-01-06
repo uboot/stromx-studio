@@ -80,18 +80,31 @@ QVariant OperatorLibraryModel::data(const QModelIndex& index, int role) const
     
     // index is a package
     if(id < m_package2TypeMap.size())
-        return m_index2PackageMap[id];
+    {
+        if(index.column() == 0)
+            return m_index2PackageMap[id];
+        else
+            return QVariant();
+    }
     
     // index is an operator
     unsigned int packageId = id - m_package2TypeMap.size();
     QString package = m_index2PackageMap.value(packageId, "");
-    QStringList ops = m_package2TypeMap.value(package, QStringList());
-    return ops[index.row()];
+    if(index.column() == 0)
+    {
+        QStringList ops = m_package2TypeMap.value(package, QStringList());
+        return ops[index.row()];
+    }
+    else
+    {
+        QStringList ops = m_package2VersionMap.value(package, QStringList());
+        return ops[index.row()];
+    }
 }
 
 int OperatorLibraryModel::columnCount(const QModelIndex& parent) const
 {
-    return 1;
+    return 2;
 }
 
 int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
@@ -198,6 +211,7 @@ void OperatorLibraryModel::updateOperators()
     beginResetModel();
     
     m_package2TypeMap.clear();
+    m_package2VersionMap.clear();
     m_index2PackageMap.clear();
     
     unsigned int i = 0;
@@ -208,8 +222,13 @@ void OperatorLibraryModel::updateOperators()
     {
         QString package = QString::fromStdString((*iter)->package());
         QString type = QString::fromStdString((*iter)->type());
+        QString version = QString("%1.%2.%3")
+                          .arg((*iter)->version().major())
+                          .arg((*iter)->version().minor())
+                          .arg((*iter)->version().patch());
         
         m_package2TypeMap[package].append(type);
+        m_package2VersionMap[package].append(version);
         m_index2PackageMap[i] = package;
     }
     
@@ -218,8 +237,13 @@ void OperatorLibraryModel::updateOperators()
 
 QVariant OperatorLibraryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if(orientation == Qt::Horizontal && role == Qt::DisplayRole && section == 0)
-        return tr("Operator");
+    if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    {
+        if(section == 0)
+            return tr("Operator");
+        else
+            return tr("Version");
+    }
     
     return QVariant();
 }

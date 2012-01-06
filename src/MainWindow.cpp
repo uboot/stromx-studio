@@ -57,6 +57,9 @@ MainWindow::MainWindow(QWidget *parent)
     createStatusBar();
     createDockWindows();
     
+    connect(m_streamEditor, SIGNAL(selectedModelChanged(QAbstractTableModel*)),
+            m_propertyEditor, SLOT(setModel(QAbstractTableModel*)));
+    
     splitter->addWidget(m_streamEditor);
     splitter->addWidget(m_threadEditor);
      

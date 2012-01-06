@@ -64,6 +64,7 @@ private:
     void updateOperators();
     
     QMap<QString, QStringList> m_package2TypeMap;
+    QMap<QString, QStringList> m_package2VersionMap;
     QMap<unsigned int, QString> m_index2PackageMap;
     QVector<void*> m_libraryHandles;
     QStringList m_loadedLibraries;
