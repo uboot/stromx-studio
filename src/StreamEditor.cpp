@@ -7,15 +7,13 @@
 #include "StreamEditorScene.h"
 
 StreamEditor::StreamEditor(QWidget* parent)
-  : QScrollArea(parent)
+  : QGraphicsView(parent)
 {
-    QGraphicsView* view = new QGraphicsView;
     StreamEditorScene* scene = new StreamEditorScene;
     
-    scene->setSceneRect(0, 0, 400, 400);
-    view->setScene(scene);
-    view->setAcceptDrops(true);
-    view->setDragMode(QGraphicsView::RubberBandDrag);
-    setWidget(view);
+    scene->setSceneRect(0, 0, 1024, 1024);
+    setScene(scene);
+    setAcceptDrops(true);
+    setDragMode(QGraphicsView::RubberBandDrag);
 }
 

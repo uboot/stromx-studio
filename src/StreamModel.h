@@ -1,5 +1,5 @@
 /* 
-*  Copyright 2011 Matthias Fuchs
+*  Copyright 2012 Matthias Fuchs
 *
 *  This file is part of stromx-studio.
 *
@@ -17,17 +17,19 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STREAMEDITOR_H
-#define STREAMEDITOR_H
+#ifndef STREAMMODEL_H
+#define STREAMMODEL_H
 
-#include <QGraphicsView>
+#include <QObject>
 
-class StreamEditor : public QGraphicsView
+class StreamModel : public QObject
 {
     Q_OBJECT
-
+    
 public:
-    explicit StreamEditor(QWidget *parent = 0);
+    explicit StreamModel(QObject *parent = 0);
+    
+private:
 };
 
-#endif // STREAMEDITOR_H
+#endif // STREAMMODEL_H

@@ -34,6 +34,8 @@ class QGraphicsRectItem;
 
 class OperatorItem : public QGraphicsObject
 {
+    Q_OBJECT
+    
 public:
     explicit OperatorItem(QGraphicsItem * parent = 0);
     virtual ~OperatorItem();

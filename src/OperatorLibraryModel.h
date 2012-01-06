@@ -36,6 +36,8 @@ namespace stromx
 
 class OperatorLibraryModel : public QAbstractItemModel
 {
+    Q_OBJECT
+    
 public:
     friend class OperatorLibraryModelTest;
     
