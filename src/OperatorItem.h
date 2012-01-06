@@ -37,7 +37,7 @@ public:
     
 private:
     OperatorModel* m_op;
-    QGraphicsRectItem* m_rectItem;
+    QGraphicsRectItem* m_opRect;
 };
 
 #endif // OPERATORITEM_H
