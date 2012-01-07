@@ -76,14 +76,14 @@ void OperatorModel::setPos(const QPointF& pos)
     }
 }
 
-bool OperatorModel::initialized() const
+bool OperatorModel::isInitialized() const
 {
     return m_op->status() != stromx::core::Operator::NONE;
 }
 
 void OperatorModel::setInitialized(bool status)
 {
-    if(initialized() == status)
+    if(isInitialized() == status)
         return;
    
     beginResetModel();
@@ -92,6 +92,6 @@ void OperatorModel::setInitialized(bool status)
     
     endResetModel();
     
-    emit initializedChanged(initialized());
+    emit initializedChanged(isInitialized());
 }
 
