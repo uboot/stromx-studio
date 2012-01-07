@@ -1,8 +1,10 @@
 #include "StreamEditorScene.h"
 
+#include <QAction>
 #include <QGraphicsSceneDragDropEvent>
 #include <stromx/core/Operator.h>
 #include "OperatorItem.h"
+#include "OperatorModel.h"
 #include "StreamModel.h"
 #include "StromxData.h"
 
@@ -13,6 +15,7 @@ StreamEditorScene::StreamEditorScene(QObject* parent)
     m_model = new StreamModel(this);
     
     connect(m_model, SIGNAL(operatorAdded(OperatorModel*)), this, SLOT(addOperator(OperatorModel*)));
+    connect(this, SIGNAL(selectionChanged()), this, SLOT(showSelectedModel()));
 }
 
 void StreamEditorScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
@@ -55,10 +58,39 @@ void StreamEditorScene::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
     }
 }
 
+QAction* StreamEditorScene::createInitializeAction(QObject* parent)
+{
+    QAction* action = new QAction(tr("Initialize"), parent);
+    action->setStatusTip(tr("Initialize the selected operators"));
+    connect(action, SIGNAL(triggered()), this, SLOT(initialize()));
+    connect(this, SIGNAL(initializeEnabledChanged(bool)), action, SLOT(setEnabled(bool)));
+    
+    return action;
+}
+
 void StreamEditorScene::addOperator(OperatorModel* op)
 {
     OperatorItem* opItem = new OperatorItem(op);
     addItem(opItem);
+}
+
+void StreamEditorScene::initialize()
+{
+
+}
+
+void StreamEditorScene::showSelectedModel()
+{
+    if(selectedItems().size() == 1)
+    {
+        if(OperatorItem* item = qgraphicsitem_cast<OperatorItem*>(selectedItems()[0]))
+        {
+            emit selectedModelChanged(item->op());
+            return;
+        }
+    }
+    
+    emit selectedModelChanged(0);
 }
 
 

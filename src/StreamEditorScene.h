@@ -22,6 +22,8 @@
 
 #include <QGraphicsScene>
 
+class QAction;
+class QAbstractTableModel;
 class QGraphicsSceneDragDropEvent;
 class OperatorModel;
 class StreamModel;
@@ -37,8 +39,16 @@ public:
     virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event);
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
     
-public slots:
+    QAction* createInitializeAction(QObject* parent);
+    
+signals:
+    void initializeEnabledChanged(bool enabled);
+    void selectedModelChanged(QAbstractTableModel* model);
+    
+private slots:
+    void showSelectedModel();
     void addOperator(OperatorModel* op);
+    void initialize();
     
 private:
     StreamModel* m_model;

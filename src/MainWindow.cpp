@@ -36,6 +36,7 @@
 #include "OperatorLibraryModel.h"
 #include "PropertyEditor.h"
 #include "StreamEditor.h"
+#include "StreamEditorScene.h"
 #include "ThreadEditor.h"
 #include "Exception.h"
 
@@ -57,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent)
     createStatusBar();
     createDockWindows();
     
-    connect(m_streamEditor, SIGNAL(selectedModelChanged(QAbstractTableModel*)),
+    connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractTableModel*)),
             m_propertyEditor, SLOT(setModel(QAbstractTableModel*)));
     
     splitter->addWidget(m_streamEditor);
@@ -80,57 +81,57 @@ MainWindow::~MainWindow()
 
 void MainWindow::createActions()
 {
-     m_undoAct = m_undoStack->createUndoAction(this);
-     m_redoAct = m_undoStack->createRedoAction(this);
-     
-     m_saveAct = new QAction(tr("&Save"), this);
-     m_saveAct->setShortcuts(QKeySequence::Save);
-     m_saveAct->setStatusTip(tr("Save the current stream"));
-     connect(m_saveAct, SIGNAL(triggered()), this, SLOT(save()));
-     
-     m_saveAsAct = new QAction(tr("Save &As..."), this);
-     m_saveAsAct->setShortcuts(QKeySequence::SaveAs);
-     m_saveAsAct->setStatusTip(tr("Save the current stream as"));
-     connect(m_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
-     
-     m_openAct = new QAction(tr("&Open..."), this);
-     m_openAct->setShortcuts(QKeySequence::Open);
-     m_openAct->setStatusTip(tr("Open a stream"));
-     connect(m_openAct, SIGNAL(triggered()), this, SLOT(open()));
-     
-     m_closeAct = new QAction(tr("&Close"), this);
-     m_closeAct->setShortcuts(QKeySequence::Close);
-     m_closeAct->setStatusTip(tr("Close the current stream"));
-     connect(m_closeAct, SIGNAL(triggered()), this, SLOT(closeStream()));
-     
-     m_loadLibrariesAct = new QAction(tr("&Load Libraries..."), this);
-     m_loadLibrariesAct->setStatusTip(tr("Load operator libraries"));
-     connect(m_loadLibrariesAct, SIGNAL(triggered()), this, SLOT(loadLibraries()));
-     
-     m_resetLibrariesAct = new QAction(tr("&Reset Libraries..."), this);
-     m_resetLibrariesAct->setStatusTip(tr("Reset operator libraries"));
-     connect(m_resetLibrariesAct, SIGNAL(triggered()), this, SLOT(resetLibraries()));
+    m_undoAct = m_undoStack->createUndoAction(this);
+    m_redoAct = m_undoStack->createRedoAction(this);
 
-     m_quitAct = new QAction(tr("&Quit"), this);
-     m_quitAct->setShortcuts(QKeySequence::Quit);
-     m_quitAct->setStatusTip(tr("Quit the application"));
-     connect(m_quitAct, SIGNAL(triggered()), this, SLOT(close()));
+    m_saveAct = new QAction(tr("&Save"), this);
+    m_saveAct->setShortcuts(QKeySequence::Save);
+    m_saveAct->setStatusTip(tr("Save the current stream"));
+    connect(m_saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
-     m_startAct = new QAction(QIcon(":/images/start.png"), tr("Start"), this);
-     m_startAct->setStatusTip(tr("Start the stream"));
-     connect(m_startAct, SIGNAL(triggered()), this, SLOT(start()));
+    m_saveAsAct = new QAction(tr("Save &As..."), this);
+    m_saveAsAct->setShortcuts(QKeySequence::SaveAs);
+    m_saveAsAct->setStatusTip(tr("Save the current stream as"));
+    connect(m_saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
-     m_stopAct = new QAction(QIcon(":/images/stop.png"), tr("Stop"), this);
-     m_stopAct->setStatusTip(tr("Stop the stream"));
-     connect(m_stopAct, SIGNAL(triggered()), this, SLOT(stop()));
+    m_openAct = new QAction(tr("&Open..."), this);
+    m_openAct->setShortcuts(QKeySequence::Open);
+    m_openAct->setStatusTip(tr("Open a stream"));
+    connect(m_openAct, SIGNAL(triggered()), this, SLOT(open()));
 
-     m_aboutAct = new QAction(tr("&About"), this);
-     m_aboutAct->setStatusTip(tr("Show the application's About box"));
-     connect(m_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+    m_closeAct = new QAction(tr("&Close"), this);
+    m_closeAct->setShortcuts(QKeySequence::Close);
+    m_closeAct->setStatusTip(tr("Close the current stream"));
+    connect(m_closeAct, SIGNAL(triggered()), this, SLOT(closeStream()));
 
-     m_aboutQtAct = new QAction(tr("About &Qt"), this);
-     m_aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
-     connect(m_aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    m_loadLibrariesAct = new QAction(tr("&Load Libraries..."), this);
+    m_loadLibrariesAct->setStatusTip(tr("Load operator libraries"));
+    connect(m_loadLibrariesAct, SIGNAL(triggered()), this, SLOT(loadLibraries()));
+
+    m_resetLibrariesAct = new QAction(tr("&Reset Libraries..."), this);
+    m_resetLibrariesAct->setStatusTip(tr("Reset operator libraries"));
+    connect(m_resetLibrariesAct, SIGNAL(triggered()), this, SLOT(resetLibraries()));
+
+    m_quitAct = new QAction(tr("&Quit"), this);
+    m_quitAct->setShortcuts(QKeySequence::Quit);
+    m_quitAct->setStatusTip(tr("Quit the application"));
+    connect(m_quitAct, SIGNAL(triggered()), this, SLOT(close()));
+
+    m_startAct = new QAction(QIcon(":/images/start.png"), tr("Start"), this);
+    m_startAct->setStatusTip(tr("Start the stream"));
+    connect(m_startAct, SIGNAL(triggered()), this, SLOT(start()));
+
+    m_stopAct = new QAction(QIcon(":/images/stop.png"), tr("Stop"), this);
+    m_stopAct->setStatusTip(tr("Stop the stream"));
+    connect(m_stopAct, SIGNAL(triggered()), this, SLOT(stop()));
+
+    m_aboutAct = new QAction(tr("&About"), this);
+    m_aboutAct->setStatusTip(tr("Show the application's About box"));
+    connect(m_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+
+    m_aboutQtAct = new QAction(tr("About &Qt"), this);
+    m_aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
+    connect(m_aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
 void MainWindow::createDockWindows()

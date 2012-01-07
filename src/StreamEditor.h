@@ -22,7 +22,6 @@
 
 #include <QGraphicsView>
 
-class QAbstractTableModel;
 class StreamEditorScene;
 
 class StreamEditor : public QGraphicsView
@@ -32,11 +31,7 @@ class StreamEditor : public QGraphicsView
 public:
     explicit StreamEditor(QWidget *parent = 0);
     
-signals:
-    void selectedModelChanged(QAbstractTableModel* model);
-    
-private slots:
-    void showSelectedModel();
+    StreamEditorScene* scene() const { return m_scene; }
     
 private:
     StreamEditorScene* m_scene;
