@@ -76,6 +76,7 @@ private:
     QAction* m_aboutQtAct;
     QAction* m_startAct;
     QAction* m_stopAct;
+    QAction* m_initializeAct;
     
     QUndoStack* m_undoStack;
     
@@ -83,6 +84,7 @@ private:
     QMenu* m_editMenu;
     QMenu* m_viewMenu;
     QMenu* m_helpMenu;
+    QMenu* m_streamMenu;
     
     QToolBar* m_streamToolBar;
     

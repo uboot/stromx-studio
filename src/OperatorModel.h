@@ -35,6 +35,7 @@ class OperatorModel : public QAbstractTableModel
 {
     Q_OBJECT
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
+    Q_PROPERTY(bool initialized READ initialized WRITE setInitialized)
     
 public:
     explicit OperatorModel(stromx::core::Operator* const op, QObject *parent = 0);
@@ -49,8 +50,12 @@ public:
     const QPointF & pos() const { return m_pos; }
     void setPos(const QPointF & pos);
     
+    bool initialized() const;
+    void setInitialized(bool initialized);
+    
 signals:
     void posChanged(const QPointF & pos);
+    void initializedChanged(bool status);
     
 private:
     stromx::core::Operator* m_op;

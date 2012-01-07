@@ -83,6 +83,7 @@ void MainWindow::createActions()
 {
     m_undoAct = m_undoStack->createUndoAction(this);
     m_redoAct = m_undoStack->createRedoAction(this);
+    m_initializeAct = m_streamEditor->scene()->createInitializeAction(this);
 
     m_saveAct = new QAction(tr("&Save"), this);
     m_saveAct->setShortcuts(QKeySequence::Save);
@@ -154,6 +155,9 @@ void MainWindow::createMenus()
      m_editMenu = menuBar()->addMenu(tr("&Edit"));
      m_editMenu->addAction(m_undoAct);
      m_editMenu->addAction(m_redoAct);
+     
+     m_streamMenu = menuBar()->addMenu(tr("&Stream"));
+     m_streamMenu->addAction(m_initializeAct);
 
      m_viewMenu = menuBar()->addMenu(tr("&View"));
 

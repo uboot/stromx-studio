@@ -10,7 +10,7 @@ OperatorModel::OperatorModel(stromx::core::Operator* const op, QObject* parent)
 
 int OperatorModel::rowCount(const QModelIndex& index) const
 {
-    return 1;
+    return 2;
 }
 
 int OperatorModel::columnCount(const QModelIndex& index) const
@@ -38,10 +38,30 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     
     if(m_op)
     {
-        if(index.column() == 0)
-            return tr("Type");
+        if(index.row() == 0)
+        {
+            if(index.column() == 0)
+                return tr("Type");
+            else
+                return QVariant(QString::fromStdString(m_op->info().type()));
+        }
         else
-            return QVariant(QString::fromStdString(m_op->info().type()));
+        {
+            if(index.column() == 0)
+            {
+                return tr("Status");
+            }
+            else
+            {
+                switch(m_op->status())
+                {
+                case stromx::core::Operator::NONE:
+                    return QVariant(tr("None"));
+                default:
+                    return QVariant(tr("Initialized"));
+                }
+            }
+        }
     }
     
     return QVariant();
@@ -55,3 +75,23 @@ void OperatorModel::setPos(const QPointF& pos)
         emit posChanged(m_pos);
     }
 }
+
+bool OperatorModel::initialized() const
+{
+    return m_op->status() != stromx::core::Operator::NONE;
+}
+
+void OperatorModel::setInitialized(bool status)
+{
+    if(initialized() == status)
+        return;
+   
+    beginResetModel();
+    if(status == true)
+        m_op->initialize();
+    
+    endResetModel();
+    
+    emit initializedChanged(initialized());
+}
+

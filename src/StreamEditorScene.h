@@ -47,6 +47,7 @@ signals:
     
 private slots:
     void showSelectedModel();
+    void enableInitializeAction();
     void addOperator(OperatorModel* op);
     void initialize();
     

@@ -16,6 +16,7 @@ StreamEditorScene::StreamEditorScene(QObject* parent)
     
     connect(m_model, SIGNAL(operatorAdded(OperatorModel*)), this, SLOT(addOperator(OperatorModel*)));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(showSelectedModel()));
+    connect(this, SIGNAL(selectionChanged()), this, SLOT(enableInitializeAction()));
 }
 
 void StreamEditorScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
@@ -62,6 +63,8 @@ QAction* StreamEditorScene::createInitializeAction(QObject* parent)
 {
     QAction* action = new QAction(tr("Initialize"), parent);
     action->setStatusTip(tr("Initialize the selected operators"));
+    action->setShortcut(tr("Ctrl+I"));
+    action->setEnabled(false);
     connect(action, SIGNAL(triggered()), this, SLOT(initialize()));
     connect(this, SIGNAL(initializeEnabledChanged(bool)), action, SLOT(setEnabled(bool)));
     
@@ -75,7 +78,13 @@ void StreamEditorScene::addOperator(OperatorModel* op)
 }
 
 void StreamEditorScene::initialize()
-{
+{    
+    QGraphicsItem* item = 0;
+    foreach(item, selectedItems())
+    {
+        if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
+            opItem->op()->setInitialized(true);
+    }
 
 }
 
@@ -92,5 +101,26 @@ void StreamEditorScene::showSelectedModel()
     
     emit selectedModelChanged(0);
 }
+
+void StreamEditorScene::enableInitializeAction()
+{
+    if(selectedItems().size() == 0)
+    {
+        emit initializeEnabledChanged(false);
+        return;
+    }
+        
+    bool selectionIsValid = true;
+    
+    QGraphicsItem* item = 0;
+    foreach(item, selectedItems())
+    {
+        if(! qgraphicsitem_cast<OperatorItem*>(item))
+            selectionIsValid = false;
+    }
+    
+    emit initializeEnabledChanged(selectionIsValid);
+}
+
 
 
