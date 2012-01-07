@@ -24,12 +24,16 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
     QSettings settings("stromx", "stromx-studio");
     QStringList loadedLibraries = settings.value("loadedLibraries").toStringList();
     
-    try
+    QString file;
+    foreach(file, loadedLibraries)
     {
-        loadLibraries(loadedLibraries);
-    }
-    catch(LoadLibrariesFailed&)
-    {
+        try
+        {
+            loadLibrary(file);
+        }
+        catch(LoadLibraryFailed&)
+        {
+        }
     }
 }
 
@@ -132,73 +136,55 @@ int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
     return 0;
 }
 
-void OperatorLibraryModel::loadLibraries(const QStringList& libraries)
+void OperatorLibraryModel::loadLibrary(const QString& library)
 {
-    QStringList failedLibraries;
+    QFileInfo info(library);
     
-    for(QStringList::const_iterator iter = libraries.begin();
-        iter != libraries.end();
-        ++iter)
-    {
-        QFileInfo info(*iter);
-        
-        QRegExp regEx("libstromx_(.+)");
-        if(regEx.indexIn(info.baseName()) == -1)
-        {
-            failedLibraries.append(*iter);
-            continue;
-        }
-        
-        QString registrationFunctionName = regEx.cap(1);
-        registrationFunctionName[0] = registrationFunctionName[0].toUpper();
-        registrationFunctionName.prepend("stromxRegister");
-        
-        void* libHandle;
-        void (*registrationFunction)(stromx::core::Registry& registry);
-        char* error;
-        
-        libHandle = dlopen((*iter).toStdString().c_str(), RTLD_LAZY);
-        
-        if (!libHandle)
-        {
-            failedLibraries.append(*iter);
-            continue;
-        }
+    QRegExp regEx("libstromx_(.+)");
+    if(regEx.indexIn(info.baseName()) == -1)
+        throw LoadLibraryFailed();
+    
+    QString registrationFunctionName = regEx.cap(1);
+    registrationFunctionName[0] = registrationFunctionName[0].toUpper();
+    registrationFunctionName.prepend("stromxRegister");
+    
+    void* libHandle;
+    void (*registrationFunction)(stromx::core::Registry& registry);
+    char* error;
+    
+    libHandle = dlopen(library.toStdString().c_str(), RTLD_LAZY);
+    
+    if (!libHandle)
+        throw LoadLibraryFailed();
 
-        registrationFunction = reinterpret_cast<void (*)(stromx::core::Registry& registry)>
-            (dlsym(libHandle, registrationFunctionName.toStdString().c_str()));
-            
-        if ((error = dlerror()) != NULL) 
-        {
-            failedLibraries.append(*iter);
-            dlclose(libHandle);
-            continue;
-        } 
+    registrationFunction = reinterpret_cast<void (*)(stromx::core::Registry& registry)>
+        (dlsym(libHandle, registrationFunctionName.toStdString().c_str()));
         
-        // store library handle to unload the library after use
-        m_libraryHandles.append(libHandle);
-        
-        // try to register the library
-        try
-        {
-            (*registrationFunction)(*m_factory);
-        }
-        catch(stromx::core::Exception&)
-        {
-            // even if an exception was thrown, parts of the library might 
-            // have been loaded
-            failedLibraries.append(*iter);
-            continue;
-        }
-        
-        // remember the library
-        m_loadedLibraries.append(*iter);
+    if ((error = dlerror()) != NULL) 
+    {
+        dlclose(libHandle);
+        throw LoadLibraryFailed();
+    } 
+    
+    // store library handle to unload the library after use
+    m_libraryHandles.append(libHandle);
+    
+    // try to register the library
+    try
+    {
+        (*registrationFunction)(*m_factory);
     }
+    catch(stromx::core::Exception&)
+    {
+        // even if an exception was thrown, parts of the library might have been loaded
+        // therefore the library is not closed
+        throw LoadLibraryFailed();
+    }
+    
+    // remember the library
+    m_loadedLibraries.append(library);
         
     updateOperators();
-    
-    if(failedLibraries.size())
-        throw LoadLibrariesFailed(failedLibraries);
 }
 
 void OperatorLibraryModel::resetLibraries()

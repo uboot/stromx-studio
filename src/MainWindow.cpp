@@ -235,16 +235,18 @@ void MainWindow::loadLibraries()
                             lastDir,
                             tr("libraries (*.so)")); 
     
-    // try to load libraries
-    try
+    // load each library
+    QString file;
+    foreach(file, files)
     {
-        m_operatorLibrary->model()->loadLibraries(files);
-    }
-    catch(LoadLibrariesFailed & e)
-    {
-        QString library;
-        foreach(library, e.libraries())
-            std::cout << "Failed to load '" << library.toStdString() << "'" << std::endl;
+        try
+        {
+            m_operatorLibrary->model()->loadLibrary(file);
+        }
+        catch(LoadLibraryFailed & e)
+        {
+            std::cout << "Failed to load '" << file.toStdString() << "'" << std::endl;
+        }
     }
     
     // remember the last directory

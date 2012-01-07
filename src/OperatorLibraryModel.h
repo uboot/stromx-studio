@@ -57,7 +57,7 @@ public:
     virtual const bool isOperator(const QModelIndex & index) const;
     virtual stromx::core::Operator* newOperator(const QModelIndex & index) const;
     
-    void loadLibraries(const QStringList & libraries);
+    void loadLibrary(const QString& library);
     void resetLibraries();
     
     

@@ -15,9 +15,8 @@ void OperatorLibraryModelTest::setUp()
     m_model = new OperatorLibraryModel();
     m_model->resetLibraries();
     
-    QStringList libraries;
-    libraries << STROMX_BASE_LIBRARY;
-    CPPUNIT_ASSERT_NO_THROW(m_model->loadLibraries(libraries));
+    QString library(STROMX_BASE_LIBRARY);
+    CPPUNIT_ASSERT_NO_THROW(m_model->loadLibrary(library));
 }
 
 void OperatorLibraryModelTest::tearDown()
@@ -25,39 +24,28 @@ void OperatorLibraryModelTest::tearDown()
     delete m_model;
 }
 
-void OperatorLibraryModelTest::testLoadLibraries()
+void OperatorLibraryModelTest::testLoadLibrary()
 {
     m_model->resetLibraries();
     
-    QStringList libraries;
-    libraries << STROMX_BASE_LIBRARY;
-    CPPUNIT_ASSERT_NO_THROW(m_model->loadLibraries(libraries));
+    QString library(STROMX_BASE_LIBRARY);
+    CPPUNIT_ASSERT_NO_THROW(m_model->loadLibrary(library));
     
     CPPUNIT_ASSERT_EQUAL((unsigned int)(12), (unsigned int)(m_model->m_factory->availableOperators().size()));
     CPPUNIT_ASSERT_EQUAL(11, m_model->rowCount(m_model->createIndex(1, 0, 1)));
 }
 
-void OperatorLibraryModelTest::testLoadLibrariesDoubleData()
+void OperatorLibraryModelTest::testLoadLibraryDoubleData()
 {
-    QStringList libraries;
-    libraries << STROMX_BASE_LIBRARY;
-    CPPUNIT_ASSERT_THROW(m_model->loadLibraries(libraries), LoadLibrariesFailed);
+    QString library(STROMX_BASE_LIBRARY);
+    CPPUNIT_ASSERT_THROW(m_model->loadLibrary(library), LoadLibraryFailed);
 }
 
-void OperatorLibraryModelTest::testLoadLibrariesWrongFile()
+void OperatorLibraryModelTest::testLoadLibraryWrongFile()
 {
-    QStringList libraries;
-    libraries << "/stupid_path_to/wrong_library.so";
+    QString library("/stupid_path_to/wrong_library.so");
     
-    try
-    {
-        m_model->loadLibraries(libraries);
-    }
-    catch(LoadLibrariesFailed & e)
-    {
-        CPPUNIT_ASSERT_EQUAL(int(1), int(e.libraries().size()));
-        CPPUNIT_ASSERT_EQUAL(libraries[0].toStdString(), e.libraries()[0].toStdString());
-    }
+    CPPUNIT_ASSERT_THROW(m_model->loadLibrary(library), LoadLibraryFailed);
 }
 
 void OperatorLibraryModelTest::testRowCount()

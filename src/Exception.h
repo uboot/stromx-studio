@@ -32,31 +32,23 @@ public:
     virtual ~Exception() throw() {}
     
     /** Returns a description of the exception. */
-    virtual const char* what() const throw() { return m_message.c_str(); }
+    virtual const char* what() const throw() { return m_message.toStdString().c_str(); }
     
 protected:
     /** Constructs an exception. */
-    Exception(const std::string & message) : m_message(message) {}
+    Exception(const QString & message) : m_message(message) {}
                 
 private:
-    std::string m_message; 
+    QString m_message; 
 };  
 
-/** \brief Failed to load an operator libraries. */
-class LoadLibrariesFailed : public Exception
+/** \brief Failed to load an operator library. */
+class LoadLibraryFailed : public Exception
 {
 public:
-    LoadLibrariesFailed(const QStringList & libraries, const QString & message = "LoadLibrariesFailed")
-      : Exception(message.toStdString()),
-        m_libraries(libraries)
+    LoadLibraryFailed(const QString & message = "LoadLibraryFailed")
+      : Exception(message)
     {}
-    
-    virtual ~LoadLibrariesFailed() throw() {}
-    
-    const QStringList & libraries() const { return m_libraries; }
-    
-private:
-    const QStringList m_libraries;
 }; 
 
 
