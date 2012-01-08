@@ -17,39 +17,23 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OPERATORITEM_H
-#define OPERATORITEM_H
+#ifndef CONNECTORITEM_H
+#define CONNECTORITEM_H
 
-#include <QGraphicsObject>
+#include <QGraphicsRectItem>
 
-class QGraphicsRectItem;
-class ConnectorItem;
-class OperatorModel;
-
-class OperatorItem : public QGraphicsObject
+class ConnectorItem : public QGraphicsRectItem
 {
-    Q_OBJECT
-    
 public:
-    explicit OperatorItem(OperatorModel* op, QGraphicsItem * parent = 0);
-    
-    OperatorModel* op() const { return m_op; }
-    
-    virtual QRectF boundingRect() const;
-    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
-    
-public slots:
-    void setInitialized(bool value);
+    explicit ConnectorItem(QGraphicsItem * parent = 0);
+
+protected:
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
     
 private:
-    void initialize();
-    void deinitialize();
-    
-    OperatorModel* m_op;
-    QGraphicsRectItem* m_opRect;
-    
-    QList<ConnectorItem*> m_inputs;
-    QList<ConnectorItem*> m_outputs;
+    QGraphicsLineItem* m_currentConnection;
 };
 
-#endif // OPERATORITEM_H
+#endif // CONNECTORITEM_H

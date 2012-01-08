@@ -1,4 +1,5 @@
 set(stromxstudio_SOURCES
+    ConnectorItem.cpp
     main.cpp
     MainWindow.cpp
     ObserverEditor.cpp
