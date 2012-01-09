@@ -38,7 +38,7 @@ class OperatorModel : public QAbstractTableModel
     Q_PROPERTY(bool initialized READ isInitialized WRITE setInitialized)
     
 public:
-    explicit OperatorModel(stromx::core::Operator* const op, QObject *parent = 0);
+    explicit OperatorModel(stromx::core::Operator* op, QObject *parent = 0);
     
     stromx::core::Operator* const op() const { return m_op; }
     

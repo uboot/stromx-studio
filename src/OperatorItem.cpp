@@ -14,6 +14,7 @@ OperatorItem::OperatorItem(OperatorModel* op, QGraphicsItem * parent)
     setPos(m_op->pos());
     
     QGraphicsTextItem* label = new QGraphicsTextItem(this);
+    label->setPos(0, 55);
     label->setPlainText(QString::fromStdString(m_op->op()->info().type()));
     
     setFlag(ItemIsMovable, true);
@@ -60,7 +61,7 @@ void OperatorItem::initialize()
         iter != inputs.end();
         ++iter, ++i)
     {
-        ConnectorItem* inputItem = new ConnectorItem(this);
+        ConnectorItem* inputItem = new ConnectorItem(ConnectorItem::INPUT, this);
         inputItem->setPos(0, i * 10);
         
         m_inputs.append(inputItem);
@@ -72,7 +73,7 @@ void OperatorItem::initialize()
         iter != outputs.end();
         ++iter, ++i)
     {
-        ConnectorItem* outputItem = new ConnectorItem(this);
+        ConnectorItem* outputItem = new ConnectorItem(ConnectorItem::OUTPUT, this);
         outputItem->setPos(40, i * 10);
         
         m_outputs.append(outputItem);

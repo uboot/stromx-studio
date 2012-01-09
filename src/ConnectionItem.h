@@ -17,34 +17,15 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONNECTORITEM_H
-#define CONNECTORITEM_H
+#ifndef CONNECTIONITEM_H
+#define CONNECTIONITEM_H
 
-#include <QGraphicsRectItem>
+#include <QGraphicsLineItem>
 
-class ConnectionItem;
-
-class ConnectorItem : public QGraphicsRectItem
+class ConnectionItem : public QGraphicsLineItem
 {
 public:
-    enum ConnectorType
-    {
-        INPUT,
-        OUTPUT
-    };
-    
-    explicit ConnectorItem(ConnectorType type, QGraphicsItem * parent = 0);
-    
-    ConnectorType connectorType() const { return m_connectorType; }
-
-protected:
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
-    
-private:
-    ConnectorType m_connectorType;
-    ConnectionItem* m_currentConnection;
+    explicit ConnectionItem(qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem * parent = 0);
 };
 
-#endif // CONNECTORITEM_H
+#endif // CONNECTIONITEM_H

@@ -1,7 +1,7 @@
 #include "OperatorModel.h"
 #include <stromx/core/Operator.h>
 
-OperatorModel::OperatorModel(stromx::core::Operator* const op, QObject* parent)
+OperatorModel::OperatorModel(stromx::core::Operator* op, QObject* parent)
   : QAbstractTableModel(parent),
     m_op(op)
 {
@@ -87,6 +87,7 @@ void OperatorModel::setInitialized(bool status)
         return;
    
     beginResetModel();
+    
     if(status == true)
         m_op->initialize();
     

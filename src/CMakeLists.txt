@@ -1,4 +1,5 @@
 set(stromxstudio_SOURCES
+    ConnectionItem.cpp
     ConnectorItem.cpp
     main.cpp
     MainWindow.cpp
