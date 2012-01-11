@@ -1,6 +1,7 @@
 set(stromxstudio_SOURCES
     ConnectionItem.cpp
     ConnectorItem.cpp
+    ConnectionModel.cpp
     main.cpp
     MainWindow.cpp
     ObserverEditor.cpp
@@ -18,6 +19,7 @@ set(stromxstudio_SOURCES
 )
 
 set(stromxstudio_HEADERS
+    ConnectionModel.h
     MainWindow.h
     ObserverEditor.h
     OperatorItem.h

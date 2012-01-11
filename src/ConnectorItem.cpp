@@ -14,33 +14,47 @@ ConnectorItem::ConnectorItem(ConnectorType type, QGraphicsItem* parent)
 
 void ConnectorItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-    QPointF start(5, 5);
-    QPointF end(mapFromScene(event->scenePos()));
-    m_currentConnection = new ConnectionItem(start.x(), start.y(), end.x(), end.y(), this);
+    if(m_connectorType == INPUT)
+    {
+        QPointF end(5, 5);
+        QPointF start(mapFromScene(event->scenePos()));
+        m_currentConnection = new ConnectionItem(start, end, this);
+    }
+    else
+    {
+        QPointF start(5, 5);
+        QPointF end(mapFromScene(event->scenePos()));
+        m_currentConnection = new ConnectionItem(start, end, this);
+    }
 }
 
 void ConnectorItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     if(m_currentConnection)
     {
-        QPointF start(m_currentConnection->line().p1());
-        QPointF end(mapFromScene(event->scenePos()));
-        m_currentConnection->setLine(start.x(), start.y(), end.x(), end.y());
-        
-        QGraphicsItem* item = scene()->itemAt(event->scenePos());
-        if(ConnectorItem* connectorItem = qgraphicsitem_cast<ConnectorItem*>(item))
+        if(m_connectorType == INPUT)
         {
-            if(connectorType() != connectorItem->connectorType())
-                m_currentConnection->setPen(QPen(Qt::red));
+            QPointF start(mapFromScene(event->scenePos()));
+            m_currentConnection->setStart(start);
         }
         else
         {
-            m_currentConnection->setPen(QPen(Qt::black));
+            QPointF end(mapFromScene(event->scenePos()));
+            m_currentConnection->setEnd(end);
         }
-    }
-    else
-    {
-        QGraphicsItem::mouseMoveEvent(event);
+        
+        QGraphicsItem* item = scene()->itemAt(event->scenePos(), QTransform());
+        if(ConnectorItem* connectorItem = qgraphicsitem_cast<ConnectorItem*>(item))
+        {
+            if(connectorType() != connectorItem->connectorType())
+                m_currentConnection->setActive(true);
+            else
+                m_currentConnection->setActive(false);
+        }
+        else
+        {
+            m_currentConnection->setActive(false);
+        }
     }
 }
 

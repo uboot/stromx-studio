@@ -25,7 +25,22 @@
 class ConnectionItem : public QGraphicsLineItem
 {
 public:
-    explicit ConnectionItem(qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem * parent = 0);
+    explicit ConnectionItem(QPointF start, QPointF end, QGraphicsItem * parent = 0);
+    
+    enum { Type = UserType + 2 };
+    virtual int type() const { return Type; }
+    
+    void setStart(const QPointF & start);
+    void setEnd(const QPointF & end);
+    
+    void setActive(bool value);
+    
+    
+private:
+    void rotateHead();
+    
+    QGraphicsLineItem* m_head1;
+    QGraphicsLineItem* m_head2;
 };
 
 #endif // CONNECTIONITEM_H

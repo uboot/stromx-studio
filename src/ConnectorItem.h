@@ -33,6 +33,9 @@ public:
         OUTPUT
     };
     
+    enum { Type = UserType + 3 };
+    virtual int type() const { return Type; }
+    
     explicit ConnectorItem(ConnectorType type, QGraphicsItem * parent = 0);
     
     ConnectorType connectorType() const { return m_connectorType; }
@@ -43,6 +46,7 @@ protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
     
 private:
+    
     ConnectorType m_connectorType;
     ConnectionItem* m_currentConnection;
 };

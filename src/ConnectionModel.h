@@ -17,41 +17,38 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STREAMMODEL_H
-#define STREAMMODEL_H
+#ifndef CONNECTIONMODEL_H
+#define CONNECTIONMODEL_H
 
-#include <QObject>
-#include <QPointF>
+#include <QAbstractTableModel>
 
-namespace stromx
-{
-    namespace core
-    { 
-        class Stream;
-        class Operator;
-    }
-}
-
-class ConnectionModel;
 class OperatorModel;
+class StreamModel;
+class ThreadModel;
 
-class StreamModel : public QObject
+class ConnectionModel : public QAbstractTableModel
 {
     Q_OBJECT
+    Q_PROPERTY(ThreadModel* thread READ thread WRITE setThread)
     
 public:
-    explicit StreamModel(QObject *parent = 0);
+    explicit ConnectionModel(OperatorModel* op, unsigned int id, StreamModel * parent = 0);
     
-    void addOperator(stromx::core::Operator* const op, const QPointF & pos);
-    void addConnection(OperatorModel* sourceOp, unsigned int outputId,
-                       OperatorModel* targetOp, unsigned int inputId);
+    int rowCount(const QModelIndex & index) const;
+    int columnCount(const QModelIndex & index) const;
+    QVariant data(const QModelIndex & index, int role) const;
+    
+    ThreadModel* thread() const { return m_thread; }
+    void setThread(ThreadModel* thread);
     
 signals:
-    void operatorAdded(OperatorModel* op);
-    void connectionAdded(ConnectionModel* connection);
+    void threadChanged(ThreadModel* thread);
     
 private:
-    stromx::core::Stream* m_stream;
+    OperatorModel* m_op;
+    unsigned int m_id;
+    StreamModel* m_stream;
+    ThreadModel* m_thread;
 };
 
-#endif // STREAMMODEL_H
+#endif // CONNECTIONMODEL_H
