@@ -3,6 +3,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include "ConnectionItem.h"
+#include <iostream>
 
 ConnectorItem::ConnectorItem(ConnectorType type, QGraphicsItem* parent)
   : QGraphicsRectItem(parent),
@@ -43,8 +44,18 @@ void ConnectorItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             m_currentConnection->setEnd(end);
         }
         
-        QGraphicsItem* item = scene()->itemAt(event->scenePos(), QTransform());
-        if(ConnectorItem* connectorItem = qgraphicsitem_cast<ConnectorItem*>(item))
+        QList<QGraphicsItem*> items = scene()->items(event->scenePos());
+        
+        QGraphicsItem* item = 0;
+        ConnectorItem* connectorItem = 0;
+        
+        foreach(item, items)
+        {
+            if(connectorItem = qgraphicsitem_cast<ConnectorItem*>(item))
+                break;
+        }
+            
+        if(connectorItem)
         {
             if(connectorType() != connectorItem->connectorType())
                 m_currentConnection->setActive(true);
