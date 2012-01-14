@@ -195,12 +195,17 @@ void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
     {    
         QGraphicsItem* item = 0;
         foreach(item, selectedItems())
-        {        
-            if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
-                m_model->removeOperator(opItem->model());
-        
-            if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
-                m_model->removeConnection(connectionItem->model());
+        { 
+            // items have been deleted because they were dependent on other deleted items
+            // check the existence of each item separately           
+            if(items().contains(item))
+            {
+                if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
+                    m_model->removeOperator(opItem->model());
+            
+                if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
+                    m_model->removeConnection(connectionItem->model());
+            }
         }
     }
     else
@@ -211,7 +216,8 @@ void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
 
 void StreamEditorScene::removeOperator(OperatorModel* op)
 {
-
+    if(OperatorItem* item = findOperatorItem(op))
+        delete item;
 }
 
 void StreamEditorScene::removeConnection(ConnectionModel* connection)

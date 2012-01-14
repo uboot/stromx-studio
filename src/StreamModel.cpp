@@ -32,7 +32,12 @@ void StreamModel::addConnection(OperatorModel* sourceOp, unsigned int outputId,
 
 void StreamModel::removeOperator(OperatorModel* op)
 {
-
+    if(op->isInitialized())
+        op->setInitialized(false);
+    
+    emit operatorRemoved(op);
+    
+    delete op;
 }
 
 void StreamModel::removeConnection(ConnectionModel* connection)

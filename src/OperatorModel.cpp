@@ -102,10 +102,24 @@ void OperatorModel::setInitialized(bool status)
     beginResetModel();
     
     if(status == true)
+    {
         m_op->initialize();
+        emit initializedChanged(true);
+    }
+    else
+    {
+        // before deinitialization remove all connections
+        ConnectionModel* connection = 0;
+        foreach(connection, m_connections)
+            m_stream->removeConnection(connection);
+        
+        // this removes the operator from stromx::core::Stream
+        emit initializedChanged(false);
+        
+        m_op->deinitialize();
+    }
     
     endResetModel();
     
-    emit initializedChanged(isInitialized());
 }
 
