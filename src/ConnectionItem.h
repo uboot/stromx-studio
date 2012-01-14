@@ -27,7 +27,7 @@ class ConnectionModel;
 class ConnectionItem : public QGraphicsLineItem
 {
 public:
-    explicit ConnectionItem(ConnectionModel* connection, QGraphicsItem * parent = 0);
+    explicit ConnectionItem(ConnectionModel* model, QGraphicsItem * parent = 0);
     
     enum { Type = UserType + 2 };
     virtual int type() const { return Type; }
@@ -36,7 +36,7 @@ public:
     void setEnd(const QPointF & end);
     void setActive(bool value);
     
-    ConnectionModel* connection() const { return m_connection; }
+    ConnectionModel* model() const { return m_model; }
     
 private:
     void rotateHead();
@@ -44,7 +44,7 @@ private:
     QGraphicsLineItem* m_head1;
     QGraphicsLineItem* m_head2;
     
-    ConnectionModel* m_connection;
+    ConnectionModel* m_model;
 };
 
 #endif // CONNECTIONITEM_H

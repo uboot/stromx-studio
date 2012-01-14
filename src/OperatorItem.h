@@ -32,12 +32,12 @@ class OperatorItem : public QGraphicsObject
     Q_OBJECT
     
 public:
-    explicit OperatorItem(OperatorModel* op, QGraphicsItem * parent = 0);
+    explicit OperatorItem(OperatorModel* model, QGraphicsItem * parent = 0);
     
     enum { Type = UserType + 1 };
     virtual int type() const { return Type; }
     
-    OperatorModel* op() const { return m_op; }
+    OperatorModel* model() const { return m_model; }
     
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
@@ -56,7 +56,7 @@ private:
     void initialize();
     void deinitialize();
     
-    OperatorModel* m_op;
+    OperatorModel* m_model;
     QGraphicsRectItem* m_opRect;
     
     QMap<unsigned int, ConnectorItem*> m_inputs;

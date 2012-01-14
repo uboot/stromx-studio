@@ -29,3 +29,14 @@ void StreamModel::addConnection(OperatorModel* sourceOp, unsigned int outputId,
     
     emit connectionAdded(connection);
 }
+
+void StreamModel::removeOperator(OperatorModel* op)
+{
+
+}
+
+void StreamModel::removeConnection(ConnectionModel* connection)
+{
+
+}
+

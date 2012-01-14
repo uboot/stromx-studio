@@ -107,7 +107,7 @@ void StreamEditorScene::initialize()
     foreach(item, selectedItems())
     {
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
-            opItem->op()->setInitialized(true);
+            opItem->model()->setInitialized(true);
     }
 }
 
@@ -119,10 +119,10 @@ void StreamEditorScene::showSelectedModel()
         QAbstractTableModel* model;
         
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
-            model = opItem->op();
+            model = opItem->model();
         
         if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
-            model = connectionItem->connection();
+            model = connectionItem->model();
          
         if(model)
         {
@@ -164,7 +164,7 @@ OperatorItem* StreamEditorScene::findOperatorItem(OperatorModel* opModel) const
     {
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
         {
-            if(opItem->op() == opModel)
+            if(opItem->model() == opModel)
                 return opItem;
         }
     }
@@ -176,7 +176,12 @@ void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
     {    
         QGraphicsItem* item = 0;
         foreach(item, selectedItems())
-        {
+        {        
+            if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
+                m_model->removeOperator(opItem->model());
+        
+            if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
+                m_model->removeConnection(connectionItem->model());
         }
     }
     else

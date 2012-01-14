@@ -43,12 +43,17 @@ public:
     explicit StreamModel(QObject *parent = 0);
     
     void addOperator(stromx::core::Operator* const op, const QPointF & pos);
+    void removeOperator(OperatorModel* op);
+    
     void addConnection(OperatorModel* sourceOp, unsigned int outputId,
                        OperatorModel* targetOp, unsigned int inputId);
+    void removeConnection(ConnectionModel* connection);
     
 signals:
     void operatorAdded(OperatorModel* op);
+    void operatorRemoved(OperatorModel* op);
     void connectionAdded(ConnectionModel* connection);
+    void connectionRemoved(ConnectionModel* connection);
     
 private:
     stromx::core::Stream* m_stream;

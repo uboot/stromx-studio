@@ -5,23 +5,23 @@
 #include "ConnectorItem.h"
 #include "OperatorModel.h"
 
-OperatorItem::OperatorItem(OperatorModel* op, QGraphicsItem * parent)
+OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
   : QGraphicsObject(parent),
-    m_op(op)
+    m_model(model)
 {
     m_opRect = new QGraphicsRectItem(this);
     m_opRect->setRect(0, 0, 50, 50);
-    setPos(m_op->pos());
+    setPos(m_model->pos());
     
     QGraphicsTextItem* label = new QGraphicsTextItem(this);
     label->setPos(0, 55);
-    label->setPlainText(QString::fromStdString(m_op->op()->info().type()));
+    label->setPlainText(QString::fromStdString(m_model->op()->info().type()));
     
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
     setFlag(ItemIsFocusable, true);
     
-    connect(op, SIGNAL(initializedChanged(bool)), this, SLOT(setInitialized(bool)));
+    connect(m_model, SIGNAL(initializedChanged(bool)), this, SLOT(setInitialized(bool)));
 }
 
 QRectF OperatorItem::boundingRect() const
@@ -54,26 +54,26 @@ void OperatorItem::setInitialized(bool value)
 void OperatorItem::initialize()
 {
     typedef std::vector<const stromx::core::Description*> DescriptionVector;
-    DescriptionVector inputs = m_op->op()->info().inputs();
+    DescriptionVector inputs = m_model->op()->info().inputs();
     
     unsigned int i = 0;
     for(DescriptionVector::iterator iter = inputs.begin();
         iter != inputs.end();
         ++iter, ++i)
     {
-        ConnectorItem* inputItem = new ConnectorItem(this->m_op, (*iter)->id(), ConnectorItem::INPUT, this);
+        ConnectorItem* inputItem = new ConnectorItem(this->m_model, (*iter)->id(), ConnectorItem::INPUT, this);
         inputItem->setPos(0, i * 10);
         
         m_inputs[(*iter)->id()] = inputItem;
     }
     
-    DescriptionVector outputs = m_op->op()->info().outputs();
+    DescriptionVector outputs = m_model->op()->info().outputs();
     i = 0;
     for(DescriptionVector::iterator iter = outputs.begin();
         iter != outputs.end();
         ++iter, ++i)
     {
-        ConnectorItem* outputItem = new ConnectorItem(this->m_op, (*iter)->id(), ConnectorItem::OUTPUT, this);
+        ConnectorItem* outputItem = new ConnectorItem(this->m_model, (*iter)->id(), ConnectorItem::OUTPUT, this);
         outputItem->setPos(40, i * 10);
         
         m_outputs[(*iter)->id()] = outputItem;
