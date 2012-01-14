@@ -1,9 +1,12 @@
 #include "OperatorModel.h"
-#include <stromx/core/Operator.h>
 
-OperatorModel::OperatorModel(stromx::core::Operator* op, QObject* parent)
-  : QAbstractTableModel(parent),
-    m_op(op)
+#include <stromx/core/Operator.h>
+#include "StreamModel.h"
+
+OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
+  : QAbstractTableModel(stream),
+    m_op(op),
+    m_stream(stream)
 {
 
 }
@@ -65,6 +68,16 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     }
     
     return QVariant();
+}
+
+void OperatorModel::addConnection(ConnectionModel* connection)
+{
+    m_connections.insert(connection);
+}
+
+void OperatorModel::removeConnection(ConnectionModel* connection)
+{
+    m_connections.remove(connection);
 }
 
 void OperatorModel::setPos(const QPointF& pos)

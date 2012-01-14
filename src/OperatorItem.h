@@ -23,6 +23,7 @@
 #include <QGraphicsObject>
 
 class QGraphicsRectItem;
+class ConnectionItem;
 class ConnectorItem;
 class OperatorModel;
 
@@ -41,8 +42,15 @@ public:
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     
+    void addInputConnection(unsigned int id, ConnectionItem* connection);
+    void addOutputConnection(unsigned int id, ConnectionItem* connection);
+    void removeConnection(ConnectionItem* connection);
+    
 public slots:
     void setInitialized(bool value);
+    
+protected:
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
     
 private:
     void initialize();
@@ -51,8 +59,8 @@ private:
     OperatorModel* m_op;
     QGraphicsRectItem* m_opRect;
     
-    QList<ConnectorItem*> m_inputs;
-    QList<ConnectorItem*> m_outputs;
+    QMap<unsigned int, ConnectorItem*> m_inputs;
+    QMap<unsigned int, ConnectorItem*> m_outputs;
 };
 
 #endif // OPERATORITEM_H

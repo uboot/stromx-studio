@@ -3,6 +3,8 @@
 #include <QAction>
 #include <QGraphicsSceneDragDropEvent>
 #include <stromx/core/Operator.h>
+#include "ConnectionItem.h"
+#include "ConnectionModel.h"
 #include "OperatorItem.h"
 #include "OperatorModel.h"
 #include "StreamModel.h"
@@ -15,6 +17,7 @@ StreamEditorScene::StreamEditorScene(QObject* parent)
     m_model = new StreamModel(this);
     
     connect(m_model, SIGNAL(operatorAdded(OperatorModel*)), this, SLOT(addOperator(OperatorModel*)));
+    connect(m_model, SIGNAL(connectionAdded(ConnectionModel*)), this, SLOT(addConnection(ConnectionModel*)));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(showSelectedModel()));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(enableInitializeAction()));
 }
@@ -77,6 +80,26 @@ void StreamEditorScene::addOperator(OperatorModel* op)
     addItem(opItem);
 }
 
+void StreamEditorScene::addConnection(ConnectionModel* connection)
+{
+    ConnectionItem* connectionItem = new ConnectionItem(connection);
+    addItem(connectionItem);
+    
+    OperatorItem* sourceOp = findOperatorItem(connection->sourceOp());
+    OperatorItem* targetOp = findOperatorItem(connection->targetOp());
+    
+    if(sourceOp && targetOp)
+    {
+        sourceOp->addOutputConnection(connection->outputId(), connectionItem);
+        targetOp->addInputConnection(connection->inputId(), connectionItem);
+    }
+    else
+    {
+        Q_ASSERT(sourceOp && targetOp);
+        delete connectionItem;
+    }
+}
+
 void StreamEditorScene::initialize()
 {    
     QGraphicsItem* item = 0;
@@ -85,7 +108,6 @@ void StreamEditorScene::initialize()
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
             opItem->op()->setInitialized(true);
     }
-
 }
 
 void StreamEditorScene::showSelectedModel()
@@ -120,6 +142,22 @@ void StreamEditorScene::enableInitializeAction()
     }
     
     emit initializeEnabledChanged(selectionIsValid);
+}
+
+OperatorItem* StreamEditorScene::findOperatorItem(OperatorModel* opModel) const
+{
+    if(! opModel)
+        return 0;
+    
+    QGraphicsItem* item = 0;
+    foreach(item, items())
+    {
+        if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
+        {
+            if(opItem->op() == opModel)
+                return opItem;
+        }
+    }
 }
 
 

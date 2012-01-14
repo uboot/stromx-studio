@@ -22,10 +22,12 @@
 
 #include <QGraphicsLineItem>
 
+class ConnectionModel;
+
 class ConnectionItem : public QGraphicsLineItem
 {
 public:
-    explicit ConnectionItem(QPointF start, QPointF end, QGraphicsItem * parent = 0);
+    explicit ConnectionItem(ConnectionModel* connection, QGraphicsItem * parent = 0);
     
     enum { Type = UserType + 2 };
     virtual int type() const { return Type; }
@@ -41,6 +43,8 @@ private:
     
     QGraphicsLineItem* m_head1;
     QGraphicsLineItem* m_head2;
+    
+    ConnectionModel* m_connection;
 };
 
 #endif // CONNECTIONITEM_H

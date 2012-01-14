@@ -21,10 +21,12 @@
 #define STREAMEDITORSCENE_H
 
 #include <QGraphicsScene>
+#include "OperatorItem.h"
 
 class QAction;
 class QAbstractTableModel;
 class QGraphicsSceneDragDropEvent;
+class ConnectionModel;
 class OperatorModel;
 class StreamModel;
 
@@ -41,6 +43,8 @@ public:
     
     QAction* createInitializeAction(QObject* parent);
     
+    StreamModel* model() const { return m_model; }
+    
 signals:
     void initializeEnabledChanged(bool enabled);
     void selectedModelChanged(QAbstractTableModel* model);
@@ -49,9 +53,12 @@ private slots:
     void showSelectedModel();
     void enableInitializeAction();
     void addOperator(OperatorModel* op);
+    void addConnection(ConnectionModel* connection);
     void initialize();
     
 private:
+    OperatorItem* findOperatorItem(OperatorModel* opModel) const;
+    
     StreamModel* m_model;
 };
 

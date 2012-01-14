@@ -4,18 +4,13 @@
 #include <QVector2D>
 #include <math.h>
 
-ConnectionItem::ConnectionItem(QPointF start, QPointF end, QGraphicsItem* parent)
-  : QGraphicsLineItem(start.x(), start.y(), end.x(), end.y(), parent),
-    m_head1(0),
-    m_head2(0)
+ConnectionItem::ConnectionItem(ConnectionModel* connection, QGraphicsItem* parent)
+  : QGraphicsLineItem(parent),
+    m_head1(new QGraphicsLineItem(0, 0, -5, -5, this)),
+    m_head2(new QGraphicsLineItem(0, 0, -5, 5, this)),
+    m_connection(0)
 {
-    m_head1 = new QGraphicsLineItem(0, 0, -5, -5, this);
-    m_head2 = new QGraphicsLineItem(0, 0, -5, 5, this);
-    
-    m_head1->setPos(end);
-    m_head2->setPos(end);
-    
-    rotateHead();
+    setFlag(ItemIsSelectable, true);
 }
 
 void ConnectionItem::rotateHead()

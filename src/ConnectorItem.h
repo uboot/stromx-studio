@@ -21,8 +21,10 @@
 #define CONNECTORITEM_H
 
 #include <QGraphicsRectItem>
+#include <QSet>
 
 class ConnectionItem;
+class OperatorModel;
 
 class ConnectorItem : public QGraphicsRectItem
 {
@@ -36,9 +38,15 @@ public:
     enum { Type = UserType + 3 };
     virtual int type() const { return Type; }
     
-    explicit ConnectorItem(ConnectorType type, QGraphicsItem * parent = 0);
+    explicit ConnectorItem(OperatorModel* op, unsigned int id, ConnectorType type, QGraphicsItem * parent = 0);
     
+    OperatorModel* op() const { return m_op; }
+    unsigned int id() const { return m_id; }
     ConnectorType connectorType() const { return m_connectorType; }
+    
+    void addConnection(ConnectionItem* connection);
+    void removeConnection(ConnectionItem* connection);
+    void updateConnectionPositions() const;
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
@@ -46,9 +54,14 @@ protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
     
 private:
+    ConnectorItem* connectorItemAt(const QPointF & pos) const;
+    void updateConnectionPosition(ConnectionItem* connection) const;
     
+    OperatorModel* m_op;
+    unsigned int m_id;
     ConnectorType m_connectorType;
     ConnectionItem* m_currentConnection;
+    QSet<ConnectionItem*> m_connections;
 };
 
 #endif // CONNECTORITEM_H

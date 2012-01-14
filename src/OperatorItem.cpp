@@ -61,10 +61,10 @@ void OperatorItem::initialize()
         iter != inputs.end();
         ++iter, ++i)
     {
-        ConnectorItem* inputItem = new ConnectorItem(ConnectorItem::INPUT, this);
+        ConnectorItem* inputItem = new ConnectorItem(this->m_op, (*iter)->id(), ConnectorItem::INPUT, this);
         inputItem->setPos(0, i * 10);
         
-        m_inputs.append(inputItem);
+        m_inputs[(*iter)->id()] = inputItem;
     }
     
     DescriptionVector outputs = m_op->op()->info().outputs();
@@ -73,13 +73,61 @@ void OperatorItem::initialize()
         iter != outputs.end();
         ++iter, ++i)
     {
-        ConnectorItem* outputItem = new ConnectorItem(ConnectorItem::OUTPUT, this);
+        ConnectorItem* outputItem = new ConnectorItem(this->m_op, (*iter)->id(), ConnectorItem::OUTPUT, this);
         outputItem->setPos(40, i * 10);
         
-        m_outputs.append(outputItem);
+        m_outputs[(*iter)->id()] = outputItem;
     }
 }
 
 void OperatorItem::deinitialize()
 {
 }
+
+void OperatorItem::addInputConnection(unsigned int id, ConnectionItem* connection)
+{
+    m_inputs[id]->addConnection(connection);
+}
+
+void OperatorItem::addOutputConnection(unsigned int id, ConnectionItem* connection)
+{
+    m_outputs[id]->addConnection(connection);
+}
+
+void OperatorItem::removeConnection(ConnectionItem* connection)
+{
+    QMapIterator<unsigned int, ConnectorItem*> inputIter(m_inputs);
+    while (inputIter.hasNext())
+    {
+        inputIter.next();
+        inputIter.value()->removeConnection(connection);
+    }
+    
+    QMapIterator<unsigned int, ConnectorItem*> outputIter(m_inputs);
+    while (outputIter.hasNext())
+    {
+        outputIter.next();
+        outputIter.value()->removeConnection(connection);
+    }
+}
+
+void OperatorItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
+{    
+    QMapIterator<unsigned int, ConnectorItem*> inputIter(m_inputs);
+    while (inputIter.hasNext())
+    {
+        inputIter.next();
+        inputIter.value()->updateConnectionPositions();
+    }
+    
+    QMapIterator<unsigned int, ConnectorItem*> outputIter(m_outputs);
+    while (outputIter.hasNext())
+    {
+        outputIter.next();
+        outputIter.value()->updateConnectionPositions();
+    }
+    
+    QGraphicsItem::mouseMoveEvent(event);
+}
+
+

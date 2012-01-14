@@ -1,15 +1,18 @@
 #include "ConnectionModel.h"
 
+#include "OperatorModel.h"
 #include "StreamModel.h"
 
-ConnectionModel::ConnectionModel(OperatorModel* op, unsigned int id, StreamModel* parent)
-  : QAbstractTableModel(parent),
-    m_op(op),
-    m_id(id),
-    m_stream(parent),
+ConnectionModel::ConnectionModel(OperatorModel* sourceOp, unsigned int outputId,
+                                 OperatorModel* targetOp, unsigned int inputId, StreamModel * stream)
+  : QAbstractTableModel(stream),
+    m_sourceOp(sourceOp),
+    m_outputId(outputId),
+    m_targetOp(targetOp),
+    m_inputId(inputId),
+    m_stream(stream),
     m_thread(0)
 {
-
 }
 
 int ConnectionModel::columnCount(const QModelIndex& index) const

@@ -29,10 +29,10 @@ class ThreadModel;
 class ConnectionModel : public QAbstractTableModel
 {
     Q_OBJECT
-    Q_PROPERTY(ThreadModel* thread READ thread WRITE setThread)
     
 public:
-    explicit ConnectionModel(OperatorModel* op, unsigned int id, StreamModel * parent = 0);
+    explicit ConnectionModel(OperatorModel* sourceOp, unsigned int outputId,
+                             OperatorModel* targetOp, unsigned int inputId, StreamModel * stream = 0);
     
     int rowCount(const QModelIndex & index) const;
     int columnCount(const QModelIndex & index) const;
@@ -41,12 +41,20 @@ public:
     ThreadModel* thread() const { return m_thread; }
     void setThread(ThreadModel* thread);
     
+    OperatorModel* sourceOp() const { return m_sourceOp; }
+    OperatorModel* targetOp() const { return m_targetOp; }
+    
+    unsigned int inputId() const { return m_inputId; }
+    unsigned int outputId() const { return m_outputId; }
+    
 signals:
     void threadChanged(ThreadModel* thread);
     
 private:
-    OperatorModel* m_op;
-    unsigned int m_id;
+    OperatorModel* m_sourceOp;
+    unsigned int m_outputId;
+    OperatorModel* m_targetOp;
+    unsigned int m_inputId;
     StreamModel* m_stream;
     ThreadModel* m_thread;
 };

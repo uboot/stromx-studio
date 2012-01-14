@@ -22,6 +22,7 @@
 
 #include <QAbstractTableModel>
 #include <QPointF>
+#include <QSet>
 
 namespace stromx
 {
@@ -31,6 +32,9 @@ namespace stromx
     }
 }
 
+class ConnectionModel;
+class StreamModel;
+
 class OperatorModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -38,7 +42,7 @@ class OperatorModel : public QAbstractTableModel
     Q_PROPERTY(bool initialized READ isInitialized WRITE setInitialized)
     
 public:
-    explicit OperatorModel(stromx::core::Operator* op, QObject *parent = 0);
+    explicit OperatorModel(stromx::core::Operator* op, StreamModel *stream = 0);
     
     stromx::core::Operator* const op() const { return m_op; }
     
@@ -53,13 +57,18 @@ public:
     bool isInitialized() const;
     void setInitialized(bool initialized);
     
+    void addConnection(ConnectionModel* connection);
+    void removeConnection(ConnectionModel* connection);
+    
 signals:
     void posChanged(const QPointF & pos);
     void initializedChanged(bool status);
     
 private:
     stromx::core::Operator* m_op;
+    StreamModel* m_stream;
     QPointF m_pos;
+    QSet<ConnectionModel*> m_connections;
 };
 
 #endif // OPERATORMODEL_H

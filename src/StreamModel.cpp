@@ -21,7 +21,11 @@ void StreamModel::addOperator(stromx::core::Operator* const op, const QPointF & 
 void StreamModel::addConnection(OperatorModel* sourceOp, unsigned int outputId,
                                 OperatorModel* targetOp, unsigned int inputId)
 {
-    ConnectionModel* connection = new ConnectionModel(targetOp, inputId, this);
+    ConnectionModel* connection = new ConnectionModel(sourceOp, outputId,
+                                                      targetOp, inputId, this);
+    
+    sourceOp->addConnection(connection);
+    targetOp->addConnection(connection);
     
     emit connectionAdded(connection);
 }
