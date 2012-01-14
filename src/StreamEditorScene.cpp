@@ -18,7 +18,9 @@ StreamEditorScene::StreamEditorScene(QObject* parent)
     m_model = new StreamModel(this);
     
     connect(m_model, SIGNAL(operatorAdded(OperatorModel*)), this, SLOT(addOperator(OperatorModel*)));
+    connect(m_model, SIGNAL(operatorRemoved(OperatorModel*)), this, SLOT(removeOperator(OperatorModel*)));
     connect(m_model, SIGNAL(connectionAdded(ConnectionModel*)), this, SLOT(addConnection(ConnectionModel*)));
+    connect(m_model, SIGNAL(connectionRemoved(ConnectionModel*)), this, SLOT(removeConnection(ConnectionModel*)));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(showSelectedModel()));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(enableInitializeAction()));
 }
@@ -170,6 +172,23 @@ OperatorItem* StreamEditorScene::findOperatorItem(OperatorModel* opModel) const
     }
 }
 
+ConnectionItem* StreamEditorScene::findConnectionItem(ConnectionModel* connectionModel) const
+{
+    if(! connectionModel)
+        return 0;
+    
+    QGraphicsItem* item = 0;
+    foreach(item, items())
+    {
+        if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
+        {
+            if(connectionItem->model() == connectionModel)
+                return connectionItem;
+        }
+    }
+
+}
+
 void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
 {
     if(keyEvent->matches(QKeySequence::Delete))
@@ -190,6 +209,25 @@ void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
     }
 }
 
+void StreamEditorScene::removeOperator(OperatorModel* op)
+{
 
+}
 
+void StreamEditorScene::removeConnection(ConnectionModel* connection)
+{
+    if(ConnectionItem* item = findConnectionItem(connection))
+    {
+        OperatorModel* targetOp = item->model()->targetOp();
+        OperatorModel* sourceOp = item->model()->sourceOp();
+        
+        if(OperatorItem* opItem = findOperatorItem(targetOp))
+            opItem->removeConnection(item);
+        
+        if(OperatorItem* opItem = findOperatorItem(sourceOp))
+            opItem->removeConnection(item);
+            
+        delete item;
+    }
+}
 

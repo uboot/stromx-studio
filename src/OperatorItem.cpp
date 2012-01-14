@@ -103,7 +103,7 @@ void OperatorItem::removeConnection(ConnectionItem* connection)
         inputIter.value()->removeConnection(connection);
     }
     
-    QMapIterator<unsigned int, ConnectorItem*> outputIter(m_inputs);
+    QMapIterator<unsigned int, ConnectorItem*> outputIter(m_outputs);
     while (outputIter.hasNext())
     {
         outputIter.next();

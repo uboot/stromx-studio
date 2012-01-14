@@ -56,11 +56,14 @@ private slots:
     void showSelectedModel();
     void enableInitializeAction();
     void addOperator(OperatorModel* op);
+    void removeOperator(OperatorModel* op);
     void addConnection(ConnectionModel* connection);
+    void removeConnection(ConnectionModel* connection);
     void initialize();
     
 private:
     OperatorItem* findOperatorItem(OperatorModel* opModel) const;
+    ConnectionItem* findConnectionItem(ConnectionModel* connectionModel) const;
     
     StreamModel* m_model;
 };

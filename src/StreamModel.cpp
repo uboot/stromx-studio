@@ -37,6 +37,14 @@ void StreamModel::removeOperator(OperatorModel* op)
 
 void StreamModel::removeConnection(ConnectionModel* connection)
 {
-
+    if(connection->sourceOp())
+        connection->sourceOp()->removeConnection(connection);
+    
+    if(connection->targetOp())
+        connection->targetOp()->removeConnection(connection);
+    
+    emit connectionRemoved(connection);
+    
+    delete connection;
 }
 
