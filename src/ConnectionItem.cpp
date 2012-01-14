@@ -6,9 +6,9 @@
 
 ConnectionItem::ConnectionItem(ConnectionModel* connection, QGraphicsItem* parent)
   : QGraphicsLineItem(parent),
+    m_connection(connection),
     m_head1(new QGraphicsLineItem(0, 0, -5, -5, this)),
-    m_head2(new QGraphicsLineItem(0, 0, -5, 5, this)),
-    m_connection(0)
+    m_head2(new QGraphicsLineItem(0, 0, -5, 5, this))
 {
     setFlag(ItemIsSelectable, true);
 }

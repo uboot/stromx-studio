@@ -17,7 +17,7 @@ ConnectionModel::ConnectionModel(OperatorModel* sourceOp, unsigned int outputId,
 
 int ConnectionModel::columnCount(const QModelIndex& index) const
 {
-    return 0;
+    return 2;
 }
 
 int ConnectionModel::rowCount(const QModelIndex& index) const

@@ -49,6 +49,9 @@ signals:
     void initializeEnabledChanged(bool enabled);
     void selectedModelChanged(QAbstractTableModel* model);
     
+protected:
+    void keyPressEvent(QKeyEvent* keyEvent);
+    
 private slots:
     void showSelectedModel();
     void enableInitializeAction();

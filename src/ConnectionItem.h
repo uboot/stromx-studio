@@ -34,9 +34,9 @@ public:
     
     void setStart(const QPointF & start);
     void setEnd(const QPointF & end);
-    
     void setActive(bool value);
     
+    ConnectionModel* connection() const { return m_connection; }
     
 private:
     void rotateHead();

@@ -2,6 +2,7 @@
 
 #include <QAction>
 #include <QGraphicsSceneDragDropEvent>
+#include <QKeyEvent>
 #include <stromx/core/Operator.h>
 #include "ConnectionItem.h"
 #include "ConnectionModel.h"
@@ -114,9 +115,18 @@ void StreamEditorScene::showSelectedModel()
 {
     if(selectedItems().size() == 1)
     {
-        if(OperatorItem* item = qgraphicsitem_cast<OperatorItem*>(selectedItems()[0]))
+        QGraphicsItem* item = selectedItems()[0];
+        QAbstractTableModel* model;
+        
+        if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
+            model = opItem->op();
+        
+        if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
+            model = connectionItem->connection();
+         
+        if(model)
         {
-            emit selectedModelChanged(item->op());
+            emit selectedModelChanged(model);
             return;
         }
     }
@@ -159,6 +169,22 @@ OperatorItem* StreamEditorScene::findOperatorItem(OperatorModel* opModel) const
         }
     }
 }
+
+void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
+{
+    if(keyEvent->matches(QKeySequence::Delete))
+    {    
+        QGraphicsItem* item = 0;
+        foreach(item, selectedItems())
+        {
+        }
+    }
+    else
+    {
+        QGraphicsScene::keyPressEvent(keyEvent);
+    }
+}
+
 
 
 
