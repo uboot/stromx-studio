@@ -32,6 +32,7 @@ namespace stromx
     }
 }
 
+class QAbstractTableModel;
 class ConnectionModel;
 class OperatorModel;
 
@@ -49,6 +50,8 @@ public:
                        OperatorModel* targetOp, unsigned int inputId);
     void removeConnection(ConnectionModel* connection);
     
+    QAbstractTableModel* threadListModel() const { return m_threadListModel; }
+    
 signals:
     void operatorAdded(OperatorModel* op);
     void operatorRemoved(OperatorModel* op);
@@ -57,6 +60,8 @@ signals:
     
 private:
     stromx::core::Stream* m_stream;
+    
+    QAbstractTableModel* m_threadListModel;
 };
 
 #endif // STREAMMODEL_H

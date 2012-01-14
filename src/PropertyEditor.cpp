@@ -17,5 +17,6 @@ PropertyEditor::PropertyEditor(QWidget* parent)
 void PropertyEditor::setModel(QAbstractTableModel* model)
 {
     m_table->setModel(model);
+    m_table->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 }
 

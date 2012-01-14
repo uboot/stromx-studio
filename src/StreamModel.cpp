@@ -2,12 +2,14 @@
 
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
+#include "ThreadListModel.h"
 
 StreamModel::StreamModel(QObject* parent) 
   : QObject(parent),
-    m_stream(0)
+    m_stream(0),
+    m_threadListModel(0)
 {
-
+    m_threadListModel = new ThreadListModel(this);
 }
 
 void StreamModel::addOperator(stromx::core::Operator* const op, const QPointF & pos)

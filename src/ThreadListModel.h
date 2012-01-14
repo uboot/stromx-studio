@@ -1,5 +1,5 @@
 /* 
-*  Copyright 2011 xxx yyy
+*  Copyright 2012 Matthias Fuchs
 *
 *  This file is part of stromx-studio.
 *
@@ -17,26 +17,22 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef THREADEDITOR_H
-#define THREADEDITOR_H
+#ifndef THREADLISTMODEL_H
+#define THREADLISTMODEL_H
 
-#include <QWidget>
+#include <QAbstractTableModel>
 
-class QAbstractTableModel;
-class QTableView;
-
-class ThreadEditor : public QWidget
+class ThreadListModel : public QAbstractTableModel
 {
     Q_OBJECT
-
+    
 public:
-    explicit ThreadEditor(QWidget *parent = 0);
+    explicit ThreadListModel(QObject *parent = 0);
     
-public slots:
-    void setModel(QAbstractTableModel* model);
-    
-private:
-    QTableView* m_table;
+    virtual int rowCount(const QModelIndex & parent) const;
+    virtual int columnCount(const QModelIndex & parent) const;
+    virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 };
 
-#endif // THREADEDITOR_H
+#endif // THREADLISTMODEL_H

@@ -30,6 +30,7 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <iostream>
+#include "Exception.h"
 #include "MainWindow.h"
 #include "ObserverEditor.h"
 #include "OperatorLibrary.h"
@@ -37,8 +38,8 @@
 #include "PropertyEditor.h"
 #include "StreamEditor.h"
 #include "StreamEditorScene.h"
+#include "StreamModel.h"
 #include "ThreadEditor.h"
-#include "Exception.h"
 
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
@@ -58,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent)
     createStatusBar();
     createDockWindows();
     
+    m_threadEditor->setModel(m_streamEditor->scene()->model()->threadListModel());
     connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractTableModel*)),
             m_propertyEditor, SLOT(setModel(QAbstractTableModel*)));
     
