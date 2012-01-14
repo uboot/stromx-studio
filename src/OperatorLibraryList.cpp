@@ -1,6 +1,7 @@
 #include "OperatorLibraryList.h"
 
 #include <QApplication>
+#include <QHeaderView>
 #include <QMouseEvent>
 #include "OperatorLibraryModel.h"
 #include "StromxData.h"
@@ -15,6 +16,7 @@ void OperatorLibraryList::setOperatorLibraryModel(OperatorLibraryModel* model)
 {
     m_model = model;
     setModel(model);
+    header()->setResizeMode(QHeaderView::Stretch);
 }
 
 

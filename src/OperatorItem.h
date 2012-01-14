@@ -50,7 +50,8 @@ public slots:
     void setInitialized(bool value);
     
 protected:
-    void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value);
     
 private:
     void initialize();

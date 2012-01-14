@@ -31,16 +31,25 @@ QRectF OperatorItem::boundingRect() const
 
 void OperatorItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    QPen currentPen = m_opRect->pen();
-    
-    if(isSelected())
-        currentPen.setStyle(Qt::DashLine);
-    else
-        currentPen.setStyle(Qt::SolidLine);
+}
+
+QVariant OperatorItem::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    if(change == ItemSelectedHasChanged)
+    {
+        QPen currentPen = m_opRect->pen();
+
+        if(isSelected())
+            currentPen.setStyle(Qt::DashLine);
+        else
+            currentPen.setStyle(Qt::SolidLine);
+
+        m_opRect->setPen(currentPen);
         
-    m_opRect->setPen(currentPen);
-    
-    m_opRect->paint(painter, option, widget);
+        return value;
+    }
+
+    return QGraphicsItem::itemChange(change, value);
 }
 
 void OperatorItem::setInitialized(bool value)
