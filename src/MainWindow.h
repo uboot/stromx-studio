@@ -77,6 +77,8 @@ private:
     QAction* m_startAct;
     QAction* m_stopAct;
     QAction* m_initializeAct;
+    QAction* m_addThreadAct;
+    QAction* m_removeThreadAct;
     
     QUndoStack* m_undoStack;
     

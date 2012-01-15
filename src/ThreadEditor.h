@@ -24,6 +24,7 @@
 
 class QAbstractTableModel;
 class QTableView;
+class StreamModel;
 
 class ThreadEditor : public QWidget
 {
@@ -32,11 +33,21 @@ class ThreadEditor : public QWidget
 public:
     explicit ThreadEditor(QWidget *parent = 0);
     
+    QAction* createAddThreadAction(QObject* parent);
+    QAction* createRemoveThreadAction(QObject* parent);
+    
+    void setModel(StreamModel* model);
+    
 public slots:
-    void setModel(QAbstractTableModel* model);
+    void addThread() const;
+    void removeThread() const;
+    
+signals:
+    void threadSelectedChanged(bool selected);
     
 private:
     QTableView* m_table;
+    StreamModel* m_model;
 };
 
 #endif // THREADEDITOR_H

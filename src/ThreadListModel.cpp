@@ -8,16 +8,19 @@ ThreadListModel::ThreadListModel(QObject* parent)
 
 int ThreadListModel::rowCount(const QModelIndex& parent) const
 {
-    return 0;
+    return m_threads.size();
 }
 
 int ThreadListModel::columnCount(const QModelIndex& parent) const
 {
-    return 3;
+    return 2;
 }
 
 QVariant ThreadListModel::data(const QModelIndex& index, int role) const
 {
+    if(role != Qt::DisplayRole)
+        return QVariant();
+    
     return QVariant();
 }
 
@@ -32,10 +35,8 @@ QVariant ThreadListModel::headerData(int section, Qt::Orientation orientation, i
     switch(section)
     {
     case 0:
-        return tr("Thread");
-    case 1:
         return tr("Name");
-    case 2:
+    case 1:
         return tr("Color");
     default:
         ;
@@ -43,3 +44,14 @@ QVariant ThreadListModel::headerData(int section, Qt::Orientation orientation, i
     
     return QVariant();
 }
+
+void ThreadListModel::addThread(ThreadModel* thread)
+{
+    m_threads.append(thread);
+}
+
+void ThreadListModel::removeThread(ThreadModel* thread)
+{
+    m_threads.removeAll(thread);
+}
+

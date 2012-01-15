@@ -35,6 +35,7 @@ namespace stromx
 class QAbstractTableModel;
 class ConnectionModel;
 class OperatorModel;
+class ThreadModel;
 
 class StreamModel : public QObject
 {
@@ -49,6 +50,9 @@ public:
     void addConnection(OperatorModel* sourceOp, unsigned int outputId,
                        OperatorModel* targetOp, unsigned int inputId);
     void removeConnection(ConnectionModel* connection);
+    
+    void addThread();
+    void removeThread(ThreadModel* thread);
     
     QAbstractTableModel* threadListModel() const { return m_threadListModel; }
     

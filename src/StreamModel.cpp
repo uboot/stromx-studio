@@ -55,3 +55,8 @@ void StreamModel::removeConnection(ConnectionModel* connection)
     delete connection;
 }
 
+void StreamModel::addThread()
+{
+}
+
+

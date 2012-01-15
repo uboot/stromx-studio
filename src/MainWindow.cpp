@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent)
     createStatusBar();
     createDockWindows();
     
-    m_threadEditor->setModel(m_streamEditor->scene()->model()->threadListModel());
+    m_threadEditor->setModel(m_streamEditor->scene()->model());
     connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractTableModel*)),
             m_propertyEditor, SLOT(setModel(QAbstractTableModel*)));
     
@@ -86,6 +86,8 @@ void MainWindow::createActions()
     m_undoAct = m_undoStack->createUndoAction(this);
     m_redoAct = m_undoStack->createRedoAction(this);
     m_initializeAct = m_streamEditor->scene()->createInitializeAction(this);
+    m_addThreadAct = m_threadEditor->createAddThreadAction(this);
+    m_removeThreadAct = m_threadEditor->createRemoveThreadAction(this);
 
     m_saveAct = new QAction(tr("&Save"), this);
     m_saveAct->setShortcuts(QKeySequence::Save);
@@ -159,6 +161,9 @@ void MainWindow::createMenus()
      m_editMenu->addAction(m_redoAct);
      
      m_streamMenu = menuBar()->addMenu(tr("&Stream"));
+     m_streamMenu->addAction(m_addThreadAct);
+     m_streamMenu->addAction(m_removeThreadAct);
+     m_streamMenu->addSeparator();
      m_streamMenu->addAction(m_initializeAct);
 
      m_viewMenu = menuBar()->addMenu(tr("&View"));

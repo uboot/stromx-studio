@@ -21,6 +21,9 @@
 #define THREADLISTMODEL_H
 
 #include <QAbstractTableModel>
+#include <QList>
+
+class ThreadModel;
 
 class ThreadListModel : public QAbstractTableModel
 {
@@ -33,6 +36,12 @@ public:
     virtual int columnCount(const QModelIndex & parent) const;
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    
+    void addThread(ThreadModel* thread);
+    void removeThread(ThreadModel* thread);
+    
+private:
+    QList<ThreadModel*> m_threads;
 };
 
 #endif // THREADLISTMODEL_H
