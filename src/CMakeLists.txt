@@ -17,6 +17,7 @@ set(stromxstudio_SOURCES
     StromxData.cpp
     ThreadEditor.cpp
     ThreadListModel.cpp
+    ThreadModel.cpp
 )
 
 set(stromxstudio_HEADERS
@@ -35,6 +36,7 @@ set(stromxstudio_HEADERS
     StromxData.h
     ThreadEditor.h
     ThreadListModel.h
+    ThreadModel.h
 )
 
 #set(stromxgui_FORMS mainwindow.ui)
