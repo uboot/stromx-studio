@@ -44,6 +44,7 @@ public:
     QAction* createInitializeAction(QObject* parent);
     
     StreamModel* model() const { return m_model; }
+    void setModel(StreamModel* model);
     
 signals:
     void initializeEnabledChanged(bool enabled);

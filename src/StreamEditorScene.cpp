@@ -15,14 +15,24 @@ StreamEditorScene::StreamEditorScene(QObject* parent)
   : QGraphicsScene(parent),
     m_model(0)
 {
-    m_model = new StreamModel(this);
-    
-    connect(m_model, SIGNAL(operatorAdded(OperatorModel*)), this, SLOT(addOperator(OperatorModel*)));
-    connect(m_model, SIGNAL(operatorRemoved(OperatorModel*)), this, SLOT(removeOperator(OperatorModel*)));
-    connect(m_model, SIGNAL(connectionAdded(ConnectionModel*)), this, SLOT(addConnection(ConnectionModel*)));
-    connect(m_model, SIGNAL(connectionRemoved(ConnectionModel*)), this, SLOT(removeConnection(ConnectionModel*)));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(showSelectedModel()));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(enableInitializeAction()));
+}
+
+void StreamEditorScene::setModel(StreamModel* model)
+{
+    if(m_model)
+        m_model->disconnect(this);
+        
+    m_model = model;
+    
+    if(m_model)
+    {
+        connect(m_model, SIGNAL(operatorAdded(OperatorModel*)), this, SLOT(addOperator(OperatorModel*)));
+        connect(m_model, SIGNAL(operatorRemoved(OperatorModel*)), this, SLOT(removeOperator(OperatorModel*)));
+        connect(m_model, SIGNAL(connectionAdded(ConnectionModel*)), this, SLOT(addConnection(ConnectionModel*)));
+        connect(m_model, SIGNAL(connectionRemoved(ConnectionModel*)), this, SLOT(removeConnection(ConnectionModel*)));  
+    }
 }
 
 void StreamEditorScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)

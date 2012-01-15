@@ -59,7 +59,9 @@ MainWindow::MainWindow(QWidget *parent)
     createStatusBar();
     createDockWindows();
     
-    m_threadEditor->setModel(m_streamEditor->scene()->model());
+    StreamModel* streamModel = new StreamModel(m_undoStack, this);
+    m_streamEditor->scene()->setModel(streamModel);
+    m_threadEditor->setModel(streamModel);
     connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractTableModel*)),
             m_propertyEditor, SLOT(setModel(QAbstractTableModel*)));
     

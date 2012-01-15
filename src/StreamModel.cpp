@@ -1,15 +1,17 @@
 #include "StreamModel.h"
 
 #include <stromx/core/Stream.h>
+#include "AddOperatorCmd.h"
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
 #include "ThreadListModel.h"
 #include "ThreadModel.h"
 
-StreamModel::StreamModel(QObject* parent) 
+StreamModel::StreamModel(QUndoStack* undoStack, QObject* parent) 
   : QObject(parent),
     m_stream(0),
-    m_threadListModel(0)
+    m_threadListModel(0),
+    m_undoStack(undoStack)
 {
     m_stream = new stromx::core::Stream;
     m_threadListModel = new ThreadListModel(this);
@@ -20,12 +22,18 @@ StreamModel::~StreamModel()
     delete m_stream;
 }
 
-void StreamModel::addOperator(stromx::core::Operator* const op, const QPointF & pos)
+void StreamModel::addOperator(stromx::core::Operator*const op, const QPointF& pos)
 {
     OperatorModel* opModel = new OperatorModel(op, this);
     opModel->setPos(pos);
     
-    emit operatorAdded(opModel);
+    AddOperatorCmd* cmd = new AddOperatorCmd(this, opModel);
+    m_undoStack->push(cmd);
+}
+
+void StreamModel::removeOperator(OperatorModel* op)
+{
+    doRemoveOperator(op);
 }
 
 void StreamModel::addConnection(OperatorModel* sourceOp, unsigned int outputId,
@@ -38,16 +46,6 @@ void StreamModel::addConnection(OperatorModel* sourceOp, unsigned int outputId,
     targetOp->addConnection(connection);
     
     emit connectionAdded(connection);
-}
-
-void StreamModel::removeOperator(OperatorModel* op)
-{
-    if(op->isInitialized())
-        op->setInitialized(false);
-    
-    emit operatorRemoved(op);
-    
-    delete op;
 }
 
 void StreamModel::removeConnection(ConnectionModel* connection)
@@ -71,5 +69,19 @@ void StreamModel::addThread()
     
     emit threadAdded(threadModel);
 }
+
+void StreamModel::doAddOperator(OperatorModel* op)
+{
+    emit operatorAdded(op);
+}
+
+void StreamModel::doRemoveOperator(OperatorModel* op)
+{
+    if(op->isInitialized())
+        op->setInitialized(false);
+    
+    emit operatorRemoved(op);
+}
+
 
 
