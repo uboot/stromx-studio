@@ -47,7 +47,9 @@ QVariant ThreadListModel::headerData(int section, Qt::Orientation orientation, i
 
 void ThreadListModel::addThread(ThreadModel* thread)
 {
+    beginInsertRows(QModelIndex(), m_threads.size() + 1, m_threads.size() + 1);
     m_threads.append(thread);
+    endInsertRows();
 }
 
 void ThreadListModel::removeThread(ThreadModel* thread)

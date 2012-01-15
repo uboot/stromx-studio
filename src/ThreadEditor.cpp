@@ -5,6 +5,7 @@
 #include <QHeaderView>
 #include <QTableView>
 #include "StreamModel.h"
+#include "ThreadListModel.h"
 
 ThreadEditor::ThreadEditor(QWidget* parent)
   : QWidget(parent),
