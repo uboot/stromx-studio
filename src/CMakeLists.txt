@@ -4,6 +4,7 @@ set(stromxstudio_SOURCES
     ConnectionItem.cpp
     ConnectorItem.cpp
     ConnectionModel.cpp
+    DeinitializeOperatorCmd.cpp
     main.cpp
     MainWindow.cpp
     ObserverEditor.cpp
@@ -13,6 +14,8 @@ set(stromxstudio_SOURCES
     OperatorLibraryModel.cpp
     OperatorModel.cpp
     PropertyEditor.cpp
+    RemoveConnectionCmd.cpp
+    RemoveOperatorCmd.cpp
     StreamEditor.cpp
     StreamEditorScene.cpp
     StreamModel.cpp

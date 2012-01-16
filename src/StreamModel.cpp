@@ -3,8 +3,11 @@
 #include <stromx/core/Stream.h>
 #include "AddConnectionCmd.h"
 #include "AddOperatorCmd.h"
+#include "DeinitializeOperatorCmd.h"
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
+#include "RemoveConnectionCmd.h"
+#include "RemoveOperatorCmd.h"
 #include "ThreadListModel.h"
 #include "ThreadModel.h"
 
@@ -34,10 +37,15 @@ void StreamModel::addOperator(stromx::core::Operator*const op, const QPointF& po
 
 void StreamModel::removeOperator(OperatorModel* op)
 {
+    m_undoStack->beginMacro(tr("remove operator"));
+    
     if(op->isInitialized())
         deinitializeOperator(op);
     
-    doRemoveOperator(op);
+    RemoveOperatorCmd* cmd = new RemoveOperatorCmd(this, op);
+    m_undoStack->push(cmd);
+    
+    m_undoStack->endMacro();
 }
 
 void StreamModel::addConnection(OperatorModel* sourceOp, unsigned int outputId,
@@ -52,7 +60,8 @@ void StreamModel::addConnection(OperatorModel* sourceOp, unsigned int outputId,
 
 void StreamModel::removeConnection(ConnectionModel* connection)
 {
-    doRemoveConnection(connection);
+    RemoveConnectionCmd* cmd = new RemoveConnectionCmd(this, connection);
+    m_undoStack->push(cmd);
 }
 
 void StreamModel::addThread()
@@ -76,12 +85,17 @@ void StreamModel::initializeOperator(OperatorModel* op)
 
 void StreamModel::deinitializeOperator(OperatorModel* op)
 {
+    m_undoStack->beginMacro(tr("deinitialize operator"));
+    
     // before deinitialization remove all connections
     ConnectionModel* connection = 0;
     foreach(connection, op->connections())
         removeConnection(connection);
-        
-    doDeinitializeOperator(op);
+      
+    DeinitializeOperatorCmd* cmd = new DeinitializeOperatorCmd(this, op);
+    m_undoStack->push(cmd);
+    
+    m_undoStack->endMacro();
 }
 
 void StreamModel::doAddOperator(OperatorModel* op)

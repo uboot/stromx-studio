@@ -45,8 +45,11 @@ class StreamModel : public QObject
 {
     Q_OBJECT
     
-    friend class AddOperatorCmd;
     friend class AddConnectionCmd;
+    friend class AddOperatorCmd;
+    friend class DeinitializeOperatorCmd;
+    friend class RemoveOperatorCmd;
+    friend class RemoveConnectionCmd;
     
 public:
     explicit StreamModel(QUndoStack* undoStack, QObject *parent = 0);
