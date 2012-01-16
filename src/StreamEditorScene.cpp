@@ -119,7 +119,7 @@ void StreamEditorScene::initialize()
     foreach(item, selectedItems())
     {
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
-            opItem->model()->setInitialized(true);
+            m_model->initializeOperator(opItem->model());
     }
 }
 

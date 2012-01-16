@@ -59,6 +59,9 @@ public:
     void addThread();
     void removeThread(ThreadModel* thread);
     
+    void initializeOperator(OperatorModel* op);
+    void deinitializeOperator(OperatorModel* op);
+    
     ThreadListModel* threadListModel() const { return m_threadListModel; }
     
 signals:

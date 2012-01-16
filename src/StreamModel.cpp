@@ -78,10 +78,26 @@ void StreamModel::doAddOperator(OperatorModel* op)
 void StreamModel::doRemoveOperator(OperatorModel* op)
 {
     if(op->isInitialized())
-        op->setInitialized(false);
+        deinitializeOperator(op);
     
     emit operatorRemoved(op);
 }
+
+void StreamModel::initializeOperator(OperatorModel* op)
+{
+    op->setInitialized(true);
+}
+
+void StreamModel::deinitializeOperator(OperatorModel* op)
+{
+    // before deinitialization remove all connections
+    ConnectionModel* connection = 0;
+    foreach(connection, op->connections())
+        removeConnection(connection);
+        
+    op->setInitialized(false);
+}
+
 
 
 

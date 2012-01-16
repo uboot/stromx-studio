@@ -57,6 +57,7 @@ public:
     bool isInitialized() const;
     void setInitialized(bool initialized);
     
+    const QSet<ConnectionModel*> connections() const { return m_connections; }
     void addConnection(ConnectionModel* connection);
     void removeConnection(ConnectionModel* connection);
     
