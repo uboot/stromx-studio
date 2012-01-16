@@ -1,6 +1,7 @@
 #include "StreamModel.h"
 
 #include <stromx/core/Stream.h>
+#include "AddConnectionCmd.h"
 #include "AddOperatorCmd.h"
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
@@ -45,7 +46,8 @@ void StreamModel::addConnection(OperatorModel* sourceOp, unsigned int outputId,
     ConnectionModel* connection = new ConnectionModel(sourceOp, outputId,
                                                       targetOp, inputId, this);
     
-    doAddConnection(connection);
+    AddConnectionCmd* cmd = new AddConnectionCmd(this, connection);
+    m_undoStack->push(cmd);
 }
 
 void StreamModel::removeConnection(ConnectionModel* connection)
@@ -119,8 +121,6 @@ void StreamModel::doRemoveConnection(ConnectionModel* connection)
         connection->targetOp()->removeConnection(connection);
     
     emit connectionRemoved(connection);
-    
-    delete connection;
 }
 
 

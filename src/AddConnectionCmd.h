@@ -17,25 +17,28 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ADDOPERATORCMD_H
-#define ADDOPERATORCMD_H
+#ifndef ADDCONNECTIONCMD_H
+#define ADDCONNECTIONCMD_H
 
 #include <QUndoCommand>
+#include <QPointF>
 
-class OperatorModel;
 class StreamModel;
 
-class AddOperatorCmd : public QUndoCommand
+class ConnectionModel;
+class StreamModel;
+
+class AddConnectionCmd : public QUndoCommand
 {
 public:
-    AddOperatorCmd(StreamModel* stream, OperatorModel* model, QUndoCommand* parent = 0);
+    AddConnectionCmd(StreamModel* stream, ConnectionModel* model, QUndoCommand* parent = 0);
     
     virtual void undo();
     virtual void redo();
     
 private:
     StreamModel* m_stream;
-    OperatorModel* m_model;
+    ConnectionModel* m_model;
 };
 
-#endif // ADDOPERATORCMD_H
+#endif // ADDCONNECTIONCMD_H
