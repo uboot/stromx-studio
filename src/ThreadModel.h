@@ -39,6 +39,9 @@ class ThreadModel : public QObject
 public:
     explicit ThreadModel(stromx::core::Thread* thread, StreamModel *stream = 0);
     
+    stromx::core::Thread* thread() const { return m_thread; }
+    void setThread(stromx::core::Thread* thread);
+    
 private:
     stromx::core::Thread* m_thread;
     StreamModel* m_stream;

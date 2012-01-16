@@ -33,6 +33,9 @@ void StreamModel::addOperator(stromx::core::Operator*const op, const QPointF& po
 
 void StreamModel::removeOperator(OperatorModel* op)
 {
+    if(op->isInitialized())
+        deinitializeOperator(op);
+    
     doRemoveOperator(op);
 }
 
@@ -42,13 +45,72 @@ void StreamModel::addConnection(OperatorModel* sourceOp, unsigned int outputId,
     ConnectionModel* connection = new ConnectionModel(sourceOp, outputId,
                                                       targetOp, inputId, this);
     
-    sourceOp->addConnection(connection);
-    targetOp->addConnection(connection);
+    doAddConnection(connection);
+}
+
+void StreamModel::removeConnection(ConnectionModel* connection)
+{
+    doRemoveConnection(connection);
+}
+
+void StreamModel::addThread()
+{
+    stromx::core::Thread* thread = m_stream->addThread();
+    ThreadModel* threadModel = new ThreadModel(thread, this);
+    m_threadListModel->addThread(threadModel);
+    
+    emit threadAdded(threadModel);
+}
+
+void StreamModel::removeThread(ThreadModel* thread)
+{
+
+}
+
+void StreamModel::initializeOperator(OperatorModel* op)
+{
+    doInitializeOperator(op);
+}
+
+void StreamModel::deinitializeOperator(OperatorModel* op)
+{
+    // before deinitialization remove all connections
+    ConnectionModel* connection = 0;
+    foreach(connection, op->connections())
+        removeConnection(connection);
+        
+    doDeinitializeOperator(op);
+}
+
+void StreamModel::doAddOperator(OperatorModel* op)
+{
+    emit operatorAdded(op);
+}
+
+void StreamModel::doRemoveOperator(OperatorModel* op)
+{
+    emit operatorRemoved(op);
+}
+
+void StreamModel::doInitializeOperator(OperatorModel* op)
+{
+    op->setInitialized(true);
+}
+
+void StreamModel::doDeinitializeOperator(OperatorModel* op)
+{
+    op->setInitialized(false);
+}
+
+void StreamModel::doAddConnection(ConnectionModel* connection)
+{
+    connection->sourceOp()->addConnection(connection);
+    connection->targetOp()->addConnection(connection);
     
     emit connectionAdded(connection);
 }
 
-void StreamModel::removeConnection(ConnectionModel* connection)
+void StreamModel::doRemoveConnection(ConnectionModel* connection)
 {
     if(connection->sourceOp())
         connection->sourceOp()->removeConnection(connection);
@@ -61,42 +123,7 @@ void StreamModel::removeConnection(ConnectionModel* connection)
     delete connection;
 }
 
-void StreamModel::addThread()
-{
-    stromx::core::Thread* thread = m_stream->addThread();
-    ThreadModel* threadModel = new ThreadModel(thread, this);
-    m_threadListModel->addThread(threadModel);
-    
-    emit threadAdded(threadModel);
-}
 
-void StreamModel::doAddOperator(OperatorModel* op)
-{
-    emit operatorAdded(op);
-}
-
-void StreamModel::doRemoveOperator(OperatorModel* op)
-{
-    if(op->isInitialized())
-        deinitializeOperator(op);
-    
-    emit operatorRemoved(op);
-}
-
-void StreamModel::initializeOperator(OperatorModel* op)
-{
-    op->setInitialized(true);
-}
-
-void StreamModel::deinitializeOperator(OperatorModel* op)
-{
-    // before deinitialization remove all connections
-    ConnectionModel* connection = 0;
-    foreach(connection, op->connections())
-        removeConnection(connection);
-        
-    op->setInitialized(false);
-}
 
 
 

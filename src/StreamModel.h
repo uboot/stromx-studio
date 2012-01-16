@@ -22,13 +22,15 @@
 
 #include <QObject>
 #include <QPointF>
+#include <QSet>
 
 namespace stromx
 {
     namespace core
     { 
-        class Stream;
         class Operator;
+        class Stream;
+        class Thread;
     }
 }
 
@@ -75,10 +77,16 @@ signals:
 private:
     void doAddOperator(OperatorModel* op);
     void doRemoveOperator(OperatorModel* op);
+    void doInitializeOperator(OperatorModel* op);
+    void doDeinitializeOperator(OperatorModel* op);
+    void doAddConnection(ConnectionModel* connection);
+    void doRemoveConnection(ConnectionModel* connection);
     
     stromx::core::Stream* m_stream;
     ThreadListModel* m_threadListModel;
     QUndoStack* m_undoStack;
+    QSet<stromx::core::Operator*> m_offlineOperators;
+    QSet<stromx::core::Thread*> m_offlineThreads;
 };
 
 #endif // STREAMMODEL_H
