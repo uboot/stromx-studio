@@ -5,11 +5,16 @@
 #include <QSettings>
 #include <stromx/core/Core.h>
 #include <stromx/core/Factory.h>
-#include <stromx/core/OperatorKernel.h>
-#include <dlfcn.h>
-#include <iostream>
 #include <stromx/core/Operator.h>
+#include <stromx/core/OperatorKernel.h>
+#include <iostream>
 
+#ifdef UNIX
+    #include <dlfcn.h>
+#endif // UNIX
+
+#ifdef WIN32
+#endif // WIN32
 
 using namespace stromx::core;
     
@@ -20,6 +25,7 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
     m_factory = new stromx::core::Factory();
     stromxRegisterCore(*m_factory);
     
+    updateOperators();
     
     QSettings settings("stromx", "stromx-studio");
     QStringList loadedLibraries = settings.value("loadedLibraries").toStringList();
@@ -41,9 +47,11 @@ OperatorLibraryModel::~OperatorLibraryModel()
 {
     delete m_factory;
     
+#ifdef UNIX
     void* handle = 0;
     foreach(handle, m_libraryHandles)
         dlclose(handle);
+#endif // UNIX
     
     QSettings settings("stromx", "stromx-studio");
     settings.setValue("loadedLibraries", m_loadedLibraries);
@@ -138,6 +146,7 @@ int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
 
 void OperatorLibraryModel::loadLibrary(const QString& library)
 {
+#ifdef UNIX
     QFileInfo info(library);
     
     QRegExp regEx("libstromx_(.+)");
@@ -185,6 +194,7 @@ void OperatorLibraryModel::loadLibrary(const QString& library)
     m_loadedLibraries.append(library);
         
     updateOperators();
+#endif // UNIX
 }
 
 void OperatorLibraryModel::resetLibraries()
