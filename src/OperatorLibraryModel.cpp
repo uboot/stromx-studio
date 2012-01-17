@@ -64,16 +64,18 @@ QModelIndex OperatorLibraryModel::index(int row, int column, const QModelIndex& 
     if(! parent.isValid())
         return createIndex(row, column, row);
     
-    unsigned int id = parent.internalId();
+    int id = parent.internalId();
     
     // parent is a package
     if(id < m_package2OperatorMap.size())
         return createIndex(row, column, m_package2OperatorMap.size() + id);
+    
+    return QModelIndex();
 }
 
 QModelIndex OperatorLibraryModel::parent(const QModelIndex& child) const
 {
-    unsigned int id = child.internalId();
+    int id = child.internalId();
     
     // child is a package
     if(id < m_package2OperatorMap.size())
@@ -89,7 +91,7 @@ QVariant OperatorLibraryModel::data(const QModelIndex& index, int role) const
     if(role != Qt::DisplayRole)
         return QVariant();
         
-    unsigned int id = index.internalId();
+    int id = index.internalId();
     
     // index is a package
     if(id < m_package2OperatorMap.size())
@@ -131,7 +133,7 @@ int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
     if(! parent.isValid())
         return m_package2OperatorMap.size();
     
-    unsigned int id = parent.internalId();
+    int id = parent.internalId();
     
     // parent is a package
     if(id < m_package2OperatorMap.size())
@@ -245,7 +247,7 @@ QVariant OperatorLibraryModel::headerData(int section, Qt::Orientation orientati
 
 const bool OperatorLibraryModel::isOperator(const QModelIndex& index) const
 {
-    unsigned int id = index.internalId();
+    int id = index.internalId();
     
     return (id >= m_package2OperatorMap.size());
     

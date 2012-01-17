@@ -180,6 +180,8 @@ OperatorItem* StreamEditorScene::findOperatorItem(OperatorModel* opModel) const
                 return opItem;
         }
     }
+    
+    return 0;
 }
 
 ConnectionItem* StreamEditorScene::findConnectionItem(ConnectionModel* connectionModel) const
@@ -197,6 +199,7 @@ ConnectionItem* StreamEditorScene::findConnectionItem(ConnectionModel* connectio
         }
     }
 
+    return 0;
 }
 
 void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
