@@ -252,7 +252,7 @@ void MainWindow::loadLibraries()
         {
             m_operatorLibrary->model()->loadLibrary(file);
         }
-        catch(LoadLibraryFailed & e)
+        catch(LoadLibraryFailed &)
         {
             std::cout << "Failed to load '" << file.toStdString() << "'" << std::endl;
         }
