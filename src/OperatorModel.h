@@ -41,6 +41,8 @@ class OperatorModel : public QAbstractTableModel
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
     Q_PROPERTY(bool initialized READ isInitialized WRITE setInitialized)
     
+    friend class MoveOperatorCmd;
+    
 public:
     explicit OperatorModel(stromx::core::Operator* op, StreamModel *stream = 0);
     
@@ -66,6 +68,8 @@ signals:
     void initializedChanged(bool status);
     
 private:
+    void doSetPos(const QPointF & pos);
+    
     stromx::core::Operator* m_op;
     StreamModel* m_stream;
     QPointF m_pos;

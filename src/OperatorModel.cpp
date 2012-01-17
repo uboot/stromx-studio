@@ -1,6 +1,8 @@
 #include "OperatorModel.h"
 
+#include <QUndoStack>
 #include <stromx/core/Operator.h>
+#include "MoveOperatorCmd.h"
 #include "StreamModel.h"
 
 OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
@@ -84,9 +86,15 @@ void OperatorModel::setPos(const QPointF& pos)
 {
     if(m_pos != pos)
     {
-        m_pos = pos;
-        emit posChanged(m_pos);
+        MoveOperatorCmd* cmd = new MoveOperatorCmd(this, pos);
+        m_stream->undoStack()->push(cmd);
     }
+}
+
+void OperatorModel::doSetPos(const QPointF& pos)
+{
+    m_pos = pos;
+    emit posChanged(m_pos);
 }
 
 bool OperatorModel::isInitialized() const

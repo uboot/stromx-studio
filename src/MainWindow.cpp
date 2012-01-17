@@ -86,7 +86,9 @@ MainWindow::~MainWindow()
 void MainWindow::createActions()
 {
     m_undoAct = m_undoStack->createUndoAction(this);
+    m_undoAct->setShortcuts(QKeySequence::Undo);
     m_redoAct = m_undoStack->createRedoAction(this);
+    m_redoAct->setShortcuts(QKeySequence::Redo);
     m_initializeAct = m_streamEditor->scene()->createInitializeAction(this);
     m_addThreadAct = m_threadEditor->createAddThreadAction(this);
     m_removeThreadAct = m_threadEditor->createRemoveThreadAction(this);

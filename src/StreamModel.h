@@ -48,6 +48,7 @@ class StreamModel : public QObject
     friend class AddConnectionCmd;
     friend class AddOperatorCmd;
     friend class DeinitializeOperatorCmd;
+    friend class InitializeOperatorCmd;
     friend class RemoveOperatorCmd;
     friend class RemoveConnectionCmd;
     
@@ -69,6 +70,8 @@ public:
     void deinitializeOperator(OperatorModel* op);
     
     ThreadListModel* threadListModel() const { return m_threadListModel; }
+    
+    QUndoStack* undoStack() const { return m_undoStack; }
     
 signals:
     void operatorAdded(OperatorModel* op);

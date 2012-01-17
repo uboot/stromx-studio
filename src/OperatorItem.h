@@ -21,6 +21,7 @@
 #define OPERATORITEM_H
 
 #include <QGraphicsObject>
+#include <QPointF>
 
 class QGraphicsRectItem;
 class ConnectionItem;
@@ -48,9 +49,11 @@ public:
     
 public slots:
     void setInitialized(bool value);
+    void setOperatorPos(const QPointF & value);
     
 protected:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value);
     
 private:

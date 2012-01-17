@@ -22,6 +22,7 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
     setFlag(ItemIsFocusable, true);
     
     connect(m_model, SIGNAL(initializedChanged(bool)), this, SLOT(setInitialized(bool)));
+    connect(m_model, SIGNAL(posChanged(QPointF)), this, SLOT(setOperatorPos(QPointF)));
 }
 
 QRectF OperatorItem::boundingRect() const
@@ -91,6 +92,21 @@ void OperatorItem::initialize()
 
 void OperatorItem::deinitialize()
 {
+    QMapIterator<unsigned int, ConnectorItem*> inputIter(m_inputs);
+    while (inputIter.hasNext())
+    {
+        inputIter.next();
+        delete inputIter.value();
+    }
+    m_inputs.clear();
+    
+    QMapIterator<unsigned int, ConnectorItem*> outputIter(m_outputs);
+    while (outputIter.hasNext())
+    {
+        outputIter.next();
+        delete outputIter.value();
+    }
+    m_outputs.clear();
 }
 
 void OperatorItem::addInputConnection(unsigned int id, ConnectionItem* connection)
@@ -136,7 +152,20 @@ void OperatorItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         outputIter.value()->updateConnectionPositions();
     }
     
-    QGraphicsItem::mouseMoveEvent(event);
+    QGraphicsObject::mouseMoveEvent(event);
 }
+
+void OperatorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
+{
+    m_model->setPos(pos());
+    
+    QGraphicsObject::mouseReleaseEvent(event);
+}
+
+void OperatorItem::setOperatorPos(const QPointF& value)
+{
+    setPos(value);
+}
+
 
 

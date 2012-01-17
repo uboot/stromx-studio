@@ -5,8 +5,10 @@ set(stromxstudio_SOURCES
     ConnectorItem.cpp
     ConnectionModel.cpp
     DeinitializeOperatorCmd.cpp
+    InitializeOperatorCmd.cpp
     main.cpp
     MainWindow.cpp
+    MoveOperatorCmd.cpp
     ObserverEditor.cpp
     OperatorItem.cpp
     OperatorLibrary.cpp

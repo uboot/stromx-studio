@@ -3,7 +3,7 @@
 #include "StreamModel.h"
 
 AddOperatorCmd::AddOperatorCmd(StreamModel* stream, OperatorModel* model, QUndoCommand* parent)
-  : QUndoCommand(parent),
+  : QUndoCommand(QObject::tr("add operator"), parent),
     m_stream(stream),
     m_model(model)
 {

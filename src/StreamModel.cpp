@@ -4,6 +4,7 @@
 #include "AddConnectionCmd.h"
 #include "AddOperatorCmd.h"
 #include "DeinitializeOperatorCmd.h"
+#include "InitializeOperatorCmd.h"
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
 #include "RemoveConnectionCmd.h"
@@ -28,11 +29,15 @@ StreamModel::~StreamModel()
 
 void StreamModel::addOperator(stromx::core::Operator*const op, const QPointF& pos)
 {
+    m_undoStack->beginMacro(tr("add operator"));
+    
     OperatorModel* opModel = new OperatorModel(op, this);
     opModel->setPos(pos);
     
     AddOperatorCmd* cmd = new AddOperatorCmd(this, opModel);
     m_undoStack->push(cmd);
+    
+    m_undoStack->endMacro();
 }
 
 void StreamModel::removeOperator(OperatorModel* op)
@@ -80,7 +85,8 @@ void StreamModel::removeThread(ThreadModel* thread)
 
 void StreamModel::initializeOperator(OperatorModel* op)
 {
-    doInitializeOperator(op);
+    InitializeOperatorCmd* cmd = new InitializeOperatorCmd(this, op);
+    m_undoStack->push(cmd);
 }
 
 void StreamModel::deinitializeOperator(OperatorModel* op)
