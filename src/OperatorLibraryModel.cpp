@@ -267,6 +267,12 @@ stromx::core::Operator* OperatorLibraryModel::newOperator(const QModelIndex& ind
     return m_factory->newOperator(op->package(), op->type());
 }
 
+stromx::core::Operator* OperatorLibraryModel::newOperator(const QString& package, const QString& name) const
+{
+    return 0;
+}
+
+
 
 
 

@@ -23,8 +23,13 @@ void StreamEditorScene::setModel(StreamModel* model)
 {
     if(m_model)
         m_model->disconnect(this);
+    
+    QGraphicsItem* item = 0;
+    foreach(item, items())
+        delete item;
         
     m_model = model;
+    // TODO: add existing operators and connections to the scene
     
     if(m_model)
     {

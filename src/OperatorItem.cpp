@@ -159,7 +159,6 @@ void OperatorItem::updateConnectionPositions()
     }
 }
 
-
 void OperatorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     m_model->setPos(pos());

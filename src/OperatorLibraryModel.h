@@ -59,7 +59,7 @@ public:
     
     void loadLibrary(const QString& library);
     void resetLibraries();
-    
+    stromx::core::Operator* newOperator(const QString &package, const QString &name) const;
     
 private:
     void updateOperators();
