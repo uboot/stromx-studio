@@ -52,6 +52,8 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
     
 private:
     ConnectorItem* connectorItemAt(const QPointF & pos) const;
@@ -62,6 +64,7 @@ private:
     ConnectorType m_connectorType;
     ConnectionItem* m_currentConnection;
     QSet<ConnectionItem*> m_connections;
+    QGraphicsTextItem* m_label;
 };
 
 #endif // CONNECTORITEM_H

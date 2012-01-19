@@ -59,6 +59,7 @@ protected:
 private:
     void initialize();
     void deinitialize();
+    void updateConnectionPositions();
     
     OperatorModel* m_model;
     QGraphicsRectItem* m_opRect;

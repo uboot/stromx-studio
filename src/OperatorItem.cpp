@@ -138,6 +138,12 @@ void OperatorItem::removeConnection(ConnectionItem* connection)
 
 void OperatorItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {    
+    updateConnectionPositions();
+    QGraphicsObject::mouseMoveEvent(event);
+}
+
+void OperatorItem::updateConnectionPositions()
+{
     QMapIterator<unsigned int, ConnectorItem*> inputIter(m_inputs);
     while (inputIter.hasNext())
     {
@@ -151,9 +157,8 @@ void OperatorItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         outputIter.next();
         outputIter.value()->updateConnectionPositions();
     }
-    
-    QGraphicsObject::mouseMoveEvent(event);
 }
+
 
 void OperatorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
@@ -165,6 +170,7 @@ void OperatorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 void OperatorItem::setOperatorPos(const QPointF& value)
 {
     setPos(value);
+    updateConnectionPositions();
 }
 
 

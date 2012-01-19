@@ -2,7 +2,9 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <stromx/core/Operator.h>
 #include "ConnectionItem.h"
+#include "OperatorModel.h"
 #include "StreamEditorScene.h"
 #include "StreamModel.h"
 
@@ -11,9 +13,11 @@ ConnectorItem::ConnectorItem(OperatorModel* op, unsigned int id, ConnectorType t
     m_op(op),
     m_id(id),
     m_connectorType(type),
-    m_currentConnection(0)
+    m_currentConnection(0),
+    m_label(0)
 {
     setRect(0, 0, 10, 10);
+    setAcceptHoverEvents(true);
 }
 
 void ConnectorItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
@@ -122,4 +126,42 @@ void ConnectorItem::updateConnectionPosition(ConnectionItem* connection) const
     else
         connection->setStart(mapToScene(QPointF(5, 5)));
 }
+
+void ConnectorItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+{
+    if(! m_label)
+    {
+        std::string text;
+        if(connectorType() == INPUT)
+            text = m_op->op()->info().inputs()[m_id]->name();
+        else
+            text = m_op->op()->info().outputs()[m_id]->name();
+        
+        m_label = new QGraphicsTextItem(this);
+        m_label->setPlainText(QString::fromStdString(text));
+        
+        QPointF pos;
+        pos.setY(-5);
+        if(connectorType() == INPUT)
+            pos.setX(-m_label->boundingRect().width());
+        else
+            pos.setX(10);
+            
+        m_label->setPos(pos);
+    }
+    
+    QGraphicsItem::hoverEnterEvent(event);
+}
+
+void ConnectorItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+{
+    if(m_label)
+    {
+        delete m_label;
+        m_label = 0;
+    }
+    
+    QGraphicsItem::hoverLeaveEvent(event);
+}
+
 
