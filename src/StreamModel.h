@@ -23,6 +23,7 @@
 #include <QObject>
 #include <QPointF>
 #include <QSet>
+#include "ThreadListModel.h"
 
 namespace stromx
 {
@@ -45,24 +46,29 @@ class StreamModel : public QObject
 {
     Q_OBJECT
     
-    friend class AddConnectionCmd;
     friend class AddOperatorCmd;
-    friend class DeinitializeOperatorCmd;
-    friend class InitializeOperatorCmd;
     friend class RemoveOperatorCmd;
+    friend class InitializeOperatorCmd;
+    friend class DeinitializeOperatorCmd;
+    friend class AddConnectionCmd;
     friend class RemoveConnectionCmd;
+    friend class AddThreadCmd;
+    friend class RemoveThreadCmd;
     
 public:
     explicit StreamModel(QUndoStack* undoStack, QObject *parent = 0);
     virtual ~StreamModel();
     
+    const QList<OperatorModel*> operators() const { return m_operators; }
     void addOperator(stromx::core::Operator* const op, const QPointF & pos);
     void removeOperator(OperatorModel* op);
     
+    const QList<ConnectionModel*> connections() const { return m_connections; }
     void addConnection(OperatorModel* sourceOp, unsigned int outputId,
                        OperatorModel* targetOp, unsigned int inputId);
     void removeConnection(ConnectionModel* connection);
     
+    const QList<ThreadModel*> threads() const { return m_threadListModel->threads(); }
     void addThread();
     void removeThread(ThreadModel* thread);
     
@@ -88,12 +94,16 @@ private:
     void doDeinitializeOperator(OperatorModel* op);
     void doAddConnection(ConnectionModel* connection);
     void doRemoveConnection(ConnectionModel* connection);
+    void doAddThread(ThreadModel* threadModel);
+    void doRemoveThread(ThreadModel* threadModel);
     
     stromx::core::Stream* m_stream;
     ThreadListModel* m_threadListModel;
     QUndoStack* m_undoStack;
     QSet<stromx::core::Operator*> m_offlineOperators;
     QSet<stromx::core::Thread*> m_offlineThreads;
+    QList<ConnectionModel*> m_connections;
+    QList<OperatorModel*> m_operators;
 };
 
 #endif // STREAMMODEL_H

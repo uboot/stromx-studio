@@ -9,3 +9,8 @@ ThreadModel::ThreadModel(stromx::core::Thread* thread, StreamModel* stream)
 {
 
 }
+
+void ThreadModel::setThread(stromx::core::Thread* thread)
+{
+    m_thread = thread;
+}

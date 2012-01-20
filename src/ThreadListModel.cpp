@@ -54,6 +54,13 @@ void ThreadListModel::addThread(ThreadModel* thread)
 
 void ThreadListModel::removeThread(ThreadModel* thread)
 {
-    m_threads.removeAll(thread);
+    int i = m_threads.indexOf(thread);
+    
+    if(i >= 0)
+    {
+        beginRemoveRows(QModelIndex(), i, i);
+        m_threads.removeAt(i);
+        endRemoveRows();
+    }
 }
 

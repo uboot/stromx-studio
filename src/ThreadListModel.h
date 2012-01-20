@@ -37,6 +37,7 @@ public:
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
+    const QList<ThreadModel*> threads() const { return m_threads; }
     void addThread(ThreadModel* thread);
     void removeThread(ThreadModel* thread);
     

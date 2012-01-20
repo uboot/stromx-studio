@@ -1,5 +1,6 @@
 set(stromxstudio_SOURCES
     AddConnectionCmd.cpp
+    AddThreadCmd.cpp
     AddOperatorCmd.cpp
     ConnectionItem.cpp
     ConnectorItem.cpp

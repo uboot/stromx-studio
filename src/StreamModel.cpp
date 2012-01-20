@@ -11,6 +11,7 @@
 #include "RemoveOperatorCmd.h"
 #include "ThreadListModel.h"
 #include "ThreadModel.h"
+#include "AddThreadCmd.h"
 
 StreamModel::StreamModel(QUndoStack* undoStack, QObject* parent) 
   : QObject(parent),
@@ -71,16 +72,15 @@ void StreamModel::removeConnection(ConnectionModel* connection)
 
 void StreamModel::addThread()
 {
-    stromx::core::Thread* thread = m_stream->addThread();
-    ThreadModel* threadModel = new ThreadModel(thread, this);
-    m_threadListModel->addThread(threadModel);
+    ThreadModel* threadModel = new ThreadModel(0, this);
     
-    emit threadAdded(threadModel);
+    AddThreadCmd* cmd = new AddThreadCmd(this, threadModel);
+    m_undoStack->push(cmd);
 }
 
 void StreamModel::removeThread(ThreadModel* thread)
 {
-
+    doRemoveThread(thread);
 }
 
 void StreamModel::initializeOperator(OperatorModel* op)
@@ -105,11 +105,13 @@ void StreamModel::deinitializeOperator(OperatorModel* op)
 
 void StreamModel::doAddOperator(OperatorModel* op)
 {
+    m_operators.append(op);
     emit operatorAdded(op);
 }
 
 void StreamModel::doRemoveOperator(OperatorModel* op)
 {
+    m_operators.removeAll(op);
     emit operatorRemoved(op);
 }
 
@@ -127,6 +129,7 @@ void StreamModel::doAddConnection(ConnectionModel* connection)
 {
     connection->sourceOp()->addConnection(connection);
     connection->targetOp()->addConnection(connection);
+    m_connections.append(connection);
     
     emit connectionAdded(connection);
 }
@@ -139,7 +142,24 @@ void StreamModel::doRemoveConnection(ConnectionModel* connection)
     if(connection->targetOp())
         connection->targetOp()->removeConnection(connection);
     
+    m_connections.removeAll(connection);
+    
     emit connectionRemoved(connection);
+}
+
+void StreamModel::doAddThread(ThreadModel* threadModel)
+{
+    stromx::core::Thread* thread = m_stream->addThread();
+    threadModel->setThread(thread);
+    m_threadListModel->addThread(threadModel);
+    emit threadAdded(threadModel);
+}
+
+void StreamModel::doRemoveThread(ThreadModel* threadModel)
+{
+    m_threadListModel->removeThread(threadModel);
+    threadModel->setThread(0);
+    emit threadRemoved(threadModel);
 }
 
 
