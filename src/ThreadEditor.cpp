@@ -26,6 +26,10 @@ void ThreadEditor::setModel(StreamModel* model)
     
     m_table->setModel(m_model->threadListModel());
     m_table->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_table->setSelectionMode(QAbstractItemView::SingleSelection);
+    connect(m_table->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), 
+            this, SLOT(updateThreadSelected(QModelIndex,QModelIndex)));
 }
 
 QAction* ThreadEditor::createAddThreadAction(QObject* parent)
@@ -43,6 +47,7 @@ QAction* ThreadEditor::createRemoveThreadAction(QObject* parent)
 {
     QAction* action = new QAction(tr("Remove thread"), parent);
     action->setStatusTip(tr("Remove the selected thread from the stream"));
+    action->setShortcut(tr("Ctrl+Shift+T"));
     action->setEnabled(false);
     connect(action, SIGNAL(triggered()), this, SLOT(removeThread()));
     connect(this, SIGNAL(threadSelectedChanged(bool)), action, SLOT(setEnabled(bool)));
@@ -58,5 +63,14 @@ void ThreadEditor::addThread() const
 void ThreadEditor::removeThread() const
 {
 }
+
+void ThreadEditor::updateThreadSelected(const QModelIndex& current, const QModelIndex& previous)
+{
+    if(current.isValid())
+        emit threadSelectedChanged(true);
+    else
+        emit threadSelectedChanged(false);
+}
+
 
 

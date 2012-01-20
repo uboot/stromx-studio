@@ -23,6 +23,7 @@
 #include <QWidget>
 
 class QAbstractTableModel;
+class QModelIndex;
 class QTableView;
 class StreamModel;
 
@@ -44,6 +45,9 @@ public slots:
     
 signals:
     void threadSelectedChanged(bool selected);
+    
+private slots:
+    void updateThreadSelected( const QModelIndex & current, const QModelIndex & previous );
     
 private:
     QTableView* m_table;
