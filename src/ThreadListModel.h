@@ -41,6 +41,8 @@ public:
     void addThread(ThreadModel* thread);
     void removeThread(ThreadModel* thread);
     
+    ThreadModel* thread(const QModelIndex & index) const;
+    
 private:
     QList<ThreadModel*> m_threads;
 };

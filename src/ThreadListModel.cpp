@@ -64,3 +64,12 @@ void ThreadListModel::removeThread(ThreadModel* thread)
     }
 }
 
+ThreadModel* ThreadListModel::thread(const QModelIndex& index) const
+{
+    if(index.row() >= 0 && index.row() < m_threads.size())
+        return m_threads[index.row()];
+    else
+        return 0;
+}
+
+
