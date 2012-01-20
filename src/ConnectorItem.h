@@ -57,6 +57,7 @@ protected:
     
 private:
     ConnectorItem* connectorItemAt(const QPointF & pos) const;
+    bool canConnect() const;
     void updateConnectionPosition(ConnectionItem* connection) const;
     
     OperatorModel* m_op;

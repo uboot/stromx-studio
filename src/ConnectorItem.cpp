@@ -22,6 +22,9 @@ ConnectorItem::ConnectorItem(OperatorModel* op, unsigned int id, ConnectorType t
 
 void ConnectorItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+    if(! canConnect())
+        return;
+    
     m_currentConnection = new ConnectionItem(0, this);
     if(m_connectorType == INPUT)
     {
@@ -68,10 +71,24 @@ ConnectorItem* ConnectorItem::connectorItemAt(const QPointF& pos) const
     {
         if((connectorItem = qgraphicsitem_cast<ConnectorItem*>(item)))
             if(connectorType() != connectorItem->connectorType())
+            {
+                if(! connectorItem->canConnect())
+                    return 0;
+                
                 return connectorItem;
+            }
     }
     
     return 0;
+}
+
+bool ConnectorItem::canConnect() const
+{
+    // inputs can connect to at most one output
+    if(connectorType() == INPUT && ! m_connections.empty())
+        return false;
+    
+    return true;
 }
 
 void ConnectorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)

@@ -25,6 +25,7 @@
 class QAbstractTableModel;
 class QModelIndex;
 class QTableView;
+class ThreadModel;
 class StreamModel;
 
 class ThreadEditor : public QWidget
@@ -45,6 +46,7 @@ public slots:
     
 signals:
     void threadSelectedChanged(bool selected);
+    void selectedThreadChanged(ThreadModel* thread);
     
 private slots:
     void updateThreadSelected( const QModelIndex & current, const QModelIndex & previous );
