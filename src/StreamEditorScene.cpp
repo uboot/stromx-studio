@@ -24,8 +24,7 @@ void StreamEditorScene::setModel(StreamModel* model)
     if(m_model)
         m_model->disconnect(this);
     
-    QGraphicsItem* item = 0;
-    foreach(item, items())
+    foreach(QGraphicsItem* item, items())
         delete item;
         
     m_model = model;
@@ -120,8 +119,7 @@ void StreamEditorScene::addConnection(ConnectionModel* connection)
 
 void StreamEditorScene::initialize()
 {    
-    QGraphicsItem* item = 0;
-    foreach(item, selectedItems())
+    foreach(QGraphicsItem* item, selectedItems())
     {
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
             m_model->initializeOperator(opItem->model());
@@ -161,8 +159,7 @@ void StreamEditorScene::enableInitializeAction()
         
     bool selectionIsValid = true;
     
-    QGraphicsItem* item = 0;
-    foreach(item, selectedItems())
+    foreach(QGraphicsItem* item, selectedItems())
     {
         if(! qgraphicsitem_cast<OperatorItem*>(item))
             selectionIsValid = false;
@@ -176,8 +173,7 @@ OperatorItem* StreamEditorScene::findOperatorItem(OperatorModel* opModel) const
     if(! opModel)
         return 0;
     
-    QGraphicsItem* item = 0;
-    foreach(item, items())
+    foreach(QGraphicsItem* item, items())
     {
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
         {
@@ -194,8 +190,7 @@ ConnectionItem* StreamEditorScene::findConnectionItem(ConnectionModel* connectio
     if(! connectionModel)
         return 0;
     
-    QGraphicsItem* item = 0;
-    foreach(item, items())
+    foreach(QGraphicsItem* item, items())
     {
         if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
         {
@@ -211,8 +206,7 @@ void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
 {
     if(keyEvent->matches(QKeySequence::Delete))
     {    
-        QGraphicsItem* item = 0;
-        foreach(item, selectedItems())
+        foreach(QGraphicsItem* item, selectedItems())
         { 
             // items have been deleted because they were dependent on other deleted items
             // check the existence of each item separately           

@@ -1,5 +1,6 @@
 #include "OperatorItem.h"
 
+#include <QGraphicsScene>
 #include <QPen>
 #include <stromx/core/Operator.h>
 #include "ConnectorItem.h"
@@ -20,6 +21,7 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
     setFlag(ItemIsFocusable, true);
+    setFlag(ItemSendsScenePositionChanges, true);
     
     connect(m_model, SIGNAL(initializedChanged(bool)), this, SLOT(setInitialized(bool)));
     connect(m_model, SIGNAL(posChanged(QPointF)), this, SLOT(setOperatorPos(QPointF)));
@@ -48,6 +50,10 @@ QVariant OperatorItem::itemChange(GraphicsItemChange change, const QVariant &val
         m_opRect->setPen(currentPen);
         
         return value;
+    }
+    if(change == ItemPositionHasChanged)
+    {
+        updateConnectionPositions();
     }
 
     return QGraphicsItem::itemChange(change, value);
@@ -136,12 +142,6 @@ void OperatorItem::removeConnection(ConnectionItem* connection)
     }
 }
 
-void OperatorItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
-{    
-    updateConnectionPositions();
-    QGraphicsObject::mouseMoveEvent(event);
-}
-
 void OperatorItem::updateConnectionPositions()
 {
     QMapIterator<unsigned int, ConnectorItem*> inputIter(m_inputs);
@@ -161,7 +161,11 @@ void OperatorItem::updateConnectionPositions()
 
 void OperatorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    m_model->setPos(pos());
+    foreach(QGraphicsItem* item, scene()->selectedItems())
+    {
+        if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
+            opItem->model()->setPos(opItem->pos());
+    }
     
     QGraphicsObject::mouseReleaseEvent(event);
 }

@@ -94,8 +94,7 @@ void StreamModel::deinitializeOperator(OperatorModel* op)
     m_undoStack->beginMacro(tr("deinitialize operator"));
     
     // before deinitialization remove all connections
-    ConnectionModel* connection = 0;
-    foreach(connection, op->connections())
+    foreach(ConnectionModel* connection, op->connections())
         removeConnection(connection);
       
     DeinitializeOperatorCmd* cmd = new DeinitializeOperatorCmd(this, op);

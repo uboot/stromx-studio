@@ -62,11 +62,9 @@ void ConnectorItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 ConnectorItem* ConnectorItem::connectorItemAt(const QPointF& pos) const
 {
     QList<QGraphicsItem*> items = scene()->items(pos);
-    
-    QGraphicsItem* item = 0;
     ConnectorItem* connectorItem = 0;
     
-    foreach(item, items)
+    foreach(QGraphicsItem* item, items)
     {
         if((connectorItem = qgraphicsitem_cast<ConnectorItem*>(item)))
             if(connectorType() != connectorItem->connectorType())
@@ -114,8 +112,7 @@ void ConnectorItem::removeConnection(ConnectionItem* connection)
 
 void ConnectorItem::updateConnectionPositions() const
 {
-    ConnectionItem* connection = 0;
-    foreach(connection, m_connections)
+    foreach(ConnectionItem* connection, m_connections)
         updateConnectionPosition(connection);
 }
 

@@ -247,8 +247,7 @@ void MainWindow::loadLibraries()
                             tr("libraries (*.so)")); 
     
     // load each library
-    QString file;
-    foreach(file, files)
+    foreach(QString file, files)
     {
         try
         {

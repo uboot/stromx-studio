@@ -30,8 +30,7 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
     QSettings settings("stromx", "stromx-studio");
     QStringList loadedLibraries = settings.value("loadedLibraries").toStringList();
     
-    QString file;
-    foreach(file, loadedLibraries)
+    foreach(QString file, loadedLibraries)
     {
         try
         {
@@ -48,8 +47,7 @@ OperatorLibraryModel::~OperatorLibraryModel()
     delete m_factory;
     
 #ifdef UNIX
-    void* handle = 0;
-    foreach(handle, m_libraryHandles)
+    foreach(void* handle, m_libraryHandles)
         dlclose(handle);
 #endif // UNIX
     

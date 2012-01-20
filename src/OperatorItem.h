@@ -52,7 +52,6 @@ public slots:
     void setOperatorPos(const QPointF & value);
     
 protected:
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value);
     
