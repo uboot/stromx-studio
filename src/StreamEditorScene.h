@@ -29,6 +29,7 @@ class QGraphicsSceneDragDropEvent;
 class ConnectionModel;
 class OperatorModel;
 class StreamModel;
+class ThreadModel;
 
 class StreamEditorScene : public QGraphicsScene
 {
@@ -51,12 +52,12 @@ signals:
     void initializeEnabledChanged(bool enabled);
     void deinitializeEnabledChanged(bool enabled);
     void selectedModelChanged(QAbstractTableModel* model);
-    
+   
 protected:
     void keyPressEvent(QKeyEvent* keyEvent);
     
 private slots:
-    void showSelectedModel();
+    void processSelection();
     void enableInitializeAction();
     void enableDeinitializeAction();
     void addOperator(OperatorModel* op);

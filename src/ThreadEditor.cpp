@@ -62,12 +62,21 @@ void ThreadEditor::addThread() const
 
 void ThreadEditor::removeThread() const
 {
+    ThreadModel* thread = selectedThread();
+    if(thread)
+        m_model->removeThread(thread);
+}
+
+ThreadModel* ThreadEditor::selectedThread() const
+{
     if(m_table->selectionModel())
     {
         QModelIndex index = m_table->selectionModel()->currentIndex();
         if(index.isValid())
-            m_model->removeThread(m_model->threadListModel()->thread(index));
+            return m_model->threadListModel()->thread(index);
     }
+    
+    return 0;
 }
 
 void ThreadEditor::updateThreadSelected(const QModelIndex& current, const QModelIndex& previous)

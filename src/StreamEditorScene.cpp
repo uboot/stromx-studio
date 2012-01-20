@@ -15,7 +15,7 @@ StreamEditorScene::StreamEditorScene(QObject* parent)
   : QGraphicsScene(parent),
     m_model(0)
 {
-    connect(this, SIGNAL(selectionChanged()), this, SLOT(showSelectedModel()));
+    connect(this, SIGNAL(selectionChanged()), this, SLOT(processSelection()));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(enableInitializeAction()));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(enableDeinitializeAction()));
 }
@@ -149,7 +149,7 @@ void StreamEditorScene::deinitialize()
     }
 }
 
-void StreamEditorScene::showSelectedModel()
+void StreamEditorScene::processSelection()
 {
     if(selectedItems().size() == 1)
     {

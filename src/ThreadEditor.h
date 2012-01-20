@@ -46,12 +46,13 @@ public slots:
     
 signals:
     void threadSelectedChanged(bool selected);
-    void selectedThreadChanged(ThreadModel* thread);
     
 private slots:
     void updateThreadSelected( const QModelIndex & current, const QModelIndex & previous );
     
 private:
+    ThreadModel* selectedThread() const;
+    
     QTableView* m_table;
     StreamModel* m_model;
 };
