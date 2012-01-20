@@ -3,15 +3,16 @@
 #include <stromx/core/Stream.h>
 #include "AddConnectionCmd.h"
 #include "AddOperatorCmd.h"
+#include "AddThreadCmd.h"
 #include "DeinitializeOperatorCmd.h"
 #include "InitializeOperatorCmd.h"
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
 #include "RemoveConnectionCmd.h"
 #include "RemoveOperatorCmd.h"
+#include "RemoveThreadCmd.h"
 #include "ThreadListModel.h"
 #include "ThreadModel.h"
-#include "AddThreadCmd.h"
 
 StreamModel::StreamModel(QUndoStack* undoStack, QObject* parent) 
   : QObject(parent),
@@ -80,7 +81,8 @@ void StreamModel::addThread()
 
 void StreamModel::removeThread(ThreadModel* thread)
 {
-    doRemoveThread(thread);
+    RemoveThreadCmd* cmd = new RemoveThreadCmd(this, thread);
+    m_undoStack->push(cmd);
 }
 
 void StreamModel::initializeOperator(OperatorModel* op)

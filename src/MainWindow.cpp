@@ -90,6 +90,7 @@ void MainWindow::createActions()
     m_redoAct = m_undoStack->createRedoAction(this);
     m_redoAct->setShortcuts(QKeySequence::Redo);
     m_initializeAct = m_streamEditor->scene()->createInitializeAction(this);
+    m_deinitializeAct = m_streamEditor->scene()->createDeinitializeAction(this);
     m_addThreadAct = m_threadEditor->createAddThreadAction(this);
     m_removeThreadAct = m_threadEditor->createRemoveThreadAction(this);
 
@@ -169,6 +170,7 @@ void MainWindow::createMenus()
      m_streamMenu->addAction(m_removeThreadAct);
      m_streamMenu->addSeparator();
      m_streamMenu->addAction(m_initializeAct);
+     m_streamMenu->addAction(m_deinitializeAct);
 
      m_viewMenu = menuBar()->addMenu(tr("&View"));
 

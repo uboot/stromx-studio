@@ -17,6 +17,7 @@ StreamEditorScene::StreamEditorScene(QObject* parent)
 {
     connect(this, SIGNAL(selectionChanged()), this, SLOT(showSelectedModel()));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(enableInitializeAction()));
+    connect(this, SIGNAL(selectionChanged()), this, SLOT(enableDeinitializeAction()));
 }
 
 void StreamEditorScene::setModel(StreamModel* model)
@@ -91,6 +92,19 @@ QAction* StreamEditorScene::createInitializeAction(QObject* parent)
     return action;
 }
 
+QAction* StreamEditorScene::createDeinitializeAction(QObject* parent)
+{
+    QAction* action = new QAction(tr("Deinitialize"), parent);
+    action->setStatusTip(tr("Deinitialize the selected operators"));
+    action->setShortcut(tr("Ctrl+Shift+I"));
+    action->setEnabled(false);
+    connect(action, SIGNAL(triggered()), this, SLOT(deinitialize()));
+    connect(this, SIGNAL(deinitializeEnabledChanged(bool)), action, SLOT(setEnabled(bool)));
+    
+    return action;
+}
+
+
 void StreamEditorScene::addOperator(OperatorModel* op)
 {
     OperatorItem* opItem = new OperatorItem(op);
@@ -126,6 +140,15 @@ void StreamEditorScene::initialize()
     }
 }
 
+void StreamEditorScene::deinitialize()
+{
+    foreach(QGraphicsItem* item, selectedItems())
+    {
+        if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
+            m_model->deinitializeOperator(opItem->model());
+    }
+}
+
 void StreamEditorScene::showSelectedModel()
 {
     if(selectedItems().size() == 1)
@@ -151,21 +174,26 @@ void StreamEditorScene::showSelectedModel()
 
 void StreamEditorScene::enableInitializeAction()
 {
+    emit initializeEnabledChanged(isOperatorSelection());
+}
+
+void StreamEditorScene::enableDeinitializeAction()
+{
+    emit deinitializeEnabledChanged(isOperatorSelection());
+}
+
+bool StreamEditorScene::isOperatorSelection() const
+{
     if(selectedItems().size() == 0)
-    {
-        emit initializeEnabledChanged(false);
-        return;
-    }
-        
-    bool selectionIsValid = true;
+        return false;
     
     foreach(QGraphicsItem* item, selectedItems())
     {
         if(! qgraphicsitem_cast<OperatorItem*>(item))
-            selectionIsValid = false;
+            return false;
     }
     
-    emit initializeEnabledChanged(selectionIsValid);
+    return true;
 }
 
 OperatorItem* StreamEditorScene::findOperatorItem(OperatorModel* opModel) const

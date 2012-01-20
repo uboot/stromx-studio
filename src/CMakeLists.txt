@@ -19,6 +19,7 @@ set(stromxstudio_SOURCES
     PropertyEditor.cpp
     RemoveConnectionCmd.cpp
     RemoveOperatorCmd.cpp
+    RemoveThreadCmd.cpp
     StreamEditor.cpp
     StreamEditorScene.cpp
     StreamModel.cpp

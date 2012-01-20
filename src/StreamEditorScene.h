@@ -42,12 +42,14 @@ public:
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event);
     
     QAction* createInitializeAction(QObject* parent);
+    QAction* createDeinitializeAction(QObject* parent);
     
     StreamModel* model() const { return m_model; }
     void setModel(StreamModel* model);
     
 signals:
     void initializeEnabledChanged(bool enabled);
+    void deinitializeEnabledChanged(bool enabled);
     void selectedModelChanged(QAbstractTableModel* model);
     
 protected:
@@ -56,15 +58,18 @@ protected:
 private slots:
     void showSelectedModel();
     void enableInitializeAction();
+    void enableDeinitializeAction();
     void addOperator(OperatorModel* op);
     void removeOperator(OperatorModel* op);
     void addConnection(ConnectionModel* connection);
     void removeConnection(ConnectionModel* connection);
     void initialize();
+    void deinitialize();
     
 private:
     OperatorItem* findOperatorItem(OperatorModel* opModel) const;
     ConnectionItem* findConnectionItem(ConnectionModel* connectionModel) const;
+    bool isOperatorSelection() const;
     
     StreamModel* m_model;
 };
