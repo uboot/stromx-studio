@@ -26,6 +26,7 @@
 class QAction;
 class QAbstractTableModel;
 class QGraphicsSceneDragDropEvent;
+class QUndoStack;
 class ConnectionModel;
 class OperatorModel;
 class StreamModel;
@@ -47,6 +48,10 @@ public:
     
     StreamModel* model() const { return m_model; }
     void setModel(StreamModel* model);
+    
+    void setUndoStack(QUndoStack* undoStack);
+    void beginMacro(const QString & text);
+    void endMacro();
     
 signals:
     void initializeEnabledChanged(bool enabled);
@@ -72,6 +77,7 @@ private:
     ConnectionItem* findConnectionItem(ConnectionModel* connectionModel) const;
     bool isOperatorSelection() const;
     
+    QUndoStack* m_undoStack;
     StreamModel* m_model;
 };
 

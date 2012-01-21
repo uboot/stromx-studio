@@ -5,6 +5,7 @@
 #include <stromx/core/Operator.h>
 #include "ConnectorItem.h"
 #include "OperatorModel.h"
+#include "StreamEditorScene.h"
 
 OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
   : QGraphicsObject(parent),
@@ -161,11 +162,19 @@ void OperatorItem::updateConnectionPositions()
 
 void OperatorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
+    StreamEditorScene* streamScene = qobject_cast<StreamEditorScene*>(scene());
+    
+    if(streamScene)
+        streamScene->beginMacro("move objects");
+    
     foreach(QGraphicsItem* item, scene()->selectedItems())
     {
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
             opItem->model()->setPos(opItem->pos());
     }
+    
+    if(streamScene)
+        streamScene->endMacro();
     
     QGraphicsObject::mouseReleaseEvent(event);
 }

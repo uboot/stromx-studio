@@ -44,6 +44,8 @@
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent)
 {
+    m_undoStack = new QUndoStack(this);
+    
     QSplitter* splitter = new QSplitter(Qt::Vertical);
     m_streamEditor = new StreamEditor;
     m_threadEditor = new ThreadEditor;
@@ -51,14 +53,13 @@ MainWindow::MainWindow(QWidget *parent)
     m_operatorLibrary = new OperatorLibrary();
     m_propertyEditor = new PropertyEditor();
     
-    m_undoStack = new QUndoStack(this);
-    
     createActions();
     createMenus();
     createToolBars();
     createStatusBar();
     createDockWindows();
     
+    m_streamEditor->scene()->setUndoStack(m_undoStack);
     StreamModel* streamModel = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
     m_streamEditor->scene()->setModel(streamModel);
     m_threadEditor->setModel(streamModel);
