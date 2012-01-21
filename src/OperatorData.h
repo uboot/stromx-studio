@@ -17,33 +17,25 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STROMXDATA_H
-#define STROMXDATA_H
+#ifndef OPERATORDATA_H
+#define OPERATORDATA_H
 
 #include <QMimeData>
-#include <QSet>
 
-namespace stromx 
-{
-    namespace core 
-    {
-        class Operator;
-    }
-}
-
-class StromxData : public QMimeData
+class OperatorData : public QMimeData
 {
     Q_OBJECT
     
 public:
-    StromxData(const QSet<stromx::core::Operator*> & operators);
-    StromxData(stromx::core::Operator* const op);
+    OperatorData(const QString & package, const QString & name);
     
-    void deleteData();
-    const QSet<stromx::core::Operator*> & operators() const { return m_operators; }
+    const QString & package() const { return m_package; }
+    const QString & name() const { return m_name; }
+    
     
 private:
-    QSet<stromx::core::Operator*> m_operators;
+    QString m_package;
+    QString m_name;
 };
 
-#endif // STROMXDATA_H
+#endif // OPERATORDATA_H

@@ -59,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent)
     createStatusBar();
     createDockWindows();
     
-    StreamModel* streamModel = new StreamModel(m_undoStack, this);
+    StreamModel* streamModel = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
     m_streamEditor->scene()->setModel(streamModel);
     m_threadEditor->setModel(streamModel);
     connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractTableModel*)),

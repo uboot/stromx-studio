@@ -6,10 +6,10 @@
 #include <stromx/core/Operator.h>
 #include "ConnectionItem.h"
 #include "ConnectionModel.h"
+#include "OperatorData.h"
 #include "OperatorItem.h"
 #include "OperatorModel.h"
 #include "StreamModel.h"
-#include "StromxData.h"
 
 StreamEditorScene::StreamEditorScene(QObject* parent)
   : QGraphicsScene(parent),
@@ -42,7 +42,7 @@ void StreamEditorScene::setModel(StreamModel* model)
 
 void StreamEditorScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 {
-    const QMimeData* data = qobject_cast<const StromxData*>(event->mimeData());
+    const OperatorData* data = qobject_cast<const OperatorData*>(event->mimeData());
     
     if(data)
     {  
@@ -53,17 +53,11 @@ void StreamEditorScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 
 void StreamEditorScene::dropEvent(QGraphicsSceneDragDropEvent* event)
 {
-    const StromxData* data = qobject_cast<const StromxData*>(event->mimeData());
+    const OperatorData* data = qobject_cast<const OperatorData*>(event->mimeData());
     
     if(data)
     {  
-        for(QSet<stromx::core::Operator*>::const_iterator iter = data->operators().begin();
-            iter != data->operators().end();
-            ++iter)
-        {  
-            m_model->addOperator(*iter, event->scenePos());
-        }
-        
+        m_model->addOperator(data, event->scenePos());
         event->setDropAction(Qt::CopyAction);
         event->accept();
     }
@@ -71,7 +65,7 @@ void StreamEditorScene::dropEvent(QGraphicsSceneDragDropEvent* event)
 
 void StreamEditorScene::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
 {
-    const StromxData* data = qobject_cast<const StromxData*>(event->mimeData());
+    const OperatorData* data = qobject_cast<const OperatorData*>(event->mimeData());
     
     if(data)
     {  

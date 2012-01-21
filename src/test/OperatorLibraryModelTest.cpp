@@ -2,6 +2,7 @@
 
 #include "Config.h"
 #include "../Exception.h"
+#include "../OperatorData.h"
 #include "../OperatorLibraryModel.h"
 #include <stromx/core/Factory.h>
 #include <stromx/core/Operator.h>
@@ -132,16 +133,35 @@ void OperatorLibraryModelTest::testIsOperator()
 
 void OperatorLibraryModelTest::testNewOperator()
 {
-    // second package
+    // wrong operator
     stromx::core::Operator* op = 0;
-    QModelIndex index = m_model->createIndex(0, 0, 1);
-    CPPUNIT_ASSERT_NO_THROW(op = m_model->newOperator(index));
+    OperatorData opData1("NoPackage", "NoOperator");
+    CPPUNIT_ASSERT_NO_THROW(op = m_model->newOperator(&opData1));
     CPPUNIT_ASSERT(! op);
     
-    // second operator of second package
-    index = m_model->createIndex(1, 0, 3);
-    CPPUNIT_ASSERT_NO_THROW(op = m_model->newOperator(index));
+    // existing operator
+    OperatorData opData2("Base", "Buffer");
+    CPPUNIT_ASSERT_NO_THROW(op = m_model->newOperator(&opData2));
     CPPUNIT_ASSERT(op);
     CPPUNIT_ASSERT_EQUAL(std::string("Base"), op->info().package());
     CPPUNIT_ASSERT_EQUAL(std::string("Buffer"), op->info().type());
 }
+
+void OperatorLibraryModelTest::testNewOperatorData()
+{
+    // second package
+    OperatorData* opData = 0;
+    QModelIndex index = m_model->createIndex(0, 0, 1);
+    CPPUNIT_ASSERT_NO_THROW(opData = m_model->newOperatorData(index));
+    CPPUNIT_ASSERT(! opData);
+    
+    // second operator of second package
+    index = m_model->createIndex(1, 0, 3);
+    CPPUNIT_ASSERT_NO_THROW(opData = m_model->newOperatorData(index));
+    CPPUNIT_ASSERT(opData);
+    CPPUNIT_ASSERT_EQUAL(std::string("Base"), opData->package().toStdString());
+    CPPUNIT_ASSERT_EQUAL(std::string("Buffer"), opData->name().toStdString());
+    
+    delete opData;
+}
+

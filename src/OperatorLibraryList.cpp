@@ -4,7 +4,7 @@
 #include <QHeaderView>
 #include <QMouseEvent>
 #include "OperatorLibraryModel.h"
-#include "StromxData.h"
+#include "OperatorData.h"
 
 OperatorLibraryList::OperatorLibraryList(QWidget* parent)
   : QTreeView(parent),
@@ -47,15 +47,11 @@ void OperatorLibraryList::startDrag()
     
     if(index.isValid() && m_model->isOperator(index))
     {
-        // obtain a new operator from the factory
-        stromx::core::Operator* op = m_model->newOperator(index);
-        StromxData* data = new StromxData(op);
+        // allocate a operator data object
+        OperatorData* data = m_model->newOperatorData(index);
         
         QDrag* drag = new QDrag(this);
         drag->setMimeData(data);
-        
-        // if the drag failed delete the operator in the drag object
-        if(! drag->exec(Qt::CopyAction, Qt::CopyAction) == Qt::CopyAction)
-           data->deleteData();
+        drag->exec(Qt::CopyAction, Qt::CopyAction);
     }
 }

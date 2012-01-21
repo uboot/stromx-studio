@@ -37,6 +37,7 @@ class OperatorLibraryModelTest : public CPPUNIT_NS :: TestFixture
     CPPUNIT_TEST(testData);
     CPPUNIT_TEST(testIsOperator);
     CPPUNIT_TEST(testNewOperator);
+    CPPUNIT_TEST(testNewOperatorData);
     CPPUNIT_TEST_SUITE_END ();
 
 public:
@@ -55,6 +56,7 @@ protected:
     void testData();
     void testIsOperator();
     void testNewOperator();
+    void testNewOperatorData();
         
 private:
     OperatorLibraryModel* m_model;

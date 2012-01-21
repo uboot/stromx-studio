@@ -38,7 +38,9 @@ namespace stromx
 class QAbstractTableModel;
 class QUndoStack;
 class ConnectionModel;
+class OperatorData;
 class OperatorModel;
+class OperatorLibraryModel;
 class ThreadListModel;
 class ThreadModel;
 
@@ -56,11 +58,11 @@ class StreamModel : public QObject
     friend class RemoveThreadCmd;
     
 public:
-    explicit StreamModel(QUndoStack* undoStack, QObject *parent = 0);
+    explicit StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject *parent = 0);
     virtual ~StreamModel();
     
     const QList<OperatorModel*> operators() const { return m_operators; }
-    void addOperator(stromx::core::Operator* const op, const QPointF & pos);
+    void addOperator(const OperatorData* opData, const QPointF & pos);
     void removeOperator(OperatorModel* op);
     
     const QList<ConnectionModel*> connections() const { return m_connections; }
@@ -99,6 +101,7 @@ private:
     
     stromx::core::Stream* m_stream;
     ThreadListModel* m_threadListModel;
+    OperatorLibraryModel* m_operatorLibrary;
     QUndoStack* m_undoStack;
     QSet<stromx::core::Operator*> m_offlineOperators;
     QSet<stromx::core::Thread*> m_offlineThreads;

@@ -35,6 +35,8 @@ namespace stromx
     }
 }
 
+class OperatorData;
+
 class OperatorLibraryModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -54,12 +56,11 @@ public:
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
     
-    virtual const bool isOperator(const QModelIndex & index) const;
-    virtual stromx::core::Operator* newOperator(const QModelIndex & index) const;
-    
     void loadLibrary(const QString& library);
     void resetLibraries();
-    stromx::core::Operator* newOperator(const QString &package, const QString &name) const;
+    const bool isOperator(const QModelIndex & index) const;
+    OperatorData* newOperatorData(const QModelIndex & index) const;
+    stromx::core::Operator* newOperator(const OperatorData* data) const;
     
 private:
     void updateOperators();

@@ -1,12 +1,14 @@
 project(stromx_studio_test)
   
 set(stromxstudiotest_SOURCES
+    ../OperatorData.cpp
     ../OperatorLibraryModel.cpp
     OperatorLibraryModelTest.cpp
     main.cpp
 )
 
 set(stromxstudiotest_HEADERS
+    ../OperatorData.h
     ../OperatorLibraryModel.h
 )
 

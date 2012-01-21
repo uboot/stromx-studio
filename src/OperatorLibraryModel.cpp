@@ -1,6 +1,7 @@
 #include "OperatorLibraryModel.h"
 
 #include "Exception.h"
+#include "OperatorData.h"
 #include <QFileInfo>
 #include <QSettings>
 #include <stromx/core/Core.h>
@@ -251,7 +252,7 @@ const bool OperatorLibraryModel::isOperator(const QModelIndex& index) const
     
 }
 
-stromx::core::Operator* OperatorLibraryModel::newOperator(const QModelIndex& index) const
+OperatorData* OperatorLibraryModel::newOperatorData(const QModelIndex& index) const
 {
     if(! isOperator(index))
         return 0;
@@ -262,12 +263,19 @@ stromx::core::Operator* OperatorLibraryModel::newOperator(const QModelIndex& ind
     QList<const stromx::core::OperatorKernel*> ops = m_package2OperatorMap.value(package, QList<const stromx::core::OperatorKernel*>());
     const stromx::core::OperatorKernel* op = ops[index.row()];
     
-    return m_factory->newOperator(op->package(), op->type());
+    return new OperatorData(QString::fromStdString(op->package()), QString::fromStdString(op->type()));
 }
 
-stromx::core::Operator* OperatorLibraryModel::newOperator(const QString& package, const QString& name) const
+stromx::core::Operator* OperatorLibraryModel::newOperator(const OperatorData* data) const
 {
-    return 0;
+    try
+    {
+        return m_factory->newOperator(data->package().toStdString(), data->name().toStdString());
+    }
+    catch(stromx::core::WrongArgument &)
+    {
+        return 0;
+    }
 }
 
 

@@ -20,6 +20,7 @@
 #ifndef THREADMODEL_H
 #define THREADMODEL_H
 
+#include <QColor>
 #include <QObject>
 
 namespace stromx
@@ -42,9 +43,16 @@ public:
     stromx::core::Thread* thread() const { return m_thread; }
     void setThread(stromx::core::Thread* thread);
     
+    const QColor & color() const { return m_color; }
+    void setColor(const QColor & color);
+    
+signals:
+    void colorChanged(const QColor & color);
+    
 private:
     stromx::core::Thread* m_thread;
     StreamModel* m_stream;
+    QColor m_color;
 };
 
 #endif // THREADMODEL_H

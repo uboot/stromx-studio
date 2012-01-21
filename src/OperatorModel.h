@@ -44,7 +44,7 @@ class OperatorModel : public QAbstractTableModel
     friend class MoveOperatorCmd;
     
 public:
-    explicit OperatorModel(stromx::core::Operator* op, StreamModel *stream = 0);
+    explicit OperatorModel(stromx::core::Operator* op, StreamModel *stream);
     
     stromx::core::Operator* const op() const { return m_op; }
     

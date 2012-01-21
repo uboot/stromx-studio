@@ -12,6 +12,7 @@ set(stromxstudio_SOURCES
     MoveOperatorCmd.cpp
     ObserverEditor.cpp
     OperatorItem.cpp
+    OperatorData.cpp
     OperatorLibrary.cpp
     OperatorLibraryList.cpp
     OperatorLibraryModel.cpp
@@ -23,7 +24,6 @@ set(stromxstudio_SOURCES
     StreamEditor.cpp
     StreamEditorScene.cpp
     StreamModel.cpp
-    StromxData.cpp
     ThreadEditor.cpp
     ThreadListModel.cpp
     ThreadModel.cpp
@@ -34,6 +34,7 @@ set(stromxstudio_HEADERS
     MainWindow.h
     ObserverEditor.h
     OperatorItem.h
+    OperatorData.h
     OperatorLibrary.h
     OperatorLibraryList.h
     OperatorLibraryModel.h
@@ -42,7 +43,6 @@ set(stromxstudio_HEADERS
     StreamEditor.h 
     StreamEditorScene.h
     StreamModel.h
-    StromxData.h
     ThreadEditor.h
     ThreadListModel.h
     ThreadModel.h

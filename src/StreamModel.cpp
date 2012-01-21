@@ -6,6 +6,7 @@
 #include "AddThreadCmd.h"
 #include "DeinitializeOperatorCmd.h"
 #include "InitializeOperatorCmd.h"
+#include "OperatorLibraryModel.h"
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
 #include "RemoveConnectionCmd.h"
@@ -14,10 +15,11 @@
 #include "ThreadListModel.h"
 #include "ThreadModel.h"
 
-StreamModel::StreamModel(QUndoStack* undoStack, QObject* parent) 
+StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject* parent) 
   : QObject(parent),
     m_stream(0),
     m_threadListModel(0),
+    m_operatorLibrary(operatorLibrary),
     m_undoStack(undoStack)
 {
     m_stream = new stromx::core::Stream;
@@ -29,11 +31,11 @@ StreamModel::~StreamModel()
     delete m_stream;
 }
 
-void StreamModel::addOperator(stromx::core::Operator*const op, const QPointF& pos)
+void StreamModel::addOperator(const OperatorData* opData, const QPointF& pos)
 {
     m_undoStack->beginMacro(tr("add operator"));
     
-    OperatorModel* opModel = new OperatorModel(op, this);
+    OperatorModel* opModel = new OperatorModel(m_operatorLibrary->newOperator(opData), this);
     opModel->setPos(pos);
     
     AddOperatorCmd* cmd = new AddOperatorCmd(this, opModel);
