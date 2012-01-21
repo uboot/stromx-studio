@@ -1,6 +1,7 @@
 #include "StreamModel.h"
 
 #include <stromx/core/Stream.h>
+#include <stromx/core/XmlWriter.h>
 #include "AddConnectionCmd.h"
 #include "AddOperatorCmd.h"
 #include "AddThreadCmd.h"
@@ -109,23 +110,39 @@ void StreamModel::deinitializeOperator(OperatorModel* op)
 
 void StreamModel::doAddOperator(OperatorModel* op)
 {
+    Q_ASSERT(! op->isInitialized());
+    
     m_operators.append(op);
+    m_offlineOperators.append(op);
     emit operatorAdded(op);
 }
 
 void StreamModel::doRemoveOperator(OperatorModel* op)
 {
+    Q_ASSERT(! op->isInitialized());
+    
     m_operators.removeAll(op);
+    m_offlineOperators.removeAll(op);
     emit operatorRemoved(op);
 }
 
 void StreamModel::doInitializeOperator(OperatorModel* op)
 {
+    if(op->isInitialized())
+        return;
+    
     op->setInitialized(true);
+    m_offlineOperators.removeAll(op);
+    m_stream->addOperator(op->op());
 }
 
 void StreamModel::doDeinitializeOperator(OperatorModel* op)
 {
+    if(! op->isInitialized())
+        return;
+    
+    m_stream->removeOperator(op->op());
+    m_offlineOperators.append(op);
     op->setInitialized(false);
 }
 
@@ -134,15 +151,17 @@ void StreamModel::doAddConnection(ConnectionModel* connection)
     connection->sourceOp()->addConnection(connection);
     connection->targetOp()->addConnection(connection);
     m_connections.append(connection);
+    m_stream->connect(connection->sourceOp()->op(), connection->outputId(),
+                      connection->targetOp()->op(), connection->inputId());
     
     emit connectionAdded(connection);
 }
 
 void StreamModel::doRemoveConnection(ConnectionModel* connection)
 {
+    m_stream->disconnect(connection->targetOp()->op(), connection->inputId());
     if(connection->sourceOp())
         connection->sourceOp()->removeConnection(connection);
-    
     if(connection->targetOp())
         connection->targetOp()->removeConnection(connection);
     
@@ -164,6 +183,24 @@ void StreamModel::doRemoveThread(ThreadModel* threadModel)
     m_threadListModel->removeThread(threadModel);
     threadModel->setThread(0);
     emit threadRemoved(threadModel);
+}
+
+void StreamModel::write(const QString& streamFile, const QString& modelFile, const QString& parameterFile) const
+{
+    try
+    {
+        stromx::core::XmlWriter writer;
+        writer.write(streamFile.toStdString(), *m_stream);
+    }
+    catch(stromx::core::Exception& e)
+    {
+        qWarning(e.what());
+    }
+}
+
+void StreamModel::read(const QString& streamFile, const QString& modelFile, const QString& parameterFile)
+{
+
 }
 
 

@@ -214,6 +214,20 @@ void MainWindow::stop()
 
 void MainWindow::open()
 {
+    QSettings settings("stromx", "stromx-studio");
+    QString lastDir = settings.value("lastStreamOpened", QDir::home().absolutePath()).toString();
+    
+    QString file = QFileDialog::getOpenFileName(this, tr("Select a stream to open"),
+                                                lastDir, tr("Stream files (*.xml)")); 
+    
+    if(file.isNull())
+        return;
+    
+    // load the stream
+    m_streamEditor->scene()->model()->read(file, "", "");
+    
+    // remember the last file
+    settings.setValue("lastStreamOpened", file);
 }
 
 void MainWindow::closeStream()
@@ -222,6 +236,20 @@ void MainWindow::closeStream()
 
 void MainWindow::saveAs()
 {
+    QSettings settings("stromx", "stromx-studio");
+    QString lastDir = settings.value("lastStreamSavedDir", QDir::home().absolutePath()).toString();
+    
+    QString file = QFileDialog::getSaveFileName(this, tr("Save stream file"),
+                                                lastDir, tr("Stream files (*.xml)")); 
+    
+    if(file.isNull())
+        return;
+    
+    // write the stream
+    m_streamEditor->scene()->model()->write(file, "", "");
+    
+    // remember the last dir
+    settings.setValue("lastStreamSavedDir", QFileInfo(file).dir().absolutePath());
 }
 
 void MainWindow::readSettings()
@@ -241,16 +269,18 @@ void MainWindow::writeSettings()
 void MainWindow::loadLibraries()
 {
     QSettings settings("stromx", "stromx-studio");
-    QString lastDir = settings.value("lastLibraryDir", QDir::home().absolutePath()).toString();
+    QString lastDir = settings.value("lastLibrary", QDir::home().absolutePath()).toString();
     
     QStringList files = QFileDialog::getOpenFileNames(
                             this,
                             tr("Select one or more stromx libraries to open"),
                             lastDir,
-                            tr("libraries (*.so)")); 
+                            tr("Libraries (*.so)")); 
     
     // load each library
-    foreach(QString file, files)
+    // Qt documentation recommends to iterate over a copy of the file list
+    QStringList fileList = files;
+    foreach(QString file, fileList)
     {
         try
         {
@@ -262,11 +292,11 @@ void MainWindow::loadLibraries()
         }
     }
     
-    // remember the last directory
+    // remember the last library
     if(files.size())
     {
-        QString lastDir = QFileInfo(files.back()).dir().absolutePath();
-        settings.setValue("lastLibraryDir", lastDir);
+        QString lastDir = files.back();
+        settings.setValue("lastLibrary", lastDir);
     }
 }
 

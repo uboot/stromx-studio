@@ -10,7 +10,8 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
     m_op(op),
     m_stream(stream),
     m_package(QString::fromStdString(m_op->info().package())),
-    m_type(QString::fromStdString(m_op->info().type()))
+    m_type(QString::fromStdString(m_op->info().type())),
+    m_name(QString::fromStdString(m_op->name()))
 {
 
 }
@@ -93,6 +94,13 @@ void OperatorModel::setPos(const QPointF& pos)
     }
 }
 
+void OperatorModel::setName(const QString& name)
+{
+    m_name = name;
+    m_op->setName(name.toStdString());
+    emit nameChanged(m_name);
+}
+
 void OperatorModel::doSetPos(const QPointF& pos)
 {
     m_pos = pos;
@@ -131,4 +139,13 @@ const QString& OperatorModel::package() const
     return m_package;
 }
 
+QDataStream& operator<<(QDataStream& stream, const OperatorModel& op)
+{
+    return stream << op.m_pos;
+}
+
+QDataStream& operator>>(QDataStream& stream, OperatorModel& op)
+{
+    return stream >> op.m_pos;
+}
 

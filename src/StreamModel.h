@@ -77,9 +77,11 @@ public:
     void initializeOperator(OperatorModel* op);
     void deinitializeOperator(OperatorModel* op);
     
+    QUndoStack* undoStack() const { return m_undoStack; }
     ThreadListModel* threadListModel() const { return m_threadListModel; }
     
-    QUndoStack* undoStack() const { return m_undoStack; }
+    void write(const QString & streamFile, const QString & modelFile, const QString & parameterFile) const;
+    void read(const QString & streamFile, const QString & modelFile, const QString & parameterFile);
     
 signals:
     void operatorAdded(OperatorModel* op);
@@ -103,8 +105,7 @@ private:
     ThreadListModel* m_threadListModel;
     OperatorLibraryModel* m_operatorLibrary;
     QUndoStack* m_undoStack;
-    QSet<stromx::core::Operator*> m_offlineOperators;
-    QSet<stromx::core::Thread*> m_offlineThreads;
+    QList<OperatorModel*> m_offlineOperators;
     QList<ConnectionModel*> m_connections;
     QList<OperatorModel*> m_operators;
 };

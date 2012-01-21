@@ -40,10 +40,13 @@ class OperatorModel : public QAbstractTableModel
     Q_OBJECT
     Q_PROPERTY(QString package READ package)
     Q_PROPERTY(QString type READ type)
+    Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
     Q_PROPERTY(bool initialized READ isInitialized WRITE setInitialized)
     
     friend class MoveOperatorCmd;
+    friend QDataStream & operator<< (QDataStream & stream, const OperatorModel & op);
+    friend QDataStream & operator>> (QDataStream & stream, OperatorModel & op);
     
 public:
     explicit OperatorModel(stromx::core::Operator* op, StreamModel *stream);
@@ -57,6 +60,10 @@ public:
     
     const QString & package() const;
     const QString & type() const;
+    
+    const QString & name() const { return m_name; }
+    void setName(const QString & name);
+    
     const QPointF & pos() const { return m_pos; }
     void setPos(const QPointF & pos);
     
@@ -69,6 +76,7 @@ public:
     
 signals:
     void posChanged(const QPointF & pos);
+    void nameChanged(const QString & name);
     void initializedChanged(bool status);
     
 private:
@@ -80,6 +88,10 @@ private:
     QSet<ConnectionModel*> m_connections;
     QString m_package;
     QString m_type;
+    QString m_name;
 };
+
+QDataStream & operator<< (QDataStream & stream, const OperatorModel & op);
+QDataStream & operator>> (QDataStream & stream, OperatorModel & op);
 
 #endif // OPERATORMODEL_H
