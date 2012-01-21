@@ -30,12 +30,12 @@ public:
     OperatorData(const QString & package, const QString & name);
     
     const QString & package() const { return m_package; }
-    const QString & name() const { return m_name; }
+    const QString & type() const { return m_type; }
     
     
 private:
     QString m_package;
-    QString m_name;
+    QString m_type;
 };
 
 #endif // OPERATORDATA_H

@@ -8,7 +8,9 @@
 OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
   : QAbstractTableModel(stream),
     m_op(op),
-    m_stream(stream)
+    m_stream(stream),
+    m_package(QString::fromStdString(m_op->info().package())),
+    m_type(QString::fromStdString(m_op->info().type()))
 {
 
 }
@@ -118,4 +120,15 @@ void OperatorModel::setInitialized(bool status)
     
     emit initializedChanged(isInitialized());
 }
+
+const QString& OperatorModel::type() const
+{
+    return m_type;
+}
+
+const QString& OperatorModel::package() const
+{
+    return m_package;
+}
+
 

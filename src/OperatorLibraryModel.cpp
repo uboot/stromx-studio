@@ -270,7 +270,7 @@ stromx::core::Operator* OperatorLibraryModel::newOperator(const OperatorData* da
 {
     try
     {
-        return m_factory->newOperator(data->package().toStdString(), data->name().toStdString());
+        return m_factory->newOperator(data->package().toStdString(), data->type().toStdString());
     }
     catch(stromx::core::WrongArgument &)
     {

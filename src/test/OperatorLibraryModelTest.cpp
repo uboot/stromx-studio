@@ -160,7 +160,7 @@ void OperatorLibraryModelTest::testNewOperatorData()
     CPPUNIT_ASSERT_NO_THROW(opData = m_model->newOperatorData(index));
     CPPUNIT_ASSERT(opData);
     CPPUNIT_ASSERT_EQUAL(std::string("Base"), opData->package().toStdString());
-    CPPUNIT_ASSERT_EQUAL(std::string("Buffer"), opData->name().toStdString());
+    CPPUNIT_ASSERT_EQUAL(std::string("Buffer"), opData->type().toStdString());
     
     delete opData;
 }

@@ -38,6 +38,8 @@ class StreamModel;
 class OperatorModel : public QAbstractTableModel
 {
     Q_OBJECT
+    Q_PROPERTY(QString package READ package)
+    Q_PROPERTY(QString type READ type)
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
     Q_PROPERTY(bool initialized READ isInitialized WRITE setInitialized)
     
@@ -53,6 +55,8 @@ public:
     QVariant data(const QModelIndex & index, int role) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
+    const QString & package() const;
+    const QString & type() const;
     const QPointF & pos() const { return m_pos; }
     void setPos(const QPointF & pos);
     
@@ -74,6 +78,8 @@ private:
     StreamModel* m_stream;
     QPointF m_pos;
     QSet<ConnectionModel*> m_connections;
+    QString m_package;
+    QString m_type;
 };
 
 #endif // OPERATORMODEL_H

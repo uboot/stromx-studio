@@ -1,10 +1,10 @@
 #include "OperatorData.h"
 
 
-OperatorData::OperatorData(const QString& package, const QString& name)
+OperatorData::OperatorData(const QString& package, const QString& type)
   : m_package(package),
-    m_name(name)
+    m_type(type)
 {
-    setText(m_package + "/" + m_name);
+    setText(m_package + "/" + m_type);
 }
 
