@@ -181,6 +181,7 @@ void StreamModel::doAddThread(ThreadModel* threadModel)
 void StreamModel::doRemoveThread(ThreadModel* threadModel)
 {
     m_threadListModel->removeThread(threadModel);
+    m_stream->removeThread(threadModel->thread());
     threadModel->setThread(0);
     emit threadRemoved(threadModel);
 }
@@ -190,7 +191,7 @@ void StreamModel::write(const QString& streamFile, const QString& modelFile, con
     try
     {
         stromx::core::XmlWriter writer;
-        writer.write(streamFile.toStdString(), *m_stream);
+        writer.writeStream(streamFile.toStdString(), *m_stream);
     }
     catch(stromx::core::Exception& e)
     {
