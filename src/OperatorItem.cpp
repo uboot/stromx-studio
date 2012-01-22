@@ -164,17 +164,21 @@ void OperatorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     StreamEditorScene* streamScene = qobject_cast<StreamEditorScene*>(scene());
     
-    if(streamScene)
-        streamScene->beginMacro("move objects");
-    
-    foreach(QGraphicsItem* item, scene()->selectedItems())
+    // check if the item was moved
+    if(model()->pos() != pos())
     {
-        if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
-            opItem->model()->setPos(opItem->pos());
+        if(streamScene)
+            streamScene->beginMacro("move objects");
+        
+        foreach(QGraphicsItem* item, scene()->selectedItems())
+        {
+            if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
+                opItem->model()->setPos(opItem->pos());
+        }
+        
+        if(streamScene)
+            streamScene->endMacro();
     }
-    
-    if(streamScene)
-        streamScene->endMacro();
     
     QGraphicsObject::mouseReleaseEvent(event);
 }
