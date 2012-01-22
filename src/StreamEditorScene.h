@@ -45,6 +45,7 @@ public:
     
     QAction* createInitializeAction(QObject* parent);
     QAction* createDeinitializeAction(QObject* parent);
+    QAction* createRemoveAction(QObject* parent);
     
     StreamModel* model() const { return m_model; }
     void setModel(StreamModel* model);
@@ -56,6 +57,7 @@ public:
 signals:
     void initializeEnabledChanged(bool enabled);
     void deinitializeEnabledChanged(bool enabled);
+    void removeEnabledChanged(bool enabled);
     void selectedModelChanged(QAbstractTableModel* model);
    
 protected:
@@ -71,6 +73,7 @@ private slots:
     void removeConnection(ConnectionModel* connection);
     void initialize();
     void deinitialize();
+    void removeSelectedItems();
     
 private:
     OperatorItem* findOperatorItem(OperatorModel* opModel) const;

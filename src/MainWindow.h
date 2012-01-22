@@ -80,6 +80,7 @@ private:
     QAction* m_deinitializeAct;
     QAction* m_addThreadAct;
     QAction* m_removeThreadAct;
+    QAction* m_removeSelectedItemsAct;
     
     QUndoStack* m_undoStack;
     

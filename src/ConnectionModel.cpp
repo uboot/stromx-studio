@@ -1,7 +1,9 @@
 #include "ConnectionModel.h"
 
+#include <stromx/core/Thread.h>
 #include "OperatorModel.h"
 #include "StreamModel.h"
+#include "ThreadModel.h"
 
 ConnectionModel::ConnectionModel(OperatorModel* sourceOp, unsigned int outputId,
                                  OperatorModel* targetOp, unsigned int inputId, StreamModel * stream)
@@ -34,6 +36,14 @@ void ConnectionModel::setThread(ThreadModel* thread)
 {
     if(m_thread != thread)
     {
+        // remove from the previous thread
+        if(m_thread)
+            m_thread->thread()->removeInput(m_targetOp->op(), m_inputId);
+        
+        // add to the new thread
+        if(thread)
+            thread->thread()->addInput(m_targetOp->op(), m_inputId);
+        
         m_thread = thread;
         emit threadChanged(m_thread);
     }

@@ -105,6 +105,16 @@ QAction* StreamEditorScene::createDeinitializeAction(QObject* parent)
     return action;
 }
 
+QAction* StreamEditorScene::createRemoveAction(QObject* parent)
+{
+    QAction* action = new QAction(tr("Remove items"), parent);
+    action->setStatusTip(tr("Remove selected items"));
+    action->setEnabled(false);
+    connect(action, SIGNAL(triggered()), this, SLOT(removeSelectedItems()));
+    connect(this, SIGNAL(removeEnabledChanged(bool)), action, SLOT(setEnabled(bool)));
+    
+    return action;
+}
 
 void StreamEditorScene::addOperator(OperatorModel* op)
 {
@@ -156,6 +166,11 @@ void StreamEditorScene::deinitialize()
 
 void StreamEditorScene::processSelection()
 {
+    if(selectedItems().size() > 0)
+        emit removeEnabledChanged(true);
+    else
+        emit removeEnabledChanged(false);
+        
     if(selectedItems().size() == 1)
     {
         QGraphicsItem* item = selectedItems()[0];
@@ -238,27 +253,28 @@ ConnectionItem* StreamEditorScene::findConnectionItem(ConnectionModel* connectio
 void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
 {
     if(keyEvent->matches(QKeySequence::Delete))
-    {   
-        beginMacro("remove objects");
-        foreach(QGraphicsItem* item, selectedItems())
-        { 
-            // items have been deleted because they were dependent on other deleted items
-            // check the existence of each item separately           
-            if(items().contains(item))
-            {
-                if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
-                    m_model->removeOperator(opItem->model());
-            
-                if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
-                    m_model->removeConnection(connectionItem->model());
-            }
-        }
-        endMacro();
-    }
+        removeSelectedItems();
     else
-    {
         QGraphicsScene::keyPressEvent(keyEvent);
+}
+
+void StreamEditorScene::removeSelectedItems()
+{
+    beginMacro("remove objects");
+    foreach(QGraphicsItem* item, selectedItems())
+    { 
+        // items have been deleted because they were dependent on other deleted items
+        // check the existence of each item separately           
+        if(items().contains(item))
+        {
+            if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
+                m_model->removeOperator(opItem->model());
+        
+            if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
+                m_model->removeConnection(connectionItem->model());
+        }
     }
+    endMacro();
 }
 
 void StreamEditorScene::removeOperator(OperatorModel* op)
