@@ -1,6 +1,5 @@
 #include "OperatorLibraryModel.h"
 
-#include "Exception.h"
 #include "OperatorData.h"
 #include <QFileInfo>
 #include <QSettings>
@@ -33,13 +32,8 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
     
     foreach(QString file, loadedLibraries)
     {
-        try
-        {
-            loadLibrary(file);
-        }
-        catch(LoadLibraryFailed&)
-        {
-        }
+        // try to load the library and ignore any failures
+        loadLibrary(file);
     }
 }
 
@@ -145,14 +139,14 @@ int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
     return 0;
 }
 
-void OperatorLibraryModel::loadLibrary(const QString& library)
+bool OperatorLibraryModel::loadLibrary(const QString& library)
 {
 #ifdef UNIX
     QFileInfo info(library);
     
     QRegExp regEx("libstromx_(.+)");
     if(regEx.indexIn(info.baseName()) == -1)
-        throw LoadLibraryFailed();
+        return false;
     
     QString registrationFunctionName = regEx.cap(1);
     registrationFunctionName[0] = registrationFunctionName[0].toUpper();
@@ -165,7 +159,7 @@ void OperatorLibraryModel::loadLibrary(const QString& library)
     libHandle = dlopen(library.toStdString().c_str(), RTLD_LAZY);
     
     if (!libHandle)
-        throw LoadLibraryFailed();
+        return false;
 
     registrationFunction = reinterpret_cast<void (*)(stromx::core::Registry& registry)>
         (dlsym(libHandle, registrationFunctionName.toStdString().c_str()));
@@ -173,7 +167,7 @@ void OperatorLibraryModel::loadLibrary(const QString& library)
     if ((error = dlerror()) != NULL) 
     {
         dlclose(libHandle);
-        throw LoadLibraryFailed();
+        return false;
     } 
     
     // store library handle to unload the library after use
@@ -188,7 +182,7 @@ void OperatorLibraryModel::loadLibrary(const QString& library)
     {
         // even if an exception was thrown, parts of the library might have been loaded
         // therefore the library is not closed
-        throw LoadLibraryFailed();
+        return false;
     }
     
     // remember the library

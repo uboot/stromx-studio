@@ -1,7 +1,6 @@
 #include "OperatorLibraryModelTest.h"
 
 #include "Config.h"
-#include "../Exception.h"
 #include "../OperatorData.h"
 #include "../OperatorLibraryModel.h"
 #include <stromx/core/Factory.h>
@@ -39,14 +38,14 @@ void OperatorLibraryModelTest::testLoadLibrary()
 void OperatorLibraryModelTest::testLoadLibraryDoubleData()
 {
     QString library(STROMX_BASE_LIBRARY);
-    CPPUNIT_ASSERT_THROW(m_model->loadLibrary(library), LoadLibraryFailed);
+    CPPUNIT_ASSERT_EQUAL(false, m_model->loadLibrary(library));
 }
 
 void OperatorLibraryModelTest::testLoadLibraryWrongFile()
 {
     QString library("/stupid_path_to/wrong_library.so");
     
-    CPPUNIT_ASSERT_THROW(m_model->loadLibrary(library), LoadLibraryFailed);
+    CPPUNIT_ASSERT_EQUAL(false, m_model->loadLibrary(library));
 }
 
 void OperatorLibraryModelTest::testRowCount()

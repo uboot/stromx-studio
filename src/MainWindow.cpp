@@ -30,7 +30,6 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <iostream>
-#include "Exception.h"
 #include "MainWindow.h"
 #include "ObserverEditor.h"
 #include "OperatorLibrary.h"
@@ -284,14 +283,8 @@ void MainWindow::loadLibraries()
     QStringList fileList = files;
     foreach(QString file, fileList)
     {
-        try
-        {
-            m_operatorLibrary->model()->loadLibrary(file);
-        }
-        catch(LoadLibraryFailed &)
-        {
+        if(! m_operatorLibrary->model()->loadLibrary(file))
             std::cout << "Failed to load '" << file.toStdString() << "'" << std::endl;
-        }
     }
     
     // remember the last library
