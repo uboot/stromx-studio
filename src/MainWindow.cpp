@@ -225,7 +225,7 @@ void MainWindow::open()
         return;
     
     // load the stream
-    m_streamEditor->scene()->model()->read(file, "", "");
+    m_streamEditor->scene()->model()->read(file);
     
     // remember the last file
     settings.setValue("lastStreamOpened", file);
@@ -247,7 +247,7 @@ void MainWindow::saveAs()
         return;
     
     // write the stream
-    m_streamEditor->scene()->model()->write(file, "", "");
+    m_streamEditor->scene()->model()->write(file);
     
     // remember the last dir
     settings.setValue("lastStreamSavedDir", QFileInfo(file).dir().absolutePath());

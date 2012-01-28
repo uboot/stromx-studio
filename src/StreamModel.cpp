@@ -1,5 +1,8 @@
 #include "StreamModel.h"
 
+#include <QDir>
+#include <QFileInfo>
+#include <stromx/core/DirectoryFileOutput.h>
 #include <stromx/core/Stream.h>
 #include <stromx/core/XmlWriter.h>
 #include "AddConnectionCmd.h"
@@ -186,12 +189,16 @@ void StreamModel::doRemoveThread(ThreadModel* threadModel)
     emit threadRemoved(threadModel);
 }
 
-void StreamModel::write(const QString& streamFile, const QString& modelFile, const QString& parameterFile) const
+void StreamModel::write(const QString& filename) const
 {
+    QString name = QFileInfo(filename).fileName();
+    QString directory = QFileInfo(filename).absoluteDir().absolutePath();
+    
     try
     {
+        stromx::core::DirectoryFileOutput output(directory.toStdString());
         stromx::core::XmlWriter writer;
-        writer.writeStream(streamFile.toStdString(), *m_stream);
+        writer.writeStream(output, name.toStdString(), *m_stream);
     }
     catch(stromx::core::Exception& e)
     {
@@ -199,7 +206,7 @@ void StreamModel::write(const QString& streamFile, const QString& modelFile, con
     }
 }
 
-void StreamModel::read(const QString& streamFile, const QString& modelFile, const QString& parameterFile)
+void StreamModel::read(const QString& filename)
 {
 
 }

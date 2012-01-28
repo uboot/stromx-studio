@@ -80,8 +80,8 @@ public:
     QUndoStack* undoStack() const { return m_undoStack; }
     ThreadListModel* threadListModel() const { return m_threadListModel; }
     
-    void write(const QString & streamFile, const QString & modelFile, const QString & parameterFile) const;
-    void read(const QString & streamFile, const QString & modelFile, const QString & parameterFile);
+    void write(const QString & filename) const;
+    void read(const QString & filename);
     
 signals:
     void operatorAdded(OperatorModel* op);
