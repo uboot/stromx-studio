@@ -170,6 +170,7 @@ void StreamModel::doAddConnection(ConnectionModel* connection)
 void StreamModel::doRemoveConnection(ConnectionModel* connection)
 {
     m_stream->disconnect(connection->targetOp()->op(), connection->inputId());
+    
     if(connection->sourceOp())
         connection->sourceOp()->removeConnection(connection);
     if(connection->targetOp())
@@ -226,15 +227,33 @@ bool StreamModel::write(const QString& filename) const
 bool StreamModel::read(const QString& filename)
 {
     QString name = QFileInfo(filename).fileName();
+    QString baseName = QFileInfo(filename).baseName();
     QString directory = QFileInfo(filename).absoluteDir().absolutePath();
     
     stromx::core::Stream* stream = 0;
+    
+    QByteArray modelData;
     
     try
     {
         stromx::core::DirectoryFileInput input(directory.toStdString());
         stromx::core::XmlReader reader;
         stream = reader.readStream(input, name.toStdString(), *m_operatorLibrary->factory());
+        
+        input.initialize("", (baseName + ".model").toStdString());
+        input.openFile(stromx::core::InputProvider::BINARY);
+        
+        // read all data from the input stream
+        int dataSize = 0;
+        const int CHUNK_SIZE = 10;
+        while(! input.file().eof())
+        {
+            modelData.resize(modelData.size() + CHUNK_SIZE);
+            char* dataPtr = modelData.data() + dataSize;
+            input.file().read(dataPtr, CHUNK_SIZE);
+            dataSize += (int)(input.file().gcount());
+        }
+        modelData.resize(dataSize);
     }
     catch(stromx::core::Exception& e)
     {
@@ -245,12 +264,16 @@ bool StreamModel::read(const QString& filename)
     if(! stream)
         return false;
     
-    setStream(stream);
+    updateStream(stream);
+//     deserializeModel(modelData);
+    
+    // inform the clients
+    emit modelWasReset();
     
     return true;
 }
 
-void StreamModel::setStream(stromx::core::Stream* stream)
+void StreamModel::updateStream(stromx::core::Stream* stream)
 {
     // clear the undo stack
     m_undoStack->clear();
@@ -334,9 +357,6 @@ void StreamModel::setStream(stromx::core::Stream* stream)
             connectionModel->setThread(threadModel);
         }
     }
-    
-    // inform the clients
-    emit modelWasReset();
 }
 
 OperatorModel* StreamModel::findOperatorModel(const stromx::core::Operator* op)
@@ -389,9 +409,9 @@ void StreamModel::deserializeModel(const QByteArray& data)
     QDataStream dataStream(data);
     QList<ThreadModel*> threads;
     
-    dataStream >> m_threadListModel;
-    dataStream >> m_offlineOperators;
     dataStream >> m_onlineOperators;
+    dataStream >> m_offlineOperators;
+    dataStream >> m_threadListModel;
 }
 
 

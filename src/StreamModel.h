@@ -106,8 +106,7 @@ private:
     void serializeModel(QByteArray& data) const;
     void deserializeModel(const QByteArray& data);
     
-    void setStream(stromx::core::Stream* stream);
-    
+    void updateStream(stromx::core::Stream* stream);
     OperatorModel* findOperatorModel(const stromx::core::Operator* op);
     ConnectionModel* findConnectionModel(const stromx::core::Input & input);
     ThreadModel* findThreadModel(const stromx::core::Thread* thread);

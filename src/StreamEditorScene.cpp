@@ -277,6 +277,21 @@ void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
 void StreamEditorScene::removeSelectedItems()
 {
     beginMacro("remove objects");
+    QList<QGraphicsItem*> itemList = selectedItems();
+    
+    // remove all selected connections first
+    foreach(QGraphicsItem* item, selectedItems())
+    { 
+        // items have been deleted because they were dependent on other deleted items
+        // check the existence of each item separately           
+        if(items().contains(item))
+        {
+            if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
+                m_model->removeConnection(connectionItem->model());
+        }
+    }
+    
+    // remove operators
     foreach(QGraphicsItem* item, selectedItems())
     { 
         // items have been deleted because they were dependent on other deleted items
@@ -285,11 +300,10 @@ void StreamEditorScene::removeSelectedItems()
         {
             if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
                 m_model->removeOperator(opItem->model());
-        
-            if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
-                m_model->removeConnection(connectionItem->model());
         }
     }
+    
+    
     endMacro();
 }
 
