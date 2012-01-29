@@ -14,3 +14,22 @@ void ThreadModel::setThread(stromx::core::Thread* thread)
 {
     m_thread = thread;
 }
+
+void ThreadModel::setColor(const QColor& color)
+{
+    if(color != m_color)
+    {
+        m_color = color;
+        emit colorChanged(color);
+    }
+}
+
+QDataStream& operator<<(QDataStream& stream, const ThreadModel* thread)
+{
+    return stream << thread->m_color;
+}
+
+QDataStream& operator>>(QDataStream& stream, ThreadModel* thread)
+{
+    return stream >> thread->m_color;
+}

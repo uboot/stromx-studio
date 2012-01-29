@@ -43,8 +43,14 @@ public:
     
     ThreadModel* thread(const QModelIndex & index) const;
     
+    friend QDataStream & operator<< (QDataStream & stream, const ThreadListModel * threadList);
+    friend QDataStream & operator>> (QDataStream & stream, ThreadListModel * threadList);
+    
 private:
     QList<ThreadModel*> m_threads;
 };
 
+QDataStream & operator<< (QDataStream & stream, const ThreadListModel * threadList);
+QDataStream & operator>> (QDataStream & stream, ThreadListModel * threadList);
+    
 #endif // THREADLISTMODEL_H

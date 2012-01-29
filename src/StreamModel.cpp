@@ -136,6 +136,7 @@ void StreamModel::doInitializeOperator(OperatorModel* op)
     
     op->setInitialized(true);
     m_offlineOperators.removeAll(op);
+    m_onlineOperators.append(op);
     m_stream->addOperator(op->op());
 }
 
@@ -145,6 +146,7 @@ void StreamModel::doDeinitializeOperator(OperatorModel* op)
         return;
     
     m_stream->removeOperator(op->op());
+    m_onlineOperators.removeAll(op);
     m_offlineOperators.append(op);
     op->setInitialized(false);
 }
@@ -192,6 +194,7 @@ void StreamModel::doRemoveThread(ThreadModel* threadModel)
 void StreamModel::write(const QString& filename) const
 {
     QString name = QFileInfo(filename).fileName();
+    QString baseName = QFileInfo(filename).baseName();
     QString directory = QFileInfo(filename).absoluteDir().absolutePath();
     
     try
@@ -199,6 +202,12 @@ void StreamModel::write(const QString& filename) const
         stromx::core::DirectoryFileOutput output(directory.toStdString());
         stromx::core::XmlWriter writer;
         writer.writeStream(output, name.toStdString(), *m_stream);
+        
+        QByteArray modelData;
+        serializeModel(modelData);
+        output.initialize(baseName.toStdString());
+        output.openFile("model", stromx::core::OutputProvider::BINARY);
+        output.file().write(modelData.data(), modelData.size());
     }
     catch(stromx::core::Exception& e)
     {
@@ -209,6 +218,25 @@ void StreamModel::write(const QString& filename) const
 void StreamModel::read(const QString& filename)
 {
 
+}
+
+void StreamModel::serializeModel(QByteArray& data) const
+{
+    QDataStream dataStream(&data, QIODevice::WriteOnly | QIODevice::Truncate);
+    
+    dataStream << m_onlineOperators;
+    dataStream << m_offlineOperators;
+    dataStream << m_threadListModel;
+}
+
+void StreamModel::deserializeModel(const QByteArray& data)
+{
+    QDataStream dataStream(data);
+    QList<ThreadModel*> threads;
+    
+    dataStream >> m_threadListModel;
+    dataStream >> m_offlineOperators;
+    dataStream >> m_onlineOperators;
 }
 
 

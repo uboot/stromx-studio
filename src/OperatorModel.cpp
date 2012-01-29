@@ -139,13 +139,13 @@ const QString& OperatorModel::package() const
     return m_package;
 }
 
-QDataStream& operator<<(QDataStream& stream, const OperatorModel& op)
+QDataStream& operator<<(QDataStream& stream, const OperatorModel* op)
 {
-    return stream << op.m_pos;
+    return stream << op->m_pos;
 }
 
-QDataStream& operator>>(QDataStream& stream, OperatorModel& op)
+QDataStream& operator>>(QDataStream& stream, OperatorModel* op)
 {
-    return stream >> op.m_pos;
+    return stream >> op->m_pos;
 }
 

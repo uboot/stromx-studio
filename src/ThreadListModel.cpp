@@ -1,5 +1,7 @@
 #include "ThreadListModel.h"
 
+#include "ThreadModel.h"
+
 ThreadListModel::ThreadListModel(QObject* parent)
   : QAbstractTableModel(parent)
 {
@@ -71,5 +73,16 @@ ThreadModel* ThreadListModel::thread(const QModelIndex& index) const
     else
         return 0;
 }
+
+QDataStream& operator<<(QDataStream& stream, const ThreadListModel* threadList)
+{
+    return stream << threadList->m_threads;
+}
+
+QDataStream& operator>>(QDataStream& stream, ThreadListModel* threadList)
+{
+    return stream >> threadList->m_threads;
+}
+
 
 

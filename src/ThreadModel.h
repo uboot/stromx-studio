@@ -36,6 +36,10 @@ class StreamModel;
 class ThreadModel : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QColor color READ color WRITE setColor)
+    
+    friend QDataStream & operator<< (QDataStream & stream, const ThreadModel * thread);
+    friend QDataStream & operator>> (QDataStream & stream, ThreadModel * thread);
     
 public:
     explicit ThreadModel(stromx::core::Thread* thread, StreamModel *stream = 0);
@@ -54,5 +58,8 @@ private:
     StreamModel* m_stream;
     QColor m_color;
 };
+
+QDataStream & operator<< (QDataStream & stream, const ThreadModel * thread);
+QDataStream & operator>> (QDataStream & stream, ThreadModel * thread);
 
 #endif // THREADMODEL_H

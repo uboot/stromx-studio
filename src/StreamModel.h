@@ -22,7 +22,7 @@
 
 #include <QObject>
 #include <QPointF>
-#include <QSet>
+#include <QList>
 #include "ThreadListModel.h"
 
 namespace stromx
@@ -101,13 +101,17 @@ private:
     void doAddThread(ThreadModel* threadModel);
     void doRemoveThread(ThreadModel* threadModel);
     
+    void serializeModel(QByteArray& data) const;
+    void deserializeModel(const QByteArray& data);
+    
     stromx::core::Stream* m_stream;
     ThreadListModel* m_threadListModel;
     OperatorLibraryModel* m_operatorLibrary;
     QUndoStack* m_undoStack;
+    QList<OperatorModel*> m_operators;
+    QList<OperatorModel*> m_onlineOperators;
     QList<OperatorModel*> m_offlineOperators;
     QList<ConnectionModel*> m_connections;
-    QList<OperatorModel*> m_operators;
 };
 
 #endif // STREAMMODEL_H

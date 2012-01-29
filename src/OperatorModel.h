@@ -45,8 +45,8 @@ class OperatorModel : public QAbstractTableModel
     Q_PROPERTY(bool initialized READ isInitialized WRITE setInitialized)
     
     friend class MoveOperatorCmd;
-    friend QDataStream & operator<< (QDataStream & stream, const OperatorModel & op);
-    friend QDataStream & operator>> (QDataStream & stream, OperatorModel & op);
+    friend QDataStream & operator<< (QDataStream & stream, const OperatorModel * op);
+    friend QDataStream & operator>> (QDataStream & stream, OperatorModel * op);
     
 public:
     explicit OperatorModel(stromx::core::Operator* op, StreamModel *stream);
@@ -91,7 +91,7 @@ private:
     QString m_name;
 };
 
-QDataStream & operator<< (QDataStream & stream, const OperatorModel & op);
-QDataStream & operator>> (QDataStream & stream, OperatorModel & op);
+QDataStream & operator<< (QDataStream & stream, const OperatorModel * op);
+QDataStream & operator>> (QDataStream & stream, OperatorModel * op);
 
 #endif // OPERATORMODEL_H
