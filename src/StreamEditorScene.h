@@ -64,6 +64,7 @@ protected:
     void keyPressEvent(QKeyEvent* keyEvent);
     
 private slots:
+    void reset();
     void processSelection();
     void enableInitializeAction();
     void enableDeinitializeAction();

@@ -24,6 +24,8 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
     setFlag(ItemIsFocusable, true);
     setFlag(ItemSendsScenePositionChanges, true);
     
+    setInitialized(model->isInitialized());
+    
     connect(m_model, SIGNAL(initializedChanged(bool)), this, SLOT(setInitialized(bool)));
     connect(m_model, SIGNAL(posChanged(QPointF)), this, SLOT(setOperatorPos(QPointF)));
 }

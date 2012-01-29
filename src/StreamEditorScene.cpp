@@ -40,6 +40,7 @@ void StreamEditorScene::setModel(StreamModel* model)
     
     if(m_model)
     {
+        connect(m_model, SIGNAL(modelWasReset()), this, SLOT(reset()));
         connect(m_model, SIGNAL(operatorAdded(OperatorModel*)), this, SLOT(addOperator(OperatorModel*)));
         connect(m_model, SIGNAL(operatorRemoved(OperatorModel*)), this, SLOT(removeOperator(OperatorModel*)));
         connect(m_model, SIGNAL(connectionAdded(ConnectionModel*)), this, SLOT(addConnection(ConnectionModel*)));
@@ -114,6 +115,21 @@ QAction* StreamEditorScene::createRemoveAction(QObject* parent)
     connect(this, SIGNAL(removeEnabledChanged(bool)), action, SLOT(setEnabled(bool)));
     
     return action;
+}
+
+void StreamEditorScene::reset()
+{
+    foreach(QGraphicsItem* item, items())
+        delete item;
+    
+    if(m_model)
+    {
+        foreach(OperatorModel* op, m_model->operators())
+            addOperator(op);
+        
+        foreach(ConnectionModel* connection, m_model->connections())
+            addConnection(connection);
+    }
 }
 
 void StreamEditorScene::addOperator(OperatorModel* op)

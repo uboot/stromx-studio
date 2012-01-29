@@ -29,6 +29,7 @@ namespace stromx
 {
     namespace core
     { 
+        class Input;
         class Operator;
         class Stream;
         class Thread;
@@ -80,10 +81,11 @@ public:
     QUndoStack* undoStack() const { return m_undoStack; }
     ThreadListModel* threadListModel() const { return m_threadListModel; }
     
-    void write(const QString & filename) const;
-    void read(const QString & filename);
+    bool write(const QString & filename) const;
+    bool read(const QString & filename);
     
 signals:
+    void modelWasReset();
     void operatorAdded(OperatorModel* op);
     void operatorRemoved(OperatorModel* op);
     void connectionAdded(ConnectionModel* connection);
@@ -103,6 +105,12 @@ private:
     
     void serializeModel(QByteArray& data) const;
     void deserializeModel(const QByteArray& data);
+    
+    void setStream(stromx::core::Stream* stream);
+    
+    OperatorModel* findOperatorModel(const stromx::core::Operator* op);
+    ConnectionModel* findConnectionModel(const stromx::core::Input & input);
+    ThreadModel* findThreadModel(const stromx::core::Thread* thread);
     
     stromx::core::Stream* m_stream;
     ThreadListModel* m_threadListModel;

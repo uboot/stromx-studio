@@ -40,6 +40,7 @@ public:
     const QList<ThreadModel*> threads() const { return m_threads; }
     void addThread(ThreadModel* thread);
     void removeThread(ThreadModel* thread);
+    void removeAllThreads();
     
     ThreadModel* thread(const QModelIndex & index) const;
     

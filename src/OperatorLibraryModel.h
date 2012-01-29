@@ -61,6 +61,7 @@ public:
     const bool isOperator(const QModelIndex & index) const;
     OperatorData* newOperatorData(const QModelIndex & index) const;
     stromx::core::Operator* newOperator(const OperatorData* data) const;
+    stromx::core::Factory* factory() const { return m_factory; }
     
 private:
     void updateOperators();

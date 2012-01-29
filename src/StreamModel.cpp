@@ -2,8 +2,13 @@
 
 #include <QDir>
 #include <QFileInfo>
+#include <stromx/core/Description.h>
+#include <stromx/core/DirectoryFileInput.h>
 #include <stromx/core/DirectoryFileOutput.h>
+#include <stromx/core/Operator.h>
 #include <stromx/core/Stream.h>
+#include <stromx/core/Thread.h>
+#include <stromx/core/XmlReader.h>
 #include <stromx/core/XmlWriter.h>
 #include "AddConnectionCmd.h"
 #include "AddOperatorCmd.h"
@@ -191,7 +196,7 @@ void StreamModel::doRemoveThread(ThreadModel* threadModel)
     emit threadRemoved(threadModel);
 }
 
-void StreamModel::write(const QString& filename) const
+bool StreamModel::write(const QString& filename) const
 {
     QString name = QFileInfo(filename).fileName();
     QString baseName = QFileInfo(filename).baseName();
@@ -212,12 +217,162 @@ void StreamModel::write(const QString& filename) const
     catch(stromx::core::Exception& e)
     {
         qWarning(e.what());
+        return false;
     }
+    
+    return true;
 }
 
-void StreamModel::read(const QString& filename)
+bool StreamModel::read(const QString& filename)
 {
+    QString name = QFileInfo(filename).fileName();
+    QString directory = QFileInfo(filename).absoluteDir().absolutePath();
+    
+    stromx::core::Stream* stream = 0;
+    
+    try
+    {
+        stromx::core::DirectoryFileInput input(directory.toStdString());
+        stromx::core::XmlReader reader;
+        stream = reader.readStream(input, name.toStdString(), *m_operatorLibrary->factory());
+    }
+    catch(stromx::core::Exception& e)
+    {
+        qWarning(e.what());
+        return false;
+    }
+    
+    if(! stream)
+        return false;
+    
+    setStream(stream);
+    
+    return true;
+}
 
+void StreamModel::setStream(stromx::core::Stream* stream)
+{
+    // clear the undo stack
+    m_undoStack->clear();
+    
+    // backup all models
+    QList<ConnectionModel*> connections = m_connections;
+    QList<OperatorModel*> operators = m_operators;
+    QList<ThreadModel*> threads = m_threadListModel->threads();
+    
+    // clear the lists
+    m_connections.clear();
+    m_operators.clear();
+    m_offlineOperators.clear();
+    m_onlineOperators.clear();
+    m_threadListModel->removeAllThreads();
+    
+    // inform the clients
+    emit modelWasReset();
+    
+    // delete the models
+    foreach(ConnectionModel* connection, connections)
+        delete connection;
+    
+    foreach(ThreadModel* thread, threads)
+        delete thread;
+    
+    foreach(OperatorModel* op, operators)
+        delete op;
+
+    // reset the stream
+    delete m_stream;
+    m_stream = stream;
+    
+    for(std::vector<stromx::core::Operator*>::const_iterator iter = m_stream->operators().begin();
+        iter != m_stream->operators().end();
+        ++iter)
+    {
+        OperatorModel* op = new OperatorModel(*iter, this);
+        m_operators.append(op);
+        m_onlineOperators.append(op);
+    }
+    
+    foreach(OperatorModel* opModel, m_onlineOperators)
+    {
+        stromx::core::Operator* op = opModel->op();
+        
+        for(std::vector<const stromx::core::Description*>::const_iterator inputIter = op->info().inputs().begin();
+            inputIter != op->info().inputs().end();
+            ++inputIter)
+        {
+            stromx::core::Output output = m_stream->connectionSource(op, (*inputIter)->id());
+            
+            if(output.valid())
+            {
+                OperatorModel* source = findOperatorModel(output.op());
+                ConnectionModel* connection = new ConnectionModel(source, output.id(), opModel, (*inputIter)->id(), this);
+                m_connections.append(connection);
+            }
+        }
+    }
+    
+    for(std::vector<stromx::core::Thread*>::const_iterator iter = m_stream->threads().begin();
+        iter != m_stream->threads().end();
+        ++iter)
+    {
+        ThreadModel* thread = new ThreadModel(*iter, this);
+        m_threadListModel->addThread(thread);
+    }
+    
+    
+    for(std::vector<stromx::core::Thread*>::const_iterator threadIter = m_stream->threads().begin();
+        threadIter != m_stream->threads().end();
+        ++threadIter)
+    {
+        ThreadModel* threadModel = findThreadModel(*threadIter);
+        for(std::vector<stromx::core::Input>::const_iterator inputIter = (*threadIter)->inputSequence().begin();
+            inputIter != (*threadIter)->inputSequence().end();
+            ++inputIter)
+        {
+            ConnectionModel* connectionModel = findConnectionModel(*inputIter);
+            connectionModel->setThread(threadModel);
+        }
+    }
+    
+    // inform the clients
+    emit modelWasReset();
+}
+
+OperatorModel* StreamModel::findOperatorModel(const stromx::core::Operator* op)
+{
+    foreach(OperatorModel* opModel, m_operators)
+    {
+        if(opModel->op() == op)
+            return opModel;
+    }
+    
+    return 0;
+}
+
+ConnectionModel* StreamModel::findConnectionModel(const stromx::core::Input& input)
+{
+    foreach(ConnectionModel* connectionModel, m_connections)
+    {
+        if(connectionModel->targetOp()->op() == input.op()
+            && connectionModel->inputId() == input.id())
+        {
+            return connectionModel;
+        }
+    }
+    
+    return 0;
+}
+
+ThreadModel* StreamModel::findThreadModel(const stromx::core::Thread* thread)
+{
+    foreach(ThreadModel* threadModel, m_threadListModel->threads())
+    {
+        if(threadModel->thread() == thread)
+            return threadModel;
+    }
+    
+    return 0;
 }
 
 void StreamModel::serializeModel(QByteArray& data) const

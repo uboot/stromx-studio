@@ -225,7 +225,11 @@ void MainWindow::open()
         return;
     
     // load the stream
-    m_streamEditor->scene()->model()->read(file);
+    if(! m_streamEditor->scene()->model()->read(file))
+    {
+        QMessageBox::critical(this, tr("stromx-studio error"), tr("Failed to open stream"),
+                              QMessageBox::Ok, QMessageBox::Ok);
+    }
     
     // remember the last file
     settings.setValue("lastStreamOpened", file);
@@ -247,7 +251,11 @@ void MainWindow::saveAs()
         return;
     
     // write the stream
-    m_streamEditor->scene()->model()->write(file);
+    if(! m_streamEditor->scene()->model()->write(file))
+    {
+        QMessageBox::critical(this, tr("stromx-studio error"), tr("Failed to save stream"),
+                              QMessageBox::Ok, QMessageBox::Ok);
+    }
     
     // remember the last dir
     settings.setValue("lastStreamSavedDir", QFileInfo(file).dir().absolutePath());

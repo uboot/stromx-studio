@@ -74,6 +74,13 @@ ThreadModel* ThreadListModel::thread(const QModelIndex& index) const
         return 0;
 }
 
+void ThreadListModel::removeAllThreads()
+{
+    beginResetModel();
+    m_threads.clear();
+    endResetModel();
+}
+
 QDataStream& operator<<(QDataStream& stream, const ThreadListModel* threadList)
 {
     return stream << threadList->m_threads;
