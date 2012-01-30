@@ -213,7 +213,7 @@ void StreamModel::write(const QString& filename) const
         QByteArray modelData;
         serializeModel(modelData);
         output.initialize(baseName.toStdString());
-        output.openFile("model", stromx::core::OutputProvider::BINARY);
+        output.openFile("studio", stromx::core::OutputProvider::BINARY);
         output.file().write(modelData.data(), modelData.size());
     }
     catch(stromx::core::Exception& e)
@@ -237,37 +237,57 @@ void StreamModel::read(const QString& filename)
     {
         stromx::core::DirectoryFileInput input(directory.toStdString());
         stromx::core::XmlReader reader;
-        stream = reader.readStream(input, name.toStdString(), *m_operatorLibrary->factory());
         
-        input.initialize("", (baseName + ".model").toStdString());
-        input.openFile(stromx::core::InputProvider::BINARY);
-        
-        // read all data from the input stream
-        int dataSize = 0;
-        const int CHUNK_SIZE = 10;
-        while(! input.file().eof())
+        try
         {
-            modelData.resize(modelData.size() + CHUNK_SIZE);
-            char* dataPtr = modelData.data() + dataSize;
-            input.file().read(dataPtr, CHUNK_SIZE);
-            dataSize += (int)(input.file().gcount());
+            stream = reader.readStream(input, name.toStdString(), *m_operatorLibrary->factory());
         }
-        modelData.resize(dataSize);
+        catch(stromx::core::Exception& e)
+        {
+            qWarning(e.what());
+            throw WriteStreamFailed();
+        }
+        
+        bool failedToReadModel = false;
+        
+        try
+        {
+            input.initialize("", (baseName + ".studio").toStdString());
+            input.openFile(stromx::core::InputProvider::BINARY);
+            
+            // read all data from the input stream
+            int dataSize = 0;
+            const int CHUNK_SIZE = 10;
+            while(! input.file().eof())
+            {
+                modelData.resize(modelData.size() + CHUNK_SIZE);
+                char* dataPtr = modelData.data() + dataSize;
+                input.file().read(dataPtr, CHUNK_SIZE);
+                dataSize += (int)(input.file().gcount());
+            }
+            modelData.resize(dataSize);
+        }
+        catch(stromx::core::Exception& e)
+        {
+            qWarning(e.what());
+            failedToReadModel = true;
+        }
+        
+        updateStream(stream);
+        deserializeModel(modelData);
+        
+        // inform the clients
+        emit modelWasReset();
+        
+        if(failedToReadModel)
+            throw ReadModelFailed();
+    
     }
     catch(stromx::core::Exception& e)
     {
         qWarning(e.what());
         throw WriteStreamFailed();
     }
-    
-    if(! stream)
-        throw WriteStreamFailed();
-    
-    updateStream(stream);
-//     deserializeModel(modelData);
-    
-    // inform the clients
-    emit modelWasReset();
 }
 
 void StreamModel::updateStream(stromx::core::Stream* stream)
@@ -396,9 +416,14 @@ void StreamModel::serializeModel(QByteArray& data) const
 {
     QDataStream dataStream(&data, QIODevice::WriteOnly | QIODevice::Truncate);
     
-    dataStream << m_onlineOperators;
-    dataStream << m_offlineOperators;
-    dataStream << m_threadListModel;
+    foreach(OperatorModel* op, m_onlineOperators)
+        dataStream << op;
+    
+    foreach(OperatorModel* op, m_offlineOperators)
+        dataStream << op;
+    
+    foreach(ThreadModel* thread, m_threadListModel->threads())
+        dataStream << thread;
 }
 
 void StreamModel::deserializeModel(const QByteArray& data)
@@ -406,9 +431,14 @@ void StreamModel::deserializeModel(const QByteArray& data)
     QDataStream dataStream(data);
     QList<ThreadModel*> threads;
     
-    dataStream >> m_onlineOperators;
-    dataStream >> m_offlineOperators;
-    dataStream >> m_threadListModel;
+    foreach(OperatorModel* op, m_onlineOperators)
+        dataStream >>  op;
+    
+    foreach(OperatorModel* op, m_offlineOperators)
+        dataStream >> op;
+    
+    foreach(ThreadModel* thread, m_threadListModel->threads())
+        dataStream >> thread;
 }
 
 

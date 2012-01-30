@@ -38,6 +38,12 @@ public:
     ReadStreamFailed() {}
 };
 
+class ReadModelFailed : public Exception
+{
+public:
+    ReadModelFailed() {}
+};
+
 class WriteStreamFailed : public Exception
 {
 public:

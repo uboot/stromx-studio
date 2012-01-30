@@ -230,9 +230,14 @@ void MainWindow::open()
     {
         m_streamEditor->scene()->model()->read(file);
     }
+    catch(ReadModelFailed&)
+    {
+        QMessageBox::warning(this, tr("stromx-studio error"), tr("Failed to read stream meta data."),
+                             QMessageBox::Ok, QMessageBox::Ok);
+    }
     catch(ReadStreamFailed&)
     {
-        QMessageBox::critical(this, tr("stromx-studio error"), tr("Failed to open stream"),
+        QMessageBox::critical(this, tr("stromx-studio error"), tr("Failed to open stream."),
                               QMessageBox::Ok, QMessageBox::Ok);
     }
     
