@@ -1,5 +1,6 @@
 #include "OperatorLibraryModel.h"
 
+#include "Exception.h"
 #include "OperatorData.h"
 #include <QFileInfo>
 #include <QSettings>
@@ -139,14 +140,14 @@ int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
     return 0;
 }
 
-bool OperatorLibraryModel::loadLibrary(const QString& library)
+void OperatorLibraryModel::loadLibrary(const QString& library)
 {
 #ifdef UNIX
     QFileInfo info(library);
     
     QRegExp regEx("libstromx_(.+)");
     if(regEx.indexIn(info.baseName()) == -1)
-        return false;
+        throw LoadLibraryFailed();
     
     QString registrationFunctionName = regEx.cap(1);
     registrationFunctionName[0] = registrationFunctionName[0].toUpper();
@@ -159,7 +160,7 @@ bool OperatorLibraryModel::loadLibrary(const QString& library)
     libHandle = dlopen(library.toStdString().c_str(), RTLD_LAZY);
     
     if (!libHandle)
-        return false;
+        throw LoadLibraryFailed();
 
     registrationFunction = reinterpret_cast<void (*)(stromx::core::Registry& registry)>
         (dlsym(libHandle, registrationFunctionName.toStdString().c_str()));
@@ -167,7 +168,7 @@ bool OperatorLibraryModel::loadLibrary(const QString& library)
     if ((error = dlerror()) != NULL) 
     {
         dlclose(libHandle);
-        return false;
+        throw LoadLibraryFailed();
     } 
     
     // store library handle to unload the library after use
@@ -182,7 +183,7 @@ bool OperatorLibraryModel::loadLibrary(const QString& library)
     {
         // even if an exception was thrown, parts of the library might have been loaded
         // therefore the library is not closed
-        return false;
+        throw LoadLibraryFailed();
     }
     
     // remember the library

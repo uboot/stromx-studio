@@ -30,6 +30,7 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <iostream>
+#include "Exception.h"
 #include "MainWindow.h"
 #include "ObserverEditor.h"
 #include "OperatorLibrary.h"
@@ -225,7 +226,11 @@ void MainWindow::open()
         return;
     
     // load the stream
-    if(! m_streamEditor->scene()->model()->read(file))
+    try
+    {
+        m_streamEditor->scene()->model()->read(file);
+    }
+    catch(ReadStreamFailed&)
     {
         QMessageBox::critical(this, tr("stromx-studio error"), tr("Failed to open stream"),
                               QMessageBox::Ok, QMessageBox::Ok);
@@ -251,7 +256,11 @@ void MainWindow::saveAs()
         return;
     
     // write the stream
-    if(! m_streamEditor->scene()->model()->write(file))
+    try
+    {
+        m_streamEditor->scene()->model()->write(file);
+    }
+    catch(WriteStreamFailed&)
     {
         QMessageBox::critical(this, tr("stromx-studio error"), tr("Failed to save stream"),
                               QMessageBox::Ok, QMessageBox::Ok);
@@ -291,8 +300,14 @@ void MainWindow::loadLibraries()
     QStringList fileList = files;
     foreach(QString file, fileList)
     {
-        if(! m_operatorLibrary->model()->loadLibrary(file))
+        try
+        {
+            m_operatorLibrary->model()->loadLibrary(file);
+        }
+        catch(LoadLibraryFailed&)
+        {
             std::cout << "Failed to load '" << file.toStdString() << "'" << std::endl;
+        }
     }
     
     // remember the last library

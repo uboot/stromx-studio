@@ -81,8 +81,8 @@ public:
     QUndoStack* undoStack() const { return m_undoStack; }
     ThreadListModel* threadListModel() const { return m_threadListModel; }
     
-    bool write(const QString & filename) const;
-    bool read(const QString & filename);
+    void write(const QString & filename) const;
+    void read(const QString & filename);
     
 signals:
     void modelWasReset();

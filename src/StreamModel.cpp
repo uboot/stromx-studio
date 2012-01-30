@@ -14,6 +14,7 @@
 #include "AddOperatorCmd.h"
 #include "AddThreadCmd.h"
 #include "DeinitializeOperatorCmd.h"
+#include "Exception.h"
 #include "InitializeOperatorCmd.h"
 #include "OperatorLibraryModel.h"
 #include "OperatorModel.h"
@@ -197,7 +198,7 @@ void StreamModel::doRemoveThread(ThreadModel* threadModel)
     emit threadRemoved(threadModel);
 }
 
-bool StreamModel::write(const QString& filename) const
+void StreamModel::write(const QString& filename) const
 {
     QString name = QFileInfo(filename).fileName();
     QString baseName = QFileInfo(filename).baseName();
@@ -218,13 +219,11 @@ bool StreamModel::write(const QString& filename) const
     catch(stromx::core::Exception& e)
     {
         qWarning(e.what());
-        return false;
+        throw WriteStreamFailed();
     }
-    
-    return true;
 }
 
-bool StreamModel::read(const QString& filename)
+void StreamModel::read(const QString& filename)
 {
     QString name = QFileInfo(filename).fileName();
     QString baseName = QFileInfo(filename).baseName();
@@ -258,19 +257,17 @@ bool StreamModel::read(const QString& filename)
     catch(stromx::core::Exception& e)
     {
         qWarning(e.what());
-        return false;
+        throw WriteStreamFailed();
     }
     
     if(! stream)
-        return false;
+        throw WriteStreamFailed();
     
     updateStream(stream);
 //     deserializeModel(modelData);
     
     // inform the clients
     emit modelWasReset();
-    
-    return true;
 }
 
 void StreamModel::updateStream(stromx::core::Stream* stream)
