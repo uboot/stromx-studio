@@ -1,3 +1,8 @@
+configure_file (
+  "${PROJECT_SOURCE_DIR}/src/Config.h.in"
+  "${PROJECT_SOURCE_DIR}/src/Config.h"
+)
+
 set(stromxstudio_SOURCES
     AddConnectionCmd.cpp
     AddThreadCmd.cpp
@@ -73,7 +78,6 @@ target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
     ${STROMX_CORE_LIBRARY}
 )
-
 
 if(BUILD_TESTS)
     add_subdirectory(test)

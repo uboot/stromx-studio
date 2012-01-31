@@ -94,7 +94,7 @@ signals:
     void threadRemoved(ThreadModel* thread);
     
 private:
-    static const qint32 MAGIC_NUMBER;
+    static const quint32 MAGIC_NUMBER;
     
     void doAddOperator(OperatorModel* op);
     void doRemoveOperator(OperatorModel* op);

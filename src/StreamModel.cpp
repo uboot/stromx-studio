@@ -13,6 +13,7 @@
 #include "AddConnectionCmd.h"
 #include "AddOperatorCmd.h"
 #include "AddThreadCmd.h"
+#include "Config.h"
 #include "DeinitializeOperatorCmd.h"
 #include "Exception.h"
 #include "InitializeOperatorCmd.h"
@@ -26,7 +27,7 @@
 #include "ThreadModel.h"
 
 
-const qint32 StreamModel::MAGIC_NUMBER = 0x20111202;
+const quint32 StreamModel::MAGIC_NUMBER = 0x20111202;
 
 StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject* parent) 
   : QObject(parent),
@@ -418,6 +419,13 @@ void StreamModel::serializeModel(QByteArray& data) const
 {
     QDataStream dataStream(&data, QIODevice::WriteOnly | QIODevice::Truncate);
     
+    dataStream << qint32(MAGIC_NUMBER);
+    dataStream << qint32(STROMX_STUDIO_VERSION_MAJOR);
+    dataStream << qint32(STROMX_STUDIO_VERSION_MINOR);
+    dataStream << qint32(STROMX_STUDIO_VERSION_PATCH);
+    
+    dataStream.setVersion(QDataStream::Qt_4_7);
+    
     dataStream << qint32(m_onlineOperators.count());
     foreach(OperatorModel* op, m_onlineOperators)
         dataStream << op;
@@ -434,25 +442,37 @@ void StreamModel::serializeModel(QByteArray& data) const
 void StreamModel::deserializeModel(const QByteArray& data)
 {
     QDataStream dataStream(data);
-    QList<ThreadModel*> threads;
-    
+    qint32 magicNumber = 0;
     qint32 count = 0;
+    qint32 versionMajor = 0;
+    qint32 versionMinor = 0;
+    qint32 versionPatch = 0;
+    
+    dataStream >> magicNumber;
+    if(magicNumber != MAGIC_NUMBER)
+        throw ReadStudioDataFailed(tr("This is not a stromx-studio file."));
+    
+    dataStream >> versionMajor;
+    dataStream >> versionMinor;
+    dataStream >> versionPatch;
+    
+    dataStream.setVersion(QDataStream::Qt_4_7);
     
     dataStream >> count;
     if(count != m_onlineOperators.count())
-        throw ReadStudioDataFailed(tr("Number of initialized operators does not match studio data."));
+        throw ReadStudioDataFailed(tr("Number of initialized operators does not match the stromx-studio data."));
     foreach(OperatorModel* op, m_onlineOperators)
         dataStream >>  op;
     
     dataStream >> count;
     if(count != m_offlineOperators.count())
-        throw ReadStudioDataFailed(tr("Number of uninitialized operators does not match studio data."));
+        throw ReadStudioDataFailed(tr("Number of uninitialized operators does not match stromx-studio data."));
     foreach(OperatorModel* op, m_offlineOperators)
         dataStream >> op;
     
     dataStream >> count;
     if(count != m_threadListModel->threads().count())
-        throw ReadStudioDataFailed(tr("Number of threads does not match studio data."));
+        throw ReadStudioDataFailed(tr("Number of threads does not match stromx-studio data."));
     foreach(ThreadModel* thread, m_threadListModel->threads())
         dataStream >> thread;
 }
