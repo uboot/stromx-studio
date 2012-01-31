@@ -21,6 +21,7 @@
 #define EXCEPTION_H
 
 #include <exception>
+#include <QString>
 
 class Exception : public std::exception
 {
@@ -38,10 +39,16 @@ public:
     ReadStreamFailed() {}
 };
 
-class ReadModelFailed : public Exception
+class ReadStudioDataFailed : public Exception
 {
 public:
-    ReadModelFailed() {}
+    ReadStudioDataFailed(const QString & message) : m_message(message) {}
+    
+    virtual const char* what() const throw() { return m_message.toAscii(); }
+    virtual ~ReadStudioDataFailed() throw() {}
+    
+private:
+    QString m_message;
 };
 
 class WriteStreamFailed : public Exception

@@ -94,6 +94,8 @@ signals:
     void threadRemoved(ThreadModel* thread);
     
 private:
+    static const qint32 MAGIC_NUMBER;
+    
     void doAddOperator(OperatorModel* op);
     void doRemoveOperator(OperatorModel* op);
     void doInitializeOperator(OperatorModel* op);
@@ -107,9 +109,9 @@ private:
     void deserializeModel(const QByteArray& data);
     
     void updateStream(stromx::core::Stream* stream);
-    OperatorModel* findOperatorModel(const stromx::core::Operator* op);
-    ConnectionModel* findConnectionModel(const stromx::core::Input & input);
-    ThreadModel* findThreadModel(const stromx::core::Thread* thread);
+    OperatorModel* findOperatorModel(const stromx::core::Operator* op) const;
+    ConnectionModel* findConnectionModel(const stromx::core::Input & input) const;
+    ThreadModel* findThreadModel(const stromx::core::Thread* thread) const;
     
     stromx::core::Stream* m_stream;
     ThreadListModel* m_threadListModel;

@@ -25,6 +25,9 @@
 #include "ThreadListModel.h"
 #include "ThreadModel.h"
 
+
+const qint32 StreamModel::MAGIC_NUMBER = 0x20111202;
+
 StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject* parent) 
   : QObject(parent),
     m_stream(0),
@@ -245,10 +248,10 @@ void StreamModel::read(const QString& filename)
         catch(stromx::core::Exception& e)
         {
             qWarning(e.what());
-            throw WriteStreamFailed();
+            throw ReadStreamFailed();
         }
         
-        bool failedToReadModel = false;
+        updateStream(stream);
         
         try
         {
@@ -266,22 +269,21 @@ void StreamModel::read(const QString& filename)
                 dataSize += (int)(input.file().gcount());
             }
             modelData.resize(dataSize);
+            
+            deserializeModel(modelData);
+        }
+        catch(ReadStudioDataFailed& e)
+        {
+            emit modelWasReset();
+            throw;
         }
         catch(stromx::core::Exception& e)
         {
-            qWarning(e.what());
-            failedToReadModel = true;
+            emit modelWasReset();
+            throw ReadStudioDataFailed(e.what());
         }
         
-        updateStream(stream);
-        deserializeModel(modelData);
-        
-        // inform the clients
         emit modelWasReset();
-        
-        if(failedToReadModel)
-            throw ReadModelFailed();
-    
     }
     catch(stromx::core::Exception& e)
     {
@@ -366,9 +368,9 @@ void StreamModel::updateStream(stromx::core::Stream* stream)
         ++threadIter)
     {
         ThreadModel* threadModel = findThreadModel(*threadIter);
-        for(std::vector<stromx::core::Input>::const_iterator inputIter = (*threadIter)->inputSequence().begin();
-            inputIter != (*threadIter)->inputSequence().end();
-            ++inputIter)
+        std::vector<stromx::core::Input>::const_iterator start = (*threadIter)->inputSequence().begin();
+        std::vector<stromx::core::Input>::const_iterator end = (*threadIter)->inputSequence().end();
+        for(std::vector<stromx::core::Input>::const_iterator inputIter = start; inputIter != end; ++inputIter)
         {
             ConnectionModel* connectionModel = findConnectionModel(*inputIter);
             connectionModel->setThread(threadModel);
@@ -376,7 +378,7 @@ void StreamModel::updateStream(stromx::core::Stream* stream)
     }
 }
 
-OperatorModel* StreamModel::findOperatorModel(const stromx::core::Operator* op)
+OperatorModel* StreamModel::findOperatorModel(const stromx::core::Operator* op) const
 {
     foreach(OperatorModel* opModel, m_operators)
     {
@@ -387,7 +389,7 @@ OperatorModel* StreamModel::findOperatorModel(const stromx::core::Operator* op)
     return 0;
 }
 
-ConnectionModel* StreamModel::findConnectionModel(const stromx::core::Input& input)
+ConnectionModel* StreamModel::findConnectionModel(const stromx::core::Input& input) const
 {
     foreach(ConnectionModel* connectionModel, m_connections)
     {
@@ -401,7 +403,7 @@ ConnectionModel* StreamModel::findConnectionModel(const stromx::core::Input& inp
     return 0;
 }
 
-ThreadModel* StreamModel::findThreadModel(const stromx::core::Thread* thread)
+ThreadModel* StreamModel::findThreadModel(const stromx::core::Thread* thread) const
 {
     foreach(ThreadModel* threadModel, m_threadListModel->threads())
     {
@@ -416,12 +418,15 @@ void StreamModel::serializeModel(QByteArray& data) const
 {
     QDataStream dataStream(&data, QIODevice::WriteOnly | QIODevice::Truncate);
     
+    dataStream << qint32(m_onlineOperators.count());
     foreach(OperatorModel* op, m_onlineOperators)
         dataStream << op;
     
+    dataStream << qint32(m_offlineOperators.count());
     foreach(OperatorModel* op, m_offlineOperators)
         dataStream << op;
     
+    dataStream << qint32(m_threadListModel->threads().count());
     foreach(ThreadModel* thread, m_threadListModel->threads())
         dataStream << thread;
 }
@@ -431,12 +436,23 @@ void StreamModel::deserializeModel(const QByteArray& data)
     QDataStream dataStream(data);
     QList<ThreadModel*> threads;
     
+    qint32 count = 0;
+    
+    dataStream >> count;
+    if(count != m_onlineOperators.count())
+        throw ReadStudioDataFailed(tr("Number of initialized operators does not match studio data."));
     foreach(OperatorModel* op, m_onlineOperators)
         dataStream >>  op;
     
+    dataStream >> count;
+    if(count != m_offlineOperators.count())
+        throw ReadStudioDataFailed(tr("Number of uninitialized operators does not match studio data."));
     foreach(OperatorModel* op, m_offlineOperators)
         dataStream >> op;
     
+    dataStream >> count;
+    if(count != m_threadListModel->threads().count())
+        throw ReadStudioDataFailed(tr("Number of threads does not match studio data."));
     foreach(ThreadModel* thread, m_threadListModel->threads())
         dataStream >> thread;
 }
