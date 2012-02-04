@@ -29,6 +29,8 @@ namespace stromx
 {
     namespace core
     { 
+        class FileInput;
+        class FileOutput;
         class Input;
         class Operator;
         class Stream;
@@ -81,8 +83,8 @@ public:
     QUndoStack* undoStack() const { return m_undoStack; }
     ThreadListModel* threadListModel() const { return m_threadListModel; }
     
-    void write(const QString & filename) const;
-    void read(const QString & filename);
+    void write(stromx::core::FileOutput & output, const QString & basename) const;
+    void read(stromx::core::FileInput & input, const QString & basename);
     
 signals:
     void modelWasReset();

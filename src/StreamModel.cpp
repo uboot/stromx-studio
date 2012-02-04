@@ -4,7 +4,7 @@
 #include <QFileInfo>
 #include <stromx/core/Description.h>
 #include <stromx/core/DirectoryFileInput.h>
-#include <stromx/core/DirectoryFileOutput.h>
+#include <stromx/core/FileOutput.h>
 #include <stromx/core/Operator.h>
 #include <stromx/core/Stream.h>
 #include <stromx/core/Thread.h>
@@ -202,21 +202,16 @@ void StreamModel::doRemoveThread(ThreadModel* threadModel)
     emit threadRemoved(threadModel);
 }
 
-void StreamModel::write(const QString& filename) const
+void StreamModel::write(stromx::core::FileOutput & output, const QString& basename) const
 {
-    QString name = QFileInfo(filename).fileName();
-    QString baseName = QFileInfo(filename).baseName();
-    QString directory = QFileInfo(filename).absoluteDir().absolutePath();
-    
     try
     {
-        stromx::core::DirectoryFileOutput output(directory.toStdString());
         stromx::core::XmlWriter writer;
-        writer.writeStream(output, name.toStdString(), *m_stream);
+        writer.writeStream(output, basename.toStdString(), *m_stream);
         
         QByteArray modelData;
         serializeModel(modelData);
-        output.initialize(baseName.toStdString());
+        output.initialize(basename.toStdString());
         output.openFile("studio", stromx::core::OutputProvider::BINARY);
         output.file().write(modelData.data(), modelData.size());
     }
@@ -227,70 +222,56 @@ void StreamModel::write(const QString& filename) const
     }
 }
 
-void StreamModel::read(const QString& filename)
+void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
 {
-    QString name = QFileInfo(filename).fileName();
-    QString baseName = QFileInfo(filename).baseName();
-    QString directory = QFileInfo(filename).absoluteDir().absolutePath();
-    
     stromx::core::Stream* stream = 0;
-    
-    QByteArray modelData;
+    std::string streamFilename = (basename + ".xml").toStdString();
     
     try
     {
-        stromx::core::DirectoryFileInput input(directory.toStdString());
         stromx::core::XmlReader reader;
-        
-        try
-        {
-            stream = reader.readStream(input, name.toStdString(), *m_operatorLibrary->factory());
-        }
-        catch(stromx::core::Exception& e)
-        {
-            qWarning(e.what());
-            throw ReadStreamFailed();
-        }
-        
-        updateStream(stream);
-        
-        try
-        {
-            input.initialize("", (baseName + ".studio").toStdString());
-            input.openFile(stromx::core::InputProvider::BINARY);
-            
-            // read all data from the input stream
-            int dataSize = 0;
-            const int CHUNK_SIZE = 10;
-            while(! input.file().eof())
-            {
-                modelData.resize(modelData.size() + CHUNK_SIZE);
-                char* dataPtr = modelData.data() + dataSize;
-                input.file().read(dataPtr, CHUNK_SIZE);
-                dataSize += (int)(input.file().gcount());
-            }
-            modelData.resize(dataSize);
-            
-            deserializeModel(modelData);
-        }
-        catch(ReadStudioDataFailed& e)
-        {
-            emit modelWasReset();
-            throw;
-        }
-        catch(stromx::core::Exception& e)
-        {
-            emit modelWasReset();
-            throw ReadStudioDataFailed(e.what());
-        }
-        
-        emit modelWasReset();
+        stream = reader.readStream(input, streamFilename, *m_operatorLibrary->factory());
     }
     catch(stromx::core::Exception& e)
     {
         qWarning(e.what());
-        throw WriteStreamFailed();
+        throw ReadStreamFailed();
     }
+    
+    updateStream(stream);
+    
+    try
+    {
+        input.initialize("", (basename + ".studio").toStdString());
+        input.openFile(stromx::core::InputProvider::BINARY);
+        
+        // read all data from the input stream
+        QByteArray modelData;
+        int dataSize = 0;
+        const int CHUNK_SIZE = 10;
+        while(! input.file().eof())
+        {
+            modelData.resize(modelData.size() + CHUNK_SIZE);
+            char* dataPtr = modelData.data() + dataSize;
+            input.file().read(dataPtr, CHUNK_SIZE);
+            dataSize += (int)(input.file().gcount());
+        }
+        modelData.resize(dataSize);
+        
+        deserializeModel(modelData);
+    }
+    catch(ReadStudioDataFailed& e)
+    {
+        emit modelWasReset();
+        throw;
+    }
+    catch(stromx::core::Exception& e)
+    {
+        emit modelWasReset();
+        throw ReadStudioDataFailed(e.what());
+    }
+    
+    emit modelWasReset();
 }
 
 void StreamModel::updateStream(stromx::core::Stream* stream)
@@ -419,7 +400,7 @@ void StreamModel::serializeModel(QByteArray& data) const
 {
     QDataStream dataStream(&data, QIODevice::WriteOnly | QIODevice::Truncate);
     
-    dataStream << qint32(MAGIC_NUMBER);
+    dataStream << quint32(MAGIC_NUMBER);
     dataStream << qint32(STROMX_STUDIO_VERSION_MAJOR);
     dataStream << qint32(STROMX_STUDIO_VERSION_MINOR);
     dataStream << qint32(STROMX_STUDIO_VERSION_PATCH);
@@ -442,7 +423,7 @@ void StreamModel::serializeModel(QByteArray& data) const
 void StreamModel::deserializeModel(const QByteArray& data)
 {
     QDataStream dataStream(data);
-    qint32 magicNumber = 0;
+    quint32 magicNumber = 0;
     qint32 count = 0;
     qint32 versionMajor = 0;
     qint32 versionMinor = 0;

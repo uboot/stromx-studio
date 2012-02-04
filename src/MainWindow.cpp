@@ -30,6 +30,10 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <iostream>
+#include <stromx/core/DirectoryFileInput.h>
+#include <stromx/core/DirectoryFileOutput.h>
+#include <stromx/core/ZipFileInput.h>
+#include <stromx/core/ZipFileOutput.h>
 #include "Exception.h"
 #include "MainWindow.h"
 #include "ObserverEditor.h"
@@ -220,15 +224,33 @@ void MainWindow::open()
     QString lastDir = settings.value("lastStreamOpened", QDir::home().absolutePath()).toString();
     
     QString file = QFileDialog::getOpenFileName(this, tr("Select a stream to open"),
-                                                lastDir, tr("Stream files (*.xml)")); 
+                                                lastDir, tr("Stromx archive (*.zip);;Stream file (*.xml)")); 
     
+    QString basename = QFileInfo(file).baseName();
     if(file.isNull())
         return;
+    
+    QString extension = QFileInfo(file).suffix();
+    if(! (extension == "xml" || extension == "zip"))
+    {
+        QMessageBox::critical(this, tr("stromx-studio error"), tr("Invalid file extension"),
+                              QMessageBox::Ok, QMessageBox::Ok);
+    }
     
     // load the stream
     try
     {
-        m_streamEditor->scene()->model()->read(file);
+        if(extension == "xml")
+        {
+            QString directory = QFileInfo(file).absoluteDir().absolutePath();
+            stromx::core::DirectoryFileInput input(directory.toStdString());
+            m_streamEditor->scene()->model()->read(input, basename);
+        }
+        else if(extension == "zip")
+        {
+            stromx::core::ZipFileInput input(file.toStdString());
+            m_streamEditor->scene()->model()->read(input, basename);
+        }
     }
     catch(ReadStudioDataFailed&)
     {
@@ -254,16 +276,34 @@ void MainWindow::saveAs()
     QSettings settings("stromx", "stromx-studio");
     QString lastDir = settings.value("lastStreamSavedDir", QDir::home().absolutePath()).toString();
     
-    QString file = QFileDialog::getSaveFileName(this, tr("Save stream file"),
-                                                lastDir, tr("Stream files (*.xml)")); 
+    QString file = QFileDialog::getSaveFileName(this, tr("Save stromx-studio project"),
+                                                lastDir, tr("Stromx archive (*.zip);;Stream file (*.xml)")); 
     
     if(file.isNull())
         return;
     
+    QString basename = QFileInfo(file).baseName();
+    QString extension = QFileInfo(file).suffix();
+    if(! (extension == "xml" || extension == "zip"))
+    {
+        QMessageBox::critical(this, tr("stromx-studio error"), tr("Invalid file extension"),
+                              QMessageBox::Ok, QMessageBox::Ok);
+    }
+        
     // write the stream
     try
     {
-        m_streamEditor->scene()->model()->write(file);
+        if(extension == "xml")
+        {
+            QString directory = QFileInfo(file).absoluteDir().absolutePath();
+            stromx::core::DirectoryFileOutput output(directory.toStdString());
+            m_streamEditor->scene()->model()->write(output, basename);
+        }
+        else if(extension == "zip")
+        {
+            stromx::core::ZipFileOutput output(file.toStdString());
+            m_streamEditor->scene()->model()->write(output, basename);
+        }
     }
     catch(WriteStreamFailed&)
     {
