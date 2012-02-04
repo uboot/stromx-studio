@@ -260,7 +260,7 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
         
         deserializeModel(modelData);
     }
-    catch(ReadStudioDataFailed& e)
+    catch(ReadStudioDataFailed&)
     {
         emit modelWasReset();
         throw;
