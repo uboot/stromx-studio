@@ -284,7 +284,7 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
             throw ReadStudioDataFailed(tr("Failed to read the parameter values of an unitialized operator."));
         }
     }
-    catch(ReadStudioDataFailed& e)
+    catch(ReadStudioDataFailed&)
     {
         emit modelWasReset();
         throw;
