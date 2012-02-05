@@ -45,7 +45,6 @@ public:
     friend class OperatorLibraryModelTest;
     
     explicit OperatorLibraryModel(QObject *parent = 0);
-    
     virtual ~OperatorLibraryModel();
     
     virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;

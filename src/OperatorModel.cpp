@@ -13,7 +13,7 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
     m_type(QString::fromStdString(m_op->info().type())),
     m_name(QString::fromStdString(m_op->name()))
 {
-
+    Q_ASSERT(m_op);
 }
 
 int OperatorModel::rowCount(const QModelIndex& index) const
@@ -44,30 +44,27 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     if(role != Qt::DisplayRole)
         return QVariant();
     
-    if(m_op)
+    if(index.row() == 0)
     {
-        if(index.row() == 0)
+        if(index.column() == 0)
+            return tr("Type");
+        else
+            return QVariant(QString::fromStdString(m_op->info().type()));
+    }
+    else
+    {
+        if(index.column() == 0)
         {
-            if(index.column() == 0)
-                return tr("Type");
-            else
-                return QVariant(QString::fromStdString(m_op->info().type()));
+            return tr("Status");
         }
         else
         {
-            if(index.column() == 0)
+            switch(m_op->status())
             {
-                return tr("Status");
-            }
-            else
-            {
-                switch(m_op->status())
-                {
-                case stromx::core::Operator::NONE:
-                    return QVariant(tr("None"));
-                default:
-                    return QVariant(tr("Initialized"));
-                }
+            case stromx::core::Operator::NONE:
+                return QVariant(tr("None"));
+            default:
+                return QVariant(tr("Initialized"));
             }
         }
     }

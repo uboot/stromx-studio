@@ -111,6 +111,7 @@ private:
     void deserializeModel(const QByteArray& data);
     
     void updateStream(stromx::core::Stream* stream);
+    void deleteAllData();
     OperatorModel* findOperatorModel(const stromx::core::Operator* op) const;
     ConnectionModel* findConnectionModel(const stromx::core::Input & input) const;
     ThreadModel* findThreadModel(const stromx::core::Thread* thread) const;
