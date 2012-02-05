@@ -209,6 +209,11 @@ void StreamModel::write(stromx::core::FileOutput & output, const QString& basena
         stromx::core::XmlWriter writer;
         writer.writeStream(output, basename.toStdString(), *m_stream);
         
+        std::vector<const stromx::core::Operator*> offlineOperators;
+        foreach(OperatorModel* opModel, m_offlineOperators)
+            offlineOperators.push_back(opModel->op());
+        writer.writeParameters(output, (basename + "_offline").toStdString(), offlineOperators);
+        
         QByteArray modelData;
         serializeModel(modelData);
         output.initialize(basename.toStdString());
@@ -258,7 +263,26 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
         }
         modelData.resize(dataSize);
         
+        // allocate the offline operators and read all model data like 
+        // operator positions, thread color etc.
         deserializeModel(modelData);
+           
+        // read the parameters values of the offlline operators
+        std::string parametersFilename = (basename + "_offline.xml").toStdString();
+        std::vector<stromx::core::Operator*> offlineOperators;
+        foreach(OperatorModel* opModel, m_offlineOperators)
+            offlineOperators.push_back(opModel->op());
+        try
+        {
+            stromx::core::XmlReader reader;
+            reader.readParameters(input, parametersFilename,
+                                  *m_operatorLibrary->factory(), offlineOperators);
+        }
+        catch(stromx::core::Exception& e)
+        {
+            qWarning(e.what());
+            throw ReadStudioDataFailed(tr("Failed to read the parameter values of an unitialized operator."));
+        }
     }
     catch(ReadStudioDataFailed& e)
     {

@@ -278,9 +278,12 @@ void MainWindow::readFile(const QString& filepath)
             stromx::core::ZipFileInput input(filepath.toStdString());
             m_streamEditor->scene()->model()->read(input, basename);
         }
+    
+        updateCurrentFile(filepath);
     }
     catch(ReadStudioDataFailed&)
     {
+        updateCurrentFile(filepath);
         QMessageBox::warning(this, tr("stromx-studio error"), tr("Failed to read studio data."),
                              QMessageBox::Ok, QMessageBox::Ok);
     }
@@ -289,8 +292,6 @@ void MainWindow::readFile(const QString& filepath)
         QMessageBox::critical(this, tr("stromx-studio error"), tr("Failed to open stream."),
                               QMessageBox::Ok, QMessageBox::Ok);
     }
-    
-    updateCurrentFile(filepath);
     
     // remember the last file
     QSettings settings("stromx", "stromx-studio");
@@ -404,18 +405,18 @@ void MainWindow::writeFile(const QString& filepath)
             stromx::core::ZipFileOutput output(filepath.toStdString());
             m_streamEditor->scene()->model()->write(output, basename);
         }
+    
+        updateCurrentFile(filepath);
+        
+        // remember the last dir
+        QSettings settings("stromx", "stromx-studio");
+        settings.setValue("lastStreamSavedDir", QFileInfo(filepath).dir().absolutePath());
     }
     catch(WriteStreamFailed&)
     {
         QMessageBox::critical(this, tr("stromx-studio error"), tr("Failed to save stream"),
                               QMessageBox::Ok, QMessageBox::Ok);
     }
-    
-    updateCurrentFile(filepath);
-    
-    // remember the last dir
-    QSettings settings("stromx", "stromx-studio");
-    settings.setValue("lastStreamSavedDir", QFileInfo(filepath).dir().absolutePath());
 }
 
 void MainWindow::readSettings()
