@@ -122,7 +122,7 @@ private:
     QUndoStack* m_undoStack;
     QList<OperatorModel*> m_operators;
     QList<OperatorModel*> m_onlineOperators;
-    QList<OperatorModel*> m_offlineOperators;
+    QList<OperatorModel*> m_uninitializedOperators;
     QList<ConnectionModel*> m_connections;
 };
 
