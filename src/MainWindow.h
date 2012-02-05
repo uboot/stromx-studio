@@ -40,18 +40,19 @@ public:
     ~MainWindow();
     
 protected:
-    virtual void closeEvent(QCloseEvent* e);
+    virtual void closeEvent(QCloseEvent* event);
 
 private slots:
-    void open();
-    void saveAs();
-    void closeStream();
+    bool open();
+    bool saveAs();
+    bool closeStream();
+    bool save();
     void loadLibraries();
     void resetLibraries();
-    void save();
     void about();
     void start();
     void stop();
+    void updateWindowTitle(bool undoStackIsClean);
 
 private:
     void createActions();
@@ -62,6 +63,14 @@ private:
     
     void readSettings();
     void writeSettings();
+    void writeFile(const QString & filepath);
+    void readFile(const QString & filepath);
+    
+    /** Remembers the current file as being saved or opened and updates the undo stack. */
+    void updateCurrentFile(const QString & filepath);
+    
+    /** Saves the stream before it is going to be closed. */
+    bool saveBeforeClosing();
     
     QAction* m_openAct;
     QAction* m_saveAct;
@@ -97,6 +106,8 @@ private:
     ObserverEditor* m_observerEditor;
     OperatorLibrary* m_operatorLibrary;
     PropertyEditor* m_propertyEditor;
+    
+    QString m_currentFile;
 };
 
 #endif // MAINWINDOW_H
