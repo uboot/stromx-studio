@@ -1,15 +1,5 @@
 #include "StreamModel.h"
 
-#include <QDir>
-#include <QFileInfo>
-#include <stromx/core/Description.h>
-#include <stromx/core/DirectoryFileInput.h>
-#include <stromx/core/FileOutput.h>
-#include <stromx/core/Operator.h>
-#include <stromx/core/Stream.h>
-#include <stromx/core/Thread.h>
-#include <stromx/core/XmlReader.h>
-#include <stromx/core/XmlWriter.h>
 #include "AddConnectionCmd.h"
 #include "AddOperatorCmd.h"
 #include "AddThreadCmd.h"
@@ -25,7 +15,17 @@
 #include "RemoveThreadCmd.h"
 #include "ThreadListModel.h"
 #include "ThreadModel.h"
-
+#include <QDir>
+#include <QFileInfo>
+#include <stromx/core/Description.h>
+#include <stromx/core/DirectoryFileInput.h>
+#include <stromx/core/FileOutput.h>
+#include <stromx/core/Operator.h>
+#include <stromx/core/Stream.h>
+#include <stromx/core/Thread.h>
+#include <stromx/core/XmlReader.h>
+#include <stromx/core/XmlWriter.h>
+#include <stromx/core/Factory.h>
 
 const quint32 StreamModel::MAGIC_NUMBER = 0x20111202;
 
@@ -41,8 +41,8 @@ StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLi
 }
 
 StreamModel::~StreamModel()
-{
-    delete m_stream;
+{   
+    deleteAllData();
 }
 
 void StreamModel::addOperator(const OperatorData* opData, const QPointF& pos)
@@ -126,7 +126,7 @@ void StreamModel::doAddOperator(OperatorModel* op)
     Q_ASSERT(! op->isInitialized());
     
     m_operators.append(op);
-    m_offlineOperators.append(op);
+    m_uninitializedOperators.append(op);
     emit operatorAdded(op);
 }
 
@@ -135,7 +135,7 @@ void StreamModel::doRemoveOperator(OperatorModel* op)
     Q_ASSERT(! op->isInitialized());
     
     m_operators.removeAll(op);
-    m_offlineOperators.removeAll(op);
+    m_uninitializedOperators.removeAll(op);
     emit operatorRemoved(op);
 }
 
@@ -145,7 +145,7 @@ void StreamModel::doInitializeOperator(OperatorModel* op)
         return;
     
     op->setInitialized(true);
-    m_offlineOperators.removeAll(op);
+    m_uninitializedOperators.removeAll(op);
     m_onlineOperators.append(op);
     m_stream->addOperator(op->op());
 }
@@ -157,7 +157,7 @@ void StreamModel::doDeinitializeOperator(OperatorModel* op)
     
     m_stream->removeOperator(op->op());
     m_onlineOperators.removeAll(op);
-    m_offlineOperators.append(op);
+    m_uninitializedOperators.append(op);
     op->setInitialized(false);
 }
 
@@ -209,6 +209,11 @@ void StreamModel::write(stromx::core::FileOutput & output, const QString& basena
         stromx::core::XmlWriter writer;
         writer.writeStream(output, basename.toStdString(), *m_stream);
         
+        std::vector<const stromx::core::Operator*> uninitializedOperators;
+        foreach(OperatorModel* opModel, m_uninitializedOperators)
+            uninitializedOperators.push_back(opModel->op());
+        writer.writeParameters(output, (basename + "_uninitialized").toStdString(), uninitializedOperators);
+        
         QByteArray modelData;
         serializeModel(modelData);
         output.initialize(basename.toStdString());
@@ -258,9 +263,28 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
         }
         modelData.resize(dataSize);
         
+        // allocate the uninitialized operators and read all model data like 
+        // operator positions, thread color etc.
         deserializeModel(modelData);
+           
+        // read the parameters values of the offlline operators
+        std::string parametersFilename = (basename + "_uninitialized.xml").toStdString();
+        std::vector<stromx::core::Operator*> uninitializedOperators;
+        foreach(OperatorModel* opModel, m_uninitializedOperators)
+            uninitializedOperators.push_back(opModel->op());
+        try
+        {
+            stromx::core::XmlReader reader;
+            reader.readParameters(input, parametersFilename,
+                                  *m_operatorLibrary->factory(), uninitializedOperators);
+        }
+        catch(stromx::core::Exception& e)
+        {
+            qWarning(e.what());
+            throw ReadStudioDataFailed(tr("Failed to read the parameter values of an unitialized operator."));
+        }
     }
-    catch(ReadStudioDataFailed& e)
+    catch(ReadStudioDataFailed&)
     {
         emit modelWasReset();
         throw;
@@ -274,20 +298,22 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
     emit modelWasReset();
 }
 
-void StreamModel::updateStream(stromx::core::Stream* stream)
+void StreamModel::deleteAllData()
 {
-    // clear the undo stack
-    m_undoStack->clear();
-    
     // backup all models
     QList<ConnectionModel*> connections = m_connections;
     QList<OperatorModel*> operators = m_operators;
     QList<ThreadModel*> threads = m_threadListModel->threads();
     
+    // backup the uninitialized operators
+    QList<stromx::core::Operator*> uninitializedOperators;
+    foreach(OperatorModel* op, m_uninitializedOperators)
+        uninitializedOperators.append(op->op());
+    
     // clear the lists
     m_connections.clear();
     m_operators.clear();
-    m_offlineOperators.clear();
+    m_uninitializedOperators.clear();
     m_onlineOperators.clear();
     m_threadListModel->removeAllThreads();
     
@@ -304,8 +330,24 @@ void StreamModel::updateStream(stromx::core::Stream* stream)
     foreach(OperatorModel* op, operators)
         delete op;
 
-    // reset the stream
+    // delete the uninitialized operators
+    foreach(stromx::core::Operator* op, uninitializedOperators)
+        delete op;
+    
+    // delete the stream
     delete m_stream;
+    m_stream = 0;
+}
+
+void StreamModel::updateStream(stromx::core::Stream* stream)
+{
+    // clear the undo stack
+    m_undoStack->clear();
+    
+    // delete all data
+    deleteAllData();
+    
+    // get the new data
     m_stream = stream;
     
     for(std::vector<stromx::core::Operator*>::const_iterator iter = m_stream->operators().begin();
@@ -401,18 +443,29 @@ void StreamModel::serializeModel(QByteArray& data) const
     QDataStream dataStream(&data, QIODevice::WriteOnly | QIODevice::Truncate);
     
     dataStream << quint32(MAGIC_NUMBER);
-    dataStream << qint32(STROMX_STUDIO_VERSION_MAJOR);
-    dataStream << qint32(STROMX_STUDIO_VERSION_MINOR);
-    dataStream << qint32(STROMX_STUDIO_VERSION_PATCH);
+    dataStream << quint32(STROMX_STUDIO_VERSION_MAJOR);
+    dataStream << quint32(STROMX_STUDIO_VERSION_MINOR);
+    dataStream << quint32(STROMX_STUDIO_VERSION_PATCH);
     
     dataStream.setVersion(QDataStream::Qt_4_7);
+    
+    dataStream << qint32(m_uninitializedOperators.count());
+    foreach(OperatorModel* op, m_uninitializedOperators)
+    {
+        const stromx::core::OperatorInfo & info = op->op()->info();
+        dataStream << QString::fromStdString(info.package());
+        dataStream << QString::fromStdString(info.type());
+        dataStream << quint32(info.version().major());
+        dataStream << quint32(info.version().minor());
+        dataStream << quint32(info.version().patch());
+    }
     
     dataStream << qint32(m_onlineOperators.count());
     foreach(OperatorModel* op, m_onlineOperators)
         dataStream << op;
     
-    dataStream << qint32(m_offlineOperators.count());
-    foreach(OperatorModel* op, m_offlineOperators)
+    dataStream << qint32(m_uninitializedOperators.count());
+    foreach(OperatorModel* op, m_uninitializedOperators)
         dataStream << op;
     
     dataStream << qint32(m_threadListModel->threads().count());
@@ -424,10 +477,10 @@ void StreamModel::deserializeModel(const QByteArray& data)
 {
     QDataStream dataStream(data);
     quint32 magicNumber = 0;
-    qint32 count = 0;
-    qint32 versionMajor = 0;
-    qint32 versionMinor = 0;
-    qint32 versionPatch = 0;
+    qint32 count = 0; // TODO: change to uint!!!!!
+    quint32 versionMajor = 0;
+    quint32 versionMinor = 0;
+    quint32 versionPatch = 0;
     
     dataStream >> magicNumber;
     if(magicNumber != MAGIC_NUMBER)
@@ -438,6 +491,33 @@ void StreamModel::deserializeModel(const QByteArray& data)
     dataStream >> versionPatch;
     
     dataStream.setVersion(QDataStream::Qt_4_7);
+
+    dataStream >> count;
+    stromx::core::Factory* factory = m_operatorLibrary->factory();
+    for(int i = 0; i < count; ++i)
+    {
+        QString package, type;
+        quint32 version;
+        
+        dataStream >> package;
+        dataStream >> type;
+        dataStream >> version;
+        dataStream >> version;
+        dataStream >> version;
+        
+        OperatorModel* opModel = 0;
+        try
+        {
+            stromx::core::Operator* op = factory->newOperator(package.toStdString(), type.toStdString());
+            opModel = new OperatorModel(op, this);
+            m_uninitializedOperators.append(opModel);
+            m_operators.append(opModel);
+        }
+        catch(stromx::core::Exception&)
+        {
+            throw ReadStudioDataFailed(tr("Failed to allocate operator %1 of package %2.").arg(type).arg(package));
+        }
+    }
     
     dataStream >> count;
     if(count != m_onlineOperators.count())
@@ -446,9 +526,9 @@ void StreamModel::deserializeModel(const QByteArray& data)
         dataStream >>  op;
     
     dataStream >> count;
-    if(count != m_offlineOperators.count())
+    if(count != m_uninitializedOperators.count())
         throw ReadStudioDataFailed(tr("Number of uninitialized operators does not match stromx-studio data."));
-    foreach(OperatorModel* op, m_offlineOperators)
+    foreach(OperatorModel* op, m_uninitializedOperators)
         dataStream >> op;
     
     dataStream >> count;

@@ -111,6 +111,7 @@ private:
     void deserializeModel(const QByteArray& data);
     
     void updateStream(stromx::core::Stream* stream);
+    void deleteAllData();
     OperatorModel* findOperatorModel(const stromx::core::Operator* op) const;
     ConnectionModel* findConnectionModel(const stromx::core::Input & input) const;
     ThreadModel* findThreadModel(const stromx::core::Thread* thread) const;
@@ -121,7 +122,7 @@ private:
     QUndoStack* m_undoStack;
     QList<OperatorModel*> m_operators;
     QList<OperatorModel*> m_onlineOperators;
-    QList<OperatorModel*> m_offlineOperators;
+    QList<OperatorModel*> m_uninitializedOperators;
     QList<ConnectionModel*> m_connections;
 };
 

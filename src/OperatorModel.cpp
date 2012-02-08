@@ -15,7 +15,7 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
     m_name(QString::fromStdString(m_op->name())),
     offsetPosParam(3)
 {
-
+    Q_ASSERT(m_op);
 }
 
 int OperatorModel::rowCount(const QModelIndex& index) const
@@ -47,7 +47,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
 {
     if(role != Qt::DisplayRole)
         return QVariant();
-    
+
     if(!index.isValid())
         return QVariant();
     

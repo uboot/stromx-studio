@@ -31,12 +31,9 @@ void StreamEditorScene::setModel(StreamModel* model)
 {
     if(m_model)
         m_model->disconnect(this);
-    
-    foreach(QGraphicsItem* item, items())
-        delete item;
         
     m_model = model;
-    // TODO: add existing operators and connections to the scene
+    reset();
     
     if(m_model)
     {
