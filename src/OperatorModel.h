@@ -23,12 +23,14 @@
 #include <QAbstractTableModel>
 #include <QPointF>
 #include <QSet>
+#include <stromx/core/Data.h>
 
 namespace stromx
 {
     namespace core
     { 
         class Operator;
+        class Parameter;
     }
 }
 
@@ -81,6 +83,9 @@ signals:
     
 private:
     void doSetPos(const QPointF & pos);
+    int accessibleParametersCount() const;
+    bool accessibleParameter(const stromx::core::Parameter* const par) const;
+    QString convertDataToQString(const stromx::core::Data& data) const;
     
     stromx::core::Operator* m_op;
     StreamModel* m_stream;
@@ -89,6 +94,7 @@ private:
     QString m_package;
     QString m_type;
     QString m_name;
+    unsigned int offsetPosParam;
 };
 
 QDataStream & operator<< (QDataStream & stream, const OperatorModel * op);
