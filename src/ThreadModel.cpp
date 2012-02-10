@@ -1,5 +1,6 @@
 #include "ThreadModel.h"
 
+#include <stromx/core/Thread.h>
 #include "StreamModel.h"
 
 ThreadModel::ThreadModel(stromx::core::Thread* thread, StreamModel* stream)
@@ -7,21 +8,43 @@ ThreadModel::ThreadModel(stromx::core::Thread* thread, StreamModel* stream)
     m_thread(thread),
     m_stream(stream)
 {
-
+    if(m_thread)
+        m_name = QString::fromStdString(m_thread->name());
 }
 
 void ThreadModel::setThread(stromx::core::Thread* thread)
 {
     m_thread = thread;
+    if(m_thread)
+        m_name = QString::fromStdString(m_thread->name());
+}
+
+void ThreadModel::setName(const QString& name)
+{
+    if(name != m_name)
+        doSetName(name);
+}
+
+void ThreadModel::doSetName(const QString& name)
+{
+    if(m_thread)
+    {
+        m_thread->setName(name.toStdString());
+        m_name = name;
+        emit nameChanged(m_name);
+    }
 }
 
 void ThreadModel::setColor(const QColor& color)
 {
     if(color != m_color)
-    {
-        m_color = color;
-        emit colorChanged(color);
-    }
+        doSetColor(color);
+}
+
+void ThreadModel::doSetColor(const QColor& color)
+{
+    m_color = color;
+    emit colorChanged(m_color);
 }
 
 QDataStream& operator<<(QDataStream& stream, const ThreadModel* thread)

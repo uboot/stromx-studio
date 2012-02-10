@@ -23,6 +23,16 @@ QVariant ThreadListModel::data(const QModelIndex& index, int role) const
     if(role != Qt::DisplayRole)
         return QVariant();
     
+    switch(index.column())
+    {
+    case 0:
+        return m_threads[index.row()]->name();
+    case 1:
+        return m_threads[index.row()]->color();
+    default:
+        ;
+    }
+    
     return QVariant();
 }
 

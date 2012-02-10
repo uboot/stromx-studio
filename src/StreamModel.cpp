@@ -189,6 +189,7 @@ void StreamModel::doRemoveConnection(ConnectionModel* connection)
 void StreamModel::doAddThread(ThreadModel* threadModel)
 {
     stromx::core::Thread* thread = m_stream->addThread();
+    thread->setName("New thread");
     threadModel->setThread(thread);
     m_threadListModel->addThread(threadModel);
     emit threadAdded(threadModel);
@@ -224,15 +225,15 @@ void StreamModel::write(stromx::core::FileOutput & output, const QString& basena
     {
         qWarning(e.what());
         QString error = e.container().empty() 
-                        ? tr("The file %1 could not be opened for writing").arg(QString::fromStdString(e.filename()))
-                        : tr("The file %1 in %2 could not be opened for writing").arg(QString::fromStdString(e.filename()),
+                        ? tr("The file %1 could not be opened for writing.").arg(QString::fromStdString(e.filename()))
+                        : tr("The file %1 in %2 could not be opened for writing.").arg(QString::fromStdString(e.filename()),
                                                                                       QString::fromStdString(e.container()));
         throw WriteStreamFailed(error);
     }
     catch(stromx::core::SerializationError & e)
     {
         qWarning(e.what());
-        QString error = tr("Failed to serialize data of type %1 in package %2").arg(QString::fromStdString(e.type()),
+        QString error = tr("Failed to serialize data of type %1 in package %2.").arg(QString::fromStdString(e.type()),
                                                                                       QString::fromStdString(e.package()));
         throw WriteStreamFailed(error);
     }
@@ -252,8 +253,8 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
     {
         qWarning(e.what());
         QString error = e.container().empty() 
-                        ? tr("The file %1 could not be opened for reading").arg(QString::fromStdString(e.filename()))
-                        : tr("The file %1 in %2 could not be opened for reading").arg(QString::fromStdString(e.filename()),
+                        ? tr("The file %1 could not be opened for reading.").arg(QString::fromStdString(e.filename()))
+                        : tr("The file %1 in %2 could not be opened for reading.").arg(QString::fromStdString(e.filename()),
                                                                                       QString::fromStdString(e.container()));
         throw ReadStreamFailed(error);
     }
@@ -261,8 +262,8 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
     {
         qWarning(e.what());
         QString error = e.container().empty() 
-                        ? tr("The content of file %1 is inconsistent").arg(QString::fromStdString(e.filename()))
-                        : tr("The content of file %1 in %2 is inconsistent").arg(QString::fromStdString(e.filename()),
+                        ? tr("The content of file %1 is inconsistent.").arg(QString::fromStdString(e.filename()))
+                        : tr("The content of file %1 in %2 is inconsistent.").arg(QString::fromStdString(e.filename()),
                                                                                QString::fromStdString(e.container()));
         throw ReadStreamFailed(error);
     }
@@ -270,29 +271,29 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
     {
         qWarning(e.what());
         QString error = e.container().empty() 
-                        ? tr("The format of file %1 is invalid").arg(QString::fromStdString(e.filename()))
-                        : tr("The format of file %1 in %2 is invalid").arg(QString::fromStdString(e.filename()),
+                        ? tr("The format of file %1 is invalid.").arg(QString::fromStdString(e.filename()))
+                        : tr("The format of file %1 in %2 is invalid.").arg(QString::fromStdString(e.filename()),
                                                                            QString::fromStdString(e.container()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::core::OperatorAllocationFailed& e)
     {
         qWarning(e.what());
-        QString error = tr("Failed to allocate the operator of type %1 of package %2")
+        QString error = tr("Failed to allocate the operator of type %1 of package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::core::DataAllocationFailed& e)
     {
         qWarning(e.what());
-        QString error = tr("Failed to allocate the data of type %1 of package %2")
+        QString error = tr("Failed to allocate the data of type %1 of package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::core::DeserializationError& e)
     {
         qWarning(e.what());
-        QString error = tr("Failed to deserialize data of type %1 in package %2")
+        QString error = tr("Failed to deserialize data of type %1 in package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
@@ -340,8 +341,8 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
     {
         qWarning(e.what());
         QString error = e.container().empty() 
-                        ? tr("The file %1 could not be opened for reading").arg(QString::fromStdString(e.filename()))
-                        : tr("The file %1 in %2 could not be opened for reading").arg(QString::fromStdString(e.filename()),
+                        ? tr("The file %1 could not be opened for reading.").arg(QString::fromStdString(e.filename()))
+                        : tr("The file %1 in %2 could not be opened for reading.").arg(QString::fromStdString(e.filename()),
                                                                                       QString::fromStdString(e.container()));
         emit modelWasReset();
         throw ReadStudioDataFailed(error);
@@ -350,8 +351,8 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
     {
         qWarning(e.what());
         QString error = e.container().empty() 
-                        ? tr("The content of file %1 is inconsistent").arg(QString::fromStdString(e.filename()))
-                        : tr("The content of file %1 in %2 is inconsistent").arg(QString::fromStdString(e.filename()),
+                        ? tr("The content of file %1 is inconsistent.").arg(QString::fromStdString(e.filename()))
+                        : tr("The content of file %1 in %2 is inconsistent.").arg(QString::fromStdString(e.filename()),
                                                                                QString::fromStdString(e.container()));
         emit modelWasReset();
         throw ReadStudioDataFailed(error);
@@ -360,8 +361,8 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
     {
         qWarning(e.what());
         QString error = e.container().empty() 
-                        ? tr("The format of file %1 is invalid").arg(QString::fromStdString(e.filename()))
-                        : tr("The format of file %1 in %2 is invalid").arg(QString::fromStdString(e.filename()),
+                        ? tr("The format of file %1 is invalid.").arg(QString::fromStdString(e.filename()))
+                        : tr("The format of file %1 in %2 is invalid.").arg(QString::fromStdString(e.filename()),
                                                                            QString::fromStdString(e.container()));
         emit modelWasReset();
         throw ReadStudioDataFailed(error);
@@ -369,7 +370,7 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
     catch(stromx::core::DataAllocationFailed& e)
     {
         qWarning(e.what());
-        QString error = tr("Failed to allocate the data of type %1 of package %2")
+        QString error = tr("Failed to allocate the data of type %1 of package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         emit modelWasReset();
         throw ReadStudioDataFailed(error);
@@ -377,7 +378,7 @@ void StreamModel::read(stromx::core::FileInput & input, const QString& basename)
     catch(stromx::core::DeserializationError& e)
     {
         qWarning(e.what());
-        QString error = tr("Failed to deserialize data of type %1 in package %2")
+        QString error = tr("Failed to deserialize data of type %1 in package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         emit modelWasReset();
         throw ReadStudioDataFailed(error);
@@ -572,7 +573,7 @@ void StreamModel::deserializeModel(const QByteArray& data)
     
     dataStream >> magicNumber;
     if(magicNumber != MAGIC_NUMBER)
-        throw ReadStudioDataFailed(tr("This is not a stromx-studio file."));
+        throw ReadStudioDataFailed(tr("This is not a stromx-studio file"));
     
     dataStream >> versionMajor;
     dataStream >> versionMinor;
@@ -601,9 +602,9 @@ void StreamModel::deserializeModel(const QByteArray& data)
             m_uninitializedOperators.append(opModel);
             m_operators.append(opModel);
         }
-        catch(stromx::core::Exception&)
+        catch(stromx::core::OperatorAllocationFailed&)
         {
-            throw ReadStudioDataFailed(tr("Failed to allocate operator %1 of package %2.").arg(type).arg(package));
+            throw ReadStudioDataFailed(tr("Failed to allocate the operator of type %1 of package %2.").arg(type).arg(package));
         }
     }
     
