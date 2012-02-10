@@ -25,36 +25,38 @@
 
 class Exception : public std::exception
 {
+public:
+    Exception(const QString & message) : m_message(message) {}
+    
+    virtual const char* what() const throw() { return m_message.toAscii(); }
+    virtual ~Exception() throw() {}
+    
+private:
+    QString m_message;
 }; 
 
 class LoadLibraryFailed : public Exception
 {
 public:
-    LoadLibraryFailed() {}
+    LoadLibraryFailed(const QString & message = "") : Exception(message) {}
 };
 
 class ReadStreamFailed : public Exception
 {
 public:
-    ReadStreamFailed() {}
+    ReadStreamFailed(const QString & message = "") : Exception(message) {}
 };
 
 class ReadStudioDataFailed : public Exception
 {
 public:
-    ReadStudioDataFailed(const QString & message) : m_message(message) {}
-    
-    virtual const char* what() const throw() { return m_message.toAscii(); }
-    virtual ~ReadStudioDataFailed() throw() {}
-    
-private:
-    QString m_message;
+    ReadStudioDataFailed(const QString & message = "") : Exception(message) {}
 };
 
 class WriteStreamFailed : public Exception
 {
 public:
-    WriteStreamFailed() {}
+    WriteStreamFailed(const QString & message = "") : Exception(message) {}
 };
 
 #endif // EXCEPTION_H
