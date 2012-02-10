@@ -17,6 +17,14 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
+/*
+* TODO
+* 
+* The code for the managing the recent files is taken from the "Recent Files Example"
+* in the Qt documentation. This should be mentioned at an appropriate place.
+*/ 
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -47,6 +55,7 @@ private slots:
     bool saveAs();
     bool closeStream();
     bool save();
+    bool openRecentFile();
     void loadLibraries();
     void resetLibraries();
     void about();
@@ -55,6 +64,9 @@ private slots:
     void updateWindowTitle(bool undoStackIsClean);
 
 private:
+    enum { MAX_RECENT_FILES = 10 };
+    static QString strippedName(const QString &fullFileName);
+    
     void createActions();
     void createMenus();
     void createToolBars();
@@ -65,6 +77,7 @@ private:
     void writeSettings();
     void writeFile(const QString & filepath);
     void readFile(const QString & filepath);
+    void updateRecentFileActions();
     
     /** Remembers the current file as being saved or opened and updates the undo stack. */
     void updateCurrentFile(const QString & filepath);
@@ -90,6 +103,8 @@ private:
     QAction* m_addThreadAct;
     QAction* m_removeThreadAct;
     QAction* m_removeSelectedItemsAct;
+    QAction* m_separatorAct;
+    QAction* m_recentFileActs[MAX_RECENT_FILES];
     
     QUndoStack* m_undoStack;
     
@@ -107,6 +122,7 @@ private:
     OperatorLibrary* m_operatorLibrary;
     PropertyEditor* m_propertyEditor;
     
+     
     QString m_currentFile;
 };
 

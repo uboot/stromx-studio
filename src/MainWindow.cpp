@@ -30,6 +30,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QSettings>
+#include <QtGlobal>
 #include <iostream>
 #include <stromx/core/DirectoryFileInput.h>
 #include <stromx/core/DirectoryFileOutput.h>
@@ -127,6 +128,14 @@ void MainWindow::createActions()
     m_closeAct->setShortcuts(QKeySequence::Close);
     m_closeAct->setStatusTip(tr("Close the current stream"));
     connect(m_closeAct, SIGNAL(triggered()), this, SLOT(closeStream()));
+    
+    for (int i = 0; i < MAX_RECENT_FILES; ++i)
+    {
+        m_recentFileActs[i] = new QAction(this);
+        m_recentFileActs[i]->setVisible(false);
+        connect(m_recentFileActs[i], SIGNAL(triggered()),
+                this, SLOT(openRecentFile()));
+    }
 
     m_loadLibrariesAct = new QAction(tr("&Load Libraries..."), this);
     m_loadLibrariesAct->setStatusTip(tr("Load operator libraries"));
@@ -169,6 +178,11 @@ void MainWindow::createMenus()
      m_fileMenu->addAction(m_saveAct);
      m_fileMenu->addAction(m_saveAsAct);
      m_fileMenu->addAction(m_closeAct);
+     m_separatorAct = m_fileMenu->addSeparator();
+     for (int i = 0; i < MAX_RECENT_FILES; ++i)
+         m_fileMenu->addAction(m_recentFileActs[i]);
+     m_fileMenu->addSeparator();
+     updateRecentFileActions();
      m_fileMenu->addSeparator();
      m_fileMenu->addAction(m_loadLibrariesAct);
      m_fileMenu->addAction(m_resetLibrariesAct);
@@ -234,6 +248,22 @@ void MainWindow::start()
 
 void MainWindow::stop()
 {
+}
+
+bool MainWindow::openRecentFile()
+{
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (action)
+    {
+        if(! saveBeforeClosing())
+            return false;
+        
+        readFile(action->data().toString());
+        
+        return true;
+    }
+    
+    return false;
 }
 
 bool MainWindow::open()
@@ -305,6 +335,22 @@ void MainWindow::readFile(const QString& filepath)
     // remember the last file
     QSettings settings("stromx", "stromx-studio");
     settings.setValue("lastStreamOpened", filepath);
+    setWindowFilePath(filepath);
+
+    // update the list of recently opened files
+    QStringList files = settings.value("recentFileList").toStringList();
+    files.removeAll(filepath);
+    files.prepend(filepath);
+    while (files.size() > MAX_RECENT_FILES)
+        files.removeLast();
+    settings.setValue("recentFileList", files);
+
+    foreach (QWidget *widget, QApplication::topLevelWidgets())
+    {
+        MainWindow *mainWin = qobject_cast<MainWindow *>(widget);
+        if (mainWin)
+            mainWin->updateRecentFileActions();
+    }
 }
 
 void MainWindow::updateWindowTitle(bool undoStackIsClean)
@@ -320,6 +366,25 @@ void MainWindow::updateCurrentFile(const QString& filepath)
     m_currentFile = filepath;
     m_undoStack->setClean();
     updateWindowTitle(true);
+}
+
+void MainWindow::updateRecentFileActions()
+{
+    QSettings settings("stromx", "stromx-studio");
+    QStringList files = settings.value("recentFileList").toStringList();
+
+    int numRecentFiles = qMin(files.size(), int(MAX_RECENT_FILES));
+
+    for (int i = 0; i < numRecentFiles; ++i) {
+        QString text = tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
+        m_recentFileActs[i]->setText(text);
+        m_recentFileActs[i]->setData(files[i]);
+        m_recentFileActs[i]->setVisible(true);
+    }
+    for (int j = numRecentFiles; j < MAX_RECENT_FILES; ++j)
+        m_recentFileActs[j]->setVisible(false);
+
+    m_separatorAct->setVisible(numRecentFiles > 0);
 }
 
 bool MainWindow::saveBeforeClosing()
@@ -496,6 +561,11 @@ void MainWindow::resetLibraries()
         m_operatorLibrary->model()->resetLibraries();
 }
 
+QString MainWindow::strippedName(const QString &fullFileName)
+{
+    return QFileInfo(fullFileName).fileName();
+}
+
 void MainWindow::closeEvent(QCloseEvent* event)
 { 
     if(closeStream())
@@ -509,7 +579,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
     
     writeSettings();
 }
-
 
 
 
