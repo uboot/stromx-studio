@@ -314,7 +314,7 @@ void MainWindow::readFile(const QString& filepath)
     
         updateCurrentFile(filepath);
     }
-    catch(stromx::core::FileAccessFailed& e)
+    catch(stromx::core::FileAccessFailed&)
     {
         QMessageBox::critical(this, tr("Failed to load file"),
                               tr("The location %1 could not be openend for reading").arg(location),
@@ -488,7 +488,7 @@ void MainWindow::writeFile(const QString& filepath)
         QSettings settings("stromx", "stromx-studio");
         settings.setValue("lastStreamSavedDir", QFileInfo(filepath).dir().absolutePath());
     }
-    catch(stromx::core::FileAccessFailed& e)
+    catch(stromx::core::FileAccessFailed&)
     {
         QMessageBox::critical(this, tr("Failed to save file"),
                               tr("The location %1 could not be openend for writing").arg(location),
