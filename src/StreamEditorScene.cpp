@@ -162,9 +162,15 @@ void StreamEditorScene::initialize()
 
 void StreamEditorScene::deinitialize()
 {
-    m_model->undoStack()->beginMacro("initialize operators");
-    foreach(QGraphicsItem* item, selectedItems())
+    m_model->undoStack()->beginMacro("deinitialize operators");
+    
+    QList<QGraphicsItem*> items(selectedItems());
+    foreach(QGraphicsItem* item, items)
     {
+        // the item might have been removed while an operator was deinitialized
+        if(! selectedItems().contains(item))
+            continue;
+        
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
             m_model->deinitializeOperator(opItem->model());
     }
@@ -214,13 +220,14 @@ bool StreamEditorScene::isOperatorSelection() const
     if(selectedItems().size() == 0)
         return false;
     
+    bool foundOperator = false;
     foreach(QGraphicsItem* item, selectedItems())
     {
-        if(! qgraphicsitem_cast<OperatorItem*>(item))
-            return false;
+        if(qgraphicsitem_cast<OperatorItem*>(item))
+            foundOperator = true;
     }
     
-    return true;
+    return foundOperator;
 }
 
 OperatorItem* StreamEditorScene::findOperatorItem(OperatorModel* opModel) const

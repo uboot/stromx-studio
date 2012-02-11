@@ -17,27 +17,26 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MOVEOPERATORCMD_H
-#define MOVEOPERATORCMD_H
+#ifndef RENAMETHREADCMD_H
+#define RENAMETHREADCMD_H
 
 #include <QUndoCommand>
-#include <QPointF>
+#include "ThreadModel.h"
 
-class OperatorModel;
-class StreamModel;
+class ThreadModel;
 
-class MoveOperatorCmd : public QUndoCommand
+class RenameThreadCmd : public QUndoCommand
 {
 public:
-    MoveOperatorCmd(OperatorModel* model, const QPointF & newPos, QUndoCommand* parent = 0);
+    RenameThreadCmd(ThreadModel* model, const QString & newName, QUndoCommand* parent = 0);
     
     virtual void undo();
     virtual void redo();
     
 private:
-    OperatorModel* m_model;
-    QPointF m_oldPos;
-    QPointF m_newPos;
+    ThreadModel* m_model;
+    QString m_oldName;
+    QString m_newName;
 };
 
-#endif // MOVEOPERATORCMD_H
+#endif // RENAMETHREADCMD_H
