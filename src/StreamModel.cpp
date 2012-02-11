@@ -10,6 +10,7 @@
 #include "OperatorLibraryModel.h"
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
+#include "ObserverTreeModel.h"
 #include "RemoveConnectionCmd.h"
 #include "RemoveOperatorCmd.h"
 #include "RemoveThreadCmd.h"
@@ -33,11 +34,13 @@ StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLi
   : QObject(parent),
     m_stream(0),
     m_threadListModel(0),
+    m_observerModel(0),
     m_operatorLibrary(operatorLibrary),
     m_undoStack(undoStack)
 {
     m_stream = new stromx::core::Stream;
     m_threadListModel = new ThreadListModel(this);
+    m_observerModel = new ObserverTreeModel(m_undoStack, this);
 }
 
 StreamModel::~StreamModel()
@@ -48,6 +51,11 @@ StreamModel::~StreamModel()
 const QList<ThreadModel*> StreamModel::threads() const
 {
     return m_threadListModel->threads();
+}
+
+QAbstractItemModel* StreamModel::observerModel() const
+{
+    return m_observerModel;
 }
 
 QAbstractItemModel* StreamModel::threadListModel() const

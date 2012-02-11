@@ -22,12 +22,24 @@
 
 #include <QDockWidget>
 
+class QAbstractItemModel;
+class QTreeView;
+
 class ObserverEditor : public QDockWidget
 {
     Q_OBJECT
 
 public:
     explicit ObserverEditor(QWidget *parent = 0);
+    
+    void setModel(QAbstractItemModel* model);
+    
+    QAction* createAddObserverListAction(QObject* parent);
+    QAction* createRemoveObserverListAction(QObject* parent);
+    
+private:
+    QAbstractItemModel* m_model;
+    QTreeView* m_observerView;
 };
 
 #endif // OBSERVEREDITOR_H

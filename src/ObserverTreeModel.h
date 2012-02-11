@@ -22,6 +22,7 @@
 
 #include <QAbstractItemModel>
 
+class QUndoStack;
 class ObserverList;
 
 class ObserverTreeModel : public QAbstractItemModel
@@ -29,7 +30,8 @@ class ObserverTreeModel : public QAbstractItemModel
     Q_OBJECT
     
 public:
-    ObserverTreeModel(QObject * parent) : QAbstractItemModel(parent) {}
+    ObserverTreeModel(QUndoStack* undoStack, QObject * parent)
+      : QAbstractItemModel(parent), m_undoStack(undoStack) {}
     
     void addObserverList(ObserverList* list);
     void removeObserverList(ObserverList* list);
@@ -44,6 +46,7 @@ public:
     
 private:
     QList<ObserverList*> m_lists;
+    QUndoStack* m_undoStack;
 };
 
 #endif // OBSERVERTREEMODEL_H

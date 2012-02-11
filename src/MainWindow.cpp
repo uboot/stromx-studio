@@ -58,8 +58,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_streamEditor = new StreamEditor;
     m_threadEditor = new ThreadEditor;
     m_observerEditor = new ObserverEditor;
-    m_operatorLibrary = new OperatorLibrary();
-    m_propertyEditor = new PropertyEditor();
+    m_operatorLibrary = new OperatorLibrary;
+    m_propertyEditor = new PropertyEditor;
     
     createActions();
     createMenus();
@@ -101,6 +101,7 @@ void MainWindow::setModel(StreamModel* model)
     
     m_streamEditor->scene()->setModel(model);
     m_threadEditor->setModel(model);
+    m_observerEditor->setModel(model->observerModel());
     
     if(m_model)
         delete m_model;
