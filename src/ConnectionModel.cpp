@@ -49,3 +49,20 @@ void ConnectionModel::setThread(ThreadModel* thread)
     }
 }
 
+void ConnectionModel::connectToOperators()
+{
+    if(m_sourceOp)
+        m_sourceOp->addConnection(this);
+    if(m_targetOp)
+        m_targetOp->addConnection(this);
+}
+
+void ConnectionModel::disconnectFromOperators()
+{
+    if(m_sourceOp)
+        m_sourceOp->removeConnection(this);
+    if(m_targetOp)
+        m_targetOp->removeConnection(this);
+}
+
+

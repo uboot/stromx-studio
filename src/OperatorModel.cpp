@@ -289,6 +289,11 @@ const QString& OperatorModel::package() const
     return m_package;
 }
 
+QUndoStack* OperatorModel::undoStack() const
+{
+    return m_stream->undoStack(); 
+}
+
 QDataStream& operator<<(QDataStream& stream, const OperatorModel* op)
 {
     return stream << op->m_pos;

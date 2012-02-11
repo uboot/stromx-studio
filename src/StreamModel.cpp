@@ -173,8 +173,7 @@ void StreamModel::doDeinitializeOperator(OperatorModel* op)
 
 void StreamModel::doAddConnection(ConnectionModel* connection)
 {
-    connection->sourceOp()->addConnection(connection);
-    connection->targetOp()->addConnection(connection);
+    connection->connectToOperators();
     m_connections.append(connection);
     m_stream->connect(connection->sourceOp()->op(), connection->outputId(),
                       connection->targetOp()->op(), connection->inputId());
@@ -186,11 +185,7 @@ void StreamModel::doRemoveConnection(ConnectionModel* connection)
 {
     m_stream->disconnect(connection->targetOp()->op(), connection->inputId());
     
-    if(connection->sourceOp())
-        connection->sourceOp()->removeConnection(connection);
-    if(connection->targetOp())
-        connection->targetOp()->removeConnection(connection);
-    
+    connection->disconnectFromOperators();
     m_connections.removeAll(connection);
     
     emit connectionRemoved(connection);
@@ -472,6 +467,7 @@ void StreamModel::updateStream(stromx::core::Stream* stream)
             {
                 OperatorModel* source = findOperatorModel(output.op());
                 ConnectionModel* connection = new ConnectionModel(source, output.id(), opModel, (*inputIter)->id(), this);
+                connection->connectToOperators();
                 m_connections.append(connection);
             }
         }

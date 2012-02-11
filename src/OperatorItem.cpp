@@ -2,6 +2,7 @@
 
 #include <QGraphicsScene>
 #include <QPen>
+#include <QUndoStack>
 #include <stromx/core/Operator.h>
 #include "ConnectorItem.h"
 #include "OperatorModel.h"
@@ -164,13 +165,10 @@ void OperatorItem::updateConnectionPositions()
 
 void OperatorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    StreamEditorScene* streamScene = qobject_cast<StreamEditorScene*>(scene());
-    
     // check if the item was moved
     if(model()->pos() != pos())
     {
-        if(streamScene)
-            streamScene->beginMacro("move objects");
+        model()->undoStack()->beginMacro("move objects");
         
         foreach(QGraphicsItem* item, scene()->selectedItems())
         {
@@ -178,8 +176,7 @@ void OperatorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                 opItem->model()->setPos(opItem->pos());
         }
         
-        if(streamScene)
-            streamScene->endMacro();
+        model()->undoStack()->endMacro();
     }
     
     QGraphicsObject::mouseReleaseEvent(event);

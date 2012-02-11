@@ -47,6 +47,12 @@ public:
     unsigned int inputId() const { return m_inputId; }
     unsigned int outputId() const { return m_outputId; }
     
+    /** Adds itself to the source and target operators. */
+    void connectToOperators();
+    
+    /** Removes itself from the source and target operators. */
+    void disconnectFromOperators();
+    
 signals:
     void threadChanged(ThreadModel* thread);
     

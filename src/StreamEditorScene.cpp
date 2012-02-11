@@ -14,17 +14,11 @@
 
 StreamEditorScene::StreamEditorScene(QObject* parent)
   : QGraphicsScene(parent),
-    m_undoStack(0),
     m_model(0)
 {
     connect(this, SIGNAL(selectionChanged()), this, SLOT(processSelection()));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(enableInitializeAction()));
     connect(this, SIGNAL(selectionChanged()), this, SLOT(enableDeinitializeAction()));
-}
-
-void StreamEditorScene::setUndoStack(QUndoStack* undoStack)
-{
-    m_undoStack = undoStack;
 }
 
 void StreamEditorScene::setModel(StreamModel* model)
@@ -157,24 +151,24 @@ void StreamEditorScene::addConnection(ConnectionModel* connection)
 
 void StreamEditorScene::initialize()
 {
-    beginMacro("initialize operators");
+    m_model->undoStack()->beginMacro("initialize operators");
     foreach(QGraphicsItem* item, selectedItems())
     {
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
             m_model->initializeOperator(opItem->model());
     }
-    endMacro();
+    m_model->undoStack()->endMacro();
 }
 
 void StreamEditorScene::deinitialize()
 {
-    beginMacro("deinitialize operators");
+    m_model->undoStack()->beginMacro("initialize operators");
     foreach(QGraphicsItem* item, selectedItems())
     {
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
             m_model->deinitializeOperator(opItem->model());
     }
-    endMacro();
+    m_model->undoStack()->endMacro();
 }
 
 void StreamEditorScene::processSelection()
@@ -273,7 +267,7 @@ void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
 
 void StreamEditorScene::removeSelectedItems()
 {
-    beginMacro("remove objects");
+    m_model->undoStack()->beginMacro("remove objects");
     QList<QGraphicsItem*> itemList = selectedItems();
     
     // remove all selected connections first
@@ -300,8 +294,7 @@ void StreamEditorScene::removeSelectedItems()
         }
     }
     
-    
-    endMacro();
+    m_model->undoStack()->endMacro();
 }
 
 void StreamEditorScene::removeOperator(OperatorModel* op)
@@ -327,16 +320,5 @@ void StreamEditorScene::removeConnection(ConnectionModel* connection)
     }
 }
 
-void StreamEditorScene::beginMacro(const QString& text)
-{
-    if(m_undoStack)
-        m_undoStack->beginMacro(text);
-}
-
-void StreamEditorScene::endMacro()
-{
-    if(m_undoStack)
-        m_undoStack->endMacro();
-}
 
 

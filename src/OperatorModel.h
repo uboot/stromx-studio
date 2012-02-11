@@ -34,6 +34,7 @@ namespace stromx
     }
 }
 
+class QUndoStack;
 class ConnectionModel;
 class StreamModel;
 
@@ -75,6 +76,8 @@ public:
     const QSet<ConnectionModel*> connections() const { return m_connections; }
     void addConnection(ConnectionModel* connection);
     void removeConnection(ConnectionModel* connection);
+    
+    QUndoStack* undoStack() const;
     
 signals:
     void posChanged(const QPointF & pos);

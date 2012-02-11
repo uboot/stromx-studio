@@ -66,7 +66,6 @@ MainWindow::MainWindow(QWidget *parent)
     createStatusBar();
     createDockWindows();
     
-    m_streamEditor->scene()->setUndoStack(m_undoStack);
     StreamModel* streamModel = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
     m_streamEditor->scene()->setModel(streamModel);
     m_threadEditor->setModel(streamModel);
