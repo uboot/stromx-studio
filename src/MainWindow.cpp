@@ -307,7 +307,8 @@ void MainWindow::readFile(const QString& filepath)
                               QMessageBox::Ok, QMessageBox::Ok);
     }
     
-    // load the stream
+    // try to read the stream
+    StreamModel* stream = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
     QString location;
     try
     {
@@ -315,13 +316,13 @@ void MainWindow::readFile(const QString& filepath)
         {
             location = QFileInfo(filepath).absoluteDir().absolutePath();
             stromx::core::DirectoryFileInput input(location.toStdString());
-            m_streamEditor->scene()->model()->read(input, basename);
+            stream->read(input, basename);
         }
         else if(extension == "zip")
         {
             location = filepath;
             stromx::core::ZipFileInput input(filepath.toStdString());
-            m_streamEditor->scene()->model()->read(input, basename);
+            stream->read(input, basename);
         }
     
         updateCurrentFile(filepath);
@@ -331,11 +332,15 @@ void MainWindow::readFile(const QString& filepath)
         QMessageBox::critical(this, tr("Failed to load file"),
                               tr("The location %1 could not be openend for reading").arg(location),
                               QMessageBox::Ok, QMessageBox::Ok);
+        delete stream;
+        return;
     }
     catch(ReadStreamFailed& e)
     {
         QMessageBox::critical(this, tr("Failed to load file"), e.what(),
                               QMessageBox::Ok, QMessageBox::Ok);
+        delete stream;
+        return;
     }
     catch(ReadStudioDataFailed& e)
     {
@@ -343,6 +348,10 @@ void MainWindow::readFile(const QString& filepath)
         QMessageBox::warning(this, tr("Loaded only part of file"), e.what(),
                              QMessageBox::Ok, QMessageBox::Ok);
     }
+    
+    // reading was successful
+    // set the new stream
+    setModel(stream);
     
     // remember the last file
     QSettings settings("stromx", "stromx-studio");
