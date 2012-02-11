@@ -34,15 +34,17 @@ public:
     
     void setModel(QAbstractItemModel* model);
     
-    QAction* createAddObserverListAction(QObject* parent);
-    QAction* createRemoveObserverListAction(QObject* parent);
+    QAction* createAddObserverAction(QObject* parent);
+    QAction* createRemoveObserverAction(QObject* parent);
+    
+signals:
+    void observerSelectedChanged(bool selected);
     
 private slots:
     void addObserverList();
     void removeObserverList();
     
 private:
-    QAbstractItemModel* m_model;
     QTreeView* m_observerView;
 };
 

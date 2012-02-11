@@ -120,6 +120,8 @@ void MainWindow::createActions()
     m_addThreadAct = m_threadEditor->createAddThreadAction(this);
     m_removeThreadAct = m_threadEditor->createRemoveThreadAction(this);
     m_removeSelectedItemsAct = m_streamEditor->scene()->createRemoveAction(this);
+    m_addObserverAct = m_observerEditor->createAddObserverAction(this);
+    m_removeObserverAct = m_observerEditor->createRemoveObserverAction(this);
 
     m_saveAct = new QAction(tr("&Save"), this);
     m_saveAct->setShortcuts(QKeySequence::Save);
@@ -213,6 +215,10 @@ void MainWindow::createMenus()
      m_streamMenu->addSeparator();
      m_streamMenu->addAction(m_addThreadAct);
      m_streamMenu->addAction(m_removeThreadAct);
+     
+     m_observerMenu = menuBar()->addMenu(tr("&Observer"));
+     m_observerMenu->addAction(m_addObserverAct);
+     m_observerMenu->addAction(m_removeObserverAct);
 
      m_viewMenu = menuBar()->addMenu(tr("&View"));
 

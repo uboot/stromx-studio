@@ -42,13 +42,13 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
     
+    const QList<ThreadModel*> threads() const { return m_threads; }
     ThreadModel* thread(const QModelIndex & index) const;
     
     friend QDataStream & operator<< (QDataStream & stream, const ThreadListModel * threadList);
     friend QDataStream & operator>> (QDataStream & stream, ThreadListModel * threadList);
     
 private:
-    const QList<ThreadModel*> threads() const { return m_threads; }
     void addThread(ThreadModel* thread);
     void removeThread(ThreadModel* thread);
     void removeAllThreads();

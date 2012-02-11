@@ -107,6 +107,8 @@ private:
     QAction* m_removeSelectedItemsAct;
     QAction* m_separatorAct;
     QAction* m_recentFileActs[MAX_RECENT_FILES];
+    QAction* m_addObserverAct;
+    QAction* m_removeObserverAct;
     
     QUndoStack* m_undoStack;
     
@@ -115,6 +117,7 @@ private:
     QMenu* m_viewMenu;
     QMenu* m_helpMenu;
     QMenu* m_streamMenu;
+    QMenu* m_observerMenu;
     
     QToolBar* m_streamToolBar;
     

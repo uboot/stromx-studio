@@ -39,7 +39,7 @@ public:
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
-    const QString & name() const;
+    const QString & name() const { return m_name; }
     void setName(const QString & name);
     
     void addObserver(Observer* observer);

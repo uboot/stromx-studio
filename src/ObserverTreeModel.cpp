@@ -1,13 +1,18 @@
 #include "ObserverTreeModel.h"
 
+#include "ObserverListModel.h"
+
 int ObserverTreeModel::rowCount(const QModelIndex& parent) const
 {
+    if(parent.isValid())
+        return 0;
+    
     return m_lists.count();
 }
 
 int ObserverTreeModel::columnCount(const QModelIndex& parent) const
 {
-    return 3;
+    return 1;
 }
 
 QVariant ObserverTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -21,11 +26,7 @@ QVariant ObserverTreeModel::headerData(int section, Qt::Orientation orientation,
     switch(section)
     {
     case 0:
-        return tr("Name");
-    case 1:
         return tr("Input");
-    case 2:
-        return tr("Color");
     default:
         ;
     }
@@ -33,8 +34,37 @@ QVariant ObserverTreeModel::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
+bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & parent)
+{
+    if(parent.isValid())
+        return false;
+    
+    beginInsertRows(QModelIndex(), row, row + count - 1);
+    for(int i = 0; i < count; ++i)
+        m_lists.insert(row + i, new ObserverListModel(m_undoStack, this));
+    endInsertRows();
+    
+    return true;
+}
+
+bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & parent)
+{
+    if(parent.isValid())
+        return false;
+    
+    beginRemoveRows(QModelIndex(), row, row + count - 1);
+    for(int i = 0; i < count; ++i)
+        m_lists.removeAt(row);
+    endRemoveRows();
+    
+    return true;
+}
+
 QModelIndex ObserverTreeModel::index(int row, int column, const QModelIndex& parent) const
 {
+    if(! parent.isValid())
+        return createIndex(row, column, m_lists[row]);
+    
     return QModelIndex();
 }
 
@@ -45,15 +75,44 @@ QModelIndex ObserverTreeModel::parent(const QModelIndex& child) const
 
 QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
 {
-    return QVariant();
+    if(role != Qt::DisplayRole)
+        return QVariant();
+    
+    if(index.parent().isValid())
+        return QVariant();
+    
+    if(index.column() != 0)
+        return QVariant();
+    
+    ObserverListModel* observerList = reinterpret_cast<ObserverListModel*>(index.internalPointer());
+    return observerList->name();
 }
 
-void ObserverTreeModel::addObserverList(ObserverList* list)
+
+bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-
+    if(index.isValid() && ! index.parent().isValid() && index.column() == 0)
+    {
+        QString newName = value.toString();
+        
+        if(newName.isEmpty())
+            return false;
+        
+        m_lists[index.row()]->setName(newName);
+        emit dataChanged(index, index);
+    }
+    
+    return false;
 }
 
-void ObserverTreeModel::removeObserverList(ObserverList* list)
+Qt::ItemFlags ObserverTreeModel::flags(const QModelIndex& index) const
 {
-
+    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    
+    // only parents are editable
+    if(! index.parent().isValid())
+        return flags |= Qt::ItemIsEditable;
+        
+    return flags;
 }
+
