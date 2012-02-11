@@ -37,6 +37,10 @@ public:
     QAction* createAddObserverListAction(QObject* parent);
     QAction* createRemoveObserverListAction(QObject* parent);
     
+private slots:
+    void addObserverList();
+    void removeObserverList();
+    
 private:
     QAbstractItemModel* m_model;
     QTreeView* m_observerView;

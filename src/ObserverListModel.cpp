@@ -1,7 +1,8 @@
 #include "ObserverListModel.h"
 
-ObserverListModel::ObserverListModel(QObject * parent)
-  : QAbstractTableModel(parent)
+ObserverListModel::ObserverListModel(QUndoStack* undoStack, QObject * parent)
+  : QAbstractTableModel(parent),
+    m_undoStack(undoStack)
 {
 }
 

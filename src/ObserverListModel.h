@@ -22,6 +22,7 @@
 
 #include <QAbstractTableModel>
 
+class QUndoStack;
 class ObserverModel;
 class ObserverTreeModel;
 class Observer;
@@ -31,7 +32,7 @@ class ObserverListModel : public QAbstractTableModel
     Q_OBJECT
     
 public:
-    ObserverListModel(QObject * parent);
+    ObserverListModel(QUndoStack* undoStack, QObject * parent);
     
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
@@ -47,6 +48,7 @@ public:
 private:
     QList<ObserverModel*> m_observer;
     QString m_name;
+    QUndoStack* m_undoStack;
 };
 
 #endif // OBSERVERLISTMODEL_H
