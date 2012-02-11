@@ -37,6 +37,7 @@ class ObserverEditor;
 class OperatorLibrary;
 class PropertyEditor;
 class StreamEditor;
+class StreamModel;
 class ThreadEditor;
 
 class MainWindow : public QMainWindow
@@ -73,6 +74,7 @@ private:
     void createStatusBar();
     void createDockWindows();
     
+    void setModel(StreamModel* model);
     void readSettings();
     void writeSettings();
     void writeFile(const QString & filepath);
@@ -122,6 +124,7 @@ private:
     OperatorLibrary* m_operatorLibrary;
     PropertyEditor* m_propertyEditor;
     
+    StreamModel* m_model;
      
     QString m_currentFile;
 };

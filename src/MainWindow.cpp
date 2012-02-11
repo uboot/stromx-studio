@@ -49,7 +49,8 @@
 #include "ThreadEditor.h"
 
 MainWindow::MainWindow(QWidget *parent)
-  : QMainWindow(parent)
+  : QMainWindow(parent),
+    m_model(0)
 {
     m_undoStack = new QUndoStack(this);
     
@@ -67,8 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
     createDockWindows();
     
     StreamModel* streamModel = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
-    m_streamEditor->scene()->setModel(streamModel);
-    m_threadEditor->setModel(streamModel);
+    setModel(streamModel);
     
     splitter->addWidget(m_streamEditor);
     splitter->addWidget(m_threadEditor);
@@ -93,6 +93,19 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::setModel(StreamModel* model)
+{
+    Q_ASSERT(model);
+    
+    m_streamEditor->scene()->setModel(model);
+    m_threadEditor->setModel(model);
+    
+    if(m_model)
+        delete m_model;
+    
+    m_model = model;
 }
 
 void MainWindow::createActions()
@@ -427,11 +440,8 @@ bool MainWindow::closeStream()
         return false;
     
     // replace the current model with a new one
-    StreamModel* currentModel = m_streamEditor->scene()->model();
     StreamModel* newModel = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
-    m_streamEditor->scene()->setModel(newModel);
-    m_undoStack->clear();
-    delete currentModel;
+    setModel(newModel);
     
     updateCurrentFile("");
     
