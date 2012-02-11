@@ -45,6 +45,16 @@ StreamModel::~StreamModel()
     deleteAllData();
 }
 
+const QList<ThreadModel*> StreamModel::threads() const
+{
+    return m_threadListModel->threads();
+}
+
+QAbstractItemModel* StreamModel::threadListModel() const
+{ 
+    return m_threadListModel;
+}
+
 void StreamModel::addOperator(const OperatorData* opData, const QPointF& pos)
 {
     m_undoStack->beginMacro(tr("add operator"));

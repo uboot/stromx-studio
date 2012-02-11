@@ -29,6 +29,8 @@ class ThreadListModel : public QAbstractTableModel
 {
     Q_OBJECT
     
+    friend class StreamModel;
+    
 public:
     explicit ThreadListModel(QObject *parent = 0);
     
@@ -36,11 +38,7 @@ public:
     virtual int columnCount(const QModelIndex & parent) const;
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    
-    const QList<ThreadModel*> threads() const { return m_threads; }
-    void addThread(ThreadModel* thread);
-    void removeThread(ThreadModel* thread);
-    void removeAllThreads();
+    virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
     
     ThreadModel* thread(const QModelIndex & index) const;
     
@@ -48,6 +46,11 @@ public:
     friend QDataStream & operator>> (QDataStream & stream, ThreadListModel * threadList);
     
 private:
+    const QList<ThreadModel*> threads() const { return m_threads; }
+    void addThread(ThreadModel* thread);
+    void removeThread(ThreadModel* thread);
+    void removeAllThreads();
+    
     QList<ThreadModel*> m_threads;
 };
 

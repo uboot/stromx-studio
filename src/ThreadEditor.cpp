@@ -73,7 +73,7 @@ ThreadModel* ThreadEditor::selectedThread() const
     {
         QModelIndex index = m_table->selectionModel()->currentIndex();
         if(index.isValid())
-            return m_model->threadListModel()->thread(index);
+            return reinterpret_cast<ThreadModel*>(index.internalPointer());
     }
     
     return 0;

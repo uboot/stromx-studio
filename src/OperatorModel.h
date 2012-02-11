@@ -47,6 +47,7 @@ class OperatorModel : public QAbstractTableModel
     Q_PROPERTY(bool initialized READ isInitialized WRITE setInitialized)
     
     friend class MoveOperatorCmd;
+    friend class StreamModel;
     friend QDataStream & operator<< (QDataStream & stream, const OperatorModel * op);
     friend QDataStream & operator>> (QDataStream & stream, OperatorModel * op);
     
@@ -70,7 +71,6 @@ public:
     void setPos(const QPointF & pos);
     
     bool isInitialized() const;
-    void setInitialized(bool initialized);
     
     const QSet<ConnectionModel*> connections() const { return m_connections; }
     void addConnection(ConnectionModel* connection);
@@ -83,6 +83,7 @@ signals:
     
 private:
     void doSetPos(const QPointF & pos);
+    void setInitialized(bool initialized);
     int accessibleParametersCount() const;
     bool accessibleParameter(const stromx::core::Parameter* const par) const;
     QString convertDataToQString(const stromx::core::Data& data) const;

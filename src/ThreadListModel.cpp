@@ -84,6 +84,14 @@ ThreadModel* ThreadListModel::thread(const QModelIndex& index) const
         return 0;
 }
 
+QModelIndex ThreadListModel::index(int row, int column, const QModelIndex & parent) const
+{
+    if(row >= 0 && row < m_threads.size())
+        return createIndex(row, column, m_threads[row]);
+    else
+        return QModelIndex();
+}
+
 void ThreadListModel::removeAllThreads()
 {
     beginResetModel();
