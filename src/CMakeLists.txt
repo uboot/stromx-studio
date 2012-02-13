@@ -83,7 +83,7 @@ add_executable(stromx-studio
 
 target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
-    ${STROMX_CORE_LIBRARY}
+    ${stromx_CORE_LIB}
 )
 
 if(BUILD_TESTS)
