@@ -17,8 +17,6 @@ include(UseDoxygen OPTIONAL)
 find_package(Qt4 REQUIRED)
 find_package(stromx REQUIRED)
 
-find_package(CppUnit)
-
 if(UNIX)
     add_definitions(-DUNIX)
 endif()
@@ -26,9 +24,5 @@ endif()
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DDEBUG)
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-
-if(CPPUNIT_FOUND)
-    option(BUILD_TESTS "Build unit tests" ON)
-endif()
 
 add_subdirectory(src)

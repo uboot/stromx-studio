@@ -1,3 +1,5 @@
+add_subdirectory(test)
+
 configure_file (
   "${PROJECT_SOURCE_DIR}/src/Config.h.in"
   "${PROJECT_SOURCE_DIR}/src/Config.h"
@@ -81,7 +83,3 @@ target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
     ${stromx_CORE_LIB}
 )
-
-if(BUILD_TESTS)
-    add_subdirectory(test)
-endif()
