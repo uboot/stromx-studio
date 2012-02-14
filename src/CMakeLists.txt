@@ -70,10 +70,6 @@ qt4_wrap_cpp(stromxstudio_HEADERS_MOC ${stromxstudio_HEADERS})
 #qt4_wrap_ui(stromxstudio_FORMS_HEADERS ${stromxstudio_FORMS})
 qt4_add_resources(stromxstudio_RESOURCES_RCC ${stromxstudio_RESOURCES})
 
-include_directories(
-    ${STROMX_INCLUDE_DIR}
-)
-
 add_executable(stromx-studio 
     ${stromxstudio_SOURCES} 
     ${stromxstudio_HEADERS_MOC} 

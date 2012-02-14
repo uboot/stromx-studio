@@ -63,10 +63,18 @@ public:
     stromx::core::Factory* factory() const { return m_factory; }
     
 private:
+    struct Package
+    {
+        Package(const QString & package, const int id) : package(package), id(id) {}
+        
+        QString package;
+        int id;
+        QList<const stromx::core::OperatorKernel*> operators;
+    };
+    
     void updateOperators();
     
-    QMap<QString, QList<const stromx::core::OperatorKernel*> > m_package2OperatorMap;
-    QMap<unsigned int, QString> m_index2PackageMap;
+    QList<Package> m_packages;
     QVector<void*> m_libraryHandles;
     QStringList m_loadedLibraries;
     stromx::core::Factory* m_factory;

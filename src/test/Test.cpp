@@ -1,5 +1,5 @@
 /* 
-*  Copyright 2011 Matthias Fuchs
+*  Copyright 2012 Matthias Fuchs
 *
 *  This file is part of stromx-studio.
 *
@@ -17,11 +17,22 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#include <stromx/core/Registry.h>
 
-#define STROMX_STUDIO_VERSION_MAJOR @STROMX_STUDIO_VERSION_MAJOR@
-#define STROMX_STUDIO_VERSION_MINOR @STROMX_STUDIO_VERSION_MINOR@
-#define STROMX_STUDIO_VERSION_PATCH @STROMX_STUDIO_VERSION_PATCH@
+#include "TestOperator.h"
 
-#endif // CONFIG_H
+#ifdef WIN32
+    #define TEST_API __declspec(dllexport)
+#else
+    #define TEST_API
+#endif // WIN32
+
+extern "C"
+{
+    void TEST_API stromxRegisterTest(stromx::core::Registry& registry)
+    {
+        using namespace stromx::core;
+        
+        registry.registerOperator(new TestOperator);
+    }
+}
