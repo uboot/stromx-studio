@@ -25,10 +25,24 @@
 
 class TestOperator : public stromx::core::OperatorKernel
 {
-    static const unsigned int INPUT_1 = 0;
-    static const unsigned int INPUT_2 = 1;
-    static const unsigned int OUTPUT_1 = 2;
-    static const unsigned int OUTPUT_2 = 3;
+    enum Inputs 
+    { 
+        INPUT_1, 
+        INPUT_2
+    };
+    
+    enum Outputs 
+    { 
+        OUTPUT_1, 
+        OUTPUT_2
+    };
+    
+    enum Parameters
+    { 
+        INITIALIZE_PARAM,
+        INT_PARAM,
+        ENUM_PARAM
+    };
     
 public:
     TestOperator();
@@ -40,9 +54,7 @@ public:
     virtual void initialize();
     
 private:
-    static const std::vector<const stromx::core::Description*> setupInitInputs();
     static const std::vector<const stromx::core::Description*> setupInputs();
-    static const std::vector<const stromx::core::Description*> setupInitOutputs();
     static const std::vector<const stromx::core::Description*> setupOutputs();
     static const std::vector<const stromx::core::Parameter*> setupInitParameters();
     static const std::vector<const stromx::core::Parameter*> setupParameters();
@@ -50,6 +62,10 @@ private:
     static const std::string TYPE;
     static const std::string PACKAGE;
     static const stromx::core::Version VERSION;
+    
+    stromx::core::UInt32 m_initializeParam;
+    stromx::core::Int32 m_intParam;
+    stromx::core::Enum m_enumParam;
 };
 
 #endif // TESTOPERATOR_H
