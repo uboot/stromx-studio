@@ -19,6 +19,8 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QSplashScreen>
+#include <stromx/core/Exception.h>
+#include <fstream>
 #include "MainWindow.h"
 
 int main(int argc, char *argv[])
@@ -36,5 +38,13 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    return a.exec();
+    try
+    {
+        return a.exec();
+    }
+    catch(stromx::core::Exception &e)
+    {
+        std::ofstream file("callstack.txt");
+        file << e.callStack();
+    }
 }

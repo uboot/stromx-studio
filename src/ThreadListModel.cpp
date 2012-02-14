@@ -23,6 +23,16 @@ QVariant ThreadListModel::data(const QModelIndex& index, int role) const
     if(role != Qt::DisplayRole)
         return QVariant();
     
+    switch(index.column())
+    {
+    case 0:
+        return m_threads[index.row()]->name();
+    case 1:
+        return m_threads[index.row()]->color();
+    default:
+        ;
+    }
+    
     return QVariant();
 }
 
@@ -72,6 +82,14 @@ ThreadModel* ThreadListModel::thread(const QModelIndex& index) const
         return m_threads[index.row()];
     else
         return 0;
+}
+
+QModelIndex ThreadListModel::index(int row, int column, const QModelIndex & parent) const
+{
+    if(row >= 0 && row < m_threads.size())
+        return createIndex(row, column, m_threads[row]);
+    else
+        return QModelIndex();
 }
 
 void ThreadListModel::removeAllThreads()

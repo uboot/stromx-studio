@@ -16,6 +16,9 @@ set(stromxstudio_SOURCES
     MainWindow.cpp
     MoveOperatorCmd.cpp
     ObserverEditor.cpp
+    ObserverModel.cpp
+    ObserverListModel.cpp
+    ObserverTreeModel.cpp
     OperatorItem.cpp
     OperatorData.cpp
     OperatorLibrary.cpp
@@ -38,6 +41,9 @@ set(stromxstudio_HEADERS
     ConnectionModel.h
     MainWindow.h
     ObserverEditor.h
+    ObserverModel.h
+    ObserverListModel.h
+    ObserverTreeModel.h
     OperatorItem.h
     OperatorData.h
     OperatorLibrary.h

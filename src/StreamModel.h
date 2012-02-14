@@ -23,7 +23,6 @@
 #include <QObject>
 #include <QPointF>
 #include <QList>
-#include "ThreadListModel.h"
 
 namespace stromx
 {
@@ -38,7 +37,7 @@ namespace stromx
     }
 }
 
-class QAbstractTableModel;
+class QAbstractItemModel;
 class QUndoStack;
 class ConnectionModel;
 class OperatorData;
@@ -73,7 +72,7 @@ public:
                        OperatorModel* targetOp, unsigned int inputId);
     void removeConnection(ConnectionModel* connection);
     
-    const QList<ThreadModel*> threads() const { return m_threadListModel->threads(); }
+    const QList<ThreadModel*> threads() const;
     void addThread();
     void removeThread(ThreadModel* thread);
     
@@ -81,7 +80,7 @@ public:
     void deinitializeOperator(OperatorModel* op);
     
     QUndoStack* undoStack() const { return m_undoStack; }
-    ThreadListModel* threadListModel() const { return m_threadListModel; }
+    QAbstractItemModel* threadListModel() const;
     
     void write(stromx::core::FileOutput & output, const QString & basename) const;
     void read(stromx::core::FileInput & input, const QString & basename);

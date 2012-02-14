@@ -47,15 +47,23 @@ public:
     stromx::core::Thread* thread() const { return m_thread; }
     void setThread(stromx::core::Thread* thread);
     
+    const QString & name() const { return m_name; }
+    void setName(const QString & name);
+    
     const QColor & color() const { return m_color; }
     void setColor(const QColor & color);
     
 signals:
     void colorChanged(const QColor & color);
+    void nameChanged(const QString & name);
     
 private:
+    void doSetColor(const QColor & color);
+    void doSetName(const QString & name);
+    
     stromx::core::Thread* m_thread;
     StreamModel* m_stream;
+    QString m_name;
     QColor m_color;
 };
 

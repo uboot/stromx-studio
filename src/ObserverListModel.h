@@ -17,44 +17,36 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef THREADLISTMODEL_H
-#define THREADLISTMODEL_H
+#ifndef OBSERVERLISTMODEL_H
+#define OBSERVERLISTMODEL_H
 
 #include <QAbstractTableModel>
-#include <QList>
 
-class ThreadModel;
+class ObserverModel;
+class ObserverTreeModel;
+class Observer;
 
-class ThreadListModel : public QAbstractTableModel
+class ObserverListModel : public QAbstractTableModel
 {
     Q_OBJECT
     
-    friend class StreamModel;
-    
 public:
-    explicit ThreadListModel(QObject *parent = 0);
+    ObserverListModel(QObject * parent);
     
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
     
-    ThreadModel* thread(const QModelIndex & index) const;
+    const QString & name() const;
+    void setName(const QString & name);
     
-    friend QDataStream & operator<< (QDataStream & stream, const ThreadListModel * threadList);
-    friend QDataStream & operator>> (QDataStream & stream, ThreadListModel * threadList);
+    void addObserver(Observer* observer);
+    void removeObserver(Observer* observer);
     
 private:
-    const QList<ThreadModel*> threads() const { return m_threads; }
-    void addThread(ThreadModel* thread);
-    void removeThread(ThreadModel* thread);
-    void removeAllThreads();
-    
-    QList<ThreadModel*> m_threads;
+    QList<ObserverModel*> m_observer;
+    QString m_name;
 };
 
-QDataStream & operator<< (QDataStream & stream, const ThreadListModel * threadList);
-QDataStream & operator>> (QDataStream & stream, ThreadListModel * threadList);
-    
-#endif // THREADLISTMODEL_H
+#endif // OBSERVERLISTMODEL_H

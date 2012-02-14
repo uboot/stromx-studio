@@ -23,6 +23,10 @@ if(UNIX)
     add_definitions(-DUNIX)
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DDEBUG)
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+
 if(CPPUNIT_FOUND)
     option(BUILD_TESTS "Build unit tests" ON)
 endif()

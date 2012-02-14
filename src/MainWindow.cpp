@@ -30,9 +30,11 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QSettings>
+#include <QtGlobal>
 #include <iostream>
 #include <stromx/core/DirectoryFileInput.h>
 #include <stromx/core/DirectoryFileOutput.h>
+#include <stromx/core/Exception.h>
 #include <stromx/core/ZipFileInput.h>
 #include <stromx/core/ZipFileOutput.h>
 #include "Exception.h"
@@ -126,6 +128,14 @@ void MainWindow::createActions()
     m_closeAct->setShortcuts(QKeySequence::Close);
     m_closeAct->setStatusTip(tr("Close the current stream"));
     connect(m_closeAct, SIGNAL(triggered()), this, SLOT(closeStream()));
+    
+    for (int i = 0; i < MAX_RECENT_FILES; ++i)
+    {
+        m_recentFileActs[i] = new QAction(this);
+        m_recentFileActs[i]->setVisible(false);
+        connect(m_recentFileActs[i], SIGNAL(triggered()),
+                this, SLOT(openRecentFile()));
+    }
 
     m_loadLibrariesAct = new QAction(tr("&Load Libraries..."), this);
     m_loadLibrariesAct->setStatusTip(tr("Load operator libraries"));
@@ -168,6 +178,11 @@ void MainWindow::createMenus()
      m_fileMenu->addAction(m_saveAct);
      m_fileMenu->addAction(m_saveAsAct);
      m_fileMenu->addAction(m_closeAct);
+     m_separatorAct = m_fileMenu->addSeparator();
+     for (int i = 0; i < MAX_RECENT_FILES; ++i)
+         m_fileMenu->addAction(m_recentFileActs[i]);
+     m_fileMenu->addSeparator();
+     updateRecentFileActions();
      m_fileMenu->addSeparator();
      m_fileMenu->addAction(m_loadLibrariesAct);
      m_fileMenu->addAction(m_resetLibrariesAct);
@@ -235,6 +250,22 @@ void MainWindow::stop()
 {
 }
 
+bool MainWindow::openRecentFile()
+{
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (action)
+    {
+        if(! saveBeforeClosing())
+            return false;
+        
+        readFile(action->data().toString());
+        
+        return true;
+    }
+    
+    return false;
+}
+
 bool MainWindow::open()
 {
     if(! saveBeforeClosing())
@@ -244,7 +275,7 @@ bool MainWindow::open()
     QString lastDir = settings.value("lastStreamOpened", QDir::home().absolutePath()).toString();
     
     QString file = QFileDialog::getOpenFileName(this, tr("Select a stream to open"),
-                                                lastDir, tr("Stromx archive (*.zip);;Stream file (*.xml)")); 
+                                                lastDir, tr("Stromx archive (*.zip);;Stromx file (*.xml)")); 
     
     if(file.isNull())
         return false;
@@ -260,42 +291,66 @@ void MainWindow::readFile(const QString& filepath)
     QString extension = QFileInfo(filepath).suffix();
     if(! (extension == "xml" || extension == "zip"))
     {
-        QMessageBox::critical(this, tr("stromx-studio error"), tr("Invalid file extension"),
+        QMessageBox::critical(this, tr("Failed to load file"), tr("Invalid file extension"),
                               QMessageBox::Ok, QMessageBox::Ok);
     }
     
     // load the stream
+    QString location;
     try
     {
         if(extension == "xml")
         {
-            QString directory = QFileInfo(filepath).absoluteDir().absolutePath();
-            stromx::core::DirectoryFileInput input(directory.toStdString());
+            location = QFileInfo(filepath).absoluteDir().absolutePath();
+            stromx::core::DirectoryFileInput input(location.toStdString());
             m_streamEditor->scene()->model()->read(input, basename);
         }
         else if(extension == "zip")
         {
+            location = filepath;
             stromx::core::ZipFileInput input(filepath.toStdString());
             m_streamEditor->scene()->model()->read(input, basename);
         }
     
         updateCurrentFile(filepath);
     }
-    catch(ReadStudioDataFailed&)
+    catch(stromx::core::FileAccessFailed&)
+    {
+        QMessageBox::critical(this, tr("Failed to load file"),
+                              tr("The location %1 could not be openend for reading").arg(location),
+                              QMessageBox::Ok, QMessageBox::Ok);
+    }
+    catch(ReadStreamFailed& e)
+    {
+        QMessageBox::critical(this, tr("Failed to load file"), e.what(),
+                              QMessageBox::Ok, QMessageBox::Ok);
+    }
+    catch(ReadStudioDataFailed& e)
     {
         updateCurrentFile(filepath);
-        QMessageBox::warning(this, tr("stromx-studio error"), tr("Failed to read studio data."),
+        QMessageBox::warning(this, tr("Loaded only part of file"), e.what(),
                              QMessageBox::Ok, QMessageBox::Ok);
-    }
-    catch(ReadStreamFailed&)
-    {
-        QMessageBox::critical(this, tr("stromx-studio error"), tr("Failed to open stream."),
-                              QMessageBox::Ok, QMessageBox::Ok);
     }
     
     // remember the last file
     QSettings settings("stromx", "stromx-studio");
     settings.setValue("lastStreamOpened", filepath);
+    setWindowFilePath(filepath);
+
+    // update the list of recently opened files
+    QStringList files = settings.value("recentFileList").toStringList();
+    files.removeAll(filepath);
+    files.prepend(filepath);
+    while (files.size() > MAX_RECENT_FILES)
+        files.removeLast();
+    settings.setValue("recentFileList", files);
+
+    foreach (QWidget *widget, QApplication::topLevelWidgets())
+    {
+        MainWindow *mainWin = qobject_cast<MainWindow *>(widget);
+        if (mainWin)
+            mainWin->updateRecentFileActions();
+    }
 }
 
 void MainWindow::updateWindowTitle(bool undoStackIsClean)
@@ -311,6 +366,25 @@ void MainWindow::updateCurrentFile(const QString& filepath)
     m_currentFile = filepath;
     m_undoStack->setClean();
     updateWindowTitle(true);
+}
+
+void MainWindow::updateRecentFileActions()
+{
+    QSettings settings("stromx", "stromx-studio");
+    QStringList files = settings.value("recentFileList").toStringList();
+
+    int numRecentFiles = qMin(files.size(), int(MAX_RECENT_FILES));
+
+    for (int i = 0; i < numRecentFiles; ++i) {
+        QString text = tr("&%1 %2").arg(i + 1).arg(strippedName(files[i]));
+        m_recentFileActs[i]->setText(text);
+        m_recentFileActs[i]->setData(files[i]);
+        m_recentFileActs[i]->setVisible(true);
+    }
+    for (int j = numRecentFiles; j < MAX_RECENT_FILES; ++j)
+        m_recentFileActs[j]->setVisible(false);
+
+    m_separatorAct->setVisible(numRecentFiles > 0);
 }
 
 bool MainWindow::saveBeforeClosing()
@@ -371,7 +445,7 @@ bool MainWindow::saveAs()
     QString lastDir = settings.value("lastStreamSavedDir", QDir::home().absolutePath()).toString();
     
     QString file = QFileDialog::getSaveFileName(this, tr("Save stromx-studio project"),
-                                                lastDir, tr("Stromx archive (*.zip);;Stream file (*.xml)")); 
+                                                lastDir, tr("Stromx archive (*.zip);;Stromx file (*.xml)")); 
     
     if(file.isNull())
         return false;
@@ -387,22 +461,24 @@ void MainWindow::writeFile(const QString& filepath)
     QString extension = QFileInfo(filepath).suffix();
     if(! (extension == "xml" || extension == "zip"))
     {
-        QMessageBox::critical(this, tr("stromx-studio error"), tr("Invalid file extension"),
+        QMessageBox::critical(this, tr("Failed to save file"), tr("Invalid file extension"),
                               QMessageBox::Ok, QMessageBox::Ok);
     }
         
     // write the stream
+    QString location;
     try
     {
         if(extension == "xml")
         {
-            QString directory = QFileInfo(filepath).absoluteDir().absolutePath();
-            stromx::core::DirectoryFileOutput output(directory.toStdString());
+            location = QFileInfo(filepath).absoluteDir().absolutePath();
+            stromx::core::DirectoryFileOutput output(location.toStdString());
             m_streamEditor->scene()->model()->write(output, basename);
         }
         else if(extension == "zip")
         {
-            stromx::core::ZipFileOutput output(filepath.toStdString());
+            location = filepath;
+            stromx::core::ZipFileOutput output(location.toStdString());
             m_streamEditor->scene()->model()->write(output, basename);
         }
     
@@ -412,9 +488,15 @@ void MainWindow::writeFile(const QString& filepath)
         QSettings settings("stromx", "stromx-studio");
         settings.setValue("lastStreamSavedDir", QFileInfo(filepath).dir().absolutePath());
     }
-    catch(WriteStreamFailed&)
+    catch(stromx::core::FileAccessFailed&)
     {
-        QMessageBox::critical(this, tr("stromx-studio error"), tr("Failed to save stream"),
+        QMessageBox::critical(this, tr("Failed to save file"),
+                              tr("The location %1 could not be openend for writing").arg(location),
+                              QMessageBox::Ok, QMessageBox::Ok);
+    }
+    catch(WriteStreamFailed& e)
+    {
+        QMessageBox::critical(this, tr("Failed to save file"), e.what(),
                               QMessageBox::Ok, QMessageBox::Ok);
     }
 }
@@ -479,6 +561,11 @@ void MainWindow::resetLibraries()
         m_operatorLibrary->model()->resetLibraries();
 }
 
+QString MainWindow::strippedName(const QString &fullFileName)
+{
+    return QFileInfo(fullFileName).fileName();
+}
+
 void MainWindow::closeEvent(QCloseEvent* event)
 { 
     if(closeStream())
@@ -492,7 +579,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
     
     writeSettings();
 }
-
 
 
 
