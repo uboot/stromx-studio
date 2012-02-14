@@ -7,6 +7,11 @@ set (STROMX_STUDIO_VERSION_MAJOR 0)
 set (STROMX_STUDIO_VERSION_MINOR 1)
 set (STROMX_STUDIO_VERSION_PATCH 0)
 
+if(MSVC)
+    add_definitions(/DBOOST_ALL_DYN_LINK)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275")
+endif(MSVC)
+
 if(CMAKE_COMPILER_IS_GNUCXX)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall")
 #   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -Werror")
