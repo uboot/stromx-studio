@@ -14,6 +14,10 @@
     #include <dlfcn.h>
 #endif // UNIX
 
+#ifdef WIN32
+    #include <Windows.h>
+#endif // WIN32
+
 using namespace stromx::core;
     
 OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
@@ -52,8 +56,8 @@ OperatorLibraryModel::~OperatorLibraryModel()
 #endif // UNIX
     
 #ifdef WIN32
-    foreach(HINSTANCE hDLL, m_libraryHandles)
-        FreeLibrary(hDLL);
+    foreach(void* hDLL, m_libraryHandles)
+        FreeLibrary(reinterpret_cast<HINSTANCE>(hDLL));
 #endif // WIN32
     
     QSettings settings("stromx", "stromx-studio");
@@ -157,10 +161,8 @@ void OperatorLibraryModel::loadLibrary(const QString& library)
     void (*registrationFunction)(stromx::core::Registry& registry);
     
 #ifdef UNIX
-    void* libHandle;
     char* error;
-    
-    libHandle = dlopen(library.toStdString().c_str(), RTLD_LAZY);
+    void* libHandle = dlopen(library.toStdString().c_str(), RTLD_LAZY);
     
     if(!libHandle)
         throw LoadLibraryFailed();
@@ -178,11 +180,7 @@ void OperatorLibraryModel::loadLibrary(const QString& library)
 #endif // UNIX
     
 #ifdef WIN32
-    HINSTANCE hDLL;
-    DWORD dwParam1;
-    UINT  uParam2, uReturnVal;
-    
-    hDLL = LoadLibrary(library.toStdString().c_str());
+    HINSTANCE hDLL = LoadLibrary(library.toStdString().c_str());
     
     if(!hDLL)
         throw LoadLibraryFailed();
@@ -196,7 +194,7 @@ void OperatorLibraryModel::loadLibrary(const QString& library)
     } 
     
     // store library handle to unload the library after use
-    m_libraryHandles.append(libHandle);
+    m_libraryHandles.append(hDLL);
 #endif // WIN32
     
     // try to register the library
