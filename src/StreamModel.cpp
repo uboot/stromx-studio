@@ -7,6 +7,7 @@
 #include "DeinitializeOperatorCmd.h"
 #include "Exception.h"
 #include "InitializeOperatorCmd.h"
+#include "JoinStreamTask.h"
 #include "OperatorLibraryModel.h"
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
@@ -36,11 +37,15 @@ StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLi
     m_threadListModel(0),
     m_observerModel(0),
     m_operatorLibrary(operatorLibrary),
-    m_undoStack(undoStack)
+    m_undoStack(undoStack),
+    m_joinStreamTask(0)
 {
     m_stream = new stromx::core::Stream;
+    m_joinStreamTask = new JoinStreamTask(m_stream, this);
     m_threadListModel = new ThreadListModel(this);
     m_observerModel = new ObserverTreeModel(m_undoStack, this);
+    
+    connect(m_joinStreamTask, SIGNAL(finished()), this, SLOT(join()));
 }
 
 StreamModel::~StreamModel()
@@ -640,6 +645,47 @@ void StreamModel::deserializeModel(const QByteArray& data)
     foreach(ThreadModel* thread, m_threadListModel->threads())
         dataStream >> thread;
 }
+
+void StreamModel::start()
+{
+    switch(m_stream->status())
+    {
+    case stromx::core::Stream::INACTIVE:
+        m_stream->start();
+        break;
+    case stromx::core::Stream::PAUSED:
+        m_stream->resume();
+        break;
+    default:
+        Q_ASSERT(false);
+    }
+    
+    emit streamStarted();
+}
+
+void StreamModel::pause()
+{
+    m_stream->pause();
+    emit streamPaused();
+}
+
+void StreamModel::stop()
+{
+    // stop the stream
+    m_stream->stop();
+    emit streamStopped();
+    
+    // start the thread which waits for the stream to finish
+    m_joinStreamTask->start();
+}
+
+void StreamModel::join()
+{
+    // inform others that the stream has finished
+    emit streamJoined();
+}
+
+
 
 
 

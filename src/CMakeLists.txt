@@ -14,6 +14,7 @@ set(stromxstudio_SOURCES
     ConnectionModel.cpp
     DeinitializeOperatorCmd.cpp
     InitializeOperatorCmd.cpp
+    JoinStreamTask.cpp
     main.cpp
     MainWindow.cpp
     MoveOperatorCmd.cpp

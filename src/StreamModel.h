@@ -41,6 +41,7 @@ namespace stromx
 class QAbstractItemModel;
 class QUndoStack;
 class ConnectionModel;
+class JoinStreamTask;
 class OperatorData;
 class OperatorModel;
 class OperatorLibraryModel;
@@ -86,6 +87,14 @@ public:
     
     void write(stromx::core::FileOutput & output, const QString & basename) const;
     void read(stromx::core::FileInput & input, const QString & basename);
+
+public slots:
+    void start();
+    void pause();
+    void stop();
+    
+private slots:
+    void join();
     
 signals:
     void modelWasReset();
@@ -95,6 +104,10 @@ signals:
     void connectionRemoved(ConnectionModel* connection);
     void threadAdded(ThreadModel* thread);
     void threadRemoved(ThreadModel* thread);
+    void streamStarted();
+    void streamPaused();
+    void streamStopped();
+    void streamJoined();
     
 private:
     static const quint32 MAGIC_NUMBER;
@@ -126,6 +139,7 @@ private:
     QList<OperatorModel*> m_onlineOperators;
     QList<OperatorModel*> m_uninitializedOperators;
     QList<ConnectionModel*> m_connections;
+    JoinStreamTask* m_joinStreamTask;
 };
 
 #endif // STREAMMODEL_H
