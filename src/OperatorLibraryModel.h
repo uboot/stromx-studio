@@ -25,10 +25,6 @@
 #include <QVector>
 #include <QStringList>
 
-#ifdef WIN32
-    #include <Windows.h>
-#endif // WIN32
-
 namespace stromx 
 {
     namespace core 
@@ -77,12 +73,7 @@ private:
     void updateOperators();
     
     QList<Package> m_packages;
-#ifdef UNIX
     QVector<void*> m_libraryHandles;
-#endif // UNIX
-#if WIN32
-    QVector<HINSTANCE> m_libraryHandles;
-#endif // WIN32
     QStringList m_loadedLibraries;
     stromx::core::Factory* m_factory;
 };
