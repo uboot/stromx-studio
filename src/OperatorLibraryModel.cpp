@@ -55,9 +55,6 @@ OperatorLibraryModel::~OperatorLibraryModel()
     foreach(HINSTANCE hDLL, m_libraryHandles)
         FreeLibrary(hDLL);
 #endif // WIN32
-    
-    QSettings settings("stromx", "stromx-studio");
-    settings.setValue("loadedLibraries", m_loadedLibraries);
 }
 
 
@@ -213,6 +210,10 @@ void OperatorLibraryModel::loadLibrary(const QString& library)
     
     // remember the library
     m_loadedLibraries.append(library);
+    
+    // save the library list
+    QSettings settings("stromx", "stromx-studio");
+    settings.setValue("loadedLibraries", m_loadedLibraries);
         
     updateOperators();
 }

@@ -61,7 +61,9 @@ private slots:
     void resetLibraries();
     void about();
     void start();
+    void pause();
     void stop();
+    void join();
     void updateWindowTitle(bool undoStackIsClean);
 
 private:
@@ -99,6 +101,7 @@ private:
     QAction* m_aboutAct;
     QAction* m_aboutQtAct;
     QAction* m_startAct;
+    QAction* m_pauseAct;
     QAction* m_stopAct;
     QAction* m_initializeAct;
     QAction* m_deinitializeAct;

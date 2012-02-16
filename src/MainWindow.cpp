@@ -107,6 +107,7 @@ void MainWindow::setModel(StreamModel* model)
         delete m_model;
     
     m_model = model;
+    connect(m_model, SIGNAL(streamJoined()), this, SLOT(join()));
 }
 
 void MainWindow::createActions()
@@ -168,9 +169,15 @@ void MainWindow::createActions()
     m_startAct = new QAction(QIcon(":/images/start.png"), tr("Start"), this);
     m_startAct->setStatusTip(tr("Start the stream"));
     connect(m_startAct, SIGNAL(triggered()), this, SLOT(start()));
+    
+    m_pauseAct = new QAction(QIcon(":/images/pause.png"), tr("Pause"), this);
+    m_pauseAct->setStatusTip(tr("Pause the stream"));
+    m_pauseAct->setEnabled(false);
+    connect(m_pauseAct, SIGNAL(triggered()), this, SLOT(pause()));
 
     m_stopAct = new QAction(QIcon(":/images/stop.png"), tr("Stop"), this);
     m_stopAct->setStatusTip(tr("Stop the stream"));
+    m_stopAct->setEnabled(false);
     connect(m_stopAct, SIGNAL(triggered()), this, SLOT(stop()));
 
     m_aboutAct = new QAction(tr("&About"), this);
@@ -238,6 +245,7 @@ void MainWindow::createToolBars()
      m_streamToolBar = addToolBar(tr("Stream"));
      m_streamToolBar->setObjectName("StreamToolbar");
      m_streamToolBar->addAction(m_startAct);
+     m_streamToolBar->addAction(m_pauseAct);
      m_streamToolBar->addAction(m_stopAct);
 }
 
@@ -263,10 +271,33 @@ bool MainWindow::save()
 
 void MainWindow::start()
 {
+    m_model->start();
+    m_startAct->setEnabled(false);
+    m_pauseAct->setEnabled(true);
+    m_stopAct->setEnabled(true);
 }
 
 void MainWindow::stop()
 {
+    m_model->stop();
+    m_startAct->setEnabled(false);
+    m_pauseAct->setEnabled(false);
+    m_stopAct->setEnabled(true);
+}
+
+void MainWindow::pause()
+{
+    m_model->pause();
+    m_startAct->setEnabled(true);
+    m_pauseAct->setEnabled(false);
+    m_stopAct->setEnabled(true);
+}
+
+void MainWindow::join()
+{
+    m_startAct->setEnabled(true);
+    m_pauseAct->setEnabled(false);
+    m_stopAct->setEnabled(false);
 }
 
 bool MainWindow::openRecentFile()

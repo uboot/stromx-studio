@@ -41,7 +41,7 @@ StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLi
     m_joinStreamTask(0)
 {
     m_stream = new stromx::core::Stream;
-    m_joinStreamTask = new JoinStreamTask(m_stream, this);
+    m_joinStreamTask = new JoinStreamTask(this);
     m_threadListModel = new ThreadListModel(this);
     m_observerModel = new ObserverTreeModel(m_undoStack, this);
     
@@ -423,6 +423,7 @@ void StreamModel::deleteAllData()
     m_uninitializedOperators.clear();
     m_onlineOperators.clear();
     m_threadListModel->removeAllThreads();
+    m_joinStreamTask->setStream(0);
     
     // inform the clients
     emit modelWasReset();
@@ -676,6 +677,7 @@ void StreamModel::stop()
     emit streamStopped();
     
     // start the thread which waits for the stream to finish
+    m_joinStreamTask->setStream(m_stream);
     m_joinStreamTask->start();
 }
 

@@ -35,7 +35,10 @@ class StreamModel;
 class JoinStreamTask : public QThread
 {
 public:
-    explicit JoinStreamTask(stromx::core::Stream* stream, QObject* parent = 0) : QThread(parent), m_stream(stream) {}
+    explicit JoinStreamTask(QObject* parent = 0) : QThread(parent), m_stream(0) {}
+    
+    const stromx::core::Stream* stream() const { return m_stream; }
+    void setStream(stromx::core::Stream* stream);
     
 protected:
     virtual void run();

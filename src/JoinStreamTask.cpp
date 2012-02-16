@@ -5,5 +5,11 @@
 
 void JoinStreamTask::run()
 {
-    m_stream->join();
+    if(m_stream)
+        m_stream->join();
+}
+
+void JoinStreamTask::setStream(stromx::core::Stream* stream)
+{
+    m_stream = stream;
 }
