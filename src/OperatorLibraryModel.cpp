@@ -14,9 +14,6 @@
     #include <dlfcn.h>
 #endif // UNIX
 
-#ifdef WIN32
-#endif // WIN32
-
 using namespace stromx::core;
     
 OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
@@ -34,7 +31,14 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
     foreach(QString file, loadedLibraries)
     {
         // try to load the library and ignore any failures
-        loadLibrary(file);
+        try
+        {
+            loadLibrary(file);
+        }
+        catch(LoadLibraryFailed & e)
+        {
+            qWarning(e.what());
+        }
     }
 }
 
@@ -46,6 +50,11 @@ OperatorLibraryModel::~OperatorLibraryModel()
     foreach(void* handle, m_libraryHandles)
         dlclose(handle);
 #endif // UNIX
+    
+#ifdef WIN32
+    foreach(HINSTANCE hDLL, m_libraryHandles)
+        FreeLibrary(hDLL);
+#endif // WIN32
     
     QSettings settings("stromx", "stromx-studio");
     settings.setValue("loadedLibraries", m_loadedLibraries);
@@ -126,30 +135,39 @@ int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
 
 void OperatorLibraryModel::loadLibrary(const QString& library)
 {
-#ifdef UNIX
     QFileInfo info(library);
     
-    QRegExp regEx("libstromx_(.+)");
-    if(regEx.indexIn(info.baseName()) == -1)
+#ifdef UNIX
+    QRegExp regEx("lib(.+)_(.+)");
+#endif // UNIX
+    
+#ifdef WIN32
+    QRegExp regEx("(.+)_(.+)");
+#endif // WIN32
+    
+    regEx.indexIn(info.baseName());
+    if(regEx.captureCount() != 2)
         throw LoadLibraryFailed();
     
-    QString registrationFunctionName = regEx.cap(1);
-    registrationFunctionName[0] = registrationFunctionName[0].toUpper();
-    registrationFunctionName.prepend("stromxRegister");
+    QString prefix = regEx.cap(1);
+    QString postfix = regEx.cap(2);
+    postfix[0] = postfix[0].toUpper();
+    QString registrationFunctionName = prefix + "Register" + postfix;
     
-    void* libHandle;
     void (*registrationFunction)(stromx::core::Registry& registry);
+    
+#ifdef UNIX
+    void* libHandle;
     char* error;
     
     libHandle = dlopen(library.toStdString().c_str(), RTLD_LAZY);
     
-    if (!libHandle)
+    if(!libHandle)
         throw LoadLibraryFailed();
-
     registrationFunction = reinterpret_cast<void (*)(stromx::core::Registry& registry)>
         (dlsym(libHandle, registrationFunctionName.toStdString().c_str()));
         
-    if ((error = dlerror()) != NULL) 
+    if((error = dlerror()) != NULL) 
     {
         dlclose(libHandle);
         throw LoadLibraryFailed();
@@ -157,6 +175,29 @@ void OperatorLibraryModel::loadLibrary(const QString& library)
     
     // store library handle to unload the library after use
     m_libraryHandles.append(libHandle);
+#endif // UNIX
+    
+#ifdef WIN32
+    HINSTANCE hDLL;
+    DWORD dwParam1;
+    UINT  uParam2, uReturnVal;
+    
+    hDLL = LoadLibrary(library.toStdString().c_str());
+    
+    if(!hDLL)
+        throw LoadLibraryFailed();
+    registrationFunction = reinterpret_cast<void (*)(stromx::core::Registry& registry)>
+        (GetProcAddress(hDLL, registrationFunctionName.toStdString().c_str()));
+        
+    if(! registrationFunction) 
+    {
+        FreeLibrary(hDLL);
+        throw LoadLibraryFailed();
+    } 
+    
+    // store library handle to unload the library after use
+    m_libraryHandles.append(libHandle);
+#endif // WIN32
     
     // try to register the library
     try
@@ -174,7 +215,6 @@ void OperatorLibraryModel::loadLibrary(const QString& library)
     m_loadedLibraries.append(library);
         
     updateOperators();
-#endif // UNIX
 }
 
 void OperatorLibraryModel::resetLibraries()
