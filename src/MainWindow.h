@@ -37,6 +37,7 @@ class ObserverEditor;
 class OperatorLibrary;
 class PropertyEditor;
 class StreamEditor;
+class StreamModel;
 class ThreadEditor;
 
 class MainWindow : public QMainWindow
@@ -73,6 +74,7 @@ private:
     void createStatusBar();
     void createDockWindows();
     
+    void setModel(StreamModel* model);
     void readSettings();
     void writeSettings();
     void writeFile(const QString & filepath);
@@ -105,6 +107,8 @@ private:
     QAction* m_removeSelectedItemsAct;
     QAction* m_separatorAct;
     QAction* m_recentFileActs[MAX_RECENT_FILES];
+    QAction* m_addObserverAct;
+    QAction* m_removeObserverAct;
     
     QUndoStack* m_undoStack;
     
@@ -113,6 +117,7 @@ private:
     QMenu* m_viewMenu;
     QMenu* m_helpMenu;
     QMenu* m_streamMenu;
+    QMenu* m_observerMenu;
     
     QToolBar* m_streamToolBar;
     
@@ -122,6 +127,7 @@ private:
     OperatorLibrary* m_operatorLibrary;
     PropertyEditor* m_propertyEditor;
     
+    StreamModel* m_model;
      
     QString m_currentFile;
 };

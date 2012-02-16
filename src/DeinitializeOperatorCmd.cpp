@@ -3,7 +3,7 @@
 #include "StreamModel.h"
 
 DeinitializeOperatorCmd::DeinitializeOperatorCmd(StreamModel* stream, OperatorModel* model, QUndoCommand* parent)
-  : QUndoCommand(parent),
+  : QUndoCommand(QObject::tr("deinitialize operator"), parent),
     m_stream(stream),
     m_model(model)
 {

@@ -1,8 +1,10 @@
 #include "ObserverListModel.h"
 
-ObserverListModel::ObserverListModel(QObject * parent)
-  : QAbstractTableModel(parent)
+ObserverListModel::ObserverListModel(QUndoStack* undoStack, QObject * parent)
+  : QAbstractTableModel(parent),
+     m_undoStack(undoStack)
 {
+    m_name = "New observer";
 }
 
 int ObserverListModel::rowCount(const QModelIndex& parent) const
@@ -49,4 +51,9 @@ void ObserverListModel::addObserver(Observer* observer)
 void ObserverListModel::removeObserver(Observer* observer)
 {
 
+}
+
+void ObserverListModel::setName(const QString& name)
+{
+    m_name = name;
 }

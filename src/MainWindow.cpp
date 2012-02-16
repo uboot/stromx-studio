@@ -49,7 +49,8 @@
 #include "ThreadEditor.h"
 
 MainWindow::MainWindow(QWidget *parent)
-  : QMainWindow(parent)
+  : QMainWindow(parent),
+    m_model(0)
 {
     m_undoStack = new QUndoStack(this);
     
@@ -57,8 +58,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_streamEditor = new StreamEditor;
     m_threadEditor = new ThreadEditor;
     m_observerEditor = new ObserverEditor;
-    m_operatorLibrary = new OperatorLibrary();
-    m_propertyEditor = new PropertyEditor();
+    m_operatorLibrary = new OperatorLibrary;
+    m_propertyEditor = new PropertyEditor;
     
     createActions();
     createMenus();
@@ -66,10 +67,8 @@ MainWindow::MainWindow(QWidget *parent)
     createStatusBar();
     createDockWindows();
     
-    m_streamEditor->scene()->setUndoStack(m_undoStack);
     StreamModel* streamModel = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
-    m_streamEditor->scene()->setModel(streamModel);
-    m_threadEditor->setModel(streamModel);
+    setModel(streamModel);
     
     splitter->addWidget(m_streamEditor);
     splitter->addWidget(m_threadEditor);
@@ -96,6 +95,20 @@ MainWindow::~MainWindow()
 {
 }
 
+void MainWindow::setModel(StreamModel* model)
+{
+    Q_ASSERT(model);
+    
+    m_streamEditor->scene()->setModel(model);
+    m_threadEditor->setModel(model);
+    m_observerEditor->setModel(model->observerModel());
+    
+    if(m_model)
+        delete m_model;
+    
+    m_model = model;
+}
+
 void MainWindow::createActions()
 {
     m_undoAct = m_undoStack->createUndoAction(this);
@@ -107,6 +120,8 @@ void MainWindow::createActions()
     m_addThreadAct = m_threadEditor->createAddThreadAction(this);
     m_removeThreadAct = m_threadEditor->createRemoveThreadAction(this);
     m_removeSelectedItemsAct = m_streamEditor->scene()->createRemoveAction(this);
+    m_addObserverAct = m_observerEditor->createAddObserverAction(this);
+    m_removeObserverAct = m_observerEditor->createRemoveObserverAction(this);
 
     m_saveAct = new QAction(tr("&Save"), this);
     m_saveAct->setShortcuts(QKeySequence::Save);
@@ -200,6 +215,10 @@ void MainWindow::createMenus()
      m_streamMenu->addSeparator();
      m_streamMenu->addAction(m_addThreadAct);
      m_streamMenu->addAction(m_removeThreadAct);
+     
+     m_observerMenu = menuBar()->addMenu(tr("&Observer"));
+     m_observerMenu->addAction(m_addObserverAct);
+     m_observerMenu->addAction(m_removeObserverAct);
 
      m_viewMenu = menuBar()->addMenu(tr("&View"));
 
@@ -295,7 +314,8 @@ void MainWindow::readFile(const QString& filepath)
                               QMessageBox::Ok, QMessageBox::Ok);
     }
     
-    // load the stream
+    // try to read the stream
+    StreamModel* stream = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
     QString location;
     try
     {
@@ -303,13 +323,13 @@ void MainWindow::readFile(const QString& filepath)
         {
             location = QFileInfo(filepath).absoluteDir().absolutePath();
             stromx::core::DirectoryFileInput input(location.toStdString());
-            m_streamEditor->scene()->model()->read(input, basename);
+            stream->read(input, basename);
         }
         else if(extension == "zip")
         {
             location = filepath;
             stromx::core::ZipFileInput input(filepath.toStdString());
-            m_streamEditor->scene()->model()->read(input, basename);
+            stream->read(input, basename);
         }
     
         updateCurrentFile(filepath);
@@ -319,11 +339,15 @@ void MainWindow::readFile(const QString& filepath)
         QMessageBox::critical(this, tr("Failed to load file"),
                               tr("The location %1 could not be openend for reading").arg(location),
                               QMessageBox::Ok, QMessageBox::Ok);
+        delete stream;
+        return;
     }
     catch(ReadStreamFailed& e)
     {
         QMessageBox::critical(this, tr("Failed to load file"), e.what(),
                               QMessageBox::Ok, QMessageBox::Ok);
+        delete stream;
+        return;
     }
     catch(ReadStudioDataFailed& e)
     {
@@ -331,6 +355,10 @@ void MainWindow::readFile(const QString& filepath)
         QMessageBox::warning(this, tr("Loaded only part of file"), e.what(),
                              QMessageBox::Ok, QMessageBox::Ok);
     }
+    
+    // reading was successful
+    // set the new stream
+    setModel(stream);
     
     // remember the last file
     QSettings settings("stromx", "stromx-studio");
@@ -428,11 +456,8 @@ bool MainWindow::closeStream()
         return false;
     
     // replace the current model with a new one
-    StreamModel* currentModel = m_streamEditor->scene()->model();
     StreamModel* newModel = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
-    m_streamEditor->scene()->setModel(newModel);
-    m_undoStack->clear();
-    delete currentModel;
+    setModel(newModel);
     
     updateCurrentFile("");
     

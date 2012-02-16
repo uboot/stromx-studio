@@ -17,27 +17,22 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MOVEOPERATORCMD_H
-#define MOVEOPERATORCMD_H
+#include <stromx/core/Registry.h>
 
-#include <QUndoCommand>
-#include <QPointF>
+#include "TestOperator.h"
 
-class OperatorModel;
-class StreamModel;
+#ifdef WIN32
+    #define TEST_API __declspec(dllexport)
+#else
+    #define TEST_API
+#endif // WIN32
 
-class MoveOperatorCmd : public QUndoCommand
+extern "C"
 {
-public:
-    MoveOperatorCmd(OperatorModel* model, const QPointF & newPos, QUndoCommand* parent = 0);
-    
-    virtual void undo();
-    virtual void redo();
-    
-private:
-    OperatorModel* m_model;
-    QPointF m_oldPos;
-    QPointF m_newPos;
-};
-
-#endif // MOVEOPERATORCMD_H
+    void TEST_API stromxRegisterTest(stromx::core::Registry& registry)
+    {
+        using namespace stromx::core;
+        
+        registry.registerOperator(new TestOperator);
+    }
+}

@@ -37,16 +37,18 @@ public:
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
+    Qt::ItemFlags flags(const QModelIndex & index) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
     
+    const QList<ThreadModel*> threads() const { return m_threads; }
     ThreadModel* thread(const QModelIndex & index) const;
     
     friend QDataStream & operator<< (QDataStream & stream, const ThreadListModel * threadList);
     friend QDataStream & operator>> (QDataStream & stream, ThreadListModel * threadList);
     
 private:
-    const QList<ThreadModel*> threads() const { return m_threads; }
     void addThread(ThreadModel* thread);
     void removeThread(ThreadModel* thread);
     void removeAllThreads();

@@ -1,6 +1,7 @@
 #include "ThreadModel.h"
 
 #include <stromx/core/Thread.h>
+#include "RenameThreadCmd.h"
 #include "StreamModel.h"
 
 ThreadModel::ThreadModel(stromx::core::Thread* thread, StreamModel* stream)
@@ -22,7 +23,10 @@ void ThreadModel::setThread(stromx::core::Thread* thread)
 void ThreadModel::setName(const QString& name)
 {
     if(name != m_name)
-        doSetName(name);
+    {
+        QUndoCommand* cmd = new RenameThreadCmd(this, name);
+        m_stream->undoStack()->push(cmd);
+    }
 }
 
 void ThreadModel::doSetName(const QString& name)

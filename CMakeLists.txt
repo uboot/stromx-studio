@@ -7,6 +7,11 @@ set (STROMX_STUDIO_VERSION_MAJOR 0)
 set (STROMX_STUDIO_VERSION_MINOR 1)
 set (STROMX_STUDIO_VERSION_PATCH 0)
 
+if(MSVC)
+    add_definitions(/DBOOST_ALL_DYN_LINK)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275")
+endif(MSVC)
+
 if(CMAKE_COMPILER_IS_GNUCXX)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall")
 #   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -Werror")
@@ -17,8 +22,6 @@ include(UseDoxygen OPTIONAL)
 find_package(Qt4 REQUIRED)
 find_package(stromx REQUIRED)
 
-find_package(CppUnit)
-
 if(UNIX)
     add_definitions(-DUNIX)
 endif()
@@ -26,9 +29,5 @@ endif()
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DDEBUG)
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-
-if(CPPUNIT_FOUND)
-    option(BUILD_TESTS "Build unit tests" ON)
-endif()
 
 add_subdirectory(src)

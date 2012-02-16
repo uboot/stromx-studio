@@ -24,6 +24,7 @@
 #include <QPointF>
 #include <QList>
 
+class ObserverTreeModel;
 namespace stromx
 {
     namespace core
@@ -81,6 +82,7 @@ public:
     
     QUndoStack* undoStack() const { return m_undoStack; }
     QAbstractItemModel* threadListModel() const;
+    QAbstractItemModel* observerModel() const;
     
     void write(stromx::core::FileOutput & output, const QString & basename) const;
     void read(stromx::core::FileInput & input, const QString & basename);
@@ -117,6 +119,7 @@ private:
     
     stromx::core::Stream* m_stream;
     ThreadListModel* m_threadListModel;
+    ObserverTreeModel* m_observerModel;
     OperatorLibraryModel* m_operatorLibrary;
     QUndoStack* m_undoStack;
     QList<OperatorModel*> m_operators;

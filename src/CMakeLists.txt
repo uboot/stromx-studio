@@ -1,3 +1,5 @@
+add_subdirectory(test)
+
 configure_file (
   "${PROJECT_SOURCE_DIR}/src/Config.h.in"
   "${PROJECT_SOURCE_DIR}/src/Config.h"
@@ -29,6 +31,7 @@ set(stromxstudio_SOURCES
     RemoveConnectionCmd.cpp
     RemoveOperatorCmd.cpp
     RemoveThreadCmd.cpp
+    RenameThreadCmd.cpp
     StreamEditor.cpp
     StreamEditorScene.cpp
     StreamModel.cpp
@@ -69,10 +72,6 @@ qt4_wrap_cpp(stromxstudio_HEADERS_MOC ${stromxstudio_HEADERS})
 #qt4_wrap_ui(stromxstudio_FORMS_HEADERS ${stromxstudio_FORMS})
 qt4_add_resources(stromxstudio_RESOURCES_RCC ${stromxstudio_RESOURCES})
 
-include_directories(
-    ${STROMX_INCLUDE_DIR}
-)
-
 add_executable(stromx-studio 
     ${stromxstudio_SOURCES} 
     ${stromxstudio_HEADERS_MOC} 
@@ -82,9 +81,5 @@ add_executable(stromx-studio
 
 target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
-    ${STROMX_CORE_LIBRARY}
+    ${stromx_CORE_LIB}
 )
-
-if(BUILD_TESTS)
-    add_subdirectory(test)
-endif()
