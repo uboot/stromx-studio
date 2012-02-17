@@ -50,7 +50,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent),
-    m_model(0)
+    m_model(0),
+    m_currentUndoLimit(0)
 {
     m_undoStack = new QUndoStack(this);
     
@@ -81,7 +82,6 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(splitter);
     
     updateCurrentFile("");
-    updateWindowTitle(true);
     
     readSettings();
     
@@ -89,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent)
             m_propertyEditor, SLOT(setModel(QAbstractTableModel*)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), this, SLOT(updateWindowTitle(bool)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), m_saveAct, SLOT(setDisabled(bool)));
+    connect(m_undoAct, SIGNAL(changed()), this, SLOT(updateUndoActs()));
 }
 
 MainWindow::~MainWindow()
@@ -99,13 +100,29 @@ void MainWindow::setModel(StreamModel* model)
 {
     Q_ASSERT(model);
     
+    // clear the undo stack
+    m_undoStack->clear();
+    
+    // the model is zero when this function is called for the first time
+    if(m_model)
+    {
+        // stop the old stream
+        stop();
+        
+        // call join to update the stream controls
+        join();
+    }
+    
+    // set all editors to the new model
     m_streamEditor->scene()->setModel(model);
     m_threadEditor->setModel(model);
     m_observerEditor->setModel(model->observerModel());
     
+    // delete the old model
     if(m_model)
         delete m_model;
     
+    // remember the new model
     m_model = model;
     connect(m_model, SIGNAL(streamJoined()), this, SLOT(join()));
 }
@@ -275,6 +292,9 @@ void MainWindow::start()
     m_startAct->setEnabled(false);
     m_pauseAct->setEnabled(true);
     m_stopAct->setEnabled(true);
+    m_redoAct->setEnabled(false);
+    m_undoAct->setEnabled(false);
+    m_currentUndoLimit = m_undoStack->index();
 }
 
 void MainWindow::stop()
@@ -298,6 +318,9 @@ void MainWindow::join()
     m_startAct->setEnabled(true);
     m_pauseAct->setEnabled(false);
     m_stopAct->setEnabled(false);
+    m_currentUndoLimit = 0;
+    m_undoAct->setEnabled(m_undoStack->canUndo());
+    m_redoAct->setEnabled(m_undoStack->canRedo());
 }
 
 bool MainWindow::openRecentFile()
@@ -424,6 +447,7 @@ void MainWindow::updateCurrentFile(const QString& filepath)
 {
     m_currentFile = filepath;
     m_undoStack->setClean();
+    updateUndoActs();
     updateWindowTitle(true);
 }
 
@@ -635,6 +659,14 @@ void MainWindow::closeEvent(QCloseEvent* event)
     
     writeSettings();
 }
+
+void MainWindow::updateUndoActs()
+{
+    // disable undo stack for any undo actions beyond the limit
+    if(m_undoStack->index() == m_currentUndoLimit)
+        m_undoAct->setEnabled(false);
+}
+
 
 
 

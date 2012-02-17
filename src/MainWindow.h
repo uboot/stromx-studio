@@ -65,6 +65,7 @@ private slots:
     void stop();
     void join();
     void updateWindowTitle(bool undoStackIsClean);
+    void updateUndoActs();
 
 private:
     enum { MAX_RECENT_FILES = 10 };
@@ -133,6 +134,7 @@ private:
     StreamModel* m_model;
      
     QString m_currentFile;
+    int m_currentUndoLimit;
 };
 
 #endif // MAINWINDOW_H

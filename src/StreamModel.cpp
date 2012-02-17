@@ -50,6 +50,7 @@ StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLi
 
 StreamModel::~StreamModel()
 {   
+    m_joinStreamTask->wait();
     deleteAllData();
 }
 
@@ -449,9 +450,6 @@ void StreamModel::deleteAllData()
 
 void StreamModel::updateStream(stromx::core::Stream* stream)
 {
-    // clear the undo stack
-    m_undoStack->clear();
-    
     // delete all data
     deleteAllData();
     
@@ -672,6 +670,10 @@ void StreamModel::pause()
 
 void StreamModel::stop()
 {
+    // do nothing if the stream is inactive
+    if(m_stream->status() == stromx::core::Stream::INACTIVE)
+        return;
+    
     // stop the stream
     m_stream->stop();
     emit streamStopped();
