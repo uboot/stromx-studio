@@ -50,6 +50,9 @@ public:
     
 protected:
     virtual void closeEvent(QCloseEvent* event);
+    
+signals:
+    void canUndoChanged(bool canUndo);
 
 private slots:
     bool open();
@@ -66,6 +69,9 @@ private slots:
     void join();
     void updateWindowTitle(bool undoStackIsClean);
     void updateUndoActs();
+    void handleCanUndoChanged(bool canUndo);
+    void handleUndoTextChanged(const QString & undoText);
+    void handleUndoIndexChanged(int index);
 
 private:
     enum { MAX_RECENT_FILES = 10 };

@@ -129,8 +129,6 @@ void MainWindow::setModel(StreamModel* model)
 
 void MainWindow::createActions()
 {
-    m_undoAct = m_undoStack->createUndoAction(this);
-    m_undoAct->setShortcuts(QKeySequence::Undo);
     m_redoAct = m_undoStack->createRedoAction(this);
     m_redoAct->setShortcuts(QKeySequence::Redo);
     m_initializeAct = m_streamEditor->scene()->createInitializeAction(this);
@@ -141,6 +139,14 @@ void MainWindow::createActions()
     m_addObserverAct = m_observerEditor->createAddObserverAction(this);
     m_removeObserverAct = m_observerEditor->createRemoveObserverAction(this);
 
+    m_undoAct = new QAction(m_undoStack->undoText(), this);
+    m_undoAct->setShortcuts(QKeySequence::Undo);
+    m_undoAct->setEnabled(m_undoStack->canUndo());
+    connect(m_undoStack, SIGNAL(undoTextChanged(QString)), this, SLOT(handleUndoTextChanged(QString)));
+    connect(m_undoStack, SIGNAL(canUndoChanged(bool)), this, SLOT(handleCanUndoChanged(bool)));
+    connect(m_undoStack, SIGNAL(indexChanged(int)), this, SLOT(handleUndoIndexChanged(int)));
+    connect(m_undoAct, SIGNAL(triggered()), m_undoStack, SLOT(undo()));
+    
     m_saveAct = new QAction(tr("&Save"), this);
     m_saveAct->setShortcuts(QKeySequence::Save);
     m_saveAct->setStatusTip(tr("Save the current stream"));
@@ -662,11 +668,28 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 void MainWindow::updateUndoActs()
 {
+}
+
+void MainWindow::handleUndoTextChanged(const QString& undoText)
+{
+    m_undoAct->setText(tr("Undo %1").arg(undoText));
+}
+
+void MainWindow::handleCanUndoChanged(bool canUndo)
+{
+    // disable undo stack for any undo actions beyond the limit
+    if(m_undoStack->index() == m_currentUndoLimit)
+        m_undoAct->setEnabled(false);
+    else
+        m_undoAct->setEnabled(canUndo);
+}
+
+void MainWindow::handleUndoIndexChanged(int index)
+{
     // disable undo stack for any undo actions beyond the limit
     if(m_undoStack->index() == m_currentUndoLimit)
         m_undoAct->setEnabled(false);
 }
-
 
 
 
