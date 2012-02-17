@@ -87,6 +87,8 @@ public:
     
     void write(stromx::core::FileOutput & output, const QString & basename) const;
     void read(stromx::core::FileInput & input, const QString & basename);
+    
+    bool isActive() const;
 
 public slots:
     void start();

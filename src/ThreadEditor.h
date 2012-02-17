@@ -45,10 +45,12 @@ public slots:
     void removeThread() const;
     
 signals:
-    void threadSelectedChanged(bool selected);
+    void removeThreadActiveChanged(bool selected);
+    void addThreadActiveChanged(bool selected);
     
 private slots:
     void updateThreadSelected( const QModelIndex & current, const QModelIndex & previous );
+    void updateStreamActive();
     
 private:
     ThreadModel* selectedThread() const;

@@ -262,6 +262,11 @@ bool OperatorModel::isInitialized() const
     return m_op->status() != stromx::core::Operator::NONE;
 }
 
+bool OperatorModel::isActive() const
+{
+    return m_stream->isActive();
+}
+
 void OperatorModel::setInitialized(bool status)
 {
     if(isInitialized() == status)

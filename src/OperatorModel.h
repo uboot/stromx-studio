@@ -72,6 +72,7 @@ public:
     void setPos(const QPointF & pos);
     
     bool isInitialized() const;
+    bool isActive() const;
     
     const QSet<ConnectionModel*> connections() const { return m_connections; }
     void addConnection(ConnectionModel* connection);

@@ -16,9 +16,7 @@ StreamEditorScene::StreamEditorScene(QObject* parent)
   : QGraphicsScene(parent),
     m_model(0)
 {
-    connect(this, SIGNAL(selectionChanged()), this, SLOT(processSelection()));
-    connect(this, SIGNAL(selectionChanged()), this, SLOT(enableInitializeAction()));
-    connect(this, SIGNAL(selectionChanged()), this, SLOT(enableDeinitializeAction()));
+    connect(this, SIGNAL(selectionChanged()), this, SLOT(updateSelection()));
 }
 
 void StreamEditorScene::setModel(StreamModel* model)
@@ -35,7 +33,9 @@ void StreamEditorScene::setModel(StreamModel* model)
         connect(m_model, SIGNAL(operatorAdded(OperatorModel*)), this, SLOT(addOperator(OperatorModel*)));
         connect(m_model, SIGNAL(operatorRemoved(OperatorModel*)), this, SLOT(removeOperator(OperatorModel*)));
         connect(m_model, SIGNAL(connectionAdded(ConnectionModel*)), this, SLOT(addConnection(ConnectionModel*)));
-        connect(m_model, SIGNAL(connectionRemoved(ConnectionModel*)), this, SLOT(removeConnection(ConnectionModel*)));  
+        connect(m_model, SIGNAL(connectionRemoved(ConnectionModel*)), this, SLOT(removeConnection(ConnectionModel*)));
+        connect(m_model, SIGNAL(streamStarted()), this, SLOT(updateSelection()));
+        connect(m_model, SIGNAL(streamJoined()), this, SLOT(updateSelection()));
     }
 }
 
@@ -177,13 +177,15 @@ void StreamEditorScene::deinitialize()
     m_model->undoStack()->endMacro();
 }
 
-void StreamEditorScene::processSelection()
+void StreamEditorScene::updateSelection()
 {
-    if(selectedItems().size() > 0)
+    // enable the remove action
+    if(selectedItems().size() > 0 && ! m_model->isActive())
         emit removeEnabledChanged(true);
     else
         emit removeEnabledChanged(false);
-        
+       
+    // show selected model in the property editor
     if(selectedItems().size() == 1)
     {
         QGraphicsItem* item = selectedItems()[0];
@@ -195,24 +197,22 @@ void StreamEditorScene::processSelection()
         if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
             model = connectionItem->model();
          
+        // update the model if (1) a new operator was selected
+        // or (2) the stream was activated which requires the
+        // parameter of the shown operator to be initialized
         if(model)
-        {
             emit selectedModelChanged(model);
-            return;
-        }
+    }
+    else
+    {
+        emit selectedModelChanged(0);
     }
     
-    emit selectedModelChanged(0);
-}
-
-void StreamEditorScene::enableInitializeAction()
-{
-    emit initializeEnabledChanged(isOperatorSelection());
-}
-
-void StreamEditorScene::enableDeinitializeAction()
-{
-    emit deinitializeEnabledChanged(isOperatorSelection());
+    // activate the initialize action only if least one 
+    // operator is selected and the stream is not active
+    bool active = isOperatorSelection() && ! m_model->isActive();
+    emit initializeEnabledChanged(active);
+    emit deinitializeEnabledChanged(active);
 }
 
 bool StreamEditorScene::isOperatorSelection() const

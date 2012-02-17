@@ -30,6 +30,8 @@ void ThreadEditor::setModel(StreamModel* model)
     m_table->setSelectionMode(QAbstractItemView::SingleSelection);
     connect(m_table->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), 
             this, SLOT(updateThreadSelected(QModelIndex,QModelIndex)));
+    connect(m_model, SIGNAL(streamStarted()), this, SLOT(updateStreamActive()));
+    connect(m_model, SIGNAL(streamJoined()), this, SLOT(updateStreamActive()));
 }
 
 QAction* ThreadEditor::createAddThreadAction(QObject* parent)
@@ -39,6 +41,7 @@ QAction* ThreadEditor::createAddThreadAction(QObject* parent)
     action->setShortcut(tr("Ctrl+T"));
     action->setEnabled(true);
     connect(action, SIGNAL(triggered()), this, SLOT(addThread()));
+    connect(this, SIGNAL(addThreadActiveChanged(bool)), action, SLOT(setEnabled(bool)));
     
     return action;
 }
@@ -50,7 +53,7 @@ QAction* ThreadEditor::createRemoveThreadAction(QObject* parent)
     action->setShortcut(tr("Ctrl+Shift+T"));
     action->setEnabled(false);
     connect(action, SIGNAL(triggered()), this, SLOT(removeThread()));
-    connect(this, SIGNAL(threadSelectedChanged(bool)), action, SLOT(setEnabled(bool)));
+    connect(this, SIGNAL(removeThreadActiveChanged(bool)), action, SLOT(setEnabled(bool)));
     
     return action;
 }
@@ -81,11 +84,31 @@ ThreadModel* ThreadEditor::selectedThread() const
 
 void ThreadEditor::updateThreadSelected(const QModelIndex& current, const QModelIndex& previous)
 {
-    if(current.isValid())
-        emit threadSelectedChanged(true);
+    if(current.isValid() && ! m_model->isActive())
+        emit removeThreadActiveChanged(true);
     else
-        emit threadSelectedChanged(false);
+        emit removeThreadActiveChanged(false);
 }
+
+void ThreadEditor::updateStreamActive()
+{
+    if(! m_model->isActive())
+    {
+        emit addThreadActiveChanged(true);
+        
+        if(selectedThread())
+            emit removeThreadActiveChanged(true);
+        else
+            emit removeThreadActiveChanged(false);
+    }
+    else
+    {
+        emit addThreadActiveChanged(false);
+        emit removeThreadActiveChanged(false);
+    }
+            
+}
+
 
 
 

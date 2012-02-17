@@ -61,9 +61,7 @@ protected:
     
 private slots:
     void reset();
-    void processSelection();
-    void enableInitializeAction();
-    void enableDeinitializeAction();
+    void updateSelection();
     void addOperator(OperatorModel* op);
     void removeOperator(OperatorModel* op);
     void addConnection(ConnectionModel* connection);

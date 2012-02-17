@@ -84,6 +84,10 @@ ConnectorItem* ConnectorItem::connectorItemAt(const QPointF& pos) const
 
 bool ConnectorItem::canConnect() const
 {
+    // can not draw any connections when the stream is active
+    if(m_op->isActive())
+        return false;
+    
     // inputs can connect to at most one output
     if(connectorType() == INPUT && ! m_connections.empty())
         return false;

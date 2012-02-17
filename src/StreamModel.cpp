@@ -687,6 +687,11 @@ void StreamModel::join()
     emit streamJoined();
 }
 
+bool StreamModel::isActive() const
+{
+    return m_stream->status() != stromx::core::Stream::INACTIVE;
+}
+
 
 
 
