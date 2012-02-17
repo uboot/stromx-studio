@@ -1,6 +1,7 @@
 #include "OperatorModel.h"
 
 #include <QUndoStack>
+#include <stromx/core/Image.h>
 #include <stromx/core/Operator.h>
 #include <stromx/core/Parameter.h>
 #include "MoveOperatorCmd.h"
@@ -21,8 +22,6 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
 int OperatorModel::rowCount(const QModelIndex& index) const
 {
     return accessibleParametersCount() + offsetPosParam;
-//     m_op->info().parameters().size() + offsetPosParam;
-//     return 2;
 }
 
 int OperatorModel::columnCount(const QModelIndex& index) const
@@ -102,10 +101,21 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
                         if(index.column() == 0)
                             return QVariant(QString::fromStdString(m_op->info().parameters()[index.row()-offsetPosParam]->name()));
                         else
-                            return QVariant(convertDataToQString(m_op->getParameter(m_op->info().parameters()[index.row()-offsetPosParam]->id())));
+                        {
+                            const stromx::core::Parameter* param = m_op->info().parameters()[index.row()-offsetPosParam];
+                            unsigned int paramId = param->id();
+                            try
+                            {
+                                return QVariant(convertDataToQString(m_op->getParameter(paramId), param));
+                            }
+                            catch(stromx::core::Exception&e)
+                            {
+                                return QVariant(tr("<X:not accessible>"));
+                            }
+                        }
                     }
                     else
-                        QVariant(tr("<not accesible>"));                  
+                        QVariant(tr("<not accessible>"));                  
                 }
             }
         }
@@ -146,15 +156,48 @@ void OperatorModel::doSetPos(const QPointF& pos)
     emit posChanged(m_pos);
 }
 
-QString OperatorModel::convertDataToQString(const stromx::core::Data& data) const
+QString OperatorModel::convertDataToQString(const stromx::core::Data& data, const stromx::core::Parameter* param) const
 {
     QString dataString;
-//     if (data.isVariant(stromx::core::DataVariant::BOOL))
-//     {
-//          const stromx::core::Bool & boolData = stromx::core::data_cast<const stromx::core::Bool&>(data);
-//          dataString.setNum((unsigned int)(boolData));
-//          return dataString;
-//     }
+    
+    if (data.isVariant(stromx::core::DataVariant::NONE))
+    {
+        return QString("None");
+    }
+    
+    if (data.isVariant(stromx::core::DataVariant::TRIGGER))
+    {
+        return QString("Trigger");
+    }
+    
+    if (data.isVariant(stromx::core::DataVariant::BOOL))
+    {
+         const stromx::core::Bool & boolData = stromx::core::data_cast<const stromx::core::Bool&>(data);
+         if(bool(boolData))
+         {
+             return QString(tr("true"));
+         }
+         else
+         {
+             return QString(tr("false"));
+         }
+    }
+    
+    if (data.isVariant(stromx::core::DataVariant::ENUM))
+    {
+        const stromx::core::Enum& value = stromx::core::data_cast<const stromx::core::Enum &>(data);
+        unsigned int intValue = (unsigned int)(value);
+        const std::vector<stromx::core::EnumDescription> & vectorEnumDesc = param->descriptions();
+        for(std::vector<stromx::core::EnumDescription>::const_iterator iter_enumDesc = vectorEnumDesc.begin();
+            iter_enumDesc != vectorEnumDesc.end();
+            ++iter_enumDesc)
+            {
+                if (intValue == iter_enumDesc->value())
+                    return QString::fromStdString(iter_enumDesc->description());
+            }
+        
+        return QString(tr("<Unknown ENUM>"));
+    }
     
     if (data.isVariant(stromx::core::DataVariant::INT_8))
     {
@@ -210,6 +253,19 @@ QString OperatorModel::convertDataToQString(const stromx::core::Data& data) cons
          const stromx::core::Double & doubleData = stromx::core::data_cast<const stromx::core::Double&>(data);
          dataString.setNum((double)(doubleData));
          return dataString;
+    }
+    
+    if (data.isVariant(stromx::core::DataVariant::IMAGE))
+    {
+        QString label1;
+        QString label2;
+        const stromx::core::Image & imageData = stromx::core::data_cast<const stromx::core::Image&>(data);
+        return QString(tr("Height: %1 | Width: %2")).arg(label1.setNum(imageData.height()),label2.setNum(imageData.height()));
+    }
+    
+    if (data.isVariant(stromx::core::DataVariant::DATA))
+    {
+        return QString("Data");
     }
     
     else

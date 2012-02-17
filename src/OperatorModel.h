@@ -90,7 +90,7 @@ private:
     void setInitialized(bool initialized);
     int accessibleParametersCount() const;
     bool accessibleParameter(const stromx::core::Parameter* const par) const;
-    QString convertDataToQString(const stromx::core::Data& data) const;
+    QString convertDataToQString(const stromx::core::Data& data, const stromx::core::Parameter* param) const;
     
     stromx::core::Operator* m_op;
     StreamModel* m_stream;
