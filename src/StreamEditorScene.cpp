@@ -48,6 +48,10 @@ void StreamEditorScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
         event->setDropAction(Qt::CopyAction);
         event->accept();
     }
+    else
+    {
+        event->ignore();
+    }
 }
 
 void StreamEditorScene::dropEvent(QGraphicsSceneDragDropEvent* event)

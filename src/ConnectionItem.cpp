@@ -1,8 +1,11 @@
 #include "ConnectionItem.h"
 
+#include <QGraphicsView>
 #include <QPen>
 #include <QVector2D>
 #include <math.h>
+#include "ConnectionModel.h"
+#include "InputData.h"
 
 ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
   : QGraphicsLineItem(parent),
@@ -11,6 +14,10 @@ ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
     m_model(model)
 {
     setFlag(ItemIsSelectable, true);
+    m_pen.setWidth(3);
+    setPen(m_pen);
+    m_head1->setPen(m_pen);
+    m_head2->setPen(m_pen);
 }
 
 void ConnectionItem::rotateHead()
@@ -37,17 +44,15 @@ void ConnectionItem::setEnd(const QPointF& end)
 void ConnectionItem::setActive(bool value)
 {
     if(value)
-    {
-        setPen(QPen(Qt::red));
-        m_head1->setPen(QPen(Qt::red));
-        m_head2->setPen(QPen(Qt::red));
-    }
+        m_pen.setColor(Qt::red);
     else
-    {
-        setPen(QPen(Qt::black));
-        m_head1->setPen(QPen(Qt::black));
-        m_head2->setPen(QPen(Qt::black));
-    }
+        m_pen.setColor(Qt::black);
+    
+    setPen(m_pen);
+    m_head1->setPen(m_pen);
+    m_head2->setPen(m_pen);
 }
+
+
 
 

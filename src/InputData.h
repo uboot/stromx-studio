@@ -17,33 +17,26 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STREAMEDITOR_H
-#define STREAMEDITOR_H
+#ifndef INPUTDATA_H
+#define INPUTDATA_H
 
-#include <QGraphicsView>
+#include <QMimeData>
 
-class StreamEditorScene;
-class ConnectionItem;
+class OperatorModel;
 
-class StreamEditor : public QGraphicsView
+class InputData : public QMimeData
 {
     Q_OBJECT
-
+    
 public:
-    explicit StreamEditor(QWidget *parent = 0);
+    InputData(unsigned int id, OperatorModel* op);
     
-    StreamEditorScene* scene() const { return m_scene; }
-    
-protected:
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void mouseMoveEvent(QMouseEvent *event);
+    unsigned int id() const { return m_id; }
+    OperatorModel* op() const { return m_op; }
     
 private:
-    void startDrag();
-    
-    QPoint m_startPos;
-    ConnectionItem* m_connection;
-    StreamEditorScene* m_scene;
+    unsigned int m_id;
+    OperatorModel* m_op;
 };
 
-#endif // STREAMEDITOR_H
+#endif // INPUTDATA_H

@@ -14,6 +14,7 @@ set(stromxstudio_SOURCES
     ConnectionModel.cpp
     DeinitializeOperatorCmd.cpp
     InitializeOperatorCmd.cpp
+    InputData.cpp
     JoinStreamTask.cpp
     main.cpp
     MainWindow.cpp
@@ -43,6 +44,7 @@ set(stromxstudio_SOURCES
 
 set(stromxstudio_HEADERS
     ConnectionModel.h
+    InputData.h
     MainWindow.h
     ObserverEditor.h
     ObserverModel.h

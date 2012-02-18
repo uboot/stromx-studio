@@ -21,6 +21,7 @@
 #define CONNECTIONITEM_H
 
 #include <QGraphicsLineItem>
+#include <QPen>
 
 class ConnectionModel;
 
@@ -44,7 +45,9 @@ private:
     QGraphicsLineItem* m_head1;
     QGraphicsLineItem* m_head2;
     
+    QPointF m_startPos;
     ConnectionModel* m_model;
+    QPen m_pen;
 };
 
 #endif // CONNECTIONITEM_H
