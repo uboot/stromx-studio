@@ -13,6 +13,7 @@ ObserverEditor::ObserverEditor(QWidget* parent)
     setObjectName("ObserverEditor");
     
     m_observerView = new QTreeView;
+    m_observerView->setDragDropMode(QAbstractItemView::DragDrop);
     setWidget(m_observerView);
 }
 

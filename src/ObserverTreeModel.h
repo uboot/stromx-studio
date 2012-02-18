@@ -30,8 +30,7 @@ class ObserverTreeModel : public QAbstractItemModel
     Q_OBJECT
     
 public:
-    ObserverTreeModel(QUndoStack* undoStack, QObject * parent)
-      : QAbstractItemModel(parent), m_undoStack(undoStack) {}
+    ObserverTreeModel(QUndoStack* undoStack, QObject * parent);
 
     virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
     virtual QModelIndex parent(const QModelIndex & child) const;
@@ -41,10 +40,10 @@ public:
     virtual bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
     virtual bool setData(const QModelIndex& index, const QVariant& value, int role);
     virtual Qt::ItemFlags flags(const QModelIndex& index) const;
-    
-    
+    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
+    virtual QStringList mimeTypes() const;
     
 private:
     QList<ObserverListModel*> m_lists;

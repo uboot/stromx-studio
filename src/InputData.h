@@ -33,6 +33,7 @@ public:
     
     unsigned int id() const { return m_id; }
     OperatorModel* op() const { return m_op; }
+    virtual QStringList formats() const;
     
 private:
     unsigned int m_id;

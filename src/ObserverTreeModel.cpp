@@ -1,6 +1,14 @@
 #include "ObserverTreeModel.h"
 
+#include <QStringList>
+#include "InputData.h"
 #include "ObserverListModel.h"
+
+ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, QObject * parent)
+  : QAbstractItemModel(parent),
+    m_undoStack(undoStack)
+{
+}
 
 int ObserverTreeModel::rowCount(const QModelIndex& parent) const
 {
@@ -109,10 +117,32 @@ Qt::ItemFlags ObserverTreeModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
     
+    // top level can not accept drags
+    if(! index.isValid())
+        return flags;
+    
     // only parents are editable
     if(! index.parent().isValid())
-        return flags |= Qt::ItemIsEditable;
+        return flags |= Qt::ItemIsEditable | Qt::ItemIsDropEnabled;
         
-    return flags;
+    return flags |= Qt::ItemIsDragEnabled;
 }
+
+bool ObserverTreeModel::dropMimeData(const QMimeData *data,
+     Qt::DropAction action, int row, int column, const QModelIndex &parent)
+{
+    if(action == Qt::IgnoreAction)
+        return true;
+    
+    if(const InputData* inputData = qobject_cast<const InputData*>(data))
+        return true;
+    
+    return false;
+}
+
+QStringList ObserverTreeModel::mimeTypes() const
+{
+    return QStringList("stromx/input");
+}
+
 
