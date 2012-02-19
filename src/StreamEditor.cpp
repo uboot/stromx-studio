@@ -57,7 +57,7 @@ void StreamEditor::mousePressEvent(QMouseEvent* event)
 void StreamEditor::startDrag()
 {    
     // allocate a input data object
-    InputData* data = new InputData(m_connection->model()->inputId(), m_connection->model()->targetOp());
+    InputData* data = new InputData(m_connection->model()->targetOp(), m_connection->model()->inputId());
     
     QList<QGraphicsView*> views = scene()->views();
     if(views.count() != 1)

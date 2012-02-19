@@ -96,7 +96,6 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     return observerList->name();
 }
 
-
 bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if(index.isValid() && ! index.parent().isValid() && index.column() == 0)
@@ -135,7 +134,10 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
         return true;
     
     if(const InputData* inputData = qobject_cast<const InputData*>(data))
+    {
+        
         return true;
+    }
     
     return false;
 }

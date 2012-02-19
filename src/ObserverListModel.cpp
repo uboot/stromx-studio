@@ -1,5 +1,7 @@
 #include "ObserverListModel.h"
 
+#include "InputModel.h"
+
 ObserverListModel::ObserverListModel(QUndoStack* undoStack, QObject * parent)
   : QAbstractTableModel(parent),
      m_undoStack(undoStack)
@@ -9,7 +11,7 @@ ObserverListModel::ObserverListModel(QUndoStack* undoStack, QObject * parent)
 
 int ObserverListModel::rowCount(const QModelIndex& parent) const
 {
-    return m_observer.count();
+    return m_observers.count();
 }
 
 int ObserverListModel::columnCount(const QModelIndex& parent) const
@@ -41,16 +43,6 @@ QVariant ObserverListModel::headerData(int section, Qt::Orientation orientation,
 QVariant ObserverListModel::data(const QModelIndex& index, int role) const
 {
     return QVariant();
-}
-
-void ObserverListModel::addObserver(Observer* observer)
-{
-
-}
-
-void ObserverListModel::removeObserver(Observer* observer)
-{
-
 }
 
 void ObserverListModel::setName(const QString& name)

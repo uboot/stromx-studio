@@ -15,12 +15,12 @@ set(stromxstudio_SOURCES
     DeinitializeOperatorCmd.cpp
     InitializeOperatorCmd.cpp
     InputData.cpp
+    InputModel.cpp
     JoinStreamTask.cpp
     main.cpp
     MainWindow.cpp
     MoveOperatorCmd.cpp
     ObserverEditor.cpp
-    ObserverModel.cpp
     ObserverListModel.cpp
     ObserverTreeModel.cpp
     OperatorItem.cpp
@@ -45,9 +45,9 @@ set(stromxstudio_SOURCES
 set(stromxstudio_HEADERS
     ConnectionModel.h
     InputData.h
+    InputModel.h
     MainWindow.h
     ObserverEditor.h
-    ObserverModel.h
     ObserverListModel.h
     ObserverTreeModel.h
     OperatorItem.h

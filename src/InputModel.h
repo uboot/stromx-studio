@@ -17,28 +17,30 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OBSERVERMODEL_H
-#define OBSERVERMODEL_H
+#ifndef INPUTMODEL_H
+#define INPUTMODEL_H
 
 #include <QObject>
 #include <QColor>
 
-class ConnectionModel;
 class ObserverListModel;
+class OperatorModel;
 
-class ObserverModel : public QObject
+class InputModel : public QObject
 {
     Q_OBJECT
     
 public:
-    ObserverModel(ConnectionModel* connection, ObserverListModel * parent);
+    InputModel(OperatorModel* op, unsigned int id, ObserverListModel * parent);
     
     void setColor(const QColor & color);
     const QColor & color() const;
     
 private:
+    OperatorModel* m_op;
+    unsigned int m_id;
     ObserverListModel* m_listModel;
     QColor m_color;
 };
 
-#endif // OBSERVERMODEL_H
+#endif // INPUTMODEL_H

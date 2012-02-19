@@ -23,9 +23,8 @@
 #include <QAbstractTableModel>
 
 class QUndoStack;
-class ObserverModel;
+class InputModel;
 class ObserverTreeModel;
-class Observer;
 
 class ObserverListModel : public QAbstractTableModel
 {
@@ -42,11 +41,8 @@ public:
     const QString & name() const { return m_name; }
     void setName(const QString & name);
     
-    void addObserver(Observer* observer);
-    void removeObserver(Observer* observer);
-    
 private:
-    QList<ObserverModel*> m_observer;
+    QList<InputModel*> m_observers;
     QString m_name;
     QUndoStack* m_undoStack;
 };

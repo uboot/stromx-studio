@@ -4,7 +4,7 @@
 #include <stromx/core/Operator.h>
 #include "OperatorModel.h"
 
-InputData::InputData(unsigned int id, OperatorModel* op)
+InputData::InputData(OperatorModel* op, unsigned int id)
   : m_id(id),
     m_op(op)
 {

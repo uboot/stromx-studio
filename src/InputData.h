@@ -29,7 +29,7 @@ class InputData : public QMimeData
     Q_OBJECT
     
 public:
-    InputData(unsigned int id, OperatorModel* op);
+    InputData(OperatorModel* op, unsigned int id);
     
     unsigned int id() const { return m_id; }
     OperatorModel* op() const { return m_op; }
