@@ -4,7 +4,7 @@
 
 ObserverListModel::ObserverListModel(QUndoStack* undoStack, QObject * parent)
   : QAbstractTableModel(parent),
-     m_undoStack(undoStack)
+    m_undoStack(undoStack)
 {
     m_name = "New observer";
 }
