@@ -1,5 +1,6 @@
 #include "ConnectionModel.h"
 
+#include <algorithm>
 #include <stromx/core/Thread.h>
 #include "OperatorModel.h"
 #include "StreamModel.h"
@@ -42,7 +43,16 @@ void ConnectionModel::setThread(ThreadModel* thread)
         
         // add to the new thread
         if(thread)
-            thread->thread()->addInput(m_targetOp->op(), m_inputId);
+        {
+            // look if the input is part the input sequence of the thread
+            const std::vector<stromx::core::Input> & inputs = thread->thread()->inputSequence();
+            stromx::core::Input input(m_targetOp->op(), m_inputId);
+            std::vector<stromx::core::Input>::const_iterator result = std::find(inputs.begin(), inputs.end(), input); 
+                
+            // add input only if has not already been added to the thread
+            if(result == inputs.end())
+                thread->thread()->addInput(m_targetOp->op(), m_inputId);
+        }
         
         m_thread = thread;
         emit threadChanged(m_thread);
