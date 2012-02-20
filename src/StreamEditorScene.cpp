@@ -114,8 +114,12 @@ QAction* StreamEditorScene::createRemoveAction(QObject* parent)
 
 void StreamEditorScene::reset()
 {
-    foreach(QGraphicsItem* item, items())
-        delete item;
+    QList<QGraphicsItem*> itemList = items();
+    foreach(QGraphicsItem* item, itemList)
+    {
+        if(items().count(item))
+            delete item;
+    }
     
     if(m_model)
     {
@@ -149,7 +153,6 @@ void StreamEditorScene::addConnection(ConnectionModel* connection)
     else
     {
         Q_ASSERT(sourceOp && targetOp);
-        delete connectionItem;
     }
 }
 

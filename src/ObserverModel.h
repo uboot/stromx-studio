@@ -20,29 +20,30 @@
 #ifndef OBSERVERMODEL_H
 #define OBSERVERMODEL_H
 
-#include <QAbstractTableModel>
+#include <QObject>
 
 class QUndoStack;
 class InputModel;
 class ObserverTreeModel;
+class OperatorModel;
 
-class ObserverModel : public QAbstractTableModel
+class ObserverModel : public QObject
 {
     Q_OBJECT
     
 public:
     ObserverModel(QUndoStack* undoStack, QObject * parent);
     
-    virtual int rowCount(const QModelIndex & parent) const;
-    virtual int columnCount(const QModelIndex & parent) const;
-    virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    
     const QString & name() const { return m_name; }
     void setName(const QString & name);
     
+    const InputModel* input(int position);
+    int numInputs() const { return m_inputs.count(); }
+    void insertInput(int position, OperatorModel* op, unsigned int id);
+    void removeInput(int position);
+    
 private:
-    QList<InputModel*> m_observers;
+    QList<InputModel*> m_inputs;
     QString m_name;
     QUndoStack* m_undoStack;
 };

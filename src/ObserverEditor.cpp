@@ -1,6 +1,7 @@
 #include "ObserverEditor.h"
 
 #include <QAction>
+#include <QHeaderView>
 #include <QTreeView>
 #include "ObserverModel.h"
 #include "ObserverTreeModel.h"
@@ -20,6 +21,7 @@ ObserverEditor::ObserverEditor(QWidget* parent)
 void ObserverEditor::setModel(QAbstractItemModel* model)
 {
     m_observerView->setModel(model);
+    m_observerView->header()->setResizeMode(QHeaderView::Stretch);
 }
 
 QAction* ObserverEditor::createAddObserverAction(QObject* parent)

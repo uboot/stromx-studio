@@ -23,6 +23,7 @@
 #include <QObject>
 #include <QColor>
 
+class QUndoStack;
 class OperatorModel;
 
 class InputModel : public QObject
@@ -30,15 +31,19 @@ class InputModel : public QObject
     Q_OBJECT
     
 public:
-    InputModel(OperatorModel* op, unsigned int id, QObject * parent);
+    InputModel(OperatorModel* op, unsigned int id, QUndoStack* undostack, QObject * parent);
     
     void setColor(const QColor & color);
     const QColor & color() const;
+    
+    const OperatorModel* op() const { return m_op; }
+    unsigned int id() const { return m_id; }
     
 private:
     OperatorModel* m_op;
     unsigned int m_id;
     QColor m_color;
+    QUndoStack* m_undoStack;
 };
 
 #endif // INPUTMODEL_H

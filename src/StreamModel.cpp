@@ -75,6 +75,7 @@ void StreamModel::addOperator(const OperatorData* opData, const QPointF& pos)
     
     OperatorModel* opModel = new OperatorModel(m_operatorLibrary->newOperator(opData), this);
     opModel->setPos(pos);
+    opModel->setName("New operator");
     
     AddOperatorCmd* cmd = new AddOperatorCmd(this, opModel);
     m_undoStack->push(cmd);

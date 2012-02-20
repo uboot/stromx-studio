@@ -2,7 +2,9 @@
 
 #include <QStringList>
 #include "InputData.h"
+#include "InputModel.h"
 #include "ObserverModel.h"
+#include "OperatorModel.h"
 
 ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, QObject * parent)
   : QAbstractItemModel(parent),
@@ -12,15 +14,21 @@ ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, QObject * parent)
 
 int ObserverTreeModel::rowCount(const QModelIndex& parent) const
 {
-    if(parent.isValid())
-        return 0;
+    // parent is root
+    if(! parent.isValid())
+        return m_observers.count();
     
-    return m_observers.count();
+    // parent is an observer
+    if(! parent.internalPointer())
+        return m_observers[parent.row()]->numInputs();
+    
+    // parent is an input
+    return 0;
 }
 
 int ObserverTreeModel::columnCount(const QModelIndex& parent) const
 {
-    return 1;
+    return 2;
 }
 
 QVariant ObserverTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -34,7 +42,9 @@ QVariant ObserverTreeModel::headerData(int section, Qt::Orientation orientation,
     switch(section)
     {
     case 0:
-        return tr("Input");
+        return tr("Operator");
+    case 1:
+        return tr("Id");
     default:
         ;
     }
@@ -70,15 +80,24 @@ bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & paren
 
 QModelIndex ObserverTreeModel::index(int row, int column, const QModelIndex& parent) const
 {
+    // this is an observer list
     if(! parent.isValid())
-        return createIndex(row, column, m_observers[row]);
+        return createIndex(row, column);
     
-    return QModelIndex();
+    // this is an input
+    return createIndex(row, column, m_observers[parent.row()]);
 }
 
 QModelIndex ObserverTreeModel::parent(const QModelIndex& child) const
-{
-    return QModelIndex();
+{    
+    // child is an observer
+    if(! child.internalPointer())
+        return QModelIndex();
+    
+    // child is an input
+    ObserverModel* observer = reinterpret_cast<ObserverModel*>(child.internalPointer());
+    int observerId = m_observers.indexOf(observer);
+    return createIndex(observerId, 0);
 }
 
 QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
@@ -86,14 +105,22 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     if(role != Qt::DisplayRole)
         return QVariant();
     
-    if(index.parent().isValid())
-        return QVariant();
+    // this is an observer
+    if(! index.parent().isValid())
+    {
+        if(index.column() == 0)
+            return m_observers[index.row()]->name();
+        else 
+            return QVariant();
+    }
     
-    if(index.column() != 0)
-        return QVariant();
-    
-    ObserverModel* observerList = reinterpret_cast<ObserverModel*>(index.internalPointer());
-    return observerList->name();
+    // this is an input
+    ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
+    const InputModel* input = observer->input(index.row());
+    if(index.column() == 0)
+        return input->op()->name();
+    else
+        return input->id();
 }
 
 bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value, int role)
@@ -135,6 +162,11 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
     
     if(const InputData* inputData = qobject_cast<const InputData*>(data))
     {
+        ObserverModel* observer = m_observers[parent.row()];
+        int pos = observer->numInputs();
+        beginInsertRows(parent, pos, pos);
+        observer->insertInput(pos, inputData->op(), inputData->id());
+        endInsertRows();
         
         return true;
     }
