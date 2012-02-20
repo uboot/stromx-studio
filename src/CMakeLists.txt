@@ -21,7 +21,7 @@ set(stromxstudio_SOURCES
     MainWindow.cpp
     MoveOperatorCmd.cpp
     ObserverEditor.cpp
-    ObserverListModel.cpp
+    ObserverModel.cpp
     ObserverTreeModel.cpp
     OperatorItem.cpp
     OperatorData.cpp
@@ -48,7 +48,7 @@ set(stromxstudio_HEADERS
     InputModel.h
     MainWindow.h
     ObserverEditor.h
-    ObserverListModel.h
+    ObserverModel.h
     ObserverTreeModel.h
     OperatorItem.h
     OperatorData.h

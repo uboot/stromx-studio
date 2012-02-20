@@ -17,8 +17,8 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OBSERVERLISTMODEL_H
-#define OBSERVERLISTMODEL_H
+#ifndef OBSERVERMODEL_H
+#define OBSERVERMODEL_H
 
 #include <QAbstractTableModel>
 
@@ -26,12 +26,12 @@ class QUndoStack;
 class InputModel;
 class ObserverTreeModel;
 
-class ObserverListModel : public QAbstractTableModel
+class ObserverModel : public QAbstractTableModel
 {
     Q_OBJECT
     
 public:
-    ObserverListModel(QUndoStack* undoStack, QObject * parent);
+    ObserverModel(QUndoStack* undoStack, QObject * parent);
     
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
@@ -47,4 +47,4 @@ private:
     QUndoStack* m_undoStack;
 };
 
-#endif // OBSERVERLISTMODEL_H
+#endif // OBSERVERMODEL_H

@@ -2,7 +2,7 @@
 
 #include <QAction>
 #include <QTreeView>
-#include "ObserverListModel.h"
+#include "ObserverModel.h"
 #include "ObserverTreeModel.h"
 
 ObserverEditor::ObserverEditor(QWidget* parent)

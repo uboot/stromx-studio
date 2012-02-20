@@ -1,12 +1,9 @@
 #include "InputModel.h"
 
-#include "ObserverListModel.h"
-
-InputModel::InputModel(OperatorModel* op, unsigned int id, ObserverListModel* parent)
+InputModel::InputModel(OperatorModel* op, unsigned int id, QObject* parent)
   : QObject(parent),
     m_op(op),
-    m_id(id),
-    m_listModel(parent)
+    m_id(id)
     
 {
 

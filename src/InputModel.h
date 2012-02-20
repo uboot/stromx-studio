@@ -23,7 +23,6 @@
 #include <QObject>
 #include <QColor>
 
-class ObserverListModel;
 class OperatorModel;
 
 class InputModel : public QObject
@@ -31,7 +30,7 @@ class InputModel : public QObject
     Q_OBJECT
     
 public:
-    InputModel(OperatorModel* op, unsigned int id, ObserverListModel * parent);
+    InputModel(OperatorModel* op, unsigned int id, QObject * parent);
     
     void setColor(const QColor & color);
     const QColor & color() const;
@@ -39,7 +38,6 @@ public:
 private:
     OperatorModel* m_op;
     unsigned int m_id;
-    ObserverListModel* m_listModel;
     QColor m_color;
 };
 

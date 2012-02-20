@@ -23,7 +23,7 @@
 #include <QAbstractItemModel>
 
 class QUndoStack;
-class ObserverListModel;
+class ObserverModel;
 
 class ObserverTreeModel : public QAbstractItemModel
 {
@@ -46,7 +46,7 @@ public:
     virtual QStringList mimeTypes() const;
     
 private:
-    QList<ObserverListModel*> m_lists;
+    QList<ObserverModel*> m_observers;
     QUndoStack* m_undoStack;
 };
 

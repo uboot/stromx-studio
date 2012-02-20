@@ -2,7 +2,7 @@
 
 #include <QStringList>
 #include "InputData.h"
-#include "ObserverListModel.h"
+#include "ObserverModel.h"
 
 ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, QObject * parent)
   : QAbstractItemModel(parent),
@@ -15,7 +15,7 @@ int ObserverTreeModel::rowCount(const QModelIndex& parent) const
     if(parent.isValid())
         return 0;
     
-    return m_lists.count();
+    return m_observers.count();
 }
 
 int ObserverTreeModel::columnCount(const QModelIndex& parent) const
@@ -49,7 +49,7 @@ bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & paren
     
     beginInsertRows(QModelIndex(), row, row + count - 1);
     for(int i = 0; i < count; ++i)
-        m_lists.insert(row + i, new ObserverListModel(m_undoStack, this));
+        m_observers.insert(row + i, new ObserverModel(m_undoStack, this));
     endInsertRows();
     
     return true;
@@ -62,7 +62,7 @@ bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & paren
     
     beginRemoveRows(QModelIndex(), row, row + count - 1);
     for(int i = 0; i < count; ++i)
-        m_lists.removeAt(row);
+        m_observers.removeAt(row);
     endRemoveRows();
     
     return true;
@@ -71,7 +71,7 @@ bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & paren
 QModelIndex ObserverTreeModel::index(int row, int column, const QModelIndex& parent) const
 {
     if(! parent.isValid())
-        return createIndex(row, column, m_lists[row]);
+        return createIndex(row, column, m_observers[row]);
     
     return QModelIndex();
 }
@@ -92,7 +92,7 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     if(index.column() != 0)
         return QVariant();
     
-    ObserverListModel* observerList = reinterpret_cast<ObserverListModel*>(index.internalPointer());
+    ObserverModel* observerList = reinterpret_cast<ObserverModel*>(index.internalPointer());
     return observerList->name();
 }
 
@@ -105,7 +105,7 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         if(newName.isEmpty())
             return false;
         
-        m_lists[index.row()]->setName(newName);
+        m_observers[index.row()]->setName(newName);
         emit dataChanged(index, index);
     }
     

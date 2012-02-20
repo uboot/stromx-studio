@@ -1,25 +1,25 @@
-#include "ObserverListModel.h"
+#include "ObserverModel.h"
 
 #include "InputModel.h"
 
-ObserverListModel::ObserverListModel(QUndoStack* undoStack, QObject * parent)
+ObserverModel::ObserverModel(QUndoStack* undoStack, QObject * parent)
   : QAbstractTableModel(parent),
     m_undoStack(undoStack)
 {
     m_name = "New observer";
 }
 
-int ObserverListModel::rowCount(const QModelIndex& parent) const
+int ObserverModel::rowCount(const QModelIndex& parent) const
 {
     return m_observers.count();
 }
 
-int ObserverListModel::columnCount(const QModelIndex& parent) const
+int ObserverModel::columnCount(const QModelIndex& parent) const
 {
     return 2;
 }
 
-QVariant ObserverListModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant ObserverModel::headerData(int section, Qt::Orientation orientation, int role) const
 {    
     if(role != Qt::DisplayRole)
         return QVariant();
@@ -40,12 +40,12 @@ QVariant ObserverListModel::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-QVariant ObserverListModel::data(const QModelIndex& index, int role) const
+QVariant ObserverModel::data(const QModelIndex& index, int role) const
 {
     return QVariant();
 }
 
-void ObserverListModel::setName(const QString& name)
+void ObserverModel::setName(const QString& name)
 {
     m_name = name;
 }
