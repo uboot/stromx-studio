@@ -59,7 +59,7 @@ bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & paren
     
     beginInsertRows(QModelIndex(), row, row + count - 1);
     for(int i = 0; i < count; ++i)
-        m_observers.insert(row + i, new ObserverModel(m_undoStack, this));
+        m_observers.insert(row + i, new ObserverModel(this));
     endInsertRows();
     
     return true;
@@ -163,9 +163,9 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
     if(const InputData* inputData = qobject_cast<const InputData*>(data))
     {
         ObserverModel* observer = m_observers[parent.row()];
-        int pos = observer->numInputs();
-        beginInsertRows(parent, pos, pos);
-        observer->insertInput(pos, inputData->op(), inputData->id());
+        beginInsertRows(parent, row, row);
+        InputModel* input = new InputModel(inputData->op(), inputData->id(), m_undoStack, this);
+        observer->insertInput(row, input);
         endInsertRows();
         
         return true;

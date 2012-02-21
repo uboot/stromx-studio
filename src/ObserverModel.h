@@ -25,27 +25,25 @@
 class QUndoStack;
 class InputModel;
 class ObserverTreeModel;
-class OperatorModel;
 
 class ObserverModel : public QObject
 {
     Q_OBJECT
     
 public:
-    ObserverModel(QUndoStack* undoStack, QObject * parent);
+    ObserverModel(QObject * parent);
     
     const QString & name() const { return m_name; }
     void setName(const QString & name);
     
     const InputModel* input(int position);
     int numInputs() const { return m_inputs.count(); }
-    void insertInput(int position, OperatorModel* op, unsigned int id);
+    void insertInput(int position, InputModel* input);
     void removeInput(int position);
     
 private:
     QList<InputModel*> m_inputs;
     QString m_name;
-    QUndoStack* m_undoStack;
 };
 
 #endif // OBSERVERMODEL_H

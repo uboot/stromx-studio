@@ -2,9 +2,8 @@
 
 #include "InputModel.h"
 
-ObserverModel::ObserverModel(QUndoStack* undoStack, QObject * parent)
-  : QObject(parent),
-    m_undoStack(undoStack)
+ObserverModel::ObserverModel(QObject * parent)
+  : QObject(parent)
 {
     m_name = "New observer";
 }
@@ -14,9 +13,8 @@ void ObserverModel::setName(const QString& name)
     m_name = name;
 }
 
-void ObserverModel::insertInput(int position, OperatorModel* op, unsigned int id)
+void ObserverModel::insertInput(int position, InputModel* input)
 {
-    InputModel* input = new InputModel(op, id, m_undoStack, this);
     m_inputs.insert(position, input);
 }
 
