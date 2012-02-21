@@ -23,6 +23,7 @@
 #include <stromx/core/DirectoryFileInput.h>
 #include <stromx/core/FileOutput.h>
 #include <stromx/core/Operator.h>
+#include <stromx/core/SortInputsAlgorithm.h>
 #include <stromx/core/Stream.h>
 #include <stromx/core/Thread.h>
 #include <stromx/core/XmlReader.h>
@@ -651,6 +652,11 @@ void StreamModel::start()
     switch(m_stream->status())
     {
     case stromx::core::Stream::INACTIVE:
+        {
+            // sort inputs before starting
+            stromx::core::SortInputsAlgorithm sort;
+            sort.apply(*m_stream);
+        }
         m_stream->start();
         break;
     case stromx::core::Stream::PAUSED:

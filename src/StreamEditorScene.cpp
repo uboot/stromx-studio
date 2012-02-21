@@ -281,6 +281,10 @@ void StreamEditorScene::keyPressEvent(QKeyEvent* keyEvent)
 
 void StreamEditorScene::removeSelectedItems()
 {
+    // can not remove objects while stream is active
+    if(m_model->isActive())
+        return;
+    
     m_model->undoStack()->beginMacro("remove objects");
     QList<QGraphicsItem*> itemList = selectedItems();
     
