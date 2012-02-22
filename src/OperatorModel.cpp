@@ -108,7 +108,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
                             {
                                 return QVariant(convertDataToQString(m_op->getParameter(paramId), param));
                             }
-                            catch(stromx::core::Exception&e)
+                            catch(stromx::core::Exception&)
                             {
                                 return QVariant(tr("<X:not accessible>"));
                             }
