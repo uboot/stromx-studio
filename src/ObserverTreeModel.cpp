@@ -1,6 +1,7 @@
 #include "ObserverTreeModel.h"
 
 #include <QStringList>
+#include "InsertObserverCmd.h"
 #include "InputData.h"
 #include "InputModel.h"
 #include "ObserverModel.h"
@@ -60,7 +61,8 @@ bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & paren
     
     Q_ASSERT(count == 1);
     
-    doInsertObserver(row, new ObserverModel(this));
+    QUndoCommand* cmd = new InsertObserverCmd(this, row, new ObserverModel(this));
+    m_undoStack->push(cmd);
     
     return true;
 }
@@ -180,14 +182,25 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
     if(action == Qt::IgnoreAction)
         return true;
     
-    if(const InputData* inputData = qobject_cast<const InputData*>(data))
+    if(action == Qt::MoveAction || action == Qt::CopyAction)
     {
-        InputModel* input = inputData->input();
-        if(! input)
-            input = new InputModel(inputData->op(), inputData->id(), m_undoStack, this);
-        doInsertInput(parent.row(), row, input);
-        
-        return true;
+        if(const InputData* inputData = qobject_cast<const InputData*>(data))
+        {
+            
+            InputModel* input = inputData->input();
+            if(! input)
+            {
+                Q_ASSERT(action == Qt::CopyAction);
+                input = new InputModel(inputData->op(), inputData->id(), m_undoStack, this);
+            }
+            else
+            {
+                Q_ASSERT(action == Qt::MoveAction);
+            }
+            doInsertInput(parent.row(), row, input);
+            
+            return true;
+        }
     }
     
     return false;

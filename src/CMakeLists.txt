@@ -16,6 +16,7 @@ set(stromxstudio_SOURCES
     InitializeOperatorCmd.cpp
     InputData.cpp
     InputModel.cpp
+    InsertObserverCmd.cpp
     JoinStreamTask.cpp
     main.cpp
     MainWindow.cpp

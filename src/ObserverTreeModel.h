@@ -30,6 +30,11 @@ class ObserverTreeModel : public QAbstractItemModel
 {
     Q_OBJECT
     
+    friend class InsertObserverCmd;
+    friend class RemoveObserverCmd;
+    friend class InsertInputCmd;
+    friend class RemoveInputCmd;
+    
 public:
     ObserverTreeModel(QUndoStack* undoStack, QObject * parent);
 
