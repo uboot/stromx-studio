@@ -23,6 +23,7 @@
 #include <QAbstractItemModel>
 
 class QUndoStack;
+class InputModel;
 class ObserverModel;
 
 class ObserverTreeModel : public QAbstractItemModel
@@ -48,6 +49,11 @@ public:
     virtual Qt::DropActions supportedDropActions () const;
     
 private:
+    void doInsertObserver(int pos, ObserverModel* observer);
+    void doRemoveObserver(int pos);
+    void doInsertInput(int observerPos, int inputPos, InputModel* input);
+    void doRemoveInput(int observerPos, int inputPos);
+    
     QList<ObserverModel*> m_observers;
     QUndoStack* m_undoStack;
 };

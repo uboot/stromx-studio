@@ -22,6 +22,7 @@
 
 #include <QMimeData>
 
+class InputModel;
 class OperatorModel;
 
 class InputData : public QMimeData
@@ -30,14 +31,17 @@ class InputData : public QMimeData
     
 public:
     InputData(OperatorModel* op, unsigned int id);
+    InputData(InputModel* input);
     
     unsigned int id() const { return m_id; }
     OperatorModel* op() const { return m_op; }
+    InputModel* input() const { return m_input; }
     virtual QStringList formats() const;
     
 private:
     unsigned int m_id;
     OperatorModel* m_op;
+    InputModel* m_input;
 };
 
 #endif // INPUTDATA_H

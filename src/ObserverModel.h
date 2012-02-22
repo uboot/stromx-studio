@@ -36,7 +36,7 @@ public:
     const QString & name() const { return m_name; }
     void setName(const QString & name);
     
-    const InputModel* input(int position);
+    InputModel* input(int position);
     int numInputs() const { return m_inputs.count(); }
     void insertInput(int position, InputModel* input);
     void removeInput(int position);

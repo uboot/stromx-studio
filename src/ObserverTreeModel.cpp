@@ -58,32 +58,44 @@ bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & paren
     if(parent.isValid())
         return false;
     
-    beginInsertRows(QModelIndex(), row, row + count - 1);
-    for(int i = 0; i < count; ++i)
-        m_observers.insert(row + i, new ObserverModel(this));
-    endInsertRows();
+    Q_ASSERT(count == 1);
+    
+    doInsertObserver(row, new ObserverModel(this));
     
     return true;
 }
 
+void ObserverTreeModel::doInsertObserver(int pos, ObserverModel* observer)
+{
+    beginInsertRows(QModelIndex(), pos, pos);
+    m_observers.insert(pos, observer);
+    endInsertRows();
+}
+
 bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & parent)
 {
-    beginRemoveRows(parent, row, row + count - 1);
+    Q_ASSERT(count == 1);
+    
     if(parent.isValid())
-    {
-        // remove inputs
-        for(int i = 0; i < count; ++i)
-            m_observers[parent.row()]->removeInput(row);
-    }
+        doRemoveInput(parent.row(), row);
     else
-    {
-        // remove observers
-        for(int i = 0; i < count; ++i)
-            m_observers.removeAt(row);
-    }
-    endRemoveRows();
+        doRemoveObserver(row);
     
     return true;
+}
+
+void ObserverTreeModel::doRemoveObserver(int pos)
+{
+    beginRemoveRows(QModelIndex(), pos, pos);
+    m_observers.removeAt(pos);
+    endRemoveRows();
+}
+
+void ObserverTreeModel::doRemoveInput(int observerPos, int inputPos)
+{
+    beginRemoveRows(createIndex(observerPos, 0), inputPos, inputPos);
+    m_observers[observerPos]->removeInput(inputPos);
+    endRemoveRows();
 }
 
 QModelIndex ObserverTreeModel::index(int row, int column, const QModelIndex& parent) const
@@ -155,7 +167,7 @@ Qt::ItemFlags ObserverTreeModel::flags(const QModelIndex& index) const
     if(! index.isValid())
         return flags;
     
-    // only parents are editable
+    // only parents are editablenew ObserverModel(this)
     if(! index.parent().isValid())
         return flags |= Qt::ItemIsEditable | Qt::ItemIsDropEnabled;
         
@@ -170,16 +182,22 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
     
     if(const InputData* inputData = qobject_cast<const InputData*>(data))
     {
-        ObserverModel* observer = m_observers[parent.row()];
-        beginInsertRows(parent, row, row);
-        InputModel* input = new InputModel(inputData->op(), inputData->id(), m_undoStack, this);
-        observer->insertInput(row, input);
-        endInsertRows();
+        InputModel* input = inputData->input();
+        if(! input)
+            input = new InputModel(inputData->op(), inputData->id(), m_undoStack, this);
+        doInsertInput(parent.row(), row, input);
         
         return true;
     }
     
     return false;
+}
+
+void ObserverTreeModel::doInsertInput(int observerPos, int inputPos, InputModel* input)
+{
+    beginInsertRows(createIndex(observerPos, 0), inputPos, inputPos);
+    m_observers[observerPos]->insertInput(inputPos, input);
+    endInsertRows();
 }
 
 QStringList ObserverTreeModel::mimeTypes() const
@@ -198,8 +216,8 @@ QMimeData* ObserverTreeModel::mimeData(const QModelIndexList& indexes) const
     if(! index.parent().isValid())
         return 0;
     
-    const InputModel* input = m_observers[index.parent().row()]->input(index.row());
-    return new InputData(input->op(), input->id());
+    InputModel* input = m_observers[index.parent().row()]->input(index.row());
+    return new InputData(input);
 }
 
 Qt::DropActions ObserverTreeModel::supportedDropActions() const

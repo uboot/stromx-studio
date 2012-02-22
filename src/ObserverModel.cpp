@@ -20,12 +20,10 @@ void ObserverModel::insertInput(int position, InputModel* input)
 
 void ObserverModel::removeInput(int position)
 {
-    InputModel* input = m_inputs[position];
     m_inputs.removeAt(position);
-    delete input;
 }
 
-const InputModel* ObserverModel::input(int position)
+InputModel* ObserverModel::input(int position)
 {
     return m_inputs[position];
 }
