@@ -6,6 +6,7 @@
 #include "InputModel.h"
 #include "ObserverModel.h"
 #include "OperatorModel.h"
+#include "RemoveObserverCmd.h"
 
 ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, QObject * parent)
   : QAbstractItemModel(parent),
@@ -79,9 +80,14 @@ bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & paren
     Q_ASSERT(count == 1);
     
     if(parent.isValid())
+    {
         doRemoveInput(parent.row(), row);
+    }
     else
-        doRemoveObserver(row);
+    {
+        QUndoCommand* cmd = new RemoveObserverCmd(this, row, m_observers[row]);
+        m_undoStack->push(cmd);
+    }
     
     return true;
 }

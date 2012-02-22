@@ -5,7 +5,7 @@
 
 
 InsertObserverCmd::InsertObserverCmd(ObserverTreeModel* observerTree, int pos, ObserverModel* observer, QUndoCommand* parent)
-  : QUndoCommand(parent),
+  : QUndoCommand(QObject::tr("insert observer"), parent),
     m_observerTree(observerTree),
     m_observer(observer),
     m_pos(pos)
