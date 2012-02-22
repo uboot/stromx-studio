@@ -1,16 +1,19 @@
 #include "ObserverTreeModel.h"
 
 #include <QStringList>
+#include "InsertInputCmd.h"
 #include "InsertObserverCmd.h"
 #include "InputData.h"
 #include "InputModel.h"
 #include "ObserverModel.h"
 #include "OperatorModel.h"
+#include "RemoveInputCmd.h"
 #include "RemoveObserverCmd.h"
 
 ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, QObject * parent)
   : QAbstractItemModel(parent),
-    m_undoStack(undoStack)
+    m_undoStack(undoStack),
+    m_isMovingInput(false)
 {
     setSupportedDragActions(Qt::MoveAction);
 }
@@ -81,7 +84,15 @@ bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & paren
     
     if(parent.isValid())
     {
-        doRemoveInput(parent.row(), row);
+        InputModel* input = m_observers[parent.row()]->input(row);
+        QUndoCommand* cmd = new RemoveInputCmd(this, parent.row(), row, input);
+        m_undoStack->push(cmd);
+        
+        if(m_isMovingInput)
+        {
+            m_undoStack->endMacro();
+            m_isMovingInput = false;
+        }
     }
     else
     {
@@ -202,8 +213,15 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
             else
             {
                 Q_ASSERT(action == Qt::MoveAction);
+                m_isMovingInput = true;
+                m_undoStack->beginMacro(tr("move input"));
             }
-            doInsertInput(parent.row(), row, input);
+            int inputPos = row;
+            if(inputPos < 0)
+                inputPos = 0;
+                
+            QUndoCommand* cmd = new InsertInputCmd(this, parent.row(), inputPos, input);
+            m_undoStack->push(cmd);
             
             return true;
         }

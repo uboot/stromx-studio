@@ -16,6 +16,7 @@ set(stromxstudio_SOURCES
     InitializeOperatorCmd.cpp
     InputData.cpp
     InputModel.cpp
+    InsertInputCmd.cpp
     InsertObserverCmd.cpp
     JoinStreamTask.cpp
     main.cpp
@@ -32,6 +33,7 @@ set(stromxstudio_SOURCES
     OperatorModel.cpp
     PropertyEditor.cpp
     RemoveConnectionCmd.cpp
+    RemoveInputCmd.cpp
     RemoveObserverCmd.cpp
     RemoveOperatorCmd.cpp
     RemoveThreadCmd.cpp

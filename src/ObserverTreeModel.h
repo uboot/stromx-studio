@@ -61,6 +61,8 @@ private:
     
     QList<ObserverModel*> m_observers;
     QUndoStack* m_undoStack;
+    
+    bool m_isMovingInput;
 };
 
 #endif // OBSERVERTREEMODEL_H
