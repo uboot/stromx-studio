@@ -138,8 +138,9 @@ void MainWindow::createActions()
     m_removeSelectedItemsAct = m_streamEditor->scene()->createRemoveAction(this);
     m_addObserverAct = m_observerEditor->createAddObserverAction(this);
     m_removeObserverAct = m_observerEditor->createRemoveObserverAction(this);
+    m_removeInputAct = m_observerEditor->createRemoveInputAction(this);
 
-    m_undoAct = new QAction(m_undoStack->undoText(), this);
+    m_undoAct = new QAction(tr("Undo %1").arg(m_undoStack->undoText()), this);
     m_undoAct->setShortcuts(QKeySequence::Undo);
     m_undoAct->setEnabled(m_undoStack->canUndo());
     connect(m_undoStack, SIGNAL(undoTextChanged(QString)), this, SLOT(handleUndoTextChanged(QString)));
@@ -249,6 +250,7 @@ void MainWindow::createMenus()
      m_observerMenu = menuBar()->addMenu(tr("&Observer"));
      m_observerMenu->addAction(m_addObserverAct);
      m_observerMenu->addAction(m_removeObserverAct);
+     m_observerMenu->addAction(m_removeInputAct);
 
      m_viewMenu = menuBar()->addMenu(tr("&View"));
 

@@ -36,7 +36,7 @@ public:
     void setColor(const QColor & color);
     const QColor & color() const;
     
-    const OperatorModel* op() const { return m_op; }
+    OperatorModel* op() const { return m_op; }
     unsigned int id() const { return m_id; }
     
 private:

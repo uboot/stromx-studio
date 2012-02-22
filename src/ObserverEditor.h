@@ -23,6 +23,7 @@
 #include <QDockWidget>
 
 class QAbstractItemModel;
+class QModelIndex;
 class QTreeView;
 
 class ObserverEditor : public QDockWidget
@@ -36,13 +37,16 @@ public:
     
     QAction* createAddObserverAction(QObject* parent);
     QAction* createRemoveObserverAction(QObject* parent);
+    QAction* createRemoveInputAction(QObject* parent);
     
 signals:
     void observerSelectedChanged(bool selected);
+    void inputSelectedChanged(bool selected);
     
 private slots:
     void addObserverList();
-    void removeObserverList();
+    void removeSelectedEntry();
+    void updateObserverSelected(const QModelIndex& current, const QModelIndex& previous);
     
 private:
     QTreeView* m_observerView;

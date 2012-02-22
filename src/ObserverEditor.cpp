@@ -14,14 +14,18 @@ ObserverEditor::ObserverEditor(QWidget* parent)
     setObjectName("ObserverEditor");
     
     m_observerView = new QTreeView;
-    m_observerView->setDragDropMode(QAbstractItemView::DragDrop);
     setWidget(m_observerView);
 }
 
 void ObserverEditor::setModel(QAbstractItemModel* model)
 {
     m_observerView->setModel(model);
+    m_observerView->setDragDropMode(QAbstractItemView::DragDrop);
     m_observerView->header()->setResizeMode(QHeaderView::Stretch);
+    m_observerView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_observerView->setSelectionMode(QAbstractItemView::SingleSelection);
+    connect(m_observerView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), 
+            this, SLOT(updateObserverSelected(QModelIndex,QModelIndex)));
 }
 
 QAction* ObserverEditor::createAddObserverAction(QObject* parent)
@@ -36,11 +40,22 @@ QAction* ObserverEditor::createAddObserverAction(QObject* parent)
 
 QAction* ObserverEditor::createRemoveObserverAction(QObject* parent)
 {
-    QAction* action = new QAction(tr("Delete observer"), parent);
-    action->setStatusTip(tr("Delete the selected observer"));
-    action->setEnabled(true);
-    connect(action, SIGNAL(triggered()), this, SLOT(removeObserverList()));
+    QAction* action = new QAction(tr("Remove observer"), parent);
+    action->setStatusTip(tr("Remove the selected observer"));
+    action->setEnabled(false);
+    connect(action, SIGNAL(triggered()), this, SLOT(removeSelectedEntry()));
     connect(this, SIGNAL(observerSelectedChanged(bool)), action, SLOT(setEnabled(bool)));
+    
+    return action;
+}
+
+QAction* ObserverEditor::createRemoveInputAction(QObject* parent)
+{
+    QAction* action = new QAction(tr("Remove input"), parent);
+    action->setStatusTip(tr("Remove the selected input"));
+    action->setEnabled(false);
+    connect(action, SIGNAL(triggered()), this, SLOT(removeSelectedEntry()));
+    connect(this, SIGNAL(inputSelectedChanged(bool)), action, SLOT(setEnabled(bool)));
     
     return action;
 }
@@ -50,13 +65,39 @@ void ObserverEditor::addObserverList()
     m_observerView->model()->insertRow(m_observerView->model()->rowCount());
 }
 
-void ObserverEditor::removeObserverList()
+void ObserverEditor::removeSelectedEntry()
 {        
     if(m_observerView->selectionModel())
     {
         QModelIndex index = m_observerView->selectionModel()->currentIndex();
         if(index.isValid())
-            m_observerView->model()->removeRow(index.row());
+            m_observerView->model()->removeRows(index.row(), 1, index.parent());
     }
 }
+
+void ObserverEditor::updateObserverSelected(const QModelIndex& current, const QModelIndex& previous)
+{
+    if(current.isValid())
+    {
+        if(current.parent().isValid())
+        {
+            // input is selected
+            emit inputSelectedChanged(true);
+            emit observerSelectedChanged(false);
+        }
+        else
+        {
+            // observer is selected
+            emit inputSelectedChanged(false);
+            emit observerSelectedChanged(true);
+        }
+    }
+    else
+    {
+        // nothing is selected
+        emit inputSelectedChanged(false);
+        emit observerSelectedChanged(false);
+    }
+}
+
 

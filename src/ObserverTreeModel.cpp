@@ -10,6 +10,7 @@ ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, QObject * parent)
   : QAbstractItemModel(parent),
     m_undoStack(undoStack)
 {
+    setSupportedDragActions(Qt::MoveAction);
 }
 
 int ObserverTreeModel::rowCount(const QModelIndex& parent) const
@@ -67,12 +68,19 @@ bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & paren
 
 bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & parent)
 {
+    beginRemoveRows(parent, row, row + count - 1);
     if(parent.isValid())
-        return false;
-    
-    beginRemoveRows(QModelIndex(), row, row + count - 1);
-    for(int i = 0; i < count; ++i)
-        m_observers.removeAt(row);
+    {
+        // remove inputs
+        for(int i = 0; i < count; ++i)
+            m_observers[parent.row()]->removeInput(row);
+    }
+    else
+    {
+        // remove observers
+        for(int i = 0; i < count; ++i)
+            m_observers.removeAt(row);
+    }
     endRemoveRows();
     
     return true;
@@ -178,5 +186,27 @@ QStringList ObserverTreeModel::mimeTypes() const
 {
     return QStringList("stromx/input");
 }
+
+QMimeData* ObserverTreeModel::mimeData(const QModelIndexList& indexes) const
+{
+    if(indexes.empty())
+        return 0;
+    
+    const QModelIndex & index = indexes[0];
+    
+    // this is an observer
+    if(! index.parent().isValid())
+        return 0;
+    
+    const InputModel* input = m_observers[index.parent().row()]->input(index.row());
+    return new InputData(input->op(), input->id());
+}
+
+Qt::DropActions ObserverTreeModel::supportedDropActions() const
+{
+    return Qt::MoveAction | Qt::CopyAction;
+}
+
+
 
 

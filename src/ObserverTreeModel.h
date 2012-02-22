@@ -40,10 +40,12 @@ public:
     virtual bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
     virtual bool setData(const QModelIndex& index, const QVariant& value, int role);
     virtual Qt::ItemFlags flags(const QModelIndex& index) const;
-    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
     virtual QStringList mimeTypes() const;
+    QMimeData* mimeData ( const QModelIndexList & indexes ) const;
+    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+    virtual Qt::DropActions supportedDropActions () const;
     
 private:
     QList<ObserverModel*> m_observers;

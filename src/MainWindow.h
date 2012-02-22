@@ -119,6 +119,7 @@ private:
     QAction* m_recentFileActs[MAX_RECENT_FILES];
     QAction* m_addObserverAct;
     QAction* m_removeObserverAct;
+    QAction* m_removeInputAct;
     
     QUndoStack* m_undoStack;
     
