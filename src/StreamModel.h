@@ -48,6 +48,16 @@ class OperatorLibraryModel;
 class ThreadListModel;
 class ThreadModel;
 
+/**
+ * \brief Model of a stream
+ * 
+ * This class represents a stromx::core::Stream object in the stromx-studio application.
+ * It records all actions of its public interface to the undo stack. Moreover, it provides
+ * read and write functions to deserialize and serialize itself from and to files. In 
+ * addition to all properties of a stream as in the stromx library it stores and
+ * all information about the visual appearance of the stream in the stromx-studio.
+ * Also uninitialized operators and all observers are part of a %StreamModel.
+ */
 class StreamModel : public QObject
 {
     Q_OBJECT
@@ -62,23 +72,51 @@ class StreamModel : public QObject
     friend class RemoveThreadCmd;
     
 public:
+    /** Constructs an empty stream model. */
     explicit StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject *parent = 0);
     virtual ~StreamModel();
     
+    /** Returns the operators of the stream model. */
     const QList<OperatorModel*> operators() const { return m_operators; }
+    
+    /** 
+     * Constructs an operator model and pushes an add operator command on the 
+     * undo stack. 
+     */
     void addOperator(const OperatorData* opData, const QPointF & pos);
+    
+    /** Pushes a remove operator command on the undo stack. */
     void removeOperator(OperatorModel* op);
     
+    /** Returns the connections of the stream model. */
     const QList<ConnectionModel*> connections() const { return m_connections; }
+    
+    /** 
+     * Constructs a connection model and pushes a add connection command on
+     * the undo stack.
+     */
     void addConnection(OperatorModel* sourceOp, unsigned int outputId,
                        OperatorModel* targetOp, unsigned int inputId);
+    
+    /** Pushes a remove connection on the undo stack. */
     void removeConnection(ConnectionModel* connection);
     
+    /** Returns the threads of the stream model. */
     const QList<ThreadModel*> threads() const;
+    
+    /**
+     * Constructs a new thread and pushes an add thread command on the
+     * undo stack.
+     */
     void addThread();
+    
+    /** Pushes a remove thread command on the undo stack. */
     void removeThread(ThreadModel* thread);
     
+    /** Pushes an initialize operator command on the undo stack. */
     void initializeOperator(OperatorModel* op);
+    
+    /** Pushes a deinitialize operator command on the undo stack. */
     void deinitializeOperator(OperatorModel* op);
     
     QUndoStack* undoStack() const { return m_undoStack; }
