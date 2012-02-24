@@ -90,3 +90,8 @@ target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
     ${stromx_CORE_LIB}
 )
+
+install (TARGETS stromx-studio 
+    RUNTIME DESTINATION bin
+)
+
