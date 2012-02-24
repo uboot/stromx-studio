@@ -611,7 +611,12 @@ void MainWindow::loadLibraries()
                             this,
                             tr("Select one or more stromx libraries to open"),
                             lastDir,
+#ifdef UNIX                          
                             tr("Libraries (*.so)")); 
+#endif // UNIX
+#ifdef WIN32                          
+                            tr("Libraries (*.dll)")); 
+#endif // WIN32
     
     // load each library
     // Qt documentation recommends to iterate over a copy of the file list
