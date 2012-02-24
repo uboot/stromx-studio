@@ -68,7 +68,6 @@ private slots:
     void stop();
     void join();
     void updateWindowTitle(bool undoStackIsClean);
-    void updateUndoActs();
     void handleCanUndoChanged(bool canUndo);
     void handleUndoTextChanged(const QString & undoText);
     void handleUndoIndexChanged(int index);

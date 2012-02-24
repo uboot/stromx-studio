@@ -455,7 +455,6 @@ void MainWindow::updateCurrentFile(const QString& filepath)
 {
     m_currentFile = filepath;
     m_undoStack->setClean();
-    updateUndoActs();
     updateWindowTitle(true);
 }
 
@@ -666,10 +665,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
     }
     
     writeSettings();
-}
-
-void MainWindow::updateUndoActs()
-{
 }
 
 void MainWindow::handleUndoTextChanged(const QString& undoText)
