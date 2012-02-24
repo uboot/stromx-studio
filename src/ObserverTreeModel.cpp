@@ -262,6 +262,30 @@ Qt::DropActions ObserverTreeModel::supportedDropActions() const
     return Qt::MoveAction | Qt::CopyAction;
 }
 
+QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)
+{
+    stream << qint32(model->m_observers.count());
+    foreach(ObserverModel* model, model->m_observers)
+        stream << model;
+    
+    return stream;
+}
+
+QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
+{
+    qint32 count = 0;
+    
+    stream >> count;
+    for(int i = 0; i < count; ++i)
+    {
+        ObserverModel* observer = new ObserverModel(model);
+        stream >> observer;
+        model->m_observers.append(observer);
+    }
+    
+    return stream;
+}
+
 
 
 

@@ -586,7 +586,7 @@ void StreamModel::deserializeModel(const QByteArray& data)
 {
     QDataStream dataStream(data);
     quint32 magicNumber = 0;
-    qint32 count = 0; // TODO: change to uint!!!!!
+    qint32 count = 0;
     quint32 versionMajor = 0;
     quint32 versionMinor = 0;
     quint32 versionPatch = 0;

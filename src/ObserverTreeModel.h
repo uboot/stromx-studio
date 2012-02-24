@@ -34,6 +34,8 @@ class ObserverTreeModel : public QAbstractItemModel
     friend class RemoveObserverCmd;
     friend class InsertInputCmd;
     friend class RemoveInputCmd;
+    friend QDataStream & operator<< (QDataStream & stream, const ObserverTreeModel * op);
+    friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * op);
     
 public:
     ObserverTreeModel(QUndoStack* undoStack, QObject * parent);
@@ -53,6 +55,8 @@ public:
     virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
     virtual Qt::DropActions supportedDropActions () const;
     
+    QUndoStack* undoStack() const { return m_undoStack; }
+    
 private:
     void doInsertObserver(int pos, ObserverModel* observer);
     void doRemoveObserver(int pos);
@@ -64,5 +68,8 @@ private:
     
     bool m_isMovingInput;
 };
+
+QDataStream & operator<< (QDataStream & stream, const ObserverTreeModel * model);
+QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * model);
 
 #endif // OBSERVERTREEMODEL_H

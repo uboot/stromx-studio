@@ -30,8 +30,11 @@ class ObserverModel : public QObject
 {
     Q_OBJECT
     
+    friend QDataStream & operator<< (QDataStream & stream, const ObserverModel * model);
+    friend QDataStream & operator>> (QDataStream & stream, ObserverModel * model);
+
 public:
-    ObserverModel(QObject * parent);
+    ObserverModel(ObserverTreeModel * parent);
     
     const QString & name() const { return m_name; }
     void setName(const QString & name);
@@ -44,6 +47,10 @@ public:
 private:
     QList<InputModel*> m_inputs;
     QString m_name;
+    ObserverTreeModel* m_observerTreeModel;
 };
+
+QDataStream & operator<< (QDataStream & stream, const ObserverModel * model);
+QDataStream & operator>> (QDataStream & stream, ObserverModel * model);
 
 #endif // OBSERVERMODEL_H

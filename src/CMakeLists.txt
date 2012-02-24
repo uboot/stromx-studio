@@ -88,6 +88,7 @@ add_executable(stromx-studio
 
 target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
+    ${CMAKE_DL_LIBS}
     ${stromx_CORE_LIB}
 )
 

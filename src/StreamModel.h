@@ -119,55 +119,132 @@ public:
     /** Pushes a deinitialize operator command on the undo stack. */
     void deinitializeOperator(OperatorModel* op);
     
+    /** Returns the undo stack. */
     QUndoStack* undoStack() const { return m_undoStack; }
+    
+    /** Returns the thread list of the stream model. */
     QAbstractItemModel* threadListModel() const;
+    
+    /** Returns the observer list of the current model. */
     QAbstractItemModel* observerModel() const;
     
+    /** Writes the content of the stream model. */
     void write(stromx::core::FileOutput & output, const QString & basename) const;
+    
+    /** Sets the content of the stream model to the data read from a file. */ 
     void read(stromx::core::FileInput & input, const QString & basename);
     
+    /** Returns true if the underlying stromx stream is active. */
     bool isActive() const;
 
 public slots:
+    /** Starts the stromx stream. */
     void start();
+    
+    /** Pauses the stromx stream. */
     void pause();
+    
+    /** Stops the stromx stream. */
     void stop();
     
 private slots:
+    /** Joins the stromx stream. */
     void join();
     
 signals:
+    /** 
+     * The model was read from a file or its contents were deleted.
+     * In these cases no other signals (like operatorAdded(), ...) 
+     * are emitted.
+     */
     void modelWasReset();
+    
+    /** An operator was added. */
     void operatorAdded(OperatorModel* op);
+    
+    /** An operator was removed. */
     void operatorRemoved(OperatorModel* op);
+    
+    /** A connection was added. */
     void connectionAdded(ConnectionModel* connection);
+    
+    /** A connection was removed. */
     void connectionRemoved(ConnectionModel* connection);
+    
+    /** A thread was added. */
     void threadAdded(ThreadModel* thread);
+    
+    /** A thread was removed. */
     void threadRemoved(ThreadModel* thread);
+    
+    /** The stromx stream was started. */
     void streamStarted();
+    
+    /** The stromx stream was paused. */
     void streamPaused();
+    
+    /** The stromx stream was stopped. */
     void streamStopped();
+    
+    /** The stromx stream was joined. */
     void streamJoined();
     
 private:
+    /** Magic number which identifies the first 4 bytes of stromx-studio data files. */
     static const quint32 MAGIC_NUMBER;
     
+    /** Adds an operator. */
     void doAddOperator(OperatorModel* op);
+    
+    /** Removes an operator. */
     void doRemoveOperator(OperatorModel* op);
+    
+    /** Initializes an operator. */
     void doInitializeOperator(OperatorModel* op);
+    
+    /** Deinitializes an operator. */
     void doDeinitializeOperator(OperatorModel* op);
+    
+    /** Adds a connection. */
     void doAddConnection(ConnectionModel* connection);
+    
+    /** Removes a connection. */
     void doRemoveConnection(ConnectionModel* connection);
+    
+    /** Adds a thread. */
     void doAddThread(ThreadModel* threadModel);
+    
+    /** Removes a thread. */
     void doRemoveThread(ThreadModel* threadModel);
     
+    /** 
+     * Serializes all data of the stream which is not stored in the stromx XML,
+     * as e.g. operator positions.
+     */
     void serializeModel(QByteArray& data) const;
+    
+    /** 
+     * Deaerializes all data of the stream which is not stored in the stromx XML,
+     * as e.g. operator positions.
+     */
     void deserializeModel(const QByteArray& data);
     
+    /**
+     * Iterates over \c stream and allocates models for all operators, threads
+     * and connections in the stream.
+     */
     void updateStream(stromx::core::Stream* stream);
+    
+    /** Deletes the stromx stream and all models. */ 
     void deleteAllData();
+    
+    /** Finds the operator model which wraps \c op. Returns 0 if no such model exists. */
     OperatorModel* findOperatorModel(const stromx::core::Operator* op) const;
+    
+    /** Finds the connection model which connects to \c input. Returns 0 if no such model exists. */
     ConnectionModel* findConnectionModel(const stromx::core::Input & input) const;
+    
+    /** Finds the thread model which wraps \c thread. Returns 0 if no such model exists. */
     ThreadModel* findThreadModel(const stromx::core::Thread* thread) const;
     
     stromx::core::Stream* m_stream;
