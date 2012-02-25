@@ -86,7 +86,7 @@ signals:
     
 private slots:
     /** Removes all inputs which are the target of the removed connection. */
-    void handleRemovedConnection(ConnectionModel* connection);
+    void removeConnectedInputs(ConnectionModel* connection);
     
 private:
     void doInsertObserver(int pos, ObserverModel* observer);

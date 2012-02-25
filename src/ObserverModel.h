@@ -28,9 +28,11 @@ class InputModel;
 class ObserverModel : public QObject
 {
     Q_OBJECT
+    
+    friend class RenameObserverCmd;
 
 public:
-    ObserverModel(QObject * parent);
+    ObserverModel(QUndoStack* undoStack, QObject * parent);
     
     const QString & name() const { return m_name; }
     void setName(const QString & name);
@@ -45,6 +47,9 @@ signals:
     void nameChanged(const QString & name);
     
 private:
+    void doSetName(const QString & name);
+    
+    QUndoStack* m_undoStack;
     QList<InputModel*> m_inputs;
     QString m_name;
 };

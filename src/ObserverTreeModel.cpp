@@ -19,7 +19,7 @@ ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent
 {
     setSupportedDragActions(Qt::MoveAction);
     
-    connect(m_stream, SIGNAL(connectionRemoved(ConnectionModel*)), this, SLOT(handleRemovedConnection(ConnectionModel*)));
+    connect(m_stream, SIGNAL(connectionRemoved(ConnectionModel*)), this, SLOT(removeConnectedInputs(ConnectionModel*)));
 }
 
 int ObserverTreeModel::rowCount(const QModelIndex& parent) const
@@ -69,7 +69,7 @@ bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & paren
     
     Q_ASSERT(count == 1);
     
-    QUndoCommand* cmd = new InsertObserverCmd(this, row, new ObserverModel(this));
+    QUndoCommand* cmd = new InsertObserverCmd(this, row, new ObserverModel(m_undoStack, this));
     m_undoStack->push(cmd);
     
     return true;
@@ -271,7 +271,7 @@ Qt::DropActions ObserverTreeModel::supportedDropActions() const
     return Qt::MoveAction | Qt::CopyAction;
 }
 
-void ObserverTreeModel::handleRemovedConnection(ConnectionModel* connection)
+void ObserverTreeModel::removeConnectedInputs(ConnectionModel* connection)
 {
     for(int i = 0; i < m_observers.count(); ++i)
     {
@@ -297,6 +297,7 @@ QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)
     stream << qint32(model->m_observers.count());
     foreach(ObserverModel* observer, model->m_observers)
     {
+        stream << observer->name();
         stream << qint32(observer->numInputs());
         foreach(InputModel* input, observer->inputs())
         {
@@ -318,7 +319,10 @@ QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
     
     for(int i = 0; i < observerCount; ++i)
     {
-        ObserverModel* observer = new ObserverModel(model);
+        ObserverModel* observer = new ObserverModel(model->m_undoStack, model);
+        QString str;
+        stream >> str;
+        observer->setName(str);
         qint32 inputCount = 0;
         stream >> inputCount;
         

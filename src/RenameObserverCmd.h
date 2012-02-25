@@ -17,25 +17,25 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RENAMETHREADCMD_H
-#define RENAMETHREADCMD_H
+#ifndef RENAMEOBSERVERCMD_H
+#define RENAMEOBSERVERCMD_H
 
 #include <QUndoCommand>
 
-class ThreadModel;
+class ObserverModel;
 
-class RenameThreadCmd : public QUndoCommand
+class RenameObserverCmd : public QUndoCommand
 {
 public:
-    RenameThreadCmd(ThreadModel* model, const QString & newName, QUndoCommand* parent = 0);
+    RenameObserverCmd(ObserverModel* model, const QString & newName, QUndoCommand* parent = 0);
     
     virtual void undo();
     virtual void redo();
     
 private:
-    ThreadModel* m_model;
+    ObserverModel* m_model;
     QString m_oldName;
     QString m_newName;
 };
 
-#endif // RENAMETHREADCMD_H
+#endif // RENAMEOBSERVERCMD_H

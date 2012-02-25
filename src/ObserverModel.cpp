@@ -2,14 +2,22 @@
 
 #include "InputModel.h"
 #include "ObserverTreeModel.h"
+#include "RenameObserverCmd.h"
 
-ObserverModel::ObserverModel(QObject * parent)
-  : QObject(parent)
+ObserverModel::ObserverModel(QUndoStack* undoStack, QObject * parent)
+  : QObject(parent),
+    m_undoStack(undoStack)
 {
     m_name = "New observer";
 }
 
 void ObserverModel::setName(const QString& name)
+{
+    QUndoCommand* cmd = new RenameObserverCmd(this, name);
+    m_undoStack->push(cmd);
+}
+
+void ObserverModel::doSetName(const QString& name)
 {
     m_name = name;
     emit nameChanged(name);

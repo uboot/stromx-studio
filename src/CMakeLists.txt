@@ -36,6 +36,7 @@ set(stromxstudio_SOURCES
     RemoveConnectionCmd.cpp
     RemoveInputCmd.cpp
     RemoveObserverCmd.cpp
+    RenameObserverCmd.cpp
     RemoveOperatorCmd.cpp
     RemoveThreadCmd.cpp
     RenameThreadCmd.cpp
