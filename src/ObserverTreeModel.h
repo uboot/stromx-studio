@@ -21,6 +21,7 @@
 #define OBSERVERTREEMODEL_H
 
 #include <QAbstractItemModel>
+#include "StreamModel.h"
 
 class QUndoStack;
 class InputModel;
@@ -38,7 +39,7 @@ class ObserverTreeModel : public QAbstractItemModel
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * op);
     
 public:
-    ObserverTreeModel(QUndoStack* undoStack, QObject * parent);
+    ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent);
 
     virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
     virtual QModelIndex parent(const QModelIndex & child) const;
@@ -57,6 +58,10 @@ public:
     
     QUndoStack* undoStack() const { return m_undoStack; }
     
+private slots:
+    /** Removes all inputs which are the target of the removed connection. */
+    void handleRemovedConnection(ConnectionModel* connection);
+    
 private:
     void doInsertObserver(int pos, ObserverModel* observer);
     void doRemoveObserver(int pos);
@@ -65,6 +70,7 @@ private:
     
     QList<ObserverModel*> m_observers;
     QUndoStack* m_undoStack;
+    StreamModel* m_stream;
     
     bool m_isMovingInput;
 };

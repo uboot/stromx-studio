@@ -285,6 +285,11 @@ void StreamEditorScene::removeSelectedItems()
     if(m_model->isActive())
         return;
     
+    // return immediatly if no objects are selected
+    // otherwise, an empty remove action would be pushed to the undo stack
+    if(! selectedItems().count())
+        return;
+    
     m_model->undoStack()->beginMacro("remove objects");
     QList<QGraphicsItem*> itemList = selectedItems();
     

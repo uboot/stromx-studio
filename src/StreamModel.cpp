@@ -70,6 +70,17 @@ QAbstractItemModel* StreamModel::threadListModel() const
     return m_threadListModel;
 }
 
+int StreamModel::operatorId(const OperatorModel* op) const
+{
+    for(int i = 0; i < m_initializedOperators.count(); ++i)
+    {
+        if(op == m_initializedOperators[i])
+            return i;
+    }
+    
+    return -1;
+}
+
 void StreamModel::addOperator(const OperatorData* opData, const QPointF& pos)
 {
     m_undoStack->beginMacro(tr("add operator"));
@@ -172,7 +183,7 @@ void StreamModel::doInitializeOperator(OperatorModel* op)
     
     op->setInitialized(true);
     m_uninitializedOperators.removeAll(op);
-    m_onlineOperators.append(op);
+    m_initializedOperators.append(op);
     m_stream->addOperator(op->op());
 }
 
@@ -182,7 +193,7 @@ void StreamModel::doDeinitializeOperator(OperatorModel* op)
         return;
     
     m_stream->removeOperator(op->op());
-    m_onlineOperators.removeAll(op);
+    m_initializedOperators.removeAll(op);
     m_uninitializedOperators.append(op);
     op->setInitialized(false);
 }
@@ -424,7 +435,7 @@ void StreamModel::deleteAllData()
     m_connections.clear();
     m_operators.clear();
     m_uninitializedOperators.clear();
-    m_onlineOperators.clear();
+    m_initializedOperators.clear();
     m_threadListModel->removeAllThreads();
     m_joinStreamTask->setStream(0);
     
@@ -464,10 +475,10 @@ void StreamModel::updateStream(stromx::core::Stream* stream)
     {
         OperatorModel* op = new OperatorModel(*iter, this);
         m_operators.append(op);
-        m_onlineOperators.append(op);
+        m_initializedOperators.append(op);
     }
     
-    foreach(OperatorModel* opModel, m_onlineOperators)
+    foreach(OperatorModel* opModel, m_initializedOperators)
     {
         stromx::core::Operator* op = opModel->op();
         
@@ -569,8 +580,8 @@ void StreamModel::serializeModel(QByteArray& data) const
         dataStream << quint32(info.version().patch());
     }
     
-    dataStream << qint32(m_onlineOperators.count());
-    foreach(OperatorModel* op, m_onlineOperators)
+    dataStream << qint32(m_initializedOperators.count());
+    foreach(OperatorModel* op, m_initializedOperators)
         dataStream << op;
     
     dataStream << qint32(m_uninitializedOperators.count());
@@ -580,6 +591,8 @@ void StreamModel::serializeModel(QByteArray& data) const
     dataStream << qint32(m_threadListModel->threads().count());
     foreach(ThreadModel* thread, m_threadListModel->threads())
         dataStream << thread;
+    
+    dataStream << m_observerModel;
 }
 
 void StreamModel::deserializeModel(const QByteArray& data)
@@ -629,9 +642,9 @@ void StreamModel::deserializeModel(const QByteArray& data)
     }
     
     dataStream >> count;
-    if(count != m_onlineOperators.count())
+    if(count != m_initializedOperators.count())
         throw ReadStudioDataFailed(tr("Number of initialized operators does not match the stromx-studio data."));
-    foreach(OperatorModel* op, m_onlineOperators)
+    foreach(OperatorModel* op, m_initializedOperators)
         dataStream >>  op;
     
     dataStream >> count;
@@ -645,6 +658,8 @@ void StreamModel::deserializeModel(const QByteArray& data)
         throw ReadStudioDataFailed(tr("Number of threads does not match stromx-studio data."));
     foreach(ThreadModel* thread, m_threadListModel->threads())
         dataStream >> thread;
+    
+    dataStream >> m_observerModel;
 }
 
 void StreamModel::start()

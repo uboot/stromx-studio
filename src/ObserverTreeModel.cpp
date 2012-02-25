@@ -5,17 +5,21 @@
 #include "InsertObserverCmd.h"
 #include "InputData.h"
 #include "InputModel.h"
+#include "ConnectionModel.h"
 #include "ObserverModel.h"
 #include "OperatorModel.h"
 #include "RemoveInputCmd.h"
 #include "RemoveObserverCmd.h"
 
-ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, QObject * parent)
+ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent)
   : QAbstractItemModel(parent),
     m_undoStack(undoStack),
+    m_stream(parent),
     m_isMovingInput(false)
 {
     setSupportedDragActions(Qt::MoveAction);
+    
+    connect(m_stream, SIGNAL(connectionRemoved(ConnectionModel*)), this, SLOT(handleRemovedConnection(ConnectionModel*)));
 }
 
 int ObserverTreeModel::rowCount(const QModelIndex& parent) const
@@ -262,24 +266,70 @@ Qt::DropActions ObserverTreeModel::supportedDropActions() const
     return Qt::MoveAction | Qt::CopyAction;
 }
 
+void ObserverTreeModel::handleRemovedConnection(ConnectionModel* connection)
+{
+    for(int i = 0; i < m_observers.count(); ++i)
+    {
+        ObserverModel* observer = m_observers[i];
+        
+        for(int j = 0; j < m_observers[i]->numInputs();)
+        {
+            if(observer->input(j)->op() == connection->targetOp()
+                && observer->input(j)->id() == connection->inputId())
+            {
+                removeRows(j, 1, createIndex(i, 0));
+            }
+            else
+            {
+                ++j;
+            }
+        }        
+    }
+}
+
 QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)
 {
     stream << qint32(model->m_observers.count());
-    foreach(ObserverModel* model, model->m_observers)
-        stream << model;
+    foreach(ObserverModel* observer, model->m_observers)
+    {
+        stream << qint32(observer->numInputs());
+        foreach(InputModel* input, observer->inputs())
+        {
+            int opId = model->m_stream->operatorId(input->op());
+            Q_ASSERT(opId >=  0);
+            
+            stream << model->m_stream->operatorId(input->op());
+            stream << input->id();
+        }
+    }
     
     return stream;
 }
 
 QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
 {
-    qint32 count = 0;
+    qint32 observerCount = 0;
+    stream >> observerCount;
     
-    stream >> count;
-    for(int i = 0; i < count; ++i)
+    for(int i = 0; i < observerCount; ++i)
     {
         ObserverModel* observer = new ObserverModel(model);
-        stream >> observer;
+        qint32 inputCount = 0;
+        stream >> inputCount;
+        
+        for(int j = 0; j < inputCount; ++j)
+        {
+            qint32 opId;
+            qint32 inputId;
+            
+            stream >> opId;
+            stream >> inputId;
+            
+            OperatorModel* op = model->m_stream->operators()[opId];
+            InputModel* input = new InputModel(op, inputId, model->m_undoStack, model);
+            observer->insertInput(observer->numInputs(), input);
+        }
+        
         model->m_observers.append(observer);
     }
     

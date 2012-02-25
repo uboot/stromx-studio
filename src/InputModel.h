@@ -30,12 +30,8 @@ class InputModel : public QObject
 {
     Q_OBJECT
     
-    friend QDataStream & operator<< (QDataStream & stream, const InputModel * model);
-    friend QDataStream & operator>> (QDataStream & stream, InputModel * model);
-    
 public:
     InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject * parent);
-    InputModel(QUndoStack* undoStack, QObject * parent);
     
     void setColor(const QColor & color);
     const QColor & color() const;
@@ -49,8 +45,5 @@ private:
     QColor m_color;
     QUndoStack* m_undoStack;
 };
-
-QDataStream & operator<< (QDataStream & stream, const InputModel * model);
-QDataStream & operator>> (QDataStream & stream, InputModel * model);
 
 #endif // INPUTMODEL_H

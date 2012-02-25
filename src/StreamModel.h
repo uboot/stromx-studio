@@ -78,6 +78,13 @@ public:
     
     /** Returns the operators of the stream model. */
     const QList<OperatorModel*> operators() const { return m_operators; }
+     
+    /**
+     * Returns the current position of the operator in the operator list of the
+     * stromx stream. If the operator is not initialized and thus not part of
+     * the stromx stream -1 is returned.
+     */
+    int operatorId(const OperatorModel* op) const;
     
     /** 
      * Constructs an operator model and pushes an add operator command on the 
@@ -253,7 +260,7 @@ private:
     OperatorLibraryModel* m_operatorLibrary;
     QUndoStack* m_undoStack;
     QList<OperatorModel*> m_operators;
-    QList<OperatorModel*> m_onlineOperators;
+    QList<OperatorModel*> m_initializedOperators;
     QList<OperatorModel*> m_uninitializedOperators;
     QList<ConnectionModel*> m_connections;
     JoinStreamTask* m_joinStreamTask;
