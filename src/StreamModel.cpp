@@ -60,7 +60,7 @@ const QList<ThreadModel*> StreamModel::threads() const
     return m_threadListModel->threads();
 }
 
-QAbstractItemModel* StreamModel::observerModel() const
+ObserverTreeModel* StreamModel::observerModel() const
 {
     return m_observerModel;
 }

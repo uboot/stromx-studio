@@ -80,6 +80,8 @@ void ObserverTreeModel::doInsertObserver(int pos, ObserverModel* observer)
     beginInsertRows(QModelIndex(), pos, pos);
     m_observers.insert(pos, observer);
     endInsertRows();
+    
+    emit observerAdded(observer);
 }
 
 bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & parent)
@@ -110,8 +112,11 @@ bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & paren
 void ObserverTreeModel::doRemoveObserver(int pos)
 {
     beginRemoveRows(QModelIndex(), pos, pos);
+    ObserverModel* observer = m_observers[pos];
     m_observers.removeAt(pos);
     endRemoveRows();
+    
+    emit observerRemoved(observer);
 }
 
 void ObserverTreeModel::doRemoveInput(int observerPos, int inputPos)

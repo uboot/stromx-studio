@@ -6,7 +6,11 @@
 #include "ConnectionItem.h"
 #include "ConnectionModel.h"
 #include "InputData.h"
+#include "ObserverModel.h"
+#include "ObserverTreeModel.h"
+#include "ObserverWindow.h"
 #include "StreamEditorScene.h"
+#include "StreamModel.h"
 
 StreamEditor::StreamEditor(QWidget* parent)
   : QGraphicsView(parent),
@@ -67,4 +71,33 @@ void StreamEditor::startDrag()
     QDrag* drag = new QDrag(currentWidget);
     drag->setMimeData(data);
     drag->exec(Qt::CopyAction, Qt::CopyAction);
+}
+
+void StreamEditor::createObserverWindow(ObserverModel* observer)
+{
+    m_observerWindows.append(new ObserverWindow(observer, this));
+}
+
+void StreamEditor::destroyObserverWindow(ObserverModel* observer)
+{
+    ObserverWindow* window = 0;
+    
+    foreach(ObserverWindow* w, m_observerWindows)
+    {
+        if(w->observer() == observer)
+            window = w;
+    }
+    
+    Q_ASSERT(window);
+    m_observerWindows.removeAll(window);
+    delete window;
+}
+
+void StreamEditor::resetObserverWindows()
+{
+    foreach(ObserverWindow* window, m_observerWindows)
+        delete window;
+    
+    foreach(ObserverModel* observer, m_scene->model()->observerModel()->observers())
+        createObserverWindow(observer);
 }

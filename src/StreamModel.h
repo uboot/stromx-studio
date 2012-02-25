@@ -133,7 +133,7 @@ public:
     QAbstractItemModel* threadListModel() const;
     
     /** Returns the observer list of the current model. */
-    QAbstractItemModel* observerModel() const;
+    ObserverTreeModel* observerModel() const;
     
     /** Writes the content of the stream model. */
     void write(stromx::core::FileOutput & output, const QString & basename) const;

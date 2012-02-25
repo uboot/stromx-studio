@@ -40,6 +40,8 @@ class ObserverTreeModel : public QAbstractItemModel
     
 public:
     ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent);
+    
+    const QList<ObserverModel*> observers() const { return m_observers; }
 
     virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
     virtual QModelIndex parent(const QModelIndex & child) const;
@@ -57,6 +59,10 @@ public:
     virtual Qt::DropActions supportedDropActions () const;
     
     QUndoStack* undoStack() const { return m_undoStack; }
+    
+signals:
+    void observerAdded(ObserverModel* observer);
+    void observerRemoved(ObserverModel* observer);
     
 private slots:
     /** Removes all inputs which are the target of the removed connection. */

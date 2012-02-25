@@ -22,8 +22,10 @@
 
 #include <QGraphicsView>
 
-class StreamEditorScene;
 class ConnectionItem;
+class ObserverModel;
+class ObserverWindow;
+class StreamEditorScene;
 
 class StreamEditor : public QGraphicsView
 {
@@ -33,6 +35,19 @@ public:
     explicit StreamEditor(QWidget *parent = 0);
     
     StreamEditorScene* scene() const { return m_scene; }
+    
+private slots:
+    /** Creates a window for \c observer. */
+    void createObserverWindow(ObserverModel* observer);
+    
+    /** Destroys the window \c observer. */
+    void destroyObserverWindow(ObserverModel* observer);
+    
+    /** 
+     * Removes all current observer windows and reates a new window
+     * for each observer in the current stream mode. 
+     */
+    void resetObserverWindows();
     
 protected:
     virtual void mousePressEvent(QMouseEvent *event);
@@ -44,6 +59,7 @@ private:
     QPoint m_startPos;
     ConnectionItem* m_connection;
     StreamEditorScene* m_scene;
+    QList<ObserverWindow*> m_observerWindows;
 };
 
 #endif // STREAMEDITOR_H

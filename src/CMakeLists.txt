@@ -25,6 +25,7 @@ set(stromxstudio_SOURCES
     ObserverEditor.cpp
     ObserverModel.cpp
     ObserverTreeModel.cpp
+    ObserverWindow.cpp
     OperatorItem.cpp
     OperatorData.cpp
     OperatorLibrary.cpp
@@ -54,6 +55,7 @@ set(stromxstudio_HEADERS
     ObserverEditor.h
     ObserverModel.h
     ObserverTreeModel.h
+    ObserverWindow.h
     OperatorItem.h
     OperatorData.h
     OperatorLibrary.h

@@ -40,6 +40,7 @@
 #include "Exception.h"
 #include "MainWindow.h"
 #include "ObserverEditor.h"
+#include "ObserverTreeModel.h"
 #include "OperatorLibrary.h"
 #include "OperatorLibraryModel.h"
 #include "PropertyEditor.h"
