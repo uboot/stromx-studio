@@ -41,6 +41,9 @@ public:
     void insertInput(int position, InputModel* input);
     void removeInput(int position);
     
+signals:
+    void nameChanged(const QString & name);
+    
 private:
     QList<InputModel*> m_inputs;
     QString m_name;

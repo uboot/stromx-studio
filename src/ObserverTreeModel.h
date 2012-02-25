@@ -27,6 +27,7 @@ class QUndoStack;
 class InputModel;
 class ObserverModel;
 
+/** Represents all observers of a stream model. */
 class ObserverTreeModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -39,29 +40,48 @@ class ObserverTreeModel : public QAbstractItemModel
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * op);
     
 public:
+    /** Constructs an observer tree model. */
     ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent);
     
+    /** Returns the current observers. */
     const QList<ObserverModel*> observers() const { return m_observers; }
 
     virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
     virtual QModelIndex parent(const QModelIndex & child) const;
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    
+    /** Pushes an insert observer command on the undo stack. */
     virtual bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
+    
+    /** 
+     * Pushes a remove observer or an remove input command on the undo stack. The type of 
+     * command depends on the specified row (either observer or input row).
+     */
     virtual bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
+    
     virtual bool setData(const QModelIndex& index, const QVariant& value, int role);
     virtual Qt::ItemFlags flags(const QModelIndex& index) const;
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
     virtual QStringList mimeTypes() const;
     QMimeData* mimeData ( const QModelIndexList & indexes ) const;
+    
+    /**
+     * If \c data is of type InputData a new input model is allocated and an insert input 
+     * command is pushed on the undo stack.
+     */
     virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
     virtual Qt::DropActions supportedDropActions () const;
     
+    /** Returns the undo stack. */
     QUndoStack* undoStack() const { return m_undoStack; }
     
 signals:
+    /** An observer was added to the model. */
     void observerAdded(ObserverModel* observer);
+    
+    /** An observer was removed from the model. */
     void observerRemoved(ObserverModel* observer);
     
 private slots:

@@ -12,6 +12,7 @@ ObserverModel::ObserverModel(QObject * parent)
 void ObserverModel::setName(const QString& name)
 {
     m_name = name;
+    emit nameChanged(name);
 }
 
 void ObserverModel::insertInput(int position, InputModel* input)
