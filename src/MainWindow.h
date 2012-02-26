@@ -45,14 +45,15 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    /**
+     * Constructs a main window containing an operator library, a stream editor,
+     * a property editor, a thread list and an observer editor.
+     */
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     
 protected:
     virtual void closeEvent(QCloseEvent* event);
-    
-signals:
-    void canUndoChanged(bool canUndo);
 
 private slots:
     bool open();

@@ -65,6 +65,11 @@ public:
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
     virtual QStringList mimeTypes() const;
+    
+    /**
+     * Returns an InputData object for InputModel the first index of \c indexes points to.
+     * If the first index does not refer to an InputModel 0 is returned.
+     */
     QMimeData* mimeData ( const QModelIndexList & indexes ) const;
     
     /**

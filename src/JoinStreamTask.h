@@ -32,15 +32,21 @@ namespace stromx
 
 class StreamModel;
 
+/** A thread which waits for a given stromx stream to join. */
 class JoinStreamTask : public QThread
 {
 public:
+    /** Constructs a tas but does not start it. */
     explicit JoinStreamTask(QObject* parent = 0) : QThread(parent), m_stream(0) {}
     
+    /** Returns the current stromx stream handled by this task. */
     const stromx::core::Stream* stream() const { return m_stream; }
+    
+    /** Sets the stromx stream handled by this task. */
     void setStream(stromx::core::Stream* stream);
     
 protected:
+    /** Calls stromx::core::Stream::join() of the current stream. */
     virtual void run();
     
 private:
