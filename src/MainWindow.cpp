@@ -90,7 +90,6 @@ MainWindow::MainWindow(QWidget *parent)
             m_propertyEditor, SLOT(setModel(QAbstractTableModel*)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), this, SLOT(updateWindowTitle(bool)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), m_saveAct, SLOT(setDisabled(bool)));
-    connect(m_undoAct, SIGNAL(changed()), this, SLOT(updateUndoActs()));
 }
 
 MainWindow::~MainWindow()

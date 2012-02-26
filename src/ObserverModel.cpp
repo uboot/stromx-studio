@@ -13,8 +13,11 @@ ObserverModel::ObserverModel(QUndoStack* undoStack, QObject * parent)
 
 void ObserverModel::setName(const QString& name)
 {
-    QUndoCommand* cmd = new RenameObserverCmd(this, name);
-    m_undoStack->push(cmd);
+    if(name != m_name)
+    {
+        QUndoCommand* cmd = new RenameObserverCmd(this, name);
+        m_undoStack->push(cmd);
+    }
 }
 
 void ObserverModel::doSetName(const QString& name)

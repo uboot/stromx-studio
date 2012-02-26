@@ -60,7 +60,7 @@ public:
      */
     virtual bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
     
-    virtual bool setData(const QModelIndex& index, const QVariant& value, int role);
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
     virtual Qt::ItemFlags flags(const QModelIndex& index) const;
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
@@ -87,6 +87,9 @@ signals:
 private slots:
     /** Removes all inputs which are the target of the removed connection. */
     void removeConnectedInputs(ConnectionModel* connection);
+    
+    /** Updates the displayed observer name if the slot is invoked by an ObserverModel. */
+    void updateObserverName(const QString & name);
     
 private:
     void doInsertObserver(int pos, ObserverModel* observer);
