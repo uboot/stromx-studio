@@ -74,7 +74,25 @@ class StreamModel : public QObject
 public:
     /** Constructs an empty stream model. */
     explicit StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject *parent = 0);
+    
+    /**
+     * Constructs a stream model from a file input. This functions reads only the stromx stream.
+     * To obtain the studio specific data (operator positions, uninitialized operators...)
+     * from the file call readStudioData().
+     * 
+     * \throws ReadStreamFailed
+     */
+    explicit StreamModel(stromx::core::FileInput & input, const QString & basename, 
+                         QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject *parent = 0);
+    
     virtual ~StreamModel();
+    /**
+     * Reads the studios specific data (operator positions, uninitialized operators...)
+     * of the stream from a file input.
+     * 
+     * \throws ReadStreamFailed
+     */
+    void readStudioData(stromx::core::FileInput & input, const QString & basename);
     
     /** Returns the operators of the stream model. */
     const QList<OperatorModel*> operators() const { return m_operators; }
@@ -138,9 +156,6 @@ public:
     /** Writes the content of the stream model. */
     void write(stromx::core::FileOutput & output, const QString & basename) const;
     
-    /** Sets the content of the stream model to the data read from a file. */ 
-    void read(stromx::core::FileInput & input, const QString & basename);
-    
     /** Returns true if the underlying stromx stream is active. */
     bool isActive() const;
 
@@ -159,13 +174,6 @@ private slots:
     void join();
     
 signals:
-    /** 
-     * The model was read from a file or its contents were deleted.
-     * In these cases no other signals (like operatorAdded(), ...) 
-     * are emitted.
-     */
-    void modelWasReset();
-    
     /** An operator was added. */
     void operatorAdded(OperatorModel* op);
     
@@ -199,6 +207,9 @@ signals:
 private:
     /** Magic number which identifies the first 4 bytes of stromx-studio data files. */
     static const quint32 MAGIC_NUMBER;
+    
+    /** Allocates all submodel and sets up the necessary connections. */
+    void initializeSubModels();
     
     /** Adds an operator. */
     void doAddOperator(OperatorModel* op);
@@ -240,7 +251,7 @@ private:
      * Iterates over \c stream and allocates models for all operators, threads
      * and connections in the stream.
      */
-    void updateStream(stromx::core::Stream* stream);
+    void allocateObjects(stromx::core::Stream* stream);
     
     /** Deletes the stromx stream and all models. */ 
     void deleteAllData();

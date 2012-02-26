@@ -29,7 +29,6 @@ void StreamEditorScene::setModel(StreamModel* model)
     
     if(m_model)
     {
-        connect(m_model, SIGNAL(modelWasReset()), this, SLOT(reset()));
         connect(m_model, SIGNAL(operatorAdded(OperatorModel*)), this, SLOT(addOperator(OperatorModel*)));
         connect(m_model, SIGNAL(operatorRemoved(OperatorModel*)), this, SLOT(removeOperator(OperatorModel*)));
         connect(m_model, SIGNAL(connectionAdded(ConnectionModel*)), this, SLOT(addConnection(ConnectionModel*)));

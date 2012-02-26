@@ -32,6 +32,7 @@
 #include <QSettings>
 #include <QtGlobal>
 #include <iostream>
+#include <memory>
 #include <stromx/core/DirectoryFileInput.h>
 #include <stromx/core/DirectoryFileOutput.h>
 #include <stromx/core/Exception.h>
@@ -377,23 +378,33 @@ void MainWindow::readFile(const QString& filepath)
     }
     
     // try to read the stream
-    StreamModel* stream = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
+    StreamModel* stream = 0;
+    std::auto_ptr<stromx::core::FileInput> input;
     QString location;
     try
     {
         if(extension == "xml")
         {
             location = QFileInfo(filepath).absoluteDir().absolutePath();
-            stromx::core::DirectoryFileInput input(location.toStdString());
-            stream->read(input, basename);
+            input = std::auto_ptr<stromx::core::FileInput>(new stromx::core::DirectoryFileInput(location.toStdString()));
         }
         else if(extension == "zip")
         {
             location = filepath;
-            stromx::core::ZipFileInput input(filepath.toStdString());
-            stream->read(input, basename);
+            input = std::auto_ptr<stromx::core::FileInput>(new stromx::core::ZipFileInput(filepath.toStdString()));
         }
+    }
+    catch(stromx::core::FileAccessFailed&)
+    {
+        QMessageBox::critical(this, tr("Failed to load file"),
+                              tr("The location %1 could not be openend for reading").arg(location),
+                              QMessageBox::Ok, QMessageBox::Ok);
+        return;
+    }
     
+    try
+    {
+        stream = new StreamModel(*input, basename, m_undoStack, m_operatorLibrary->model(), this);
         updateCurrentFile(filepath);
     }
     catch(stromx::core::FileAccessFailed&)
@@ -401,19 +412,21 @@ void MainWindow::readFile(const QString& filepath)
         QMessageBox::critical(this, tr("Failed to load file"),
                               tr("The location %1 could not be openend for reading").arg(location),
                               QMessageBox::Ok, QMessageBox::Ok);
-        delete stream;
         return;
     }
     catch(ReadStreamFailed& e)
     {
         QMessageBox::critical(this, tr("Failed to load file"), e.what(),
                               QMessageBox::Ok, QMessageBox::Ok);
-        delete stream;
         return;
     }
-    catch(ReadStudioDataFailed& e)
+    
+    try
     {
-        updateCurrentFile(filepath);
+        stream->readStudioData(*input, basename);
+    }
+    catch(ReadStreamFailed& e)
+    {
         QMessageBox::warning(this, tr("Loaded only part of file"), e.what(),
                              QMessageBox::Ok, QMessageBox::Ok);
     }
