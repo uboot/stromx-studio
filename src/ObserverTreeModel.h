@@ -93,8 +93,8 @@ private slots:
     /** Removes all inputs which are the target of the removed connection. */
     void removeConnectedInputs(ConnectionModel* connection);
     
-    /** Updates the displayed observer name if the slot is invoked by an ObserverModel. */
-    void updateObserverName(const QString & name);
+    /** Updates the displayed data of \c observer. */
+    void updateObserver(ObserverModel *observer);
     
 private:
     void doInsertObserver(int pos, ObserverModel* observer);

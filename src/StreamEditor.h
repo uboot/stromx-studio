@@ -44,7 +44,7 @@ private slots:
     void destroyObserverWindow(ObserverModel* observer);
     
     /** 
-     * Removes all current observer windows and reates a new window
+     * Removes all current observer windows and creates a new window
      * for each observer in the current stream mode. 
      */
     void resetObserverWindows();

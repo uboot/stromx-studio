@@ -47,7 +47,10 @@ public:
     QAction* createDeinitializeAction(QObject* parent);
     QAction* createRemoveAction(QObject* parent);
     
+    /** Returns the current stream model. */
     StreamModel* model() const { return m_model; }
+    
+    /** Sets the current stream model to \c model. The previous model is \em not deleted. */
     void setModel(StreamModel* model);
     
 signals:
@@ -55,6 +58,9 @@ signals:
     void deinitializeEnabledChanged(bool enabled);
     void removeEnabledChanged(bool enabled);
     void selectedModelChanged(QAbstractTableModel* model);
+    
+    /** The model of the stream editor was reset, i.e. setModel() was called. */
+    void modelWasReset();
    
 protected:
     void keyPressEvent(QKeyEvent* keyEvent);

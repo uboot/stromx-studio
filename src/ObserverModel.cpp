@@ -24,6 +24,7 @@ void ObserverModel::doSetName(const QString& name)
 {
     m_name = name;
     emit nameChanged(name);
+    emit changed(this);
 }
 
 void ObserverModel::insertInput(int position, InputModel* input)

@@ -44,7 +44,11 @@ public:
     void removeInput(int position);
     
 signals:
+    /** The name of the observer changed. */
     void nameChanged(const QString & name);
+    
+    /** A property of the observer changed. */
+    void changed(ObserverModel* observer);
     
 private:
     void doSetName(const QString & name);

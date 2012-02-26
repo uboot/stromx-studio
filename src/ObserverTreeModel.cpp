@@ -70,7 +70,7 @@ bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & paren
     Q_ASSERT(count == 1);
     
     ObserverModel* observer = new ObserverModel(m_undoStack, this);
-    connect(observer, SIGNAL(nameChanged(const QString &)), this, SLOT(updateObserverName(const QString &)));
+    connect(observer, SIGNAL(changed(ObserverModel*)), this, SLOT(updateObserver(ObserverModel*)));
     
     QUndoCommand* cmd = new InsertObserverCmd(this, row, observer);
     m_undoStack->push(cmd);
@@ -295,20 +295,11 @@ void ObserverTreeModel::removeConnectedInputs(ConnectionModel* connection)
     }
 }
 
-void ObserverTreeModel::updateObserverName(const QString & name)
+void ObserverTreeModel::updateObserver(ObserverModel *observer)
 {
-    ObserverModel *observer = qobject_cast<ObserverModel *>(sender());
-    if (observer)
-    {
-        int pos = m_observers.indexOf(observer);
-        
-        // At this point the name of the observer has already been changed.
-        // The setData() below just make sure that this update is shown in the
-        // views and is ignored by the observer model, because name is the 
-        // same as observer->name().
-        if(pos >= 0)
-            setData(createIndex(pos, 0), name);
-    }
+    int pos = m_observers.indexOf(observer);
+    if(pos >= 0)
+        emit dataChanged(createIndex(pos, 0), createIndex(pos, 0));
 }
 
 QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)
@@ -339,7 +330,7 @@ QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
     for(int i = 0; i < observerCount; ++i)
     {
         ObserverModel* observer = new ObserverModel(model->m_undoStack, model);
-        QObject::connect(observer, SIGNAL(nameChanged(const QString &)), model, SLOT(updateObserverName(const QString &)));
+        QObject::connect(observer, SIGNAL(changed(ObserverModel*)), model, SLOT(updateObserver(ObserverModel*)));
         QString str;
         stream >> str;
         observer->setName(str);
