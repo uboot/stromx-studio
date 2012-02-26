@@ -37,7 +37,7 @@ void StreamEditorScene::setModel(StreamModel* model)
         connect(m_model, SIGNAL(streamJoined()), this, SLOT(updateSelection()));
     }
     
-    emit modelWasReset();
+    emit modelWasReset(m_model);
 }
 
 void StreamEditorScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)

@@ -60,7 +60,7 @@ signals:
     void selectedModelChanged(QAbstractTableModel* model);
     
     /** The model of the stream editor was reset, i.e. setModel() was called. */
-    void modelWasReset();
+    void modelWasReset(StreamModel* model);
    
 protected:
     void keyPressEvent(QKeyEvent* keyEvent);

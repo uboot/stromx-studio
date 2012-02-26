@@ -20,6 +20,8 @@ StreamEditor::StreamEditor(QWidget* parent)
     
     m_scene->setSceneRect(0, 0, 512, 512);
     setScene(m_scene);
+    connect(m_scene, SIGNAL(modelWasReset(StreamModel*)), this, SLOT(resetObserverWindows(StreamModel*)));
+    
     setAcceptDrops(true);
     setDragMode(QGraphicsView::RubberBandDrag);
 }
@@ -89,15 +91,18 @@ void StreamEditor::destroyObserverWindow(ObserverModel* observer)
     }
     
     Q_ASSERT(window);
+    delete window;
     m_observerWindows.removeAll(window);
     delete window;
 }
 
-void StreamEditor::resetObserverWindows()
+void StreamEditor::resetObserverWindows(StreamModel* model)
 {
     foreach(ObserverWindow* window, m_observerWindows)
         delete window;
     
-    foreach(ObserverModel* observer, m_scene->model()->observerModel()->observers())
+    m_observerWindows.clear();
+    
+    foreach(ObserverModel* observer, model->observerModel()->observers())
         createObserverWindow(observer);
 }

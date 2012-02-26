@@ -21,11 +21,13 @@
 #define STREAMEDITOR_H
 
 #include <QGraphicsView>
+#include "StreamModel.h"
 
 class ConnectionItem;
 class ObserverModel;
 class ObserverWindow;
 class StreamEditorScene;
+class StreamModel;
 
 class StreamEditor : public QGraphicsView
 {
@@ -45,9 +47,9 @@ private slots:
     
     /** 
      * Removes all current observer windows and creates a new window
-     * for each observer in the current stream mode. 
+     * for each observer in the stream \c model. 
      */
-    void resetObserverWindows();
+    void resetObserverWindows(StreamModel* model);
     
 protected:
     virtual void mousePressEvent(QMouseEvent *event);
