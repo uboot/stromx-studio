@@ -95,7 +95,6 @@ private:
     void createMenus();
     void createToolBars();
     void createStatusBar();
-    void createDockWindows();
     
     void setModel(StreamModel* model);
     void readSettings();
@@ -129,11 +128,12 @@ private:
     QAction* m_addThreadAct;
     QAction* m_removeThreadAct;
     QAction* m_removeSelectedItemsAct;
-    QAction* m_separatorAct;
+    QAction* m_recentFilesSeparatorAct;
     QAction* m_recentFileActs[MAX_RECENT_FILES];
     QAction* m_addObserverAct;
     QAction* m_removeObserverAct;
     QAction* m_removeInputAct;
+    QAction* m_observerSeparatorAct;
     
     QUndoStack* m_undoStack;
     

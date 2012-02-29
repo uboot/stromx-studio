@@ -32,9 +32,14 @@ public:
     explicit ObserverWindow(ObserverModel* observer, QWidget* parent);
     
     ObserverModel* observer() const { return m_observer; }
+    QAction* showAction() const { return m_showAct; }
+    
+private slots:
+    void updateActionText(const QString & name);
     
 private:
     ObserverModel* m_observer;
+    QAction* m_showAct;
 };
 
 #endif // OBSERVERWINDOW_H
