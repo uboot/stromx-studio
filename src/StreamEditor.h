@@ -24,8 +24,6 @@
 #include "StreamModel.h"
 
 class ConnectionItem;
-class ObserverModel;
-class ObserverWindow;
 class StreamEditorScene;
 class StreamModel;
 
@@ -38,19 +36,6 @@ public:
     
     StreamEditorScene* scene() const { return m_scene; }
     
-private slots:
-    /** Creates a window for \c observer. */
-    void createObserverWindow(ObserverModel* observer);
-    
-    /** Destroys the window \c observer. */
-    void destroyObserverWindow(ObserverModel* observer);
-    
-    /** 
-     * Removes all current observer windows and creates a new window
-     * for each observer in the stream \c model. 
-     */
-    void resetObserverWindows(StreamModel* model);
-    
 protected:
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *event);
@@ -61,7 +46,6 @@ private:
     QPoint m_startPos;
     ConnectionItem* m_connection;
     StreamEditorScene* m_scene;
-    QList<ObserverWindow*> m_observerWindows;
 };
 
 #endif // STREAMEDITOR_H

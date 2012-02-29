@@ -42,6 +42,7 @@
 #include "MainWindow.h"
 #include "ObserverEditor.h"
 #include "ObserverTreeModel.h"
+#include "ObserverWindow.h"
 #include "OperatorLibrary.h"
 #include "OperatorLibraryModel.h"
 #include "PropertyEditor.h"
@@ -89,6 +90,8 @@ MainWindow::MainWindow(QWidget *parent)
     
     connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractTableModel*)),
             m_propertyEditor, SLOT(setModel(QAbstractTableModel*)));
+    connect(m_streamEditor->scene(), SIGNAL(modelWasReset(StreamModel*)),
+            this, SLOT(resetObserverWindows(StreamModel*)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), this, SLOT(updateWindowTitle(bool)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), m_saveAct, SLOT(setDisabled(bool)));
 }
@@ -706,6 +709,38 @@ void MainWindow::handleUndoIndexChanged(int index)
         m_undoAct->setEnabled(false);
 }
 
+
+void MainWindow::createObserverWindow(ObserverModel* observer)
+{
+    m_observerWindows.append(new ObserverWindow(observer, this));
+}
+
+void MainWindow::destroyObserverWindow(ObserverModel* observer)
+{
+    ObserverWindow* window = 0;
+    
+    foreach(ObserverWindow* w, m_observerWindows)
+    {
+        if(w->observer() == observer)
+            window = w;
+    }
+    
+    Q_ASSERT(window);
+    delete window;
+    m_observerWindows.removeAll(window);
+    delete window;
+}
+
+void MainWindow::resetObserverWindows(StreamModel* model)
+{
+    foreach(ObserverWindow* window, m_observerWindows)
+        delete window;
+    
+    m_observerWindows.clear();
+    
+    foreach(ObserverModel* observer, model->observerModel()->observers())
+        createObserverWindow(observer);
+}
 
 
 

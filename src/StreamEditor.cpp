@@ -6,9 +6,6 @@
 #include "ConnectionItem.h"
 #include "ConnectionModel.h"
 #include "InputData.h"
-#include "ObserverModel.h"
-#include "ObserverTreeModel.h"
-#include "ObserverWindow.h"
 #include "StreamEditorScene.h"
 #include "StreamModel.h"
 
@@ -20,7 +17,6 @@ StreamEditor::StreamEditor(QWidget* parent)
     
     m_scene->setSceneRect(0, 0, 512, 512);
     setScene(m_scene);
-    connect(m_scene, SIGNAL(modelWasReset(StreamModel*)), this, SLOT(resetObserverWindows(StreamModel*)));
     
     setAcceptDrops(true);
     setDragMode(QGraphicsView::RubberBandDrag);
@@ -75,34 +71,3 @@ void StreamEditor::startDrag()
     drag->exec(Qt::CopyAction, Qt::CopyAction);
 }
 
-void StreamEditor::createObserverWindow(ObserverModel* observer)
-{
-    m_observerWindows.append(new ObserverWindow(observer, this));
-}
-
-void StreamEditor::destroyObserverWindow(ObserverModel* observer)
-{
-    ObserverWindow* window = 0;
-    
-    foreach(ObserverWindow* w, m_observerWindows)
-    {
-        if(w->observer() == observer)
-            window = w;
-    }
-    
-    Q_ASSERT(window);
-    delete window;
-    m_observerWindows.removeAll(window);
-    delete window;
-}
-
-void StreamEditor::resetObserverWindows(StreamModel* model)
-{
-    foreach(ObserverWindow* window, m_observerWindows)
-        delete window;
-    
-    m_observerWindows.clear();
-    
-    foreach(ObserverModel* observer, model->observerModel()->observers())
-        createObserverWindow(observer);
-}

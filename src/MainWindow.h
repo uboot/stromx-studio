@@ -34,6 +34,8 @@ class QAction;
 class QUndoStack;
 class QMenu;
 class ObserverEditor;
+class ObserverModel;
+class ObserverWindow;
 class OperatorLibrary;
 class PropertyEditor;
 class StreamEditor;
@@ -72,6 +74,18 @@ private slots:
     void handleCanUndoChanged(bool canUndo);
     void handleUndoTextChanged(const QString & undoText);
     void handleUndoIndexChanged(int index);
+    
+    /** Creates a window for \c observer. */
+    void createObserverWindow(ObserverModel* observer);
+    
+    /** Destroys the window \c observer. */
+    void destroyObserverWindow(ObserverModel* observer);
+    
+    /** 
+     * Removes all current observer windows and creates a new window
+     * for each observer in the stream \c model. 
+     */
+    void resetObserverWindows(StreamModel* model);
 
 private:
     enum { MAX_RECENT_FILES = 10 };
@@ -142,6 +156,7 @@ private:
      
     QString m_currentFile;
     int m_currentUndoLimit;
+    QList<ObserverWindow*> m_observerWindows;
 };
 
 #endif // MAINWINDOW_H

@@ -44,7 +44,7 @@ signals:
     void inputSelectedChanged(bool selected);
     
 private slots:
-    void addObserverList();
+    void addObserver();
     void removeSelectedEntry();
     void updateObserverSelected(const QModelIndex& current, const QModelIndex& previous);
     

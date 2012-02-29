@@ -33,7 +33,7 @@ QAction* ObserverEditor::createAddObserverAction(QObject* parent)
     QAction* action = new QAction(tr("Add observer"), parent);
     action->setStatusTip(tr("Add a new observer window"));
     action->setEnabled(true);
-    connect(action, SIGNAL(triggered()), this, SLOT(addObserverList()));
+    connect(action, SIGNAL(triggered()), this, SLOT(addObserver()));
     
     return action;
 }
@@ -60,7 +60,7 @@ QAction* ObserverEditor::createRemoveInputAction(QObject* parent)
     return action;
 }
 
-void ObserverEditor::addObserverList()
+void ObserverEditor::addObserver()
 {
     m_observerView->model()->insertRow(m_observerView->model()->rowCount());
 }

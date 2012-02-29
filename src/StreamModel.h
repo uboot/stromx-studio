@@ -52,11 +52,11 @@ class ThreadModel;
  * \brief Model of a stream
  * 
  * This class represents a stromx::core::Stream object in the stromx-studio application.
- * It records all actions of its public interface to the undo stack. Moreover, it provides
- * read and write functions to deserialize and serialize itself from and to files. In 
- * addition to all properties of a stream as in the stromx library it stores and
+ * It records all actions of its public interface to the undo stack. A StreamModel can be 
+ * constructed from a file and written to a file.
+ * In addition to all properties of a stream as in the stromx library it stores and
  * all information about the visual appearance of the stream in the stromx-studio.
- * Also uninitialized operators and all observers are part of a %StreamModel.
+ * Moreover, uninitialized operators and all observers are part of a %StreamModel.
  */
 class StreamModel : public QObject
 {
