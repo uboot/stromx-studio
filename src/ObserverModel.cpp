@@ -72,7 +72,6 @@ QModelIndex ObserverModel::mapToSource(const QModelIndex& proxyIndex) const
 
 int ObserverModel::rowCount(const QModelIndex& parent) const
 {
-    revert();
     return numInputs();
 }
 
