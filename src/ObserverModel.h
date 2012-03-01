@@ -20,19 +20,20 @@
 #ifndef OBSERVERMODEL_H
 #define OBSERVERMODEL_H
 
-#include <QObject>
+#include <QSortFilterProxyModel>
 
 class QUndoStack;
 class InputModel;
+class ObserverTreeModel;
 
-class ObserverModel : public QObject
+class ObserverModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     
     friend class RenameObserverCmd;
 
 public:
-    ObserverModel(QUndoStack* undoStack, QObject * parent);
+    ObserverModel(QUndoStack* undoStack, ObserverTreeModel* parent);
     
     const QString & name() const { return m_name; }
     void setName(const QString & name);
@@ -54,6 +55,7 @@ private:
     void doSetName(const QString & name);
     
     QUndoStack* m_undoStack;
+    ObserverTreeModel* m_parent;
     QList<InputModel*> m_inputs;
     QString m_name;
 };

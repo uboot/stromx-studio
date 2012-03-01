@@ -4,11 +4,13 @@
 #include "ObserverTreeModel.h"
 #include "RenameObserverCmd.h"
 
-ObserverModel::ObserverModel(QUndoStack* undoStack, QObject * parent)
-  : QObject(parent),
-    m_undoStack(undoStack)
+ObserverModel::ObserverModel(QUndoStack* undoStack, ObserverTreeModel* parent)
+  : QSortFilterProxyModel(parent),
+    m_undoStack(undoStack),
+    m_parent(parent)
 {
     m_name = "New observer";
+    setSourceModel(parent);
 }
 
 void ObserverModel::setName(const QString& name)

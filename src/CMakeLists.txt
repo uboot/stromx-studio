@@ -23,6 +23,7 @@ set(stromxstudio_SOURCES
     MainWindow.cpp
     MoveOperatorCmd.cpp
     ObserverEditor.cpp
+    ObserverListProxyModel.cpp
     ObserverModel.cpp
     ObserverTreeModel.cpp
     ObserverWindow.cpp
@@ -54,6 +55,7 @@ set(stromxstudio_HEADERS
     InputModel.h
     MainWindow.h
     ObserverEditor.h
+    ObserverListProxyModel.h
     ObserverModel.h
     ObserverTreeModel.h
     ObserverWindow.h

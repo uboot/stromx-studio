@@ -23,6 +23,7 @@
 #include <QWidget>
 
 class ObserverModel;
+class ObserverTreeModel;
 
 class ObserverWindow : public QWidget
 {
