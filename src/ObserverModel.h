@@ -20,13 +20,13 @@
 #ifndef OBSERVERMODEL_H
 #define OBSERVERMODEL_H
 
-#include <QSortFilterProxyModel>
+#include <QAbstractProxyModel>
 
 class QUndoStack;
 class InputModel;
 class ObserverTreeModel;
 
-class ObserverModel : public QSortFilterProxyModel
+class ObserverModel : public QAbstractProxyModel
 {
     Q_OBJECT
     
@@ -44,6 +44,13 @@ public:
     void insertInput(int position, InputModel* input);
     void removeInput(int position);
     
+    virtual QModelIndex parent(const QModelIndex& child) const;
+    virtual QModelIndex mapFromSource(const QModelIndex & sourceIndex) const;
+    virtual QModelIndex mapToSource(const QModelIndex & proxyIndex) const;
+    virtual int rowCount(const QModelIndex & parent) const;
+    virtual int columnCount(const QModelIndex & parent) const;
+    QModelIndex index(int row, int column, const QModelIndex& parent) const;
+    
 signals:
     /** The name of the observer changed. */
     void nameChanged(const QString & name);
@@ -52,7 +59,11 @@ signals:
     void changed(ObserverModel* observer);
     
 private:
+    /** Sets the name. */
     void doSetName(const QString & name);
+    
+    /** Returns the position of this observer in the list of all observers. */
+    int observerPos() const;
     
     QUndoStack* m_undoStack;
     ObserverTreeModel* m_parent;

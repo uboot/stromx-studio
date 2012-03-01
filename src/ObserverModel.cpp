@@ -5,7 +5,7 @@
 #include "RenameObserverCmd.h"
 
 ObserverModel::ObserverModel(QUndoStack* undoStack, ObserverTreeModel* parent)
-  : QSortFilterProxyModel(parent),
+  : QAbstractProxyModel(parent),
     m_undoStack(undoStack),
     m_parent(parent)
 {
@@ -43,4 +43,64 @@ InputModel* ObserverModel::input(int position)
 {
     return m_inputs[position];
 }
+
+QModelIndex ObserverModel::mapFromSource(const QModelIndex& sourceIndex) const
+{
+    if(! sourceIndex.isValid())
+        return QModelIndex();
+    
+    // filter observer lists
+    if(! sourceIndex.parent().isValid())
+        return QModelIndex();
+    
+    ObserverModel* observer = reinterpret_cast<ObserverModel*>(sourceIndex.internalPointer());
+    
+    // filter input if its parent is not this observer
+    if(observer != this)
+        return QModelIndex();
+    
+    return createIndex(sourceIndex.row(), sourceIndex.column(), sourceIndex.internalPointer());
+}
+
+QModelIndex ObserverModel::mapToSource(const QModelIndex& proxyIndex) const
+{
+    if(! proxyIndex.isValid())
+        return createIndex(observerPos(), proxyIndex.column());
+    
+    return createIndex(proxyIndex.row(), proxyIndex.column(), const_cast<ObserverModel*>(this));
+}
+
+int ObserverModel::rowCount(const QModelIndex& parent) const
+{
+    revert();
+    return numInputs();
+}
+
+QModelIndex ObserverModel::parent(const QModelIndex& child) const
+{
+    return m_parent->parent(child);
+}
+
+int ObserverModel::observerPos() const
+{
+    return m_parent->observers().indexOf(const_cast<ObserverModel*>(this));
+}
+
+QModelIndex ObserverModel::index(int row, int column, const QModelIndex& parent) const
+{
+    return createIndex(row, column, const_cast<ObserverModel*>(this));
+}
+
+int ObserverModel::columnCount(const QModelIndex& parent) const
+{
+    return 2;
+}
+
+
+
+
+
+
+
+
 
