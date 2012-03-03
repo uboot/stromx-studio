@@ -20,13 +20,13 @@
 #ifndef OBSERVERMODEL_H
 #define OBSERVERMODEL_H
 
-#include <QAbstractProxyModel>
+#include <QAbstractTableModel>
 
 class QUndoStack;
 class InputModel;
 class ObserverTreeModel;
 
-class ObserverModel : public QAbstractProxyModel
+class ObserverModel : public QAbstractTableModel
 {
     Q_OBJECT
     
@@ -44,12 +44,17 @@ public:
     void insertInput(int position, InputModel* input);
     void removeInput(int position);
     
-    virtual QModelIndex parent(const QModelIndex& child) const;
-    virtual QModelIndex mapFromSource(const QModelIndex & sourceIndex) const;
-    virtual QModelIndex mapToSource(const QModelIndex & proxyIndex) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
+    virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
-    QModelIndex index(int row, int column, const QModelIndex& parent) const;
+    virtual QStringList mimeTypes() const;
+    QMimeData* mimeData ( const QModelIndexList & indexes ) const;
+    virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+    virtual Qt::DropActions supportedDropActions () const;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+    virtual bool removeRows(int row, int count, const QModelIndex & parent = QModelIndex());
     
 signals:
     /** The name of the observer changed. */
@@ -58,12 +63,48 @@ signals:
     /** A property of the observer changed. */
     void changed(ObserverModel* observer);
     
+private slots:
+    /** 
+     * Calls beginInsertRows(). This slot is connected to the respective signal
+     * of the parent model.
+     */
+    void handleRowsAboutToBeInserted(const QModelIndex & parent, int start, int end);
+    
+    /** 
+     * Calls endInsertRows(). This slot is connected to the respective signal
+     * of the parent model. 
+     */
+    void handleRowsInserted(const QModelIndex & parent, int start, int end);
+    
+    /** 
+     * Calls beginRemoveRows(). This slot is connected to the respective signal
+     * of the parent model.
+     */
+    void handleRowsAboutToBeRemoved(const QModelIndex & parent, int start, int end);
+    
+    /** 
+     * Calls endRemoveRows(). This slot is connected to the respective signal
+     * of the parent model. 
+     */
+    void handleRowsRemoved(const QModelIndex & parent, int start, int end);
+    
+    /**
+     * Emits data changed. This slot is connected to the respective signale
+     * of the parent model.
+     */
+    void handleDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    
 private:
     /** Sets the name. */
     void doSetName(const QString & name);
     
-    /** Returns the position of this observer in the list of all observers. */
-    int observerPos() const;
+    /** 
+     * Returns true if \c parentModelIndex in the parent model refers to an
+     * index of this observer.
+     */
+    bool concernsThisObserver(const QModelIndex & parentModelIndex) const;
+    
+    
     
     QUndoStack* m_undoStack;
     ObserverTreeModel* m_parent;

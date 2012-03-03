@@ -34,7 +34,7 @@ public:
     InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject * parent);
     
     void setColor(const QColor & color);
-    const QColor & color() const;
+    const QColor & color() const { return m_color; }
     
     OperatorModel* op() const { return m_op; }
     unsigned int id() const { return m_id; }

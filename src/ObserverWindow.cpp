@@ -15,6 +15,9 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     QGraphicsView* display = new QGraphicsView();
     QTableView* inputList = new QTableView();
     inputList->setModel(observer);
+    inputList->setDragDropMode(QAbstractItemView::DragDrop);
+    inputList->setSelectionBehavior(QAbstractItemView::SelectRows);
+    inputList->setSelectionMode(QAbstractItemView::SingleSelection);
     inputList->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     
     QSplitter* splitter = new QSplitter(Qt::Vertical);

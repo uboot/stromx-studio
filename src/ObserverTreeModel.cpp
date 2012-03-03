@@ -54,12 +54,10 @@ QVariant ObserverTreeModel::headerData(int section, Qt::Orientation orientation,
     case 0:
         return tr("Operator");
     case 1:
-        return tr("Id");
+        return tr("ID");
     default:
-        ;
+        return QVariant();
     }
-    
-    return QVariant();
 }
 
 bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & parent)
@@ -168,10 +166,17 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     // this is an input
     ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
     const InputModel* input = observer->input(index.row());
-    if(index.column() == 0)
+    switch(index.column())
+    {
+    case 0:
         return input->op()->name();
-    else
+    case 1:
         return input->id();
+    case 2:
+        return input->color();
+    default:
+        return QVariant();
+    }
 }
 
 bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value, int role)
@@ -198,8 +203,8 @@ Qt::ItemFlags ObserverTreeModel::flags(const QModelIndex& index) const
     if(! index.isValid())
         return flags;
     
-    // only parents are editablenew ObserverModel(this)
-    if(! index.parent().isValid())
+    // only observer are editable
+    if(! index.internalPointer())
         return flags |= Qt::ItemIsEditable | Qt::ItemIsDropEnabled;
         
     return flags |= Qt::ItemIsDragEnabled;
@@ -262,10 +267,11 @@ QMimeData* ObserverTreeModel::mimeData(const QModelIndexList& indexes) const
     const QModelIndex & index = indexes[0];
     
     // this is an observer
-    if(! index.parent().isValid())
+    if(! index.internalPointer())
         return 0;
     
-    InputModel* input = m_observers[index.parent().row()]->input(index.row());
+    ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
+    InputModel* input = observer->input(index.row());
     return new InputData(input);
 }
 
