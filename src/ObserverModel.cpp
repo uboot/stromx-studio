@@ -143,7 +143,7 @@ bool ObserverModel::dropMimeData(const QMimeData* data, Qt::DropAction action, i
 {
     int observerPos = m_parent->observers().indexOf(const_cast<ObserverModel*>(this));
     if(observerPos >= 0)
-        return m_parent->dropMimeData(data, action, row, column, createIndex(observerPos, 0));
+        return m_parent->dropMimeData(data, action, parent.row(), 0, createIndex(observerPos, 0));
     
     return false;
 }
@@ -155,9 +155,9 @@ QMimeData* ObserverModel::mimeData(const QModelIndexList& indexes) const
 
 Qt::ItemFlags ObserverModel::flags(const QModelIndex& index) const
 {
-    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    Qt::ItemFlags flags = QAbstractTableModel::flags(index);
     
-    return flags |= Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+    return flags |= (Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
 }
 
 bool ObserverModel::removeRows(int row, int count, const QModelIndex & parent)

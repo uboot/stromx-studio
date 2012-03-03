@@ -220,7 +220,6 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
     {
         if(const InputData* inputData = qobject_cast<const InputData*>(data))
         {
-            
             InputModel* input = inputData->input();
             if(! input)
             {
