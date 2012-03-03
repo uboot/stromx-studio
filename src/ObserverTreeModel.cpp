@@ -157,7 +157,7 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
         return QVariant();
     
     // this is an observer
-    if(! index.parent().isValid())
+    if(! index.internalPointer())
     {
         if(index.column() == 0)
             return m_observers[index.row()]->name();

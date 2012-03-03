@@ -77,7 +77,7 @@ int ObserverModel::rowCount(const QModelIndex& parent) const
 
 QModelIndex ObserverModel::parent(const QModelIndex& child) const
 {
-    return m_parent->parent(child);
+    return QModelIndex();
 }
 
 int ObserverModel::observerPos() const

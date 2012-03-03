@@ -89,7 +89,7 @@ QVariant OperatorLibraryModel::data(const QModelIndex& index, int role) const
         return QVariant();
         
     // index is a package
-    if(! index.parent().isValid())
+    if(! index.internalPointer())
     {
         if(index.column() == 0)
             return m_packages[index.row()].package;
