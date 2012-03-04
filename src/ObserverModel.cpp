@@ -3,6 +3,7 @@
 #include "InputModel.h"
 #include "ObserverTreeModel.h"
 #include "RenameObserverCmd.h"
+#include "InputData.h"
 
 ObserverModel::ObserverModel(QUndoStack* undoStack, ObserverTreeModel* parent)
   : QAbstractTableModel(parent),
@@ -150,7 +151,19 @@ bool ObserverModel::dropMimeData(const QMimeData* data, Qt::DropAction action, i
 
 QMimeData* ObserverModel::mimeData(const QModelIndexList& indexes) const
 {
-    return m_parent->mimeData(indexes);
+    if(indexes.empty())
+        return 0;
+    
+    const QModelIndex & index = indexes[0];
+    
+    if(InputData* inputData = qobject_cast<InputData*>(m_parent->mimeData(indexes)))
+    {
+        InputData* returnData = new InputData(inputData->input(), const_cast<ObserverModel*>(this), index.row());
+        delete inputData;
+        return returnData;
+    }
+    
+    return 0;
 }
 
 Qt::ItemFlags ObserverModel::flags(const QModelIndex& index) const
@@ -160,15 +173,5 @@ Qt::ItemFlags ObserverModel::flags(const QModelIndex& index) const
     return flags |= (Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
 }
 
-bool ObserverModel::removeRows(int row, int count, const QModelIndex & parent)
-{
-    if(concernsThisObserver(parent))
-    {
-        int observerPos = m_parent->observers().indexOf(const_cast<ObserverModel*>(this));
-        return m_parent->removeRows(row, count, createIndex(observerPos, 0));
-    }
-    
-    return false;
-}
 
 

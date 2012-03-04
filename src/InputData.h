@@ -23,6 +23,7 @@
 #include <QMimeData>
 
 class InputModel;
+class ObserverModel;
 class OperatorModel;
 
 class InputData : public QMimeData
@@ -32,16 +33,21 @@ class InputData : public QMimeData
 public:
     InputData(OperatorModel* op, unsigned int id);
     InputData(InputModel* input);
+    InputData(InputModel* input, ObserverModel* sourceObserver, int sourcePosition);
     
     unsigned int id() const { return m_id; }
     OperatorModel* op() const { return m_op; }
     InputModel* input() const { return m_input; }
+    ObserverModel* sourceObserver() const { return m_sourceObserver; }
+    int sourcePosition() const { return m_sourcePosition; }
     virtual QStringList formats() const;
     
 private:
     unsigned int m_id;
     OperatorModel* m_op;
     InputModel* m_input;
+    ObserverModel* m_sourceObserver;
+    int m_sourcePosition;
 };
 
 #endif // INPUTDATA_H

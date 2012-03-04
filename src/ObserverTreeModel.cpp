@@ -239,6 +239,12 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
             QUndoCommand* cmd = new InsertInputCmd(this, parent.row(), inputPos, input);
             m_undoStack->push(cmd);
             
+            // if the input data contains a source observer,
+            // this function is responsible for deleting the drop source
+            int observerPos = m_observers.indexOf(inputData->sourceObserver());
+            if(observerPos >= 0 && inputData->sourcePosition() >= 0)
+                removeRow(inputData->sourcePosition(), createIndex(observerPos, 0));
+            
             return true;
         }
     }
