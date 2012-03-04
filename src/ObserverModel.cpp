@@ -137,14 +137,17 @@ QStringList ObserverModel::mimeTypes() const
 
 Qt::DropActions ObserverModel::supportedDropActions() const
 {
-    return Qt::MoveAction;
+    return Qt::MoveAction | Qt::CopyAction;
 }
 
 bool ObserverModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
     int observerPos = m_parent->observers().indexOf(const_cast<ObserverModel*>(this));
     if(observerPos >= 0)
-        return m_parent->dropMimeData(data, action, parent.row(), 0, createIndex(observerPos, 0));
+    {
+        int insertAt = parent.row() >= 0 ? parent.row() : numInputs();
+        return m_parent->dropMimeData(data, action, insertAt, 0, createIndex(observerPos, 0));
+    }
     
     return false;
 }
