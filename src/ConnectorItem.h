@@ -44,6 +44,9 @@ public:
     unsigned int id() const { return m_id; }
     ConnectorType connectorType() const { return m_connectorType; }
     
+    /** Returns the number of connections connected to this connector. */
+    int numConnections() const;
+    
     void addConnection(ConnectionItem* connection);
     void removeConnection(ConnectionItem* connection);
     void updateConnectionPositions() const;

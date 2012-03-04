@@ -5,13 +5,15 @@
 #include <QMouseEvent>
 #include "ConnectionItem.h"
 #include "ConnectionModel.h"
+#include "ConnectorItem.h"
 #include "InputData.h"
 #include "StreamEditorScene.h"
 #include "StreamModel.h"
 
 StreamEditor::StreamEditor(QWidget* parent)
   : QGraphicsView(parent),
-    m_connection(0)
+    m_targetOp(0),
+    m_inputId(0)
 {
     m_scene = new StreamEditorScene;
     
@@ -24,7 +26,7 @@ StreamEditor::StreamEditor(QWidget* parent)
 
 void StreamEditor::mouseMoveEvent(QMouseEvent* event)
 {
-    if(event->buttons() & Qt::LeftButton && m_connection)
+    if(event->buttons() & Qt::LeftButton && m_targetOp)
     {
         int distance = (event->pos() - m_startPos).manhattanLength();
         
@@ -47,19 +49,32 @@ void StreamEditor::mousePressEvent(QMouseEvent* event)
         if(ConnectionItem* connection = qgraphicsitem_cast<ConnectionItem*>(item))
         {
             m_startPos = event->pos();
-            m_connection = connection;
+            m_targetOp = connection->model()->targetOp();
+            m_inputId = connection->model()->inputId();
             return;
+        }
+        else if(ConnectorItem* connector = qgraphicsitem_cast<ConnectorItem*>(item))
+        {
+            if(connector->connectorType() == ConnectorItem::INPUT
+               && connector->numConnections())
+            {
+                m_startPos = event->pos();
+                m_targetOp = connector->op();
+                m_inputId = connector->id();
+                return;
+            }
         }
     }
     
-    m_connection = 0;
+    m_targetOp = 0;
+    m_inputId = 0;
     QGraphicsView::mousePressEvent(event);
 }
 
 void StreamEditor::startDrag()
 {    
     // allocate a input data object
-    InputData* data = new InputData(m_connection->model()->targetOp(), m_connection->model()->inputId());
+    InputData* data = new InputData(m_targetOp, m_inputId);
     
     QList<QGraphicsView*> views = scene()->views();
     if(views.count() != 1)
@@ -69,5 +84,8 @@ void StreamEditor::startDrag()
     QDrag* drag = new QDrag(currentWidget);
     drag->setMimeData(data);
     drag->exec(Qt::CopyAction, Qt::CopyAction);
+    
+    m_targetOp = 0;
+    m_inputId = 0;
 }
 

@@ -44,7 +44,8 @@ private:
     void startDrag();
     
     QPoint m_startPos;
-    ConnectionItem* m_connection;
+    OperatorModel* m_targetOp;
+    unsigned int m_inputId;
     StreamEditorScene* m_scene;
 };
 

@@ -82,6 +82,11 @@ ConnectorItem* ConnectorItem::connectorItemAt(const QPointF& pos) const
     return 0;
 }
 
+int ConnectorItem::numConnections() const
+{
+    return m_connections.count();
+}
+
 bool ConnectorItem::canConnect() const
 {
     // can not draw any connections when the stream is active
