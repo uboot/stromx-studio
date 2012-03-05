@@ -39,6 +39,11 @@ public:
     QVariant data(const QModelIndex & index, int role) const;
     
     ThreadModel* thread() const { return m_thread; }
+    
+    /** 
+     * Sets the thread of this connection and the adds the input of 
+     * this connection to the stromx stream.
+     */
     void setThread(ThreadModel* thread);
     
     OperatorModel* sourceOp() const { return m_sourceOp; }

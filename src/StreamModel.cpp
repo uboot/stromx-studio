@@ -383,6 +383,11 @@ void StreamModel::doAddThread(ThreadModel* threadModel)
 void StreamModel::doRemoveThread(ThreadModel* threadModel)
 {
     m_threadListModel->removeThread(threadModel);
+    foreach(ConnectionModel* connection, connections())
+    {
+        if(connection->thread() == threadModel)
+            connection->setThread(0);
+    }
     m_stream->removeThread(threadModel->thread());
     threadModel->setThread(0);
     emit threadRemoved(threadModel);

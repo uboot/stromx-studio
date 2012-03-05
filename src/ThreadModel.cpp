@@ -18,6 +18,8 @@ void ThreadModel::setThread(stromx::core::Thread* thread)
     m_thread = thread;
     if(m_thread)
         m_name = QString::fromStdString(m_thread->name());
+    else
+        m_name = "";
 }
 
 void ThreadModel::setName(const QString& name)

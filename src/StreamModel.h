@@ -232,7 +232,10 @@ private:
     /** Adds a thread. */
     void doAddThread(ThreadModel* threadModel);
     
-    /** Removes a thread. */
+    /**
+     * Removes a thread. Sets the thread model of all connections which
+     * are part of the thread to 0.
+     */
     void doRemoveThread(ThreadModel* threadModel);
     
     /** 
