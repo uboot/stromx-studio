@@ -29,6 +29,7 @@ namespace stromx
 {
     namespace core
     { 
+        class DataContainer;
         class Operator;
         class Parameter;
     }
@@ -36,6 +37,7 @@ namespace stromx
 
 class QUndoStack;
 class ConnectionModel;
+class ConnectorObserver;
 class StreamModel;
 
 class OperatorModel : public QAbstractTableModel
@@ -53,7 +55,14 @@ class OperatorModel : public QAbstractTableModel
     friend QDataStream & operator>> (QDataStream & stream, OperatorModel * op);
     
 public:
+    enum ConnectorType
+    {
+        INPUT,
+        OUTPUT
+    };
+    
     explicit OperatorModel(stromx::core::Operator* op, StreamModel *stream);
+    virtual ~OperatorModel();
     
     stromx::core::Operator* const op() const { return m_op; }
     
@@ -85,6 +94,17 @@ signals:
     void nameChanged(const QString & name);
     void initializedChanged(bool status);
     
+    /**
+     * The connector specified by \c type and \c id was set to a data pointer which
+     * was either zero (<tt>occupied == false</tt>) or non-zero (<tt>occupied == true</tt>).
+     */
+    void connectorOccupiedChanged(ConnectorType type, unsigned int id, bool occupied);
+    
+    /**
+     * The connector specified by \c type and \c id was set to \c data.
+     */
+    void connectorDataChanged(ConnectorType type, unsigned int id, stromx::core::DataContainer* data);
+    
 private:
     void doSetPos(const QPointF & pos);
     void setInitialized(bool initialized);
@@ -99,7 +119,8 @@ private:
     QString m_package;
     QString m_type;
     QString m_name;
-    unsigned int offsetPosParam;
+    unsigned int m_offsetPosParam;
+    ConnectorObserver* m_observer;
 };
 
 QDataStream & operator<< (QDataStream & stream, const OperatorModel * op);

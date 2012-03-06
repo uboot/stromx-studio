@@ -5,6 +5,7 @@
 #include <stromx/core/Operator.h>
 #include <stromx/core/Parameter.h>
 #include "MoveOperatorCmd.h"
+#include "ConnectorObserver.h"
 #include "StreamModel.h"
 
 OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
@@ -14,14 +15,23 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
     m_package(QString::fromStdString(m_op->info().package())),
     m_type(QString::fromStdString(m_op->info().type())),
     m_name(QString::fromStdString(m_op->name())),
-    offsetPosParam(3)
+    m_offsetPosParam(3),
+    m_observer(new ConnectorObserver(this))
 {
     Q_ASSERT(m_op);
+    
+    m_op->addObserver(m_observer);
+}
+
+OperatorModel::~OperatorModel()
+{
+    m_op->removeObserver(m_observer);
+    delete m_observer;
 }
 
 int OperatorModel::rowCount(const QModelIndex& index) const
 {
-    return accessibleParametersCount() + offsetPosParam;
+    return accessibleParametersCount() + m_offsetPosParam;
 }
 
 int OperatorModel::columnCount(const QModelIndex& index) const
@@ -99,10 +109,10 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
                     if(accessibleParameter(*iter_par))
                     {
                         if(index.column() == 0)
-                            return QVariant(QString::fromStdString(m_op->info().parameters()[index.row()-offsetPosParam]->name()));
+                            return QVariant(QString::fromStdString(m_op->info().parameters()[index.row()-m_offsetPosParam]->name()));
                         else
                         {
-                            const stromx::core::Parameter* param = m_op->info().parameters()[index.row()-offsetPosParam];
+                            const stromx::core::Parameter* param = m_op->info().parameters()[index.row()-m_offsetPosParam];
                             unsigned int paramId = param->id();
                             try
                             {
