@@ -187,4 +187,11 @@ void ConnectorItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
+void ConnectorItem::setOccupied(bool occupied)
+{
+    setBrush(occupied ? Qt::blue : Qt::white);
+    
+}
+
+
 

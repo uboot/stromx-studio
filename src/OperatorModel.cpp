@@ -1,11 +1,13 @@
 #include "OperatorModel.h"
 
+#include <QEvent>
 #include <QUndoStack>
 #include <stromx/core/Image.h>
 #include <stromx/core/Operator.h>
 #include <stromx/core/Parameter.h>
 #include "MoveOperatorCmd.h"
 #include "ConnectorObserver.h"
+#include "ConnectorOccupyEvent.h"
 #include "StreamModel.h"
 
 OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
@@ -364,6 +366,13 @@ QUndoStack* OperatorModel::undoStack() const
 {
     return m_stream->undoStack(); 
 }
+
+void OperatorModel::customEvent(QEvent* event)
+{
+    if(ConnectorOccupyEvent* connectorEvent = dynamic_cast<ConnectorOccupyEvent*>(event))
+        emit connectorOccupiedChanged(connectorEvent->type(), connectorEvent->id(), connectorEvent->occupied());
+}
+
 
 QDataStream& operator<<(QDataStream& stream, const OperatorModel* op)
 {

@@ -66,10 +66,11 @@ public:
     
     stromx::core::Operator* const op() const { return m_op; }
     
-    int rowCount(const QModelIndex & index) const;
-    int columnCount(const QModelIndex & index) const;
-    QVariant data(const QModelIndex & index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    virtual int rowCount(const QModelIndex & index) const;
+    virtual int columnCount(const QModelIndex & index) const;
+    virtual QVariant data(const QModelIndex & index, int role) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    virtual void customEvent(QEvent* event);
     
     const QString & package() const;
     const QString & type() const;
@@ -95,15 +96,15 @@ signals:
     void initializedChanged(bool status);
     
     /**
-     * The connector specified by \c type and \c id was set to a data pointer which
+     * The connector specifOperatorModel::ied by \c type and \c id was set to a data pointer which
      * was either zero (<tt>occupied == false</tt>) or non-zero (<tt>occupied == true</tt>).
      */
-    void connectorOccupiedChanged(ConnectorType type, unsigned int id, bool occupied);
+    void connectorOccupiedChanged(OperatorModel::ConnectorType type, unsigned int id, bool occupied);
     
     /**
      * The connector specified by \c type and \c id was set to \c data.
      */
-    void connectorDataChanged(ConnectorType type, unsigned int id, stromx::core::DataContainer* data);
+    void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer* data);
     
 private:
     void doSetPos(const QPointF & pos);

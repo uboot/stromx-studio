@@ -50,6 +50,7 @@ public:
     void addConnection(ConnectionItem* connection);
     void removeConnection(ConnectionItem* connection);
     void updateConnectionPositions() const;
+    void setOccupied(bool occupied);
 
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);

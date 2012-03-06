@@ -5,7 +5,6 @@
 #include <QUndoStack>
 #include <stromx/core/Operator.h>
 #include "ConnectorItem.h"
-#include "OperatorModel.h"
 #include "StreamEditorScene.h"
 
 OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
@@ -29,6 +28,8 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
     
     connect(m_model, SIGNAL(initializedChanged(bool)), this, SLOT(setInitialized(bool)));
     connect(m_model, SIGNAL(posChanged(QPointF)), this, SLOT(setOperatorPos(QPointF)));
+    connect(m_model, SIGNAL(connectorOccupiedChanged(OperatorModel::ConnectorType,uint,bool)),
+            this, SLOT(setConnectorOccupied(OperatorModel::ConnectorType,uint,bool)));;
 }
 
 QRectF OperatorItem::boundingRect() const
@@ -187,6 +188,21 @@ void OperatorItem::setOperatorPos(const QPointF& value)
     setPos(value);
     updateConnectionPositions();
 }
+
+void OperatorItem::setConnectorOccupied(OperatorModel::ConnectorType type, unsigned int id, bool occupied)
+{
+    if(type == OperatorModel::INPUT)
+    {
+        if(m_inputs.contains(id))
+            m_inputs[id]->setOccupied(occupied);
+    }
+    else
+    {
+        if(m_outputs.contains(id))
+            m_outputs[id]->setOccupied(occupied);
+    }
+}
+
 
 
 

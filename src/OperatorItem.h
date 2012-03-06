@@ -22,6 +22,7 @@
 
 #include <QGraphicsObject>
 #include <QPointF>
+#include "OperatorModel.h"
 
 class QGraphicsRectItem;
 class ConnectionItem;
@@ -54,6 +55,9 @@ public slots:
 protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value);
+    
+private slots:
+    void setConnectorOccupied(OperatorModel::ConnectorType type, unsigned int id, bool occupied);
     
 private:
     void initialize();

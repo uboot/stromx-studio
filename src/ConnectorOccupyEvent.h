@@ -26,6 +26,8 @@
 class ConnectorOccupyEvent : public QEvent
 {
 public:
+    static const unsigned int TYPE = QEvent::User;
+    
     ConnectorOccupyEvent(OperatorModel::ConnectorType type, unsigned int id, bool isOccupied);
     
     OperatorModel::ConnectorType type() const { return m_type; }
