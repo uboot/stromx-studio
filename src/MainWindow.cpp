@@ -723,7 +723,7 @@ void MainWindow::destroyObserverWindow(ObserverModel* observer)
     
     foreach(ObserverWindow* w, m_observerWindows)
     {
-        if(w->observer() == observer)
+        if(w->model() == observer)
             window = w;
     }
     

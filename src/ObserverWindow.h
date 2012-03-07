@@ -32,7 +32,7 @@ class ObserverWindow : public QWidget
 public:
     explicit ObserverWindow(ObserverModel* observer, QWidget* parent);
     
-    ObserverModel* observer() const { return m_observer; }
+    ObserverModel* model() const { return m_observer; }
     QAction* showAction() const { return m_showAct; }
     
 private slots:
