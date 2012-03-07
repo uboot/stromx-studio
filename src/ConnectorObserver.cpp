@@ -17,4 +17,7 @@ void ConnectorObserver::observe(const stromx::core::Connector& connector, const 
                                         OperatorModel::INPUT : OperatorModel::OUTPUT;
     ConnectorOccupyEvent* event = new ConnectorOccupyEvent(type, connector.id(), data.empty() ? false : true);                                   
     m_application->postEvent(m_opModel, event);
+    
+    // uncomment for slow motion:
+    // usleep(100000);
 }
