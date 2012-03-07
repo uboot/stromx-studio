@@ -15,6 +15,6 @@ void ConnectorObserver::observe(const stromx::core::Connector& connector, const 
 {
     OperatorModel::ConnectorType type = connector.type() == stromx::core::Connector::INPUT ? 
                                         OperatorModel::INPUT : OperatorModel::OUTPUT;
-    QEvent* event = new ConnectorOccupyEvent(type, connector.id(), ! data.empty());                                   
+    ConnectorOccupyEvent* event = new ConnectorOccupyEvent(type, connector.id(), data.empty() ? false : true);                                   
     m_application->postEvent(m_opModel, event);
 }
