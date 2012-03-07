@@ -57,7 +57,11 @@ protected:
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value);
     
 private slots:
+    /** Visualizes the connector as occupied. */
     void setConnectorOccupied(OperatorModel::ConnectorType type, unsigned int id, bool occupied);
+    
+    /** Visualizes all connectors as unoccupied. */
+    void resetAllConnectors();
     
 private:
     void initialize();

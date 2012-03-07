@@ -23,6 +23,8 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
     Q_ASSERT(m_op);
     
     m_op->addObserver(m_observer);
+    connect(m_stream, SIGNAL(streamStarted()), this, SLOT(setActiveTrue()));
+    connect(m_stream, SIGNAL(streamStopped()), this, SLOT(setActiveFalse()));
 }
 
 OperatorModel::~OperatorModel()
@@ -373,6 +375,15 @@ void OperatorModel::customEvent(QEvent* event)
         emit connectorOccupiedChanged(connectorEvent->type(), connectorEvent->id(), connectorEvent->occupied());
 }
 
+void OperatorModel::setActiveFalse()
+{
+    emit activeChanged(false);
+}
+
+void OperatorModel::setActiveTrue()
+{
+    emit activeChanged(true);
+}
 
 QDataStream& operator<<(QDataStream& stream, const OperatorModel* op)
 {

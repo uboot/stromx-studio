@@ -29,7 +29,8 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
     connect(m_model, SIGNAL(initializedChanged(bool)), this, SLOT(setInitialized(bool)));
     connect(m_model, SIGNAL(posChanged(QPointF)), this, SLOT(setOperatorPos(QPointF)));
     connect(m_model, SIGNAL(connectorOccupiedChanged(OperatorModel::ConnectorType,uint,bool)),
-            this, SLOT(setConnectorOccupied(OperatorModel::ConnectorType,uint,bool)));;
+            this, SLOT(setConnectorOccupied(OperatorModel::ConnectorType,uint,bool)));
+    connect(m_model, SIGNAL(activeChanged(bool)), this, SLOT(resetAllConnectors()));
 }
 
 QRectF OperatorItem::boundingRect() const
@@ -202,6 +203,24 @@ void OperatorItem::setConnectorOccupied(OperatorModel::ConnectorType type, unsig
             m_outputs[id]->setOccupied(occupied);
     }
 }
+
+void OperatorItem::resetAllConnectors()
+{ 
+    QMapIterator<unsigned int, ConnectorItem*> input(m_inputs);
+    while (input.hasNext())
+    {
+        input.next();
+        input.value()->setOccupied(false);
+    }
+    
+    QMapIterator<unsigned int, ConnectorItem*> output(m_outputs);
+    while (output.hasNext())
+    {
+        output.next();
+        output.value()->setOccupied(false);
+    }
+}
+
 
 
 

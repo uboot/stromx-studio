@@ -93,18 +93,28 @@ public:
 signals:
     void posChanged(const QPointF & pos);
     void nameChanged(const QString & name);
+    
+    /** The stromx operator was initialized or deinitialized. */
     void initializedChanged(bool status);
     
+    /** The stromx operator was activated or deactivated. */
+    void activeChanged(bool status);
+    
     /**
-     * The connector specifOperatorModel::ied by \c type and \c id was set to a data pointer which
+     * The connector specified by \c type and \c id was set to a data pointer which
      * was either zero (<tt>occupied == false</tt>) or non-zero (<tt>occupied == true</tt>).
      */
     void connectorOccupiedChanged(OperatorModel::ConnectorType type, unsigned int id, bool occupied);
     
-    /**
-     * The connector specified by \c type and \c id was set to \c data.
-     */
+    /** The connector specified by \c type and \c id was set to \c data. */
     void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer* data);
+    
+private slots:
+    /** Emits <tt>activeChanged(true)</tt>. */
+    void setActiveTrue();
+    
+    /** Emits <tt>activeChanged(false)</tt>. */
+    void setActiveFalse();
     
 private:
     void doSetPos(const QPointF & pos);
