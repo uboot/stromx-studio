@@ -48,6 +48,7 @@ set(stromxstudio_SOURCES
     ThreadEditor.cpp
     ThreadListModel.cpp
     ThreadModel.cpp
+    UndoStackAction.cpp
 )
 
 set(stromxstudio_HEADERS
@@ -72,6 +73,7 @@ set(stromxstudio_HEADERS
     ThreadEditor.h
     ThreadListModel.h
     ThreadModel.h
+    UndoStackAction.h
 )
 
 #set(stromxgui_FORMS mainwindow.ui)

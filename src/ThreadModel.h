@@ -55,8 +55,14 @@ public:
     void setColor(const QColor & color);
     
 signals:
+    /** The color of the thread changed. */
     void colorChanged(const QColor & color);
+    
+    /** The name of the thread changed. */
     void nameChanged(const QString & name);
+    
+    /** A property of the thread changed. */
+    void changed(ThreadModel* observer);
     
 private:
     void doSetColor(const QColor & color);

@@ -47,8 +47,15 @@ public:
     
     friend QDataStream & operator<< (QDataStream & stream, const ThreadListModel * threadList);
     friend QDataStream & operator>> (QDataStream & stream, ThreadListModel * threadList);
+     
+private slots:
+    /** Updates the displayed data of \c thread. */
+    void updateThread(ThreadModel* thread);
     
 private:
+    /** The number of columns of the model. */
+    const static int NUM_COLUMNS = 2;
+    
     void addThread(ThreadModel* thread);
     void removeThread(ThreadModel* thread);
     void removeAllThreads();

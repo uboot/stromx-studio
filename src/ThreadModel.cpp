@@ -38,6 +38,7 @@ void ThreadModel::doSetName(const QString& name)
         m_thread->setName(name.toStdString());
         m_name = name;
         emit nameChanged(m_name);
+        emit changed(this);
     }
 }
 
@@ -51,6 +52,7 @@ void ThreadModel::doSetColor(const QColor& color)
 {
     m_color = color;
     emit colorChanged(m_color);
+    emit changed(this);
 }
 
 QDataStream& operator<<(QDataStream& stream, const ThreadModel* thread)

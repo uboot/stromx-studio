@@ -310,7 +310,7 @@ void ObserverTreeModel::updateObserver(ObserverModel *observer)
 {
     int pos = m_observers.indexOf(observer);
     if(pos >= 0)
-        emit dataChanged(createIndex(pos, 0), createIndex(pos, 0));
+        emit dataChanged(createIndex(pos, 0), createIndex(pos, NUM_COLUMNS - 1));
 }
 
 QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)

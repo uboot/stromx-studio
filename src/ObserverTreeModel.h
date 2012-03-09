@@ -97,6 +97,13 @@ private slots:
     void updateObserver(ObserverModel *observer);
     
 private:
+    /** 
+     * The number of columns of the model. Note that the number returned  by columnCount()
+     * is smaller than this value because the model also provides data for the
+     * class ObserverModel which is not displayed by the tree view.
+     */
+    const static int NUM_COLUMNS = 3;
+    
     void doInsertObserver(int pos, ObserverModel* observer);
     void doRemoveObserver(int pos);
     void doInsertInput(int observerPos, int inputPos, InputModel* input);

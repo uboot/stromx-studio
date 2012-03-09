@@ -15,7 +15,7 @@ int ThreadListModel::rowCount(const QModelIndex& parent) const
 
 int ThreadListModel::columnCount(const QModelIndex& parent) const
 {
-    return 2;
+    return NUM_COLUMNS;
 }
 
 QVariant ThreadListModel::data(const QModelIndex& index, int role) const
@@ -87,6 +87,7 @@ void ThreadListModel::addThread(ThreadModel* thread)
 {
     beginInsertRows(QModelIndex(), m_threads.size() + 1, m_threads.size() + 1);
     m_threads.append(thread);
+    connect(thread, SIGNAL(changed(ThreadModel*)), this, SLOT(updateThread(ThreadModel*)));
     endInsertRows();
 }
 
@@ -123,6 +124,13 @@ void ThreadListModel::removeAllThreads()
     beginResetModel();
     m_threads.clear();
     endResetModel();
+}
+
+void ThreadListModel::updateThread(ThreadModel* thread)
+{
+    int pos = m_threads.indexOf(thread);
+    if(pos >= 0)
+        emit dataChanged(createIndex(pos, 0), createIndex(pos, NUM_COLUMNS - 1));
 }
 
 QDataStream& operator<<(QDataStream& stream, const ThreadListModel* threadList)
