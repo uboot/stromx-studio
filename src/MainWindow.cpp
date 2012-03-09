@@ -26,7 +26,6 @@
 #include <QMessageBox>
 #include <QSplitter>
 #include <QToolBar>
-#include <QUndoStack>
 #include <QDir>
 #include <QFileDialog>
 #include <QSettings>
@@ -39,6 +38,7 @@
 #include <stromx/core/ZipFileInput.h>
 #include <stromx/core/ZipFileOutput.h>
 #include "Exception.h"
+#include "LimitUndoStack.h"
 #include "MainWindow.h"
 #include "ObserverEditor.h"
 #include "ObserverTreeModel.h"
@@ -53,10 +53,9 @@
 
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent),
-    m_model(0),
-    m_currentUndoLimit(0)
+    m_model(0)
 {
-    m_undoStack = new QUndoStack(this);
+    m_undoStack = new LimitUndoStack(this);
     
     QSplitter* splitter = new QSplitter(Qt::Vertical);
     m_streamEditor = new StreamEditor;
@@ -134,6 +133,8 @@ void MainWindow::setModel(StreamModel* model)
 
 void MainWindow::createActions()
 {
+    m_undoAct = m_undoStack->createLimitUndoAction(this);
+    m_undoAct->setShortcuts(QKeySequence::Undo);
     m_redoAct = m_undoStack->createRedoAction(this);
     m_redoAct->setShortcuts(QKeySequence::Redo);
     m_initializeAct = m_streamEditor->scene()->createInitializeAction(this);
@@ -144,14 +145,6 @@ void MainWindow::createActions()
     m_addObserverAct = m_observerEditor->createAddObserverAction(this);
     m_removeObserverAct = m_observerEditor->createRemoveObserverAction(this);
     m_removeInputAct = m_observerEditor->createRemoveInputAction(this);
-
-    m_undoAct = new QAction(tr("Undo %1").arg(m_undoStack->undoText()), this);
-    m_undoAct->setShortcuts(QKeySequence::Undo);
-    m_undoAct->setEnabled(m_undoStack->canUndo());
-    connect(m_undoStack, SIGNAL(undoTextChanged(QString)), this, SLOT(handleUndoTextChanged(QString)));
-    connect(m_undoStack, SIGNAL(canUndoChanged(bool)), this, SLOT(handleCanUndoChanged(bool)));
-    connect(m_undoStack, SIGNAL(indexChanged(int)), this, SLOT(handleUndoIndexChanged(int)));
-    connect(m_undoAct, SIGNAL(triggered()), m_undoStack, SLOT(undo()));
     
     m_saveAct = new QAction(tr("&Save"), this);
     m_saveAct->setShortcuts(QKeySequence::Save);
@@ -305,7 +298,7 @@ void MainWindow::start()
     m_stopAct->setEnabled(true);
     m_redoAct->setEnabled(false);
     m_undoAct->setEnabled(false);
-    m_currentUndoLimit = m_undoStack->index();
+    m_undoStack->activateLimit();
 }
 
 void MainWindow::stop()
@@ -329,7 +322,7 @@ void MainWindow::join()
     m_startAct->setEnabled(true);
     m_pauseAct->setEnabled(false);
     m_stopAct->setEnabled(false);
-    m_currentUndoLimit = 0;
+    m_undoStack->deactivateLimit();
     m_undoAct->setEnabled(m_undoStack->canUndo());
     m_redoAct->setEnabled(m_undoStack->canRedo());
 }
@@ -686,28 +679,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
     
     writeSettings();
 }
-
-void MainWindow::handleUndoTextChanged(const QString& undoText)
-{
-    m_undoAct->setText(tr("Undo %1").arg(undoText));
-}
-
-void MainWindow::handleCanUndoChanged(bool canUndo)
-{
-    // disable undo stack for any undo actions beyond the limit
-    if(m_undoStack->index() == m_currentUndoLimit)
-        m_undoAct->setEnabled(false);
-    else
-        m_undoAct->setEnabled(canUndo);
-}
-
-void MainWindow::handleUndoIndexChanged(int index)
-{
-    // disable undo stack for any undo actions beyond the limit
-    if(m_undoStack->index() == m_currentUndoLimit)
-        m_undoAct->setEnabled(false);
-}
-
 
 void MainWindow::createObserverWindow(ObserverModel* observer)
 {

@@ -31,8 +31,8 @@
 #include <QMainWindow>
 
 class QAction;
-class QUndoStack;
 class QMenu;
+class LimitUndoStack;
 class ObserverEditor;
 class ObserverModel;
 class ObserverWindow;
@@ -71,9 +71,6 @@ private slots:
     void stop();
     void join();
     void updateWindowTitle(bool undoStackIsClean);
-    void handleCanUndoChanged(bool canUndo);
-    void handleUndoTextChanged(const QString & undoText);
-    void handleUndoIndexChanged(int index);
     
     /** Creates a window for \c observer. */
     void createObserverWindow(ObserverModel* observer);
@@ -135,7 +132,7 @@ private:
     QAction* m_removeInputAct;
     QAction* m_observerSeparatorAct;
     
-    QUndoStack* m_undoStack;
+    LimitUndoStack* m_undoStack;
     
     QMenu* m_fileMenu;
     QMenu* m_editMenu;
@@ -155,7 +152,6 @@ private:
     StreamModel* m_model;
      
     QString m_currentFile;
-    int m_currentUndoLimit;
     QList<ObserverWindow*> m_observerWindows;
 };
 
