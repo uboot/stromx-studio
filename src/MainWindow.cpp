@@ -376,6 +376,14 @@ void MainWindow::readFile(const QString& filepath)
     StreamModel* stream = 0;
     std::auto_ptr<stromx::core::FileInput> input;
     QString location;
+    
+    if(extension != "xml" && extension != "zip")
+    {
+        QMessageBox::critical(this, tr("Failed to load file"),
+                              tr("The file extension '%1' is not recognized").arg(extension),
+                              QMessageBox::Ok, QMessageBox::Ok);
+    }
+    
     try
     {
         if(extension == "xml")
@@ -399,7 +407,15 @@ void MainWindow::readFile(const QString& filepath)
     
     try
     {
-        stream = new StreamModel(*input, basename, m_undoStack, m_operatorLibrary->model(), this);
+        if(extension == "xml")
+        {
+            stream = new StreamModel(*input, basename, m_undoStack, m_operatorLibrary->model(), this);
+        }
+        else if(extension == "zip")
+        {
+            stream = new StreamModel(*input, "stream", m_undoStack, m_operatorLibrary->model(), this);
+        }
+        
         updateCurrentFile(filepath);
     }
     catch(stromx::core::FileAccessFailed&)
@@ -418,7 +434,16 @@ void MainWindow::readFile(const QString& filepath)
     
     try
     {
-        stream->readStudioData(*input, basename);
+        
+        if(extension == "xml")
+        {
+            stream->readStudioData(*input, basename);
+        }
+        else if(extension == "zip")
+        {
+            stream->readStudioData(*input, "stream");
+        }
+        
     }
     catch(ReadStreamFailed& e)
     {
@@ -574,7 +599,7 @@ void MainWindow::writeFile(const QString& filepath)
         {
             location = filepath;
             stromx::core::ZipFileOutput output(location.toStdString());
-            m_streamEditor->scene()->model()->write(output, basename);
+            m_streamEditor->scene()->model()->write(output, "stream");
         }
     
         updateCurrentFile(filepath);
