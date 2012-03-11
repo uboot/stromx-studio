@@ -53,7 +53,7 @@ public:
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
     
-    void loadLibrary(const QString& library);
+    void loadLibrary(const QString& libPath);
     void resetLibraries();
     const bool isOperator(const QModelIndex & index) const;
     OperatorData* newOperatorData(const QModelIndex & index) const;
@@ -73,7 +73,6 @@ private:
     void updateOperators();
     
     QList<Package> m_packages;
-    QVector<void*> m_libraryHandles;
     QStringList m_loadedLibraries;
     stromx::core::Factory* m_factory;
 };
