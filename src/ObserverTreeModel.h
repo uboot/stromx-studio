@@ -89,6 +89,16 @@ signals:
     /** An observer was removed from the model. */
     void observerRemoved(ObserverModel* observer);
     
+    /** An input was removed from the model. */
+    void inputRemoved(InputModel* input, ObserverModel* observer, int pos);
+    
+    /** An input was moved within the model. */
+    void inputMoved(InputModel* input, ObserverModel* srcObserver, int srcPos,
+                    ObserverModel* destObserver, int destPos);
+    
+    /** An input was added to the model. */
+    void inputAdded(InputModel* input, ObserverModel* observer, int pos);
+    
 private slots:
     /** Removes all inputs which are the target of the removed connection. */
     void removeConnectedInputs(ConnectionModel* connection);

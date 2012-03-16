@@ -28,6 +28,14 @@ class DataVisualizer : public QGraphicsView, public AbstractDataVisualizer
 public:
     DataVisualizer(QWidget* parent = 0);
     
+    virtual void addLayer(int pos);
+    virtual void moveLayer(int src, int dest);
+    virtual void removeLayer(int pos);
+    virtual void setColor(int layer, const QColor & color);
+    virtual void setAlpha(int layer, int alpha);
+    virtual void setData(int layer, stromx::core::Data& data);
+    virtual void setActive(int layer, bool active);
+    
 private:
     
 };

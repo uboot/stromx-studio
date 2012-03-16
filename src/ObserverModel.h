@@ -62,6 +62,15 @@ signals:
     /** A property of the observer changed. */
     void changed(ObserverModel* observer);
     
+    /** An input was removed from the model. */
+    void inputRemoved(InputModel* input, int pos);
+    
+    /** An input was moved within the model. */
+    void inputMoved(InputModel* input, int srcPos, int destPos);
+    
+    /** An input was added to the model. */
+    void inputAdded(InputModel* input, int pos);
+    
 private slots:
     /** 
      * Calls beginInsertRows(). This slot is connected to the respective signal

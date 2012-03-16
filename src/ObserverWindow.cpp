@@ -1,18 +1,18 @@
 #include "ObserverWindow.h"
 
 #include <QAction>
-#include <QGraphicsView>
 #include <QHeaderView>
 #include <QTableView>
 #include <QVBoxLayout>
 #include <QSplitter>
 #include "ObserverModel.h"
+#include "DataVisualizer.h"
 
 ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent) 
   : QWidget(parent, Qt::Window),
     m_observer(observer)
 {
-    QGraphicsView* display = new QGraphicsView();
+    QGraphicsView* display = new DataVisualizer();
     QTableView* inputList = new QTableView();
     inputList->setModel(observer);
     inputList->setDragDropMode(QAbstractItemView::DragDrop);
