@@ -11,6 +11,7 @@ set(stromxstudio_SOURCES
     AddOperatorCmd.cpp
     ConnectionItem.cpp
     ConnectorItem.cpp
+    ConnectorDataEvent.cpp
     ConnectorOccupyEvent.cpp
     ConnectorObserver.cpp
     ConnectionModel.cpp

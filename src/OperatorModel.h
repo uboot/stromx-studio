@@ -23,13 +23,13 @@
 #include <QAbstractTableModel>
 #include <QPointF>
 #include <QSet>
-#include <stromx/core/Data.h>
+#include <stromx/core/DataContainer.h>
 
 namespace stromx
 {
     namespace core
     { 
-        class DataContainer;
+        class Data;
         class Operator;
         class Parameter;
     }
@@ -107,7 +107,7 @@ signals:
     void connectorOccupiedChanged(OperatorModel::ConnectorType type, unsigned int id, bool occupied);
     
     /** The connector specified by \c type and \c id was set to \c data. */
-    void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer* data);
+    void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data);
     
 private slots:
     /** Emits <tt>activeChanged(true)</tt>. */

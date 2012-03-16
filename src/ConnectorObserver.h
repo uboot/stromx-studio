@@ -17,9 +17,10 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONNECTOROBSERVERL_H
-#define CONNECTOROBSERVERL_H
+#ifndef CONNECTOROBSERVER_H
+#define CONNECTOROBSERVER_H
 
+#include <QMutex>
 #include <stromx/core/ConnectorObserver.h>
 
 namespace stromx
@@ -42,9 +43,13 @@ public:
     virtual void observe(const stromx::core::Connector &connector,
                          const stromx::core::DataContainer &data) const;
                          
+    void setObserveData(bool observe);
+                         
 private:
     OperatorModel* m_opModel;
     QCoreApplication* m_application;
+    bool m_observeData;
+    mutable QMutex m_mutex;
 };
 
-#endif // CONNECTOROBSERVERL_H
+#endif // CONNECTOROBSERVER_H

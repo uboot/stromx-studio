@@ -7,6 +7,7 @@
 #include <stromx/core/Parameter.h>
 #include "MoveOperatorCmd.h"
 #include "ConnectorObserver.h"
+#include "ConnectorDataEvent.h"
 #include "ConnectorOccupyEvent.h"
 #include "StreamModel.h"
 
@@ -371,8 +372,10 @@ QUndoStack* OperatorModel::undoStack() const
 
 void OperatorModel::customEvent(QEvent* event)
 {
-    if(ConnectorOccupyEvent* connectorEvent = dynamic_cast<ConnectorOccupyEvent*>(event))
-        emit connectorOccupiedChanged(connectorEvent->type(), connectorEvent->id(), connectorEvent->occupied());
+    if(ConnectorOccupyEvent* occupyEvent = dynamic_cast<ConnectorOccupyEvent*>(event))
+        emit connectorOccupiedChanged(occupyEvent->type(), occupyEvent->id(), occupyEvent->occupied());
+    else if(ConnectorDataEvent* dataEvent = dynamic_cast<ConnectorDataEvent*>(event))
+        emit connectorDataChanged(dataEvent->type(), dataEvent->id(), dataEvent->data());
 }
 
 void OperatorModel::setActiveFalse()
