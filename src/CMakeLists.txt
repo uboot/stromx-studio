@@ -15,6 +15,8 @@ set(stromxstudio_SOURCES
     ConnectorOccupyEvent.cpp
     ConnectorObserver.cpp
     ConnectionModel.cpp
+    DataManager.cpp
+    DataVisualizer.cpp
     DeinitializeOperatorCmd.cpp
     InitializeOperatorCmd.cpp
     InputData.cpp
@@ -55,6 +57,7 @@ set(stromxstudio_SOURCES
 
 set(stromxstudio_HEADERS
     ConnectionModel.h
+    DataManager.h
     InputData.h
     InputModel.h
     LimitUndoStack.h

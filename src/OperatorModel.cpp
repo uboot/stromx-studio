@@ -390,12 +390,14 @@ void OperatorModel::setActiveTrue()
 
 void OperatorModel::connectNotify(const char* signal)
 {
+    // if there are receivers for data change signals the according events must be sent
     if(receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer))))
         m_observer->setObserveData(true);  
 }
 
 void OperatorModel::disconnectNotify(const char* signal)
 {
+    // if there are no receivers for data change signals do not send the events
     if(! receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer))))
         m_observer->setObserveData(false); 
 }
