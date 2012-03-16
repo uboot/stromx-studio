@@ -21,8 +21,11 @@ void ConnectorObserver::observe(const stromx::core::Connector& connector, const 
     m_application->postEvent(m_opModel, occupyEvent);
     
     QMutexLocker lock(&m_mutex);
-    ConnectorDataEvent* dataEvent = new ConnectorDataEvent(type, connector.id(), data);
-    m_application->postEvent(m_opModel, dataEvent);
+    if(m_observeData)
+    {
+        ConnectorDataEvent* dataEvent = new ConnectorDataEvent(type, connector.id(), data);
+        m_application->postEvent(m_opModel, dataEvent);
+    }
     
     // uncomment for slow motion:
     // usleep(100000);

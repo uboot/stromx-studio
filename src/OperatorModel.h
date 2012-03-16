@@ -109,6 +109,10 @@ signals:
     /** The connector specified by \c type and \c id was set to \c data. */
     void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data);
     
+protected:
+    virtual void connectNotify(const char * signal);
+    virtual void disconnectNotify(const char * signal);
+
 private slots:
     /** Emits <tt>activeChanged(true)</tt>. */
     void setActiveTrue();

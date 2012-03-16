@@ -388,6 +388,18 @@ void OperatorModel::setActiveTrue()
     emit activeChanged(true);
 }
 
+void OperatorModel::connectNotify(const char* signal)
+{
+    if(receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer))))
+        m_observer->setObserveData(true);  
+}
+
+void OperatorModel::disconnectNotify(const char* signal)
+{
+    if(! receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer))))
+        m_observer->setObserveData(false); 
+}
+
 QDataStream& operator<<(QDataStream& stream, const OperatorModel* op)
 {
     return stream << op->m_pos;
