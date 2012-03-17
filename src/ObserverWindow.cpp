@@ -5,14 +5,16 @@
 #include <QTableView>
 #include <QVBoxLayout>
 #include <QSplitter>
-#include "ObserverModel.h"
 #include "DataVisualizer.h"
+#include "DataManager.h"
+#include "DataVisualizer.h"
+#include "ObserverModel.h"
 
 ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent) 
   : QWidget(parent, Qt::Window),
     m_observer(observer)
 {
-    QGraphicsView* display = new DataVisualizer();
+    DataVisualizer* visualizer = new DataVisualizer();
     QTableView* inputList = new QTableView();
     inputList->setModel(observer);
     inputList->setDragDropMode(QAbstractItemView::DragDrop);
@@ -21,7 +23,7 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     inputList->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     
     QSplitter* splitter = new QSplitter(Qt::Vertical);
-    splitter->addWidget(display);
+    splitter->addWidget(visualizer);
     splitter->addWidget(inputList);
     
     QVBoxLayout* layout = new QVBoxLayout;
@@ -36,6 +38,9 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     connect(observer, SIGNAL(nameChanged(QString)), this, SLOT(updateActionText(QString)));
     
     setWindowTitle(observer->name());
+    
+    // allocate the data manager
+    new DataManager(observer, visualizer, this);
 }
 
 void ObserverWindow::updateActionText(const QString& name)

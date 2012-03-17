@@ -22,8 +22,19 @@
 
 #include <QObject>
 
+#include "OperatorModel.h"
+
 class AbstractDataVisualizer;
+class InputModel;
 class ObserverModel;
+
+namespace stromx
+{
+    namespace core
+    {
+        class DataContainer;
+    }
+}
 
 class DataManager : public QObject
 {
@@ -32,9 +43,19 @@ class DataManager : public QObject
 public:
     DataManager(ObserverModel* observer, AbstractDataVisualizer* visualizer, QObject* parent);
     
+private slots:
+    void removeInputLayer(InputModel* input, int pos);
+    void moveInputLayer(InputModel* input, int srcPos, int destPos);
+    void addInputLayer(InputModel* input, int pos);
+    void updateLayerData(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data);
+
 private:
+    void addInput(InputModel* input);
+    void removeInput(InputModel* input);
+    
     ObserverModel* m_observer;
     AbstractDataVisualizer* m_visualizer;
+    QSet<InputModel*> m_currentInputs;
 };
 
 #endif // DATAMANAGER_H
