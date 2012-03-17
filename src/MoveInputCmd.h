@@ -1,5 +1,5 @@
 /* 
-*  Copyright 2011 Matthias Fuchs
+*  Copyright 2012 Matthias Fuchs
 *
 *  This file is part of stromx-studio.
 *
@@ -17,36 +17,31 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTDATA_H
-#define INPUTDATA_H
+#ifndef MOVEINPUTCMD_H
+#define MOVEINPUTCMD_H
 
-#include <QMimeData>
+#include <QUndoCommand>
 
 class InputModel;
-class ObserverModel;
-class OperatorModel;
+class ObserverTreeModel;
+class StreamModel;
 
-class InputData : public QMimeData
+class MoveInputCmd : public QUndoCommand
 {
-    Q_OBJECT
-    
 public:
-    InputData(OperatorModel* op, unsigned int id);
-    InputData(InputModel* input, ObserverModel* sourceObserver, int sourcePosition);
+    MoveInputCmd(ObserverTreeModel* observerTree, int srcObserverPos, int srcInputPos,
+                 int destObserverPos, int destInputPos, InputModel* input, QUndoCommand* parent = 0);
     
-    unsigned int id() const { return m_id; }
-    OperatorModel* op() const { return m_op; }
-    InputModel* input() const { return m_input; }
-    ObserverModel* sourceObserver() const { return m_sourceObserver; }
-    int sourcePosition() const { return m_sourcePosition; }
-    virtual QStringList formats() const;
+    virtual void undo();
+    virtual void redo();
     
 private:
-    unsigned int m_id;
-    OperatorModel* m_op;
+    ObserverTreeModel* m_observerTree;
+    int m_srcObserverPos;
+    int m_srcInputPos;
+    int m_destObserverPos;
+    int m_destInputPos;
     InputModel* m_input;
-    ObserverModel* m_sourceObserver;
-    int m_sourcePosition;
 };
 
-#endif // INPUTDATA_H
+#endif // MOVEINPUTCMD_H

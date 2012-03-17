@@ -6,6 +6,7 @@
 #include "InputData.h"
 #include "InputModel.h"
 #include "ConnectionModel.h"
+#include "MoveInputCmd.h"
 #include "ObserverModel.h"
 #include "OperatorModel.h"
 #include "RemoveInputCmd.h"
@@ -89,17 +90,18 @@ bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & paren
 {
     Q_ASSERT(count == 1);
     
+    // suppress all remove actions during input movement
+    if(m_isMovingInput)
+    {
+        m_isMovingInput = false;
+        return true;
+    }
+    
     if(parent.isValid())
     {
         InputModel* input = m_observers[parent.row()]->input(row);
         QUndoCommand* cmd = new RemoveInputCmd(this, parent.row(), row, input);
         m_undoStack->push(cmd);
-        
-        if(m_isMovingInput)
-        {
-            m_undoStack->endMacro();
-            m_isMovingInput = false;
-        }
     }
     else
     {
@@ -220,30 +222,37 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
     {
         if(const InputData* inputData = qobject_cast<const InputData*>(data))
         {
-            InputModel* input = inputData->input();
-            if(! input)
-            {
-                Q_ASSERT(action == Qt::CopyAction);
-                input = new InputModel(inputData->op(), inputData->id(), m_undoStack, this);
-            }
-            else
-            {
-                Q_ASSERT(action == Qt::MoveAction);
-                m_isMovingInput = true;
-                m_undoStack->beginMacro(tr("move input"));
-            }
             int inputPos = row;
             if(inputPos < 0)
                 inputPos = 0;
-                
-            QUndoCommand* cmd = new InsertInputCmd(this, parent.row(), inputPos, input);
-            m_undoStack->push(cmd);
             
-            // if the input data contains a source observer,
-            // this function is responsible for deleting the drop source
-            int observerPos = m_observers.indexOf(inputData->sourceObserver());
-            if(observerPos >= 0 && inputData->sourcePosition() >= 0)
-                removeRow(inputData->sourcePosition(), createIndex(observerPos, 0));
+            InputModel* input = inputData->input();
+            if(! input)
+            {
+                // a new input was inserted from
+                Q_ASSERT(action == Qt::CopyAction);
+                input = new InputModel(inputData->op(), inputData->id(), m_undoStack, this);
+                QUndoCommand* cmd = new InsertInputCmd(this, parent.row(), inputPos, input);
+                m_undoStack->push(cmd);
+            }
+            else
+            {
+                // a input was moved within the model
+                Q_ASSERT(action == Qt::MoveAction);
+                m_isMovingInput = true;
+                
+                int srcObserverPos = m_observers.indexOf(inputData->sourceObserver());
+                int srcInputPos = inputData->sourcePosition();
+                int destObserverPos = parent.row();
+                int destInputPos = inputPos;
+                
+                if(srcObserverPos == destObserverPos && srcInputPos == destInputPos)
+                    return true;
+                
+                QUndoCommand* cmd = new MoveInputCmd(this, srcObserverPos, srcInputPos,
+                                                     destObserverPos, destInputPos, input);
+                m_undoStack->push(cmd);
+            }
             
             return true;
         }
@@ -277,7 +286,7 @@ QMimeData* ObserverTreeModel::mimeData(const QModelIndexList& indexes) const
     
     ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
     InputModel* input = observer->input(index.row());
-    return new InputData(input);
+    return new InputData(input, observer, index.row());
 }
 
 Qt::DropActions ObserverTreeModel::supportedDropActions() const
@@ -311,6 +320,17 @@ void ObserverTreeModel::updateObserver(ObserverModel *observer)
     int pos = m_observers.indexOf(observer);
     if(pos >= 0)
         emit dataChanged(createIndex(pos, 0), createIndex(pos, NUM_COLUMNS - 1));
+}
+
+void ObserverTreeModel::doMoveInput(int srcObserverPos, int srcInputPos, int destObserverPos, int destInputPos, InputModel* input)
+{
+    beginRemoveRows(createIndex(srcObserverPos, 0), srcInputPos, srcInputPos);
+    m_observers[srcObserverPos]->removeInput(srcInputPos);
+    endRemoveRows();
+    
+    beginInsertRows(createIndex(destObserverPos, 0), destInputPos, destInputPos);
+    m_observers[destObserverPos]->insertInput(destInputPos, input);
+    endInsertRows();
 }
 
 QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)

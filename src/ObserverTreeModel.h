@@ -35,6 +35,7 @@ class ObserverTreeModel : public QAbstractItemModel
     friend class InsertObserverCmd;
     friend class RemoveObserverCmd;
     friend class InsertInputCmd;
+    friend class MoveInputCmd;
     friend class RemoveInputCmd;
     friend QDataStream & operator<< (QDataStream & stream, const ObserverTreeModel * op);
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * op);
@@ -117,6 +118,7 @@ private:
     void doInsertObserver(int pos, ObserverModel* observer);
     void doRemoveObserver(int pos);
     void doInsertInput(int observerPos, int inputPos, InputModel* input);
+    void doMoveInput(int srcObserverPos, int srcInputPos, int destObserverPos, int destInputPos, InputModel* input);
     void doRemoveInput(int observerPos, int inputPos);
     
     QList<ObserverModel*> m_observers;

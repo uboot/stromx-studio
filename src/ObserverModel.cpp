@@ -154,19 +154,7 @@ bool ObserverModel::dropMimeData(const QMimeData* data, Qt::DropAction action, i
 
 QMimeData* ObserverModel::mimeData(const QModelIndexList& indexes) const
 {
-    if(indexes.empty())
-        return 0;
-    
-    const QModelIndex & index = indexes[0];
-    
-    if(InputData* inputData = qobject_cast<InputData*>(m_parent->mimeData(indexes)))
-    {
-        InputData* returnData = new InputData(inputData->input(), const_cast<ObserverModel*>(this), index.row());
-        delete inputData;
-        return returnData;
-    }
-    
-    return 0;
+    return m_parent->mimeData(indexes);
 }
 
 Qt::ItemFlags ObserverModel::flags(const QModelIndex& index) const

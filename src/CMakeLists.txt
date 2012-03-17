@@ -27,6 +27,7 @@ set(stromxstudio_SOURCES
     LimitUndoStack.cpp
     main.cpp
     MainWindow.cpp
+    MoveInputCmd.cpp
     MoveOperatorCmd.cpp
     ObserverEditor.cpp
     ObserverModel.cpp
