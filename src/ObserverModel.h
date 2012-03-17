@@ -97,10 +97,29 @@ private slots:
     void handleRowsRemoved(const QModelIndex & parent, int start, int end);
     
     /**
-     * Emits data changed. This slot is connected to the respective signale
+     * Emits data changed. This slot is connected to the respective signal
      * of the parent model.
      */
     void handleDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    
+    /**
+     * Emits input added. This slot is connected to the respective signal
+     * of the parent model.
+     */
+    void handleInputAdded(InputModel* input, ObserverModel* observer, int pos);
+    
+    /**
+     * Emits input removed. This slot is connected to the respective signal
+     * of the parent model.
+     */
+    void handleInputRemoved(InputModel* input, ObserverModel* observer, int pos);
+    
+    /**
+     * Emits input moved. This slot is connected to the respective signal
+     * of the parent model.
+     */
+    void handleInputMoved(InputModel* input, ObserverModel* srcObserver, int srcPos,
+                          ObserverModel* destObserver, int destPos);
     
 private:
     /** Sets the name. */

@@ -125,8 +125,12 @@ void ObserverTreeModel::doRemoveObserver(int pos)
 void ObserverTreeModel::doRemoveInput(int observerPos, int inputPos)
 {
     beginRemoveRows(createIndex(observerPos, 0), inputPos, inputPos);
+    ObserverModel* observer = m_observers[observerPos]; 
+    InputModel* input = observer->input(inputPos);
     m_observers[observerPos]->removeInput(inputPos);
     endRemoveRows();
+    
+    emit inputRemoved(input, observer, inputPos);
 }
 
 QModelIndex ObserverTreeModel::index(int row, int column, const QModelIndex& parent) const
@@ -264,8 +268,11 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
 void ObserverTreeModel::doInsertInput(int observerPos, int inputPos, InputModel* input)
 {
     beginInsertRows(createIndex(observerPos, 0), inputPos, inputPos);
+    ObserverModel* observer = m_observers[observerPos]; 
     m_observers[observerPos]->insertInput(inputPos, input);
     endInsertRows();
+    
+    emit inputAdded(input, observer, inputPos);
 }
 
 QStringList ObserverTreeModel::mimeTypes() const
@@ -324,6 +331,9 @@ void ObserverTreeModel::updateObserver(ObserverModel *observer)
 
 void ObserverTreeModel::doMoveInput(int srcObserverPos, int srcInputPos, int destObserverPos, int destInputPos, InputModel* input)
 {
+    ObserverModel* srcObserver = m_observers[srcObserverPos]; 
+    ObserverModel* destObserver = m_observers[destObserverPos];
+    
     beginRemoveRows(createIndex(srcObserverPos, 0), srcInputPos, srcInputPos);
     m_observers[srcObserverPos]->removeInput(srcInputPos);
     endRemoveRows();
@@ -331,6 +341,8 @@ void ObserverTreeModel::doMoveInput(int srcObserverPos, int srcInputPos, int des
     beginInsertRows(createIndex(destObserverPos, 0), destInputPos, destInputPos);
     m_observers[destObserverPos]->insertInput(destInputPos, input);
     endInsertRows();
+    
+    emit inputMoved(input, srcObserver, srcInputPos, destObserver, destInputPos);
 }
 
 QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)

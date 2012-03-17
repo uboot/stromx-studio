@@ -23,6 +23,13 @@ ObserverModel::ObserverModel(QUndoStack* undoStack, ObserverTreeModel* parent)
             this, SLOT(handleRowsAboutToBeRemoved(QModelIndex, int, int)));
     connect(m_parent, SIGNAL(rowsRemoved(QModelIndex, int, int)),
             this, SLOT(handleRowsRemoved(QModelIndex, int, int)));
+    
+    connect(m_parent, SIGNAL(inputAdded(InputModel*,ObserverModel*,int)),
+            this, SLOT(handleInputAdded(InputModel*,ObserverModel*,int)));
+    connect(m_parent, SIGNAL(inputMoved(InputModel*,ObserverModel*,int,ObserverModel*,int)),
+            this, SLOT(handleInputMoved(InputModel*,ObserverModel*,int,ObserverModel*,int)));
+    connect(m_parent, SIGNAL(inputRemoved(InputModel*,ObserverModel*,int)),
+            this, SLOT(handleInputRemoved(InputModel*,ObserverModel*,int)));
 }
 
 void ObserverModel::setName(const QString& name)
@@ -122,6 +129,28 @@ void ObserverModel::handleDataChanged(const QModelIndex& topLeft, const QModelIn
 {
     if(concernsThisObserver(topLeft) && concernsThisObserver(bottomRight))
         emit dataChanged(topLeft, bottomRight);
+}
+
+void ObserverModel::handleInputAdded(InputModel* input, ObserverModel* observer, int pos)
+{
+    if(observer == this)
+        emit inputAdded(input, pos);
+}
+
+void ObserverModel::handleInputMoved(InputModel* input, ObserverModel* srcObserver, int srcPos, ObserverModel* destObserver, int destPos)
+{
+    if(srcObserver == this && destObserver == this)
+        emit inputMoved(input, srcPos, destPos);
+    else if(srcObserver == this)
+        emit inputRemoved(input, srcPos);
+    else if(destObserver == this)
+        emit inputAdded(input, destPos);
+}
+
+void ObserverModel::handleInputRemoved(InputModel* input, ObserverModel* observer, int pos)
+{
+    if(observer == this)
+        emit inputRemoved(input, pos);
 }
 
 bool ObserverModel::concernsThisObserver(const QModelIndex & parentModelIndex) const
