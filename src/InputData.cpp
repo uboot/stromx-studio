@@ -15,12 +15,13 @@ InputData::InputData(OperatorModel* op, unsigned int id)
     setText(QString("%1/%2").arg(QString::fromStdString(m_op->op()->name()), m_id));
 }
 
-InputData::InputData(InputModel* input, ObserverModel* sourceObserver, int sourcePosition)
+InputData::InputData(InputModel* input, ObserverModel* sourceObserver, int sourcePosition, DragSource dragSource)
   : m_id(input->id()),
     m_op(input->op()),
     m_input(input),
     m_sourceObserver(sourceObserver),
-    m_sourcePosition(sourcePosition)
+    m_sourcePosition(sourcePosition),
+    m_dragSource(dragSource)
 {
     setText(QString("%1/%2").arg(QString::fromStdString(m_op->op()->name()), m_id));
 }
@@ -28,4 +29,9 @@ InputData::InputData(InputModel* input, ObserverModel* sourceObserver, int sourc
 QStringList InputData::formats () const
 {
     return QStringList("stromx/input");
+}
+
+void InputData::setDragSource(InputData::DragSource dragSource)
+{
+    m_dragSource = dragSource;
 }

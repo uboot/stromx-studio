@@ -31,14 +31,26 @@ class InputData : public QMimeData
     Q_OBJECT
     
 public:
+    /** The possible sources of a drag operation. */
+    enum DragSource
+    {
+        /** The drag started at a tree model. */
+        TREE_MODEL,
+        /** The drag started at a table model. */
+        TABLE_MODEL
+    };
+    
     InputData(OperatorModel* op, unsigned int id);
-    InputData(InputModel* input, ObserverModel* sourceObserver, int sourcePosition);
+    InputData(InputModel* input, ObserverModel* sourceObserver, int sourcePosition, DragSource dragSource);
     
     unsigned int id() const { return m_id; }
     OperatorModel* op() const { return m_op; }
     InputModel* input() const { return m_input; }
     ObserverModel* sourceObserver() const { return m_sourceObserver; }
     int sourcePosition() const { return m_sourcePosition; }
+    DragSource dragSource() const { return m_dragSource; }
+    void setDragSource(DragSource dragSource);
+    
     virtual QStringList formats() const;
     
 private:
@@ -47,6 +59,7 @@ private:
     InputModel* m_input;
     ObserverModel* m_sourceObserver;
     int m_sourcePosition;
+    DragSource m_dragSource;
 };
 
 #endif // INPUTDATA_H

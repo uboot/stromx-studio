@@ -183,7 +183,15 @@ bool ObserverModel::dropMimeData(const QMimeData* data, Qt::DropAction action, i
 
 QMimeData* ObserverModel::mimeData(const QModelIndexList& indexes) const
 {
-    return m_parent->mimeData(indexes);
+    QMimeData* data = m_parent->mimeData(indexes);
+    
+    if(InputData* inputData = qobject_cast<InputData*>(data))
+    {
+        inputData->setDragSource(InputData::TABLE_MODEL);
+        return inputData;
+    }
+    
+    return data;
 }
 
 Qt::ItemFlags ObserverModel::flags(const QModelIndex& index) const

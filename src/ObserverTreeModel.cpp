@@ -16,7 +16,7 @@ ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent
   : QAbstractItemModel(parent),
     m_undoStack(undoStack),
     m_stream(parent),
-    m_isMovingInput(false)
+    m_suppressRemoveRows(false)
 {
     setSupportedDragActions(Qt::MoveAction);
     
@@ -90,10 +90,9 @@ bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & paren
 {
     Q_ASSERT(count == 1);
     
-    // suppress all remove actions during input movement
-    if(m_isMovingInput)
+    if(m_suppressRemoveRows)
     {
-        m_isMovingInput = false;
+        m_suppressRemoveRows = false;
         return true;
     }
     
@@ -243,7 +242,11 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
             {
                 // a input was moved within the model
                 Q_ASSERT(action == Qt::MoveAction);
-                m_isMovingInput = true;
+                
+                // if the data originated from the tree view removeRows() is automatically called
+                // because the row is removed manually here, this call has to suppressed
+                if(inputData->dragSource() == InputData::TREE_MODEL)
+                    m_suppressRemoveRows = true;
                 
                 int srcObserverPos = m_observers.indexOf(inputData->sourceObserver());
                 int srcInputPos = inputData->sourcePosition();
@@ -293,7 +296,7 @@ QMimeData* ObserverTreeModel::mimeData(const QModelIndexList& indexes) const
     
     ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
     InputModel* input = observer->input(index.row());
-    return new InputData(input, observer, index.row());
+    return new InputData(input, observer, index.row(), InputData::TREE_MODEL);
 }
 
 Qt::DropActions ObserverTreeModel::supportedDropActions() const

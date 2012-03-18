@@ -125,7 +125,7 @@ private:
     QUndoStack* m_undoStack;
     StreamModel* m_stream;
     
-    bool m_isMovingInput;
+    bool m_suppressRemoveRows;
 };
 
 QDataStream & operator<< (QDataStream & stream, const ObserverTreeModel * model);
