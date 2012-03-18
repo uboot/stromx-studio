@@ -1,5 +1,7 @@
 #include "DataManager.h"
 
+#include <stromx/core/ReadAccess.h>
+
 #include "AbstractDataVisualizer.h"
 #include "InputModel.h"
 #include "ObserverModel.h"
@@ -15,40 +17,69 @@ DataManager::DataManager(ObserverModel* observer, AbstractDataVisualizer* visual
     connect(m_observer, SIGNAL(inputRemoved(InputModel*,int)), this, SLOT(removeInputLayer(InputModel*,int)));
     
     foreach(InputModel* input, observer->inputs())
-        addInput(input);
+    {
+        m_inputs.append(input);
+        connectInput(input);
+    }
 }
 
 
 void DataManager::addInputLayer(InputModel* input, int pos)
 {
-    addInput(input);
+    connectInput(input);
+    m_inputs.insert(pos, input);
 }
 
 void DataManager::moveInputLayer(InputModel* input, int srcPos, int destPos)
 {
-    
+    m_inputs.removeAt(srcPos);
+    m_inputs.insert(destPos, input);
 }
 
 void DataManager::removeInputLayer(InputModel* input, int pos)
 {
-    removeInput(input);
+    m_inputs.removeAt(pos);
+    disconnectInput(input);
 }
 
 void DataManager::updateLayerData(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data)
 {
-
+    if(data.empty())
+        return;
+    
+    QObject* source = sender();
+    if(OperatorModel* op = qobject_cast<OperatorModel*>(source))
+    {
+        stromx::core::ReadAccess<> access(data);
+        
+        for(int i = 0; i < m_inputs.count(); ++i)
+        {
+            if(m_inputs[i]->op() == op)
+                m_visualizer->setData(i, access());
+        }
+    }
 }
 
-void DataManager::addInput(InputModel* input)
+void DataManager::connectInput(InputModel* input)
 {
+    // connect only if not connection to this operator exists
     connect(input->op(), SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer)),
-            this, SLOT(updateLayerData(OperatorModel::ConnectorType,uint,stromx::core::DataContainer)));
-    m_currentInputs.insert(input);
+            this, SLOT(updateLayerData(OperatorModel::ConnectorType,uint,stromx::core::DataContainer)), Qt::UniqueConnection);
 }
 
-void DataManager::removeInput(InputModel* input)
+void DataManager::disconnectInput(InputModel* input)
 {
+    OperatorModel* op = input->op();
+    
+    // look if any other input requires a connection to op
+    // in this case the connections must not be disconnected
+    foreach(InputModel* input, m_inputs)
+    {
+        if(input->op() == op)
+            return;
+    }
+    
+    // this was the only input connected to op
     input->op()->disconnect(this);
-    m_currentInputs.remove(input);
 }
 

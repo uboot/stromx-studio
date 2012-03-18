@@ -36,7 +36,7 @@ void DataVisualizer::setColor(int layer, const QColor& color)
 
 }
 
-void DataVisualizer::setData(int layer, stromx::core::Data& data)
+void DataVisualizer::setData(int layer, const stromx::core::Data& data)
 {
 
 }

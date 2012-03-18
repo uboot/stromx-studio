@@ -50,12 +50,12 @@ private slots:
     void updateLayerData(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data);
 
 private:
-    void addInput(InputModel* input);
-    void removeInput(InputModel* input);
+    void connectInput(InputModel* input);
+    void disconnectInput(InputModel* input);
     
     ObserverModel* m_observer;
     AbstractDataVisualizer* m_visualizer;
-    QSet<InputModel*> m_currentInputs;
+    QList<InputModel*> m_inputs;
 };
 
 #endif // DATAMANAGER_H

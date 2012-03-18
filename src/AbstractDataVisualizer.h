@@ -38,7 +38,7 @@ public:
     virtual void removeLayer(int pos) = 0;
     virtual void setColor(int layer, const QColor & color) = 0;
     virtual void setAlpha(int layer, int alpha) = 0;
-    virtual void setData(int layer, stromx::core::Data& data) = 0;
+    virtual void setData(int layer, const stromx::core::Data& data) = 0;
     virtual void setActive(int layer, bool active) = 0;
     
 private:
