@@ -41,16 +41,48 @@ class DataManager : public QObject
     Q_OBJECT
     
 public:
+    /** 
+     * Constructs a data manager which routes the signals it receives from
+     * \c observer to \c visualizer.
+     */
     DataManager(ObserverModel* observer, AbstractDataVisualizer* visualizer, QObject* parent);
     
 private slots:
+    
+    /** 
+     * Removes the input layer from the visualizer and disconnects all connections from the input.
+     * Moreover, the connection from the operator of the input are disconnected if no
+     * other input requires them.
+     */
     void removeInputLayer(InputModel* input, int pos);
+    
+    /** Moves the input layer in the visualizer. */
     void moveInputLayer(InputModel* input, int srcPos, int destPos);
+    
+    /**
+     * Connects to the input model and adds an input layer to the visualizer.
+     * Moveover, if necessary a connection from the operator to the data manager
+     * is established.
+     */
     void addInputLayer(InputModel* input, int pos);
+    
+    /**
+     * Updates the data of all layers which correspond to this input.
+     * The input is specified by its type, ID and operator (the sender of the signal).
+     */
     void updateLayerData(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data);
 
 private:
+    /** 
+     * Connects to the operator of the input if the connections has not yet been established
+     * because of another input of the same operator.
+     */
     void connectInput(InputModel* input);
+    
+    /**
+     * Disconnects from the operator of the input if the connection is not required
+     * by another input of the same operator.
+     */
     void disconnectInput(InputModel* input);
     
     ObserverModel* m_observer;

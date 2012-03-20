@@ -28,16 +28,19 @@ void DataManager::addInputLayer(InputModel* input, int pos)
 {
     connectInput(input);
     m_inputs.insert(pos, input);
+    m_visualizer->addLayer(pos);
 }
 
 void DataManager::moveInputLayer(InputModel* input, int srcPos, int destPos)
 {
     m_inputs.removeAt(srcPos);
     m_inputs.insert(destPos, input);
+    m_visualizer->moveLayer(srcPos, destPos);
 }
 
 void DataManager::removeInputLayer(InputModel* input, int pos)
 {
+    m_visualizer->removeLayer(pos);
     m_inputs.removeAt(pos);
     disconnectInput(input);
 }

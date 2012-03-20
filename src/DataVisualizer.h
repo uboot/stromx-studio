@@ -21,6 +21,8 @@
 #define DATAVISUALIZER_H
 
 #include <QGraphicsView>
+#include <QMap>
+
 #include "AbstractDataVisualizer.h"
 
 class DataVisualizer : public QGraphicsView, public AbstractDataVisualizer
@@ -28,16 +30,16 @@ class DataVisualizer : public QGraphicsView, public AbstractDataVisualizer
 public:
     DataVisualizer(QWidget* parent = 0);
     
-    virtual void addLayer(int pos);
+    virtual void addLayer(int layer);
     virtual void moveLayer(int src, int dest);
-    virtual void removeLayer(int pos);
+    virtual void removeLayer(int layer);
     virtual void setColor(int layer, const QColor & color);
     virtual void setAlpha(int layer, int alpha);
     virtual void setData(int layer, const stromx::core::Data& data);
     virtual void setActive(int layer, bool active);
     
 private:
-    
+    QMap<int, QGraphicsItem*> m_items;
 };
 
 #endif // DATAVISUALIZER_H

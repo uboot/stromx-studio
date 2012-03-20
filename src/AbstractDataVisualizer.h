@@ -33,9 +33,9 @@ class QColor;
 class AbstractDataVisualizer
 {
 public:
-    virtual void addLayer(int pos) = 0;
+    virtual void addLayer(int layer) = 0;
     virtual void moveLayer(int src, int dest) = 0;
-    virtual void removeLayer(int pos) = 0;
+    virtual void removeLayer(int layer) = 0;
     virtual void setColor(int layer, const QColor & color) = 0;
     virtual void setAlpha(int layer, int alpha) = 0;
     virtual void setData(int layer, const stromx::core::Data& data) = 0;
