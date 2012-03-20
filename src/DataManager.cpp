@@ -16,13 +16,15 @@ DataManager::DataManager(ObserverModel* observer, AbstractDataVisualizer* visual
     connect(m_observer, SIGNAL(inputMoved(InputModel*,int,int)), this, SLOT(moveInputLayer(InputModel*,int,int)));
     connect(m_observer, SIGNAL(inputRemoved(InputModel*,int)), this, SLOT(removeInputLayer(InputModel*,int)));
     
+    int i = 0;
     foreach(InputModel* input, observer->inputs())
     {
         m_inputs.append(input);
         connectInput(input);
+        visualizer->addLayer(i);
+        i++;
     }
 }
-
 
 void DataManager::addInputLayer(InputModel* input, int pos)
 {
@@ -55,10 +57,11 @@ void DataManager::updateLayerData(OperatorModel::ConnectorType type, unsigned in
     {
         stromx::core::ReadAccess<> access(data);
         
-        for(int i = 0; i < m_inputs.count(); ++i)
+        for(int layer = 0; layer < m_inputs.count(); ++layer)
         {
-            if(m_inputs[i]->op() == op)
-                m_visualizer->setData(i, access());
+            InputModel* input = m_inputs[layer];
+            if(input->op() == op && input->id() == id)
+                m_visualizer->setData(layer, access());
         }
     }
 }

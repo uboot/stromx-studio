@@ -13,21 +13,45 @@ DataVisualizer::DataVisualizer(QWidget* parent)
 
 void DataVisualizer::addLayer(int layer)
 {
-
+    if(layer >= 0 && layer <= m_items.count())
+        m_items.insert(layer, 0);
+    else
+        Q_ASSERT(false);
+    
+    reorderItems();
 }
 
 void DataVisualizer::moveLayer(int src, int dest)
 {
-
+    QGraphicsItem* item = 0;
+    if(src >= 0 && src < m_items.count())
+        item = m_items[src];
+    else
+        Q_ASSERT(false);
+    
+    if(dest >= 0 && dest <= m_items.count())
+        m_items.insert(dest, item);
+    else
+        Q_ASSERT(false);
+    
+    m_items.removeAt(src);
+    
+    reorderItems();
 }
 
 void DataVisualizer::removeLayer(int layer)
 {
-    if(m_items.contains(layer))
+    if(layer >= 0 && layer < m_items.count())
     {
         delete m_items[layer];
-        m_items.remove(layer);
+        m_items.removeAt(layer);
     }
+    else
+    {
+        Q_ASSERT(false);
+    }
+    
+    reorderItems();
 }
 
 void DataVisualizer::setActive(int layer, bool active)
@@ -49,14 +73,20 @@ void DataVisualizer::setData(int layer, const stromx::core::Data& data)
 {
     using namespace stromx::core;
     
-    if(m_items.contains(layer))
+    if(layer >= 0 && layer < m_items.count())
     {
-        delete m_items[layer];
-        m_items.remove(layer);
+        if(m_items[layer])
+        {
+            delete m_items[layer];
+            m_items[layer] = 0;
+        }
+    }
+    else
+    {
+        Q_ASSERT(false);
     }
     
     QGraphicsItem* item = 0;
-    
     if(data.isVariant(DataVariant::IMAGE))
     {
         try
@@ -104,8 +134,20 @@ void DataVisualizer::setData(int layer, const stromx::core::Data& data)
     
     if(item)
     {
-        item->setZValue(layer);
+        item->setZValue(-layer);
         m_items[layer] = item;
     }
 }
+
+void DataVisualizer::reorderItems()
+{
+    int layer = 0;
+    foreach(QGraphicsItem* item, m_items)
+    {
+        if(item)
+            item->setZValue(-layer);
+        layer++;
+    }
+}
+
 

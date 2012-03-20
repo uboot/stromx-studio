@@ -22,7 +22,7 @@ void ConnectorObserver::observe(const stromx::core::Connector& connector, const 
     
     // send data event only if receivers are connected to the respective signal of OperatorModel
     QMutexLocker lock(&m_mutex);
-    if(m_observeData)
+    if(m_observeData && type == OperatorModel::INPUT)
     {
         ConnectorDataEvent* dataEvent = new ConnectorDataEvent(type, connector.id(), data);
         m_application->postEvent(m_opModel, dataEvent);
@@ -37,4 +37,5 @@ void ConnectorObserver::setObserveData(bool observe)
     QMutexLocker lock(&m_mutex);
     m_observeData = observe;
 }
+
 
