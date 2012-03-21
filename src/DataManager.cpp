@@ -33,7 +33,7 @@ void DataManager::addInputLayer(InputModel* input, int pos)
         m_visualizer->moveLayer(i - 1, i);
     
     // add a new layer in the front
-    m_visualizer->addLayer(0);
+    m_visualizer->addLayer(pos);
     
     // remember the input and connect to it
     m_inputs.insert(pos, input);
