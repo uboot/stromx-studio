@@ -41,7 +41,7 @@ public:
 private:
     /** Sets the z-values of each graphic item according to its layer position. */
     void reorderItems();
-    QList<QGraphicsItem*> m_items;
+    QMap<int, QGraphicsItem*> m_items;
 };
 
 #endif // DATAVISUALIZER_H

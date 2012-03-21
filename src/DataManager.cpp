@@ -28,23 +28,67 @@ DataManager::DataManager(ObserverModel* observer, AbstractDataVisualizer* visual
 
 void DataManager::addInputLayer(InputModel* input, int pos)
 {
-    connectInput(input);
+    // move all layers behind pos to the back
+    for(int i = m_inputs.count(); i > pos; --i)
+        m_visualizer->moveLayer(i - 1, i);
+    
+    // add a new layer in the front
+    m_visualizer->addLayer(0);
+    
+    // remember the input and connect to it
     m_inputs.insert(pos, input);
-    m_visualizer->addLayer(pos);
+    connectInput(input);
 }
 
 void DataManager::moveInputLayer(InputModel* input, int srcPos, int destPos)
 {
-    m_inputs.removeAt(srcPos);
-    m_inputs.insert(destPos, input);
-    m_visualizer->moveLayer(srcPos, destPos);
+    if(srcPos == destPos)
+        return;
+    
+    // temporarily move the source behind all layers
+    m_visualizer->moveLayer(srcPos, m_inputs.count());
+    
+    // move the layers between source and destination
+    if(srcPos < destPos)
+    {
+        for(int i = srcPos; i < destPos; ++i)
+            m_visualizer->moveLayer(i + 1, i);
+    }
+    else
+    {
+        for(int i = srcPos; i > destPos; --i)
+            m_visualizer->moveLayer(i - 1, i);
+    }
+    
+    // move the source back to the destination and remove the temporary layer
+    m_visualizer->moveLayer(m_inputs.count(), destPos);
+    m_visualizer->removeLayer(m_inputs.count());
+    
+    // update the input list
+    if(srcPos < destPos)
+    {
+        m_inputs.insert(destPos, m_inputs[srcPos]);
+        m_inputs.removeAt(srcPos);
+    }
+    else
+    {
+        m_inputs.insert(destPos, m_inputs[srcPos]);
+        m_inputs.removeAt(srcPos + 1);
+    }
 }
 
 void DataManager::removeInputLayer(InputModel* input, int pos)
 {
-    m_visualizer->removeLayer(pos);
+    // remove the input and disconnect from it
     m_inputs.removeAt(pos);
     disconnectInput(input);
+    
+    // move all layer behind pos to the front
+    for(int i = pos; i < m_inputs.count(); ++i)
+        m_visualizer->moveLayer(pos + 1, pos);
+    
+    // remove the last layer
+    m_visualizer->removeLayer(m_inputs.count());
 }
 
 void DataManager::updateLayerData(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data)
