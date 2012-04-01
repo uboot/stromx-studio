@@ -20,15 +20,18 @@ int ThreadListModel::columnCount(const QModelIndex& parent) const
 
 QVariant ThreadListModel::data(const QModelIndex& index, int role) const
 {
-    if(role != Qt::DisplayRole)
-        return QVariant();
-    
-    switch(index.column())
+    switch(role)
     {
-    case 0:
-        return m_threads[index.row()]->name();
-    case 1:
-        return m_threads[index.row()]->color();
+    case Qt::DisplayRole:
+        if(index.column() == 0)
+            return m_threads[index.row()]->name();
+        break;
+        
+    case Qt::BackgroundRole:
+        if(index.column() == 1)
+            return m_threads[index.row()]->color();
+        break;
+    
     default:
         ;
     }
