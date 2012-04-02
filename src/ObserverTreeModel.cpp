@@ -192,11 +192,6 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
         default:
             return QVariant();
         }
-    case Qt::BackgroundRole:
-        if(index.column() == 2)
-            return input->color();
-        else 
-            return QVariant();
     default:
         return QVariant();
     }
