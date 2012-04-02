@@ -24,6 +24,9 @@ ObserverModel::ObserverModel(QUndoStack* undoStack, ObserverTreeModel* parent)
     connect(m_parent, SIGNAL(rowsRemoved(QModelIndex, int, int)),
             this, SLOT(handleRowsRemoved(QModelIndex, int, int)));
     
+    connect(m_parent, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this, SLOT(handleDataChanged(QModelIndex,QModelIndex)));
+    
     connect(m_parent, SIGNAL(inputAdded(InputModel*,ObserverModel*,int)),
             this, SLOT(handleInputAdded(InputModel*,ObserverModel*,int)));
     connect(m_parent, SIGNAL(inputMoved(InputModel*,ObserverModel*,int,ObserverModel*,int)),
@@ -127,7 +130,7 @@ void ObserverModel::handleRowsRemoved(const QModelIndex& parent, int start, int 
 
 void ObserverModel::handleDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
 {
-    if(concernsThisObserver(topLeft) && concernsThisObserver(bottomRight))
+    if(topLeft.internalPointer() == this && bottomRight.internalPointer() == this)
         emit dataChanged(topLeft, bottomRight);
 }
 

@@ -105,7 +105,10 @@ private slots:
     void removeConnectedInputs(ConnectionModel* connection);
     
     /** Updates the displayed data of \c observer. */
-    void updateObserver(ObserverModel *observer);
+    void updateObserver(ObserverModel* observer);
+    
+    /** Updates the displayed data of \c input. */
+    void updateInput(InputModel* input);
     
 private:
     /** 

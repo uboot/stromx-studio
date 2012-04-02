@@ -39,6 +39,16 @@ public:
     OperatorModel* op() const { return m_op; }
     unsigned int id() const { return m_id; }
     
+public slots:
+    void updateOperatorName(const QString & name);
+    
+signals:
+    /** A property of the input model changed. */
+    void changed(InputModel* model);
+    
+    /** The color of the input changed. */
+    void colorChanged(const QColor & color);
+    
 private:
     OperatorModel* m_op;
     unsigned int m_id;

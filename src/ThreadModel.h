@@ -62,7 +62,7 @@ signals:
     void nameChanged(const QString & name);
     
     /** A property of the thread changed. */
-    void changed(ThreadModel* observer);
+    void changed(ThreadModel* thread);
     
 private:
     void doSetColor(const QColor & color);

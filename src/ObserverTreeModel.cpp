@@ -81,6 +81,8 @@ void ObserverTreeModel::doInsertObserver(int pos, ObserverModel* observer)
 {
     beginInsertRows(QModelIndex(), pos, pos);
     m_observers.insert(pos, observer);
+    foreach(InputModel* input, observer->inputs())
+        connect(input, SIGNAL(changed(InputModel*)), this, SLOT(updateInput(InputModel*)));
     endInsertRows();
     
     emit observerAdded(observer);
@@ -116,6 +118,9 @@ void ObserverTreeModel::doRemoveObserver(int pos)
     beginRemoveRows(QModelIndex(), pos, pos);
     ObserverModel* observer = m_observers[pos];
     m_observers.removeAt(pos);
+    // Note that the inputs of the observer are still connected to this tree
+    // view model. The inputs which are not part of any other observer could be
+    // disconnected.
     endRemoveRows();
     
     emit observerRemoved(observer);
@@ -127,6 +132,9 @@ void ObserverTreeModel::doRemoveInput(int observerPos, int inputPos)
     ObserverModel* observer = m_observers[observerPos]; 
     InputModel* input = observer->input(inputPos);
     m_observers[observerPos]->removeInput(inputPos);
+    // Note that the input is still connected to this tree
+    // view model. If the input is not observed at any other place it could
+    // be disconnected.
     endRemoveRows();
     
     emit inputRemoved(input, observer, inputPos);
@@ -286,6 +294,7 @@ void ObserverTreeModel::doInsertInput(int observerPos, int inputPos, InputModel*
     beginInsertRows(createIndex(observerPos, 0), inputPos, inputPos);
     ObserverModel* observer = m_observers[observerPos]; 
     m_observers[observerPos]->insertInput(inputPos, input);
+    connect(input, SIGNAL(changed(InputModel*)), this, SLOT(updateInput(InputModel*)));
     endInsertRows();
     
     emit inputAdded(input, observer, inputPos);
@@ -361,6 +370,16 @@ void ObserverTreeModel::doMoveInput(int srcObserverPos, int srcInputPos, int des
     emit inputMoved(input, srcObserver, srcInputPos, destObserver, destInputPos);
 }
 
+void ObserverTreeModel::updateInput(InputModel* input)
+{
+    foreach(ObserverModel* observer, m_observers)
+    {
+        int pos = observer->inputs().indexOf(input);
+        if(pos >= 0)
+            emit dataChanged(createIndex(pos, 0, observer), createIndex(pos, NUM_COLUMNS - 1, observer));
+    }
+}
+
 QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)
 {
     stream << qint32(model->m_observers.count());
@@ -407,6 +426,7 @@ QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
             OperatorModel* op = model->m_stream->operators()[opId];
             InputModel* input = new InputModel(op, inputId, model->m_undoStack, model);
             observer->insertInput(observer->numInputs(), input);
+            model->connect(input, SIGNAL(changed(InputModel*)), model, SLOT(updateInput(InputModel*)));
         }
         
         model->m_observers.append(observer);
@@ -414,6 +434,7 @@ QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
     
     return stream;
 }
+
 
 
 
