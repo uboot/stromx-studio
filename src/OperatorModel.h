@@ -50,6 +50,7 @@ class OperatorModel : public QAbstractTableModel
     Q_PROPERTY(bool initialized READ isInitialized WRITE setInitialized)
     
     friend class MoveOperatorCmd;
+    friend class RenameOperatorCmd;
     friend class StreamModel;
     friend QDataStream & operator<< (QDataStream & stream, const OperatorModel * op);
     friend QDataStream & operator>> (QDataStream & stream, OperatorModel * op);
@@ -69,7 +70,9 @@ public:
     virtual int rowCount(const QModelIndex & index) const;
     virtual int columnCount(const QModelIndex & index) const;
     virtual QVariant data(const QModelIndex & index, int role) const;
+    virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    virtual Qt::ItemFlags flags(const QModelIndex & index) const;
     virtual void customEvent(QEvent* event);
     
     const QString & package() const;
@@ -121,6 +124,15 @@ private slots:
     void setActiveFalse();
     
 private:
+    enum Row
+    {
+        TYPE,
+        STATUS,
+        NAME,
+        PARAMETER_OFFSET
+    };
+    
+    void doSetName(const QString & name);
     void doSetPos(const QPointF & pos);
     void setInitialized(bool initialized);
     int accessibleParametersCount() const;

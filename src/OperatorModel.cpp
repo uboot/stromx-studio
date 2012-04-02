@@ -5,6 +5,7 @@
 #include <stromx/core/Image.h>
 #include <stromx/core/Operator.h>
 #include <stromx/core/Parameter.h>
+#include "RenameOperatorCmd.h"
 #include "MoveOperatorCmd.h"
 #include "ConnectorObserver.h"
 #include "ConnectorDataEvent.h"
@@ -18,7 +19,6 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
     m_package(QString::fromStdString(m_op->info().package())),
     m_type(QString::fromStdString(m_op->info().type())),
     m_name(QString::fromStdString(m_op->name())),
-    m_offsetPosParam(3),
     m_observer(new ConnectorObserver(this))
 {
     Q_ASSERT(m_op);
@@ -36,7 +36,7 @@ OperatorModel::~OperatorModel()
 
 int OperatorModel::rowCount(const QModelIndex& index) const
 {
-    return accessibleParametersCount() + m_offsetPosParam;
+    return accessibleParametersCount() + PARAMETER_OFFSET;
 }
 
 int OperatorModel::columnCount(const QModelIndex& index) const
@@ -57,9 +57,18 @@ QVariant OperatorModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
+Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
+{
+    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    if(index.column() == 1 && index.row() == 2)
+        return flags |= Qt::ItemIsEditable;
+        
+    return flags;
+}
+
 QVariant OperatorModel::data(const QModelIndex& index, int role) const
 {
-    if(role != Qt::DisplayRole)
+    if(role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
     if(!index.isValid())
@@ -69,7 +78,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     {
         switch(index.row())
         {
-            case 0:
+            case TYPE:
             {
                 if(index.column() == 0)
                     return tr("Type");
@@ -77,7 +86,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
                     return QVariant(QString::fromStdString(m_op->info().type()));
             }
             
-            case 1:
+            case STATUS:
             {
                 if(index.column() == 0)
                     return tr("Status");
@@ -93,15 +102,12 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
                 }
             }
             
-            case 2:
+            case NAME:
             {
                 if(index.column() == 0)
                     return tr("Name");
                 else
-                    if (m_op->name().empty())
-                        return QVariant(tr("<empty>"));
-                    else
-                        return QVariant(QString::fromStdString(m_op->name()));
+                    return QVariant(QString::fromStdString(m_op->name()));
             }
         
         
@@ -114,10 +120,10 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
                     if(accessibleParameter(*iter_par))
                     {
                         if(index.column() == 0)
-                            return QVariant(QString::fromStdString(m_op->info().parameters()[index.row()-m_offsetPosParam]->name()));
+                            return QVariant(QString::fromStdString(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]->name()));
                         else
                         {
-                            const stromx::core::Parameter* param = m_op->info().parameters()[index.row()-m_offsetPosParam];
+                            const stromx::core::Parameter* param = m_op->info().parameters()[index.row()-PARAMETER_OFFSET];
                             unsigned int paramId = param->id();
                             try
                             {
@@ -137,6 +143,22 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     }
     
     return QVariant();
+}
+
+bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{    
+    if(index.isValid() && index.column() == 1 && index.row() == NAME)
+    {
+        QString newName = value.toString();
+        
+        if(newName.isEmpty())
+            return false;
+        
+        setName(newName);
+        emit dataChanged(index, index);
+    }
+    
+    return false;
 }
 
 void OperatorModel::addConnection(ConnectionModel* connection)
@@ -160,9 +182,19 @@ void OperatorModel::setPos(const QPointF& pos)
 
 void OperatorModel::setName(const QString& name)
 {
+    if(m_name != name)
+    {
+        RenameOperatorCmd* cmd = new RenameOperatorCmd(this, name);
+        m_stream->undoStack()->push(cmd);
+    }
+}
+
+void OperatorModel::doSetName(const QString& name)
+{
     m_name = name;
     m_op->setName(name.toStdString());
     emit nameChanged(m_name);
+    emit dataChanged(createIndex(NAME, 1), createIndex(NAME, 1));
 }
 
 void OperatorModel::doSetPos(const QPointF& pos)

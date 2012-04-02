@@ -12,6 +12,7 @@
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
 #include "ObserverTreeModel.h"
+#include "OperatorData.h"
 #include "RemoveConnectionCmd.h"
 #include "RemoveOperatorCmd.h"
 #include "RemoveThreadCmd.h"
@@ -240,7 +241,7 @@ void StreamModel::addOperator(const OperatorData* opData, const QPointF& pos)
     
     OperatorModel* opModel = new OperatorModel(m_operatorLibrary->newOperator(opData), this);
     opModel->setPos(pos);
-    opModel->setName("New operator");
+    opModel->setName(opData->type());
     
     AddOperatorCmd* cmd = new AddOperatorCmd(this, opModel);
     m_undoStack->push(cmd);

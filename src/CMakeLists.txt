@@ -45,6 +45,7 @@ set(stromxstudio_SOURCES
     RemoveObserverCmd.cpp
     RenameObserverCmd.cpp
     RemoveOperatorCmd.cpp
+    RenameOperatorCmd.cpp
     RemoveThreadCmd.cpp
     RenameThreadCmd.cpp
     StreamEditor.cpp
