@@ -164,9 +164,6 @@ QModelIndex ObserverTreeModel::parent(const QModelIndex& child) const
 
 QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
 {
-    if(role != Qt::DisplayRole && role != Qt::EditRole && role != Qt::BackgroundRole)
-        return QVariant();
-    
     // this is an observer
     if(! index.internalPointer())
     {
@@ -195,6 +192,14 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
             return input->op()->name();
         case 1:
             return input->id();
+        case 2:
+            return input->color();
+        default:
+            return QVariant();
+        }
+    case Qt::DecorationRole:
+        switch(index.column())
+        {
         case 2:
             return input->color();
         default:

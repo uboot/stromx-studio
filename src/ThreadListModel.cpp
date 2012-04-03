@@ -34,6 +34,15 @@ QVariant ThreadListModel::data(const QModelIndex& index, int role) const
             ;
         }
         break;
+    case Qt::DecorationRole:
+        switch(index.column())
+        {
+        case 1:
+            return m_threads[index.row()]->color();
+        default:
+            ;
+        }
+        break;
     default:
         ;
     }
