@@ -17,16 +17,27 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef SETTHREADCMD_H
+#define SETTHREADCMD_H
 
-#ifndef COMMON_H
-#define COMMON_H
+#include <QUndoCommand>
 
-#include <Qt>
+class ConnectionModel;
+class StreamModel;
+class ThreadModel;
 
-enum Roles
+class SetThreadCmd : public QUndoCommand
 {
-    ChoicesRole = Qt::UserRole,
-    ChoiceRole
+public:
+    SetThreadCmd(ConnectionModel* connection, ThreadModel* newThread, QUndoCommand* parent = 0);
+    
+    virtual void undo();
+    virtual void redo();
+    
+private:
+    ConnectionModel* m_model;
+    ThreadModel* m_oldThread;
+    ThreadModel* m_newThread;
 };
 
-#endif // COMMON_H
+#endif // SETTHREADCMD_H

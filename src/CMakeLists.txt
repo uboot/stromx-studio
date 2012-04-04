@@ -49,6 +49,7 @@ set(stromxstudio_SOURCES
     RenameOperatorCmd.cpp
     RemoveThreadCmd.cpp
     RenameThreadCmd.cpp
+    SetThreadCmd.cpp
     StreamEditor.cpp
     StreamEditorScene.cpp
     StreamModel.cpp

@@ -4,6 +4,7 @@
 #include <stromx/core/Thread.h>
 #include "Common.h"
 #include "OperatorModel.h"
+#include "SetThreadCmd.h"
 #include "StreamModel.h"
 #include "ThreadModel.h"
 
@@ -38,7 +39,7 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
         
         switch(index.row())
         {
-        case 0:
+        case THREAD:
             return "Thread"; 
         default:
             ;
@@ -48,7 +49,7 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
     {
         switch(index.row())
         {
-            case 0:
+            case THREAD:
                 switch(role)
                 {
                 case Qt::DisplayRole:
@@ -93,6 +94,35 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
+bool ConnectionModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    if(role != Qt::EditRole)
+        return false;
+    
+    if(index.column() == 0)
+        return false;
+    
+    switch(index.row())
+    {
+        case THREAD:
+        {
+            int index = value.toInt();
+            ThreadModel* thread = 0;
+            if(index > 0)
+            {
+                // 0 means no thread; values > 0 must decremented to get
+                // the thread index
+                Q_ASSERT(index >= m_stream->threads().count());
+                thread = m_stream->threads()[index - 1];
+            }
+            setThread(thread);
+            return true;
+        }
+        default:
+            return false;
+    } 
+}
+
 Qt::ItemFlags ConnectionModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
@@ -103,6 +133,15 @@ Qt::ItemFlags ConnectionModel::flags(const QModelIndex& index) const
 }
 
 void ConnectionModel::setThread(ThreadModel* thread)
+{
+    if(thread != m_thread)
+    {
+        QUndoCommand* cmd = new SetThreadCmd(this, thread);
+        m_stream->undoStack()->push(cmd);
+    }
+}
+
+void ConnectionModel::doSetThread(ThreadModel* thread)
 {
     if(m_thread != thread)
     {
@@ -125,6 +164,7 @@ void ConnectionModel::setThread(ThreadModel* thread)
         
         m_thread = thread;
         emit threadChanged(m_thread);
+        emit dataChanged(createIndex(THREAD, 1), createIndex(THREAD, 1));
     }
 }
 

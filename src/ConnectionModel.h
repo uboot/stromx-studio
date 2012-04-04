@@ -30,6 +30,8 @@ class ConnectionModel : public QAbstractTableModel
 {
     Q_OBJECT
     
+    friend class SetThreadCmd;
+    
 public:
     explicit ConnectionModel(OperatorModel* sourceOp, unsigned int outputId,
                              OperatorModel* targetOp, unsigned int inputId, StreamModel * stream = 0);
@@ -37,6 +39,7 @@ public:
     virtual int rowCount(const QModelIndex & index) const;
     virtual int columnCount(const QModelIndex & index) const;
     virtual QVariant data(const QModelIndex & index, int role) const;
+    virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
     virtual Qt::ItemFlags flags(const QModelIndex& index) const;
     
     ThreadModel* thread() const { return m_thread; }
@@ -45,6 +48,8 @@ public:
      * Sets the thread of this connection and the adds the input of 
      * this connection to the stromx stream.
      */
+    
+    /** Pushes a set thread command on the undo stack. */
     void setThread(ThreadModel* thread);
     
     OperatorModel* sourceOp() const { return m_sourceOp; }
@@ -63,6 +68,17 @@ signals:
     void threadChanged(ThreadModel* thread);
     
 private:
+    enum Row
+    {
+        THREAD = 0
+    };
+    
+    /** 
+     * Sets the thread of this connection and the adds the input of 
+     * this connection to the stromx stream.
+     */
+    void doSetThread(ThreadModel* thread);
+    
     OperatorModel* m_sourceOp;
     unsigned int m_outputId;
     OperatorModel* m_targetOp;

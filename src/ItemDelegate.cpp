@@ -23,12 +23,23 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
 
 void ItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
-    QStyledItemDelegate::setEditorData(editor, index);
+    QVariant choices = index.model()->data(index, ChoicesRole);
+    if(! choices.isValid())
+        QStyledItemDelegate::setEditorData(editor, index);
+    
+    QVariant data = index.model()->data(index, Qt::EditRole);
+    if(QComboBox* comboBox = qobject_cast<QComboBox*>(editor))
+        comboBox->setCurrentIndex(data.toInt());    
 }
 
 void ItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
-    QStyledItemDelegate::setModelData(editor, model, index);
+    QVariant choices = index.model()->data(index, ChoicesRole);
+    if(! choices.isValid())
+        QStyledItemDelegate::setModelData(editor, model, index);
+    
+    if(QComboBox* comboBox = qobject_cast<QComboBox*>(editor))
+        model->setData(index, comboBox->currentIndex(), Qt::EditRole); 
 }
 
 void ItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
