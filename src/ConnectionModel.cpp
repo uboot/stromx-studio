@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <stromx/core/Thread.h>
+#include "Common.h"
 #include "OperatorModel.h"
 #include "StreamModel.h"
 #include "ThreadModel.h"
@@ -25,12 +26,80 @@ int ConnectionModel::columnCount(const QModelIndex& index) const
 
 int ConnectionModel::rowCount(const QModelIndex& index) const
 {
-    return 0;
+    return 1;
 }
 
 QVariant ConnectionModel::data(const QModelIndex& index, int role) const
 {
+    if(index.column() == 0)
+    {
+        if(role != Qt::DisplayRole)
+            return QVariant();
+        
+        switch(index.row())
+        {
+        case 0:
+            return "Thread"; 
+        default:
+            ;
+        }
+    }
+    else
+    {
+        switch(index.row())
+        {
+            case 0:
+                switch(role)
+                {
+                case Qt::DisplayRole:
+                    if(m_thread)
+                        return m_thread->name();
+                    else
+                        return tr("no thread");
+                case Qt::EditRole:
+                {
+                    if(! m_thread)
+                        return 0;
+                    
+                    int index = 1;
+                    foreach(ThreadModel* thread, m_stream->threads())
+                    {
+                        if(thread == m_thread)
+                            return index;
+                        ++index;
+                    }
+                    
+                    return -1;
+                }
+                case ChoicesRole:
+                {
+                    QList<QVariant> choices;
+                    choices << tr("no thread");
+                    foreach(ThreadModel* thread, m_stream->threads())
+                    {
+                        choices << thread->name();
+                    }
+                    return choices;
+                }
+                default:
+                    ;
+                }
+                break;
+            default:
+                ;
+        } 
+    }
+    
     return QVariant();
+}
+
+Qt::ItemFlags ConnectionModel::flags(const QModelIndex& index) const
+{
+    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    if(index.column() == 1 && index.row() == 0)
+        return flags |= Qt::ItemIsEditable;
+        
+    return flags;
 }
 
 void ConnectionModel::setThread(ThreadModel* thread)

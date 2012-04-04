@@ -34,9 +34,10 @@ public:
     explicit ConnectionModel(OperatorModel* sourceOp, unsigned int outputId,
                              OperatorModel* targetOp, unsigned int inputId, StreamModel * stream = 0);
     
-    int rowCount(const QModelIndex & index) const;
-    int columnCount(const QModelIndex & index) const;
-    QVariant data(const QModelIndex & index, int role) const;
+    virtual int rowCount(const QModelIndex & index) const;
+    virtual int columnCount(const QModelIndex & index) const;
+    virtual QVariant data(const QModelIndex & index, int role) const;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const;
     
     ThreadModel* thread() const { return m_thread; }
     

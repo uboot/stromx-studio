@@ -23,6 +23,7 @@ set(stromxstudio_SOURCES
     InputModel.cpp
     InsertInputCmd.cpp
     InsertObserverCmd.cpp
+    ItemDelegate.cpp
     JoinStreamTask.cpp
     LimitUndoStack.cpp
     main.cpp
@@ -62,6 +63,7 @@ set(stromxstudio_HEADERS
     DataManager.h
     InputData.h
     InputModel.h
+    ItemDelegate.h
     LimitUndoStack.h
     MainWindow.h
     ObserverEditor.h
