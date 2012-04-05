@@ -8,6 +8,7 @@
 #include "DataVisualizer.h"
 #include "DataManager.h"
 #include "DataVisualizer.h"
+#include "ItemDelegate.h"
 #include "ObserverModel.h"
 
 ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent) 
@@ -21,6 +22,7 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     inputList->setSelectionBehavior(QAbstractItemView::SelectRows);
     inputList->setSelectionMode(QAbstractItemView::SingleSelection);
     inputList->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    inputList->setItemDelegate(new ItemDelegate(this));
     
     QSplitter* splitter = new QSplitter(Qt::Vertical);
     splitter->addWidget(visualizer);

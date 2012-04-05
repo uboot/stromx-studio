@@ -1,5 +1,6 @@
 #include "ThreadListModel.h"
 
+#include "Common.h"
 #include "ThreadModel.h"
 
 ThreadListModel::ThreadListModel(QObject* parent)
@@ -20,10 +21,12 @@ int ThreadListModel::columnCount(const QModelIndex& parent) const
 
 QVariant ThreadListModel::data(const QModelIndex& index, int role) const
 {
+    if(! index.isValid())
+        return QVariant();
+    
     switch(role)
     {
     case Qt::EditRole:
-    case Qt::DisplayRole:
         switch(index.column())
         {
         case 0:
@@ -34,6 +37,26 @@ QVariant ThreadListModel::data(const QModelIndex& index, int role) const
             ;
         }
         break;
+    case Qt::DisplayRole:
+        switch(index.column())
+        {
+        case 0:
+            return m_threads[index.row()]->name();
+        case 1:
+        {
+            QColor color = m_threads[index.row()]->color();
+            foreach(QString name, QColor::colorNames())
+            {
+                if(QColor(name) == color)
+                    return name;
+            }
+            return color;
+        }
+        default:
+            ;
+        }
+        break;
+    case ColorRole:
     case Qt::DecorationRole:
         switch(index.column())
         {
@@ -52,16 +75,32 @@ QVariant ThreadListModel::data(const QModelIndex& index, int role) const
 
 bool ThreadListModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if(index.isValid() && index.column() == 0)
+    if(! index.isValid())
+        return false;
+    
+    ThreadModel* thread = reinterpret_cast<ThreadModel*>(index.internalPointer());
+    Q_ASSERT(thread);
+    
+    switch(index.column())
+    {
+    case 0:
     {
         QString newName = value.toString();
-        
         if(newName.isEmpty())
             return false;
-        
-        ThreadModel* thread = reinterpret_cast<ThreadModel*>(index.internalPointer());
         thread->setName(newName);
         emit dataChanged(index, index);
+        return true;
+    }
+    case 1:
+    {
+        QColor color(value.toString());
+        thread->setColor(color);
+        emit dataChanged(index, index);
+        return true;
+    }
+    default:
+        ;
     }
     
     return false;
@@ -70,10 +109,9 @@ bool ThreadListModel::setData(const QModelIndex& index, const QVariant& value, i
 Qt::ItemFlags ThreadListModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-    if(index.column() == 0)
-        return flags |= Qt::ItemIsEditable;
-        
-    return flags;
+    
+    // all columns are editable
+    return flags |= Qt::ItemIsEditable;
 }
 
 QVariant ThreadListModel::headerData(int section, Qt::Orientation orientation, int role) const

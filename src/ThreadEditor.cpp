@@ -4,6 +4,7 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QTableView>
+#include "ItemDelegate.h"
 #include "StreamModel.h"
 #include "ThreadListModel.h"
 
@@ -13,6 +14,7 @@ ThreadEditor::ThreadEditor(QWidget* parent)
 {    
     m_table = new QTableView;
     m_table->verticalHeader()->hide();
+    m_table->setItemDelegate(new ItemDelegate(this));
     
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(m_table);

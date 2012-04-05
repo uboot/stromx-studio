@@ -2,7 +2,6 @@
 
 #include <QHeaderView>
 #include <QTableView>
-
 #include "ItemDelegate.h"
 
 PropertyEditor::PropertyEditor(QWidget* parent)

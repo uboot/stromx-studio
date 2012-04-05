@@ -1,6 +1,7 @@
 #include "ObserverTreeModel.h"
 
 #include <QStringList>
+#include "Common.h"
 #include "InsertInputCmd.h"
 #include "InsertObserverCmd.h"
 #include "InputData.h"
@@ -193,11 +194,27 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
         case 1:
             return input->id();
         case 2:
-            return input->color();
+        {
+            QColor color = input->color();
+            foreach(QString name, QColor::colorNames())
+            {
+                if(QColor(name) == color)
+                    return name;
+            }
+            return color;
+        }
         default:
             return QVariant();
         }
     case Qt::DecorationRole:
+        switch(index.column())
+        {
+        case 2:
+            return input->color();
+        default:
+            return QVariant();
+        }
+    case ColorRole:
         switch(index.column())
         {
         case 2:
