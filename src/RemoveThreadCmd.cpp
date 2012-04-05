@@ -2,7 +2,7 @@
 #include "StreamModel.h"
 
 RemoveThreadCmd::RemoveThreadCmd(StreamModel* stream, ThreadModel* model, QUndoCommand* parent)
-  : QUndoCommand(parent),
+  : QUndoCommand(QObject::tr("remove thread"), parent),
     m_stream(stream),
     m_model(model)
 {

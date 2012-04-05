@@ -288,8 +288,17 @@ void StreamModel::addThread()
 
 void StreamModel::removeThread(ThreadModel* thread)
 {
+    m_undoStack->beginMacro(tr("remove thread"));
+    
+    foreach(ConnectionModel* connection, connections())
+    {
+        if(connection->thread() == thread)
+            connection->setThread(0);
+    }
     RemoveThreadCmd* cmd = new RemoveThreadCmd(this, thread);
     m_undoStack->push(cmd);
+    
+    m_undoStack->endMacro();
 }
 
 void StreamModel::initializeOperator(OperatorModel* op)
@@ -384,11 +393,6 @@ void StreamModel::doAddThread(ThreadModel* threadModel)
 void StreamModel::doRemoveThread(ThreadModel* threadModel)
 {
     m_threadListModel->removeThread(threadModel);
-    foreach(ConnectionModel* connection, connections())
-    {
-        if(connection->thread() == threadModel)
-            connection->setThread(0);
-    }
     m_stream->removeThread(threadModel->thread());
     threadModel->setThread(0);
     emit threadRemoved(threadModel);
