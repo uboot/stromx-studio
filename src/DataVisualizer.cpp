@@ -55,7 +55,23 @@ void DataVisualizer::setAlpha(int layer, int alpha)
 
 void DataVisualizer::setColor(int layer, const QColor& color)
 {
+    if(! m_items.contains(layer))
+        return;  
 
+    // get the item of this layer
+    QGraphicsItem* item = m_items[layer];
+    
+    if(! item)
+        return;
+    
+    switch(item->type())
+    {
+    case QGraphicsSimpleTextItem::Type:
+        if(QGraphicsSimpleTextItem* textItem = qgraphicsitem_cast<QGraphicsSimpleTextItem*>(item))
+            textItem->setBrush(color);
+    default:
+        ;
+    }
 }
 
 void DataVisualizer::setData(int layer, const stromx::core::Data& data)
@@ -121,15 +137,5 @@ void DataVisualizer::setData(int layer, const stromx::core::Data& data)
     }
 }
 
-void DataVisualizer::reorderItems()
-{
-    int layer = 0;
-    foreach(QGraphicsItem* item, m_items)
-    {
-        if(item)
-            item->setZValue(-layer);
-        layer++;
-    }
-}
 
 

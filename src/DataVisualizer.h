@@ -39,8 +39,6 @@ public:
     virtual void setActive(int layer, bool active);
     
 private:
-    /** Sets the z-values of each graphic item according to its layer position. */
-    void reorderItems();
     QMap<int, QGraphicsItem*> m_items;
 };
 

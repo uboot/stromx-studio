@@ -31,5 +31,6 @@ void InputModel::doSetColor(const QColor& color)
 {
     m_color = color;
     emit colorChanged(m_color);
+    emit changed(this);
 }
 

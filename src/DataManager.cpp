@@ -34,6 +34,7 @@ void DataManager::addInputLayer(InputModel* input, int pos)
     
     // add a new layer in the front
     m_visualizer->addLayer(pos);
+    m_visualizer->setColor(pos, input->color());
     
     // remember the input and connect to it
     m_inputs.insert(pos, input);
@@ -110,11 +111,22 @@ void DataManager::updateLayerData(OperatorModel::ConnectorType type, unsigned in
     }
 }
 
+void DataManager::updateInputProperties(InputModel* input)
+{
+    for(int layer = 0; layer < m_inputs.count(); ++layer)
+    {
+        if(input == m_inputs[layer])
+            m_visualizer->setColor(layer, input->color());
+    }
+}
+
 void DataManager::connectInput(InputModel* input)
 {
-    // connect only if not connection to this operator exists
+    // connect only if no connection to this operator exists
     connect(input->op(), SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer)),
             this, SLOT(updateLayerData(OperatorModel::ConnectorType,uint,stromx::core::DataContainer)), Qt::UniqueConnection);
+    connect(input, SIGNAL(changed(InputModel*)), this,
+            SLOT(updateInputProperties(InputModel*)), Qt::UniqueConnection);
 }
 
 void DataManager::disconnectInput(InputModel* input)
