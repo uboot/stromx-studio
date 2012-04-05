@@ -40,7 +40,7 @@ int ObserverTreeModel::rowCount(const QModelIndex& parent) const
 
 int ObserverTreeModel::columnCount(const QModelIndex& parent) const
 {
-    return 2;
+    return NUM_VISIBLE_COLUMNS;
 }
 
 QVariant ObserverTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -53,9 +53,9 @@ QVariant ObserverTreeModel::headerData(int section, Qt::Orientation orientation,
     
     switch(section)
     {
-    case 0:
+    case OPERATOR:
         return tr("Operator");
-    case 1:
+    case ID:
         return tr("ID");
     default:
         return QVariant();
@@ -189,11 +189,11 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole:
         switch(index.column())
         {
-        case 0:
+        case OPERATOR:
             return input->op()->name();
-        case 1:
+        case ID:
             return input->id();
-        case 2:
+        case COLOR:
         {
             QColor color = input->color();
             foreach(QString name, QColor::colorNames())
@@ -209,7 +209,7 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     case Qt::DecorationRole:
         switch(index.column())
         {
-        case 2:
+        case COLOR:
             return input->color();
         default:
             return QVariant();
@@ -217,7 +217,7 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     case ColorRole:
         switch(index.column())
         {
-        case 2:
+        case COLOR:
             return input->color();
         default:
             return QVariant();
@@ -229,7 +229,8 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
 
 bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if(index.isValid() && ! index.parent().isValid() && index.column() == 0)
+    // the index points to an observer name
+    if(index.isValid() && ! index.internalPointer() && index.column() == OPERATOR)
     {
         QString newName = value.toString();
         
@@ -238,6 +239,20 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         
         m_observers[index.row()]->setName(newName);
         emit dataChanged(index, index);
+    }
+    
+    // the index points to an input color
+    if(index.isValid() && index.internalPointer() && index.column() == COLOR)
+    {
+        // get the input
+        ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
+        InputModel* input = observer->input(index.row());
+        
+        // set the color
+        QColor color(value.toString());
+        input->setColor(color);
+        emit dataChanged(index, index);
+        return true;
     }
     
     return false;
@@ -251,10 +266,10 @@ Qt::ItemFlags ObserverTreeModel::flags(const QModelIndex& index) const
     if(! index.isValid())
         return flags;
     
-    // only observer are editable
-    if(! index.internalPointer())
+    // observer names are editable
+    if(! index.internalPointer() && index.column() == OPERATOR)
         return flags |= Qt::ItemIsEditable | Qt::ItemIsDropEnabled;
-        
+    
     return flags |= Qt::ItemIsDragEnabled;
 }
 
@@ -416,6 +431,7 @@ QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)
             
             stream << model->m_stream->operatorId(input->op());
             stream << input->id();
+            stream << input->color();
         }
     }
     
@@ -441,12 +457,15 @@ QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
         {
             qint32 opId;
             qint32 inputId;
+            QColor color;
             
             stream >> opId;
             stream >> inputId;
+            stream >> color;
             
             OperatorModel* op = model->m_stream->operators()[opId];
             InputModel* input = new InputModel(op, inputId, model->m_undoStack, model);
+            input->doSetColor(color);
             observer->insertInput(observer->numInputs(), input);
             model->connect(input, SIGNAL(changed(InputModel*)), model, SLOT(updateInput(InputModel*)));
         }

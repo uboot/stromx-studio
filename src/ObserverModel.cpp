@@ -68,7 +68,7 @@ InputModel* ObserverModel::input(int position)
 
 int ObserverModel::columnCount(const QModelIndex& parent) const
 {
-    return 3;
+    return ObserverTreeModel::NUM_COLUMNS;
 }
 
 int ObserverModel::rowCount(const QModelIndex& parent) const
@@ -82,11 +82,11 @@ QVariant ObserverModel::headerData(int section, Qt::Orientation orientation, int
     {
         switch(section)
         {
-        case 0:
+        case ObserverTreeModel::OPERATOR:
             return tr("Operator");
-        case 1:
+        case ObserverTreeModel::ID:
             return tr("ID");
-        case 2:
+        case ObserverTreeModel::COLOR:
             return tr("Color");
         }
     }
@@ -102,6 +102,11 @@ QModelIndex ObserverModel::index(int row, int column, const QModelIndex& parent)
 QVariant ObserverModel::data(const QModelIndex& index, int role) const
 {
     return m_parent->data(index, role);
+}
+
+bool ObserverModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    return m_parent->setData(index, value, role);
 }
 
 void ObserverModel::handleRowsAboutToBeInserted(const QModelIndex& parent, int start, int end)
@@ -201,7 +206,15 @@ Qt::ItemFlags ObserverModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = QAbstractTableModel::flags(index);
     
-    return flags |= (Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
+    switch(index.column())
+    {
+    case ObserverTreeModel::COLOR:
+        flags |= Qt::ItemIsEditable;
+    default:
+        flags |= (Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
+    }
+    
+    return flags;
 }
 
 

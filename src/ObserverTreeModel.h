@@ -41,6 +41,14 @@ class ObserverTreeModel : public QAbstractItemModel
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * op);
     
 public:
+    enum Column
+    {
+        OPERATOR,
+        ID,
+        COLOR,
+        NUM_COLUMNS
+    };
+    
     /** Constructs an observer tree model. */
     ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent);
     
@@ -116,7 +124,7 @@ private:
      * is smaller than this value because the model also provides data for the
      * class ObserverModel which is not displayed by the tree view.
      */
-    const static int NUM_COLUMNS = 3;
+    const static int NUM_VISIBLE_COLUMNS = 2;
     
     void doInsertObserver(int pos, ObserverModel* observer);
     void doRemoveObserver(int pos);

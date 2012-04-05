@@ -24,16 +24,22 @@
 #include <QColor>
 
 class QUndoStack;
+class ObserverTreeModel;
 class OperatorModel;
 
 class InputModel : public QObject
 {
     Q_OBJECT
     
+    friend class SetInputColorCmd;
+    friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * model);
+    
 public:
     InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject * parent);
     
+    /** Pushes a set color command on the undo stack. */
     void setColor(const QColor & color);
+    
     const QColor & color() const { return m_color; }
     
     OperatorModel* op() const { return m_op; }
@@ -50,6 +56,9 @@ signals:
     void colorChanged(const QColor & color);
     
 private:
+    /** Sets the color of the input. */
+    void doSetColor(const QColor & color);
+    
     OperatorModel* m_op;
     unsigned int m_id;
     QColor m_color;
