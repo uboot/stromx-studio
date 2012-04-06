@@ -229,6 +229,9 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
 
 bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
+    if(role != Qt::EditRole)
+        return false;
+        
     // the index points to an observer name
     if(index.isValid() && ! index.internalPointer() && index.column() == OPERATOR)
     {

@@ -8,6 +8,7 @@ InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack
   : QObject(parent),
     m_op(op),
     m_id(id),
+    m_color(Qt::black),
     m_undoStack(undoStack) 
 {
     connect(op, SIGNAL(nameChanged(QString)), this, SLOT(updateOperatorName(QString)));

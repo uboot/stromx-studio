@@ -8,7 +8,8 @@
 ThreadModel::ThreadModel(stromx::core::Thread* thread, StreamModel* stream)
   : QObject(stream),
     m_thread(thread),
-    m_stream(stream)
+    m_stream(stream),
+    m_color(Qt::black)
 {
     if(m_thread)
         m_name = QString::fromStdString(m_thread->name());

@@ -5,7 +5,6 @@
 #include <QVector2D>
 #include <math.h>
 #include "ConnectionModel.h"
-#include "InputData.h"
 
 ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
   : QGraphicsObject(parent),
@@ -15,13 +14,17 @@ ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
     m_model(model)
 {
     setFlag(ItemIsSelectable, true);
-    m_pen.setWidth(3);
-    m_pen.setColor(m_model->color());
+    
+    if(m_model)
+    {
+        m_pen.setColor(m_model->color());
+        connect(m_model, SIGNAL(colorChanged(QColor)), this, SLOT(setColor(QColor)));
+    }
+    
+    m_pen.setWidth(INACTIVE_WIDTH);
     m_shaft->setPen(m_pen);
     m_head1->setPen(m_pen);
     m_head2->setPen(m_pen);
-    
-    connect(m_model, SIGNAL(colorChanged(QColor)), this, SLOT(setColor(QColor)));
 }
 
 QRectF ConnectionItem::boundingRect() const
