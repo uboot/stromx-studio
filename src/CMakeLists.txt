@@ -51,6 +51,7 @@ set(stromxstudio_SOURCES
     RenameThreadCmd.cpp
     SetInputColorCmd.cpp
     SetThreadCmd.cpp
+    SetThreadColorCmd.cpp
     StreamEditor.cpp
     StreamEditorScene.cpp
     StreamModel.cpp

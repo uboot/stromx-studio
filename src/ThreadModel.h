@@ -39,6 +39,7 @@ class ThreadModel : public QObject
     Q_PROPERTY(QColor color READ color WRITE setColor)
     
     friend class RenameThreadCmd;
+    friend class SetThreadColorCmd;
     friend QDataStream & operator<< (QDataStream & stream, const ThreadModel * thread);
     friend QDataStream & operator>> (QDataStream & stream, ThreadModel * thread);
     

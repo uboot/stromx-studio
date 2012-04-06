@@ -2,6 +2,7 @@
 
 #include <stromx/core/Thread.h>
 #include "RenameThreadCmd.h"
+#include "SetThreadColorCmd.h"
 #include "StreamModel.h"
 
 ThreadModel::ThreadModel(stromx::core::Thread* thread, StreamModel* stream)
@@ -45,7 +46,10 @@ void ThreadModel::doSetName(const QString& name)
 void ThreadModel::setColor(const QColor& color)
 {
     if(color != m_color)
-        doSetColor(color);
+    {
+        QUndoCommand* cmd = new SetThreadColorCmd(this, color);
+        m_stream->undoStack()->push(cmd);
+    }
 }
 
 void ThreadModel::doSetColor(const QColor& color)
