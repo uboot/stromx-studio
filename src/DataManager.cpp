@@ -106,7 +106,10 @@ void DataManager::updateLayerData(OperatorModel::ConnectorType type, unsigned in
         {
             InputModel* input = m_inputs[layer];
             if(input->op() == op && input->id() == id)
+            {
                 m_visualizer->setData(layer, access());
+                m_visualizer->setColor(layer, input->color());
+            }
         }
     }
 }
