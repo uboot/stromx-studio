@@ -42,13 +42,16 @@ public:
     virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
     virtual Qt::ItemFlags flags(const QModelIndex& index) const;
     
+    /** Returns the thread which this input is assigned to. */
     ThreadModel* thread() const { return m_thread; }
     
     /** 
-     * Sets the thread of this connection and the adds the input of 
-     * this connection to the stromx stream.
+     * Returns the current color of this connection. This either the
+     * color of the thread of the connection or a default color if the
+     * connection is not assigned to a thread.
      */
-    
+    const QColor color() const;
+
     /** Pushes a set thread command on the undo stack. */
     void setThread(ThreadModel* thread);
     
@@ -65,7 +68,14 @@ public:
     void disconnectFromOperators();
     
 signals:
+    /** The connections was assigned to a new thread (or no thread). */
     void threadChanged(ThreadModel* thread);
+    
+    /** 
+     * The color connection changed. This happens if the color of the 
+     * thread changes or the connection is assigned to a different thread.
+     */
+    void colorChanged(const QColor & color);
     
 private:
     enum Row

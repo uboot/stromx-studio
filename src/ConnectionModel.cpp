@@ -147,7 +147,10 @@ void ConnectionModel::doSetThread(ThreadModel* thread)
     {
         // remove from the previous thread
         if(m_thread)
+        {
             m_thread->thread()->removeInput(m_targetOp->op(), m_inputId);
+            m_thread->disconnect(this);
+        }
         
         // add to the new thread
         if(thread)
@@ -160,12 +163,23 @@ void ConnectionModel::doSetThread(ThreadModel* thread)
             // add input only if has not already been added to the thread
             if(result == inputs.end())
                 thread->thread()->addInput(m_targetOp->op(), m_inputId);
+            
+            connect(thread, SIGNAL(colorChanged(QColor)), this, SIGNAL(colorChanged(QColor)));
         }
         
         m_thread = thread;
         emit threadChanged(m_thread);
+        emit colorChanged(color());
         emit dataChanged(createIndex(THREAD, 1), createIndex(THREAD, 1));
     }
+}
+
+const QColor ConnectionModel::color() const
+{
+    if(m_thread)
+        return m_thread->color();
+    else
+        return QColor(Qt::black);
 }
 
 void ConnectionModel::connectToOperators()

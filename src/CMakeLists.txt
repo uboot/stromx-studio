@@ -61,6 +61,7 @@ set(stromxstudio_SOURCES
 )
 
 set(stromxstudio_HEADERS
+    ConnectionItem.h
     ConnectionModel.h
     DataManager.h
     InputData.h

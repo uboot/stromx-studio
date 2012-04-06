@@ -20,13 +20,15 @@
 #ifndef CONNECTIONITEM_H
 #define CONNECTIONITEM_H
 
-#include <QGraphicsLineItem>
+#include <QGraphicsObject>
 #include <QPen>
 
 class ConnectionModel;
 
-class ConnectionItem : public QGraphicsLineItem
+class ConnectionItem : public QGraphicsObject
 {
+    Q_OBJECT
+    
 public:
     explicit ConnectionItem(ConnectionModel* model, QGraphicsItem * parent = 0);
     
@@ -37,11 +39,38 @@ public:
     void setEnd(const QPointF & end);
     void setActive(bool value);
     
+    virtual QRectF boundingRect() const;
+    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
+    
     ConnectionModel* model() const { return m_model; }
     
+protected:
+    /** Updates the appearance of the connection when it is de-/selected. */
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value);
+    
+    virtual QPainterPath shape() const;
+    
+private slots:
+    /** Sets the color of the connection. */
+    void setColor(const QColor & color);
+    
 private:
+    enum Width
+    {
+        ACTIVE_WIDTH = 4,
+        INACTIVE_WIDTH = 2
+    };
+    
+    /** 
+     * Rotates the head of the connection arrow according to 
+     * the angle of the connection shaft.
+     */
     void rotateHead();
     
+    /** Applies the current pen to all graphic items of the connection. */
+    void applyPen();
+    
+    QGraphicsLineItem* m_shaft;
     QGraphicsLineItem* m_head1;
     QGraphicsLineItem* m_head2;
     

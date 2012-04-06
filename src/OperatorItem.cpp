@@ -17,7 +17,7 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
     
     QGraphicsTextItem* label = new QGraphicsTextItem(this);
     label->setPos(0, 55);
-    label->setPlainText(QString::fromStdString(m_model->op()->info().type()));
+    label->setPlainText(QString::fromStdString(m_model->op()->name()));
     
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
