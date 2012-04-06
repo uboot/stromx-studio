@@ -51,6 +51,7 @@ public:
 public slots:
     void setInitialized(bool value);
     void setOperatorPos(const QPointF & value);
+    void setName(const QString & value);
     
 protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
@@ -70,6 +71,7 @@ private:
     
     OperatorModel* m_model;
     QGraphicsRectItem* m_opRect;
+    QGraphicsTextItem* m_label;
     
     QMap<unsigned int, ConnectorItem*> m_inputs;
     QMap<unsigned int, ConnectorItem*> m_outputs;

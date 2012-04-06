@@ -15,9 +15,9 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
     m_opRect->setRect(0, 0, 50, 50);
     setPos(m_model->pos());
     
-    QGraphicsTextItem* label = new QGraphicsTextItem(this);
-    label->setPos(0, 55);
-    label->setPlainText(QString::fromStdString(m_model->op()->name()));
+    m_label = new QGraphicsTextItem(this);
+    m_label->setPos(0, 55);
+    m_label->setPlainText(QString::fromStdString(m_model->op()->name()));
     
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
@@ -26,6 +26,7 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
     
     setInitialized(model->isInitialized());
     
+    connect(m_model, SIGNAL(nameChanged(QString)), this, SLOT(setName(QString)));
     connect(m_model, SIGNAL(initializedChanged(bool)), this, SLOT(setInitialized(bool)));
     connect(m_model, SIGNAL(posChanged(QPointF)), this, SLOT(setOperatorPos(QPointF)));
     connect(m_model, SIGNAL(connectorOccupiedChanged(OperatorModel::ConnectorType,uint,bool)),
@@ -202,6 +203,11 @@ void OperatorItem::setConnectorOccupied(OperatorModel::ConnectorType type, unsig
         if(m_outputs.contains(id))
             m_outputs[id]->setOccupied(occupied);
     }
+}
+
+void OperatorItem::setName(const QString& value)
+{
+    m_label->setPlainText(value);
 }
 
 void OperatorItem::resetAllConnectors()
