@@ -46,25 +46,25 @@ void StreamEditor::mousePressEvent(QMouseEvent* event)
         QPointF scenePos = mapToScene(event->pos());
         QGraphicsItem* item = scene()->itemAt(scenePos);
         
-        if(! item)
-            return;
-        
-        if(ConnectionItem* connection = qgraphicsitem_cast<ConnectionItem*>(item->parentItem()))
-        {
-            m_startPos = event->pos();
-            m_targetOp = connection->model()->targetOp();
-            m_inputId = connection->model()->inputId();
-            return;
-        }
-        else if(ConnectorItem* connector = qgraphicsitem_cast<ConnectorItem*>(item))
-        {
-            if(connector->connectorType() == ConnectorItem::INPUT
-               && connector->numConnections())
+        if(item)
+        {    
+            if(ConnectionItem* connection = qgraphicsitem_cast<ConnectionItem*>(item->parentItem()))
             {
                 m_startPos = event->pos();
-                m_targetOp = connector->op();
-                m_inputId = connector->id();
+                m_targetOp = connection->model()->targetOp();
+                m_inputId = connection->model()->inputId();
                 return;
+            }
+            else if(ConnectorItem* connector = qgraphicsitem_cast<ConnectorItem*>(item))
+            {
+                if(connector->connectorType() == ConnectorItem::INPUT
+                && connector->numConnections())
+                {
+                    m_startPos = event->pos();
+                    m_targetOp = connector->op();
+                    m_inputId = connector->id();
+                    return;
+                }
             }
         }
     }
