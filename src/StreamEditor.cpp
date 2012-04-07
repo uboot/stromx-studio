@@ -22,6 +22,7 @@ StreamEditor::StreamEditor(QWidget* parent)
     
     setAcceptDrops(true);
     setDragMode(QGraphicsView::RubberBandDrag);
+    setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 }
 
 void StreamEditor::mouseMoveEvent(QMouseEvent* event)

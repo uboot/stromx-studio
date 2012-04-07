@@ -81,8 +81,15 @@ void TestOperator::execute(DataProvider& provider)
 const std::vector<const Description*> TestOperator::setupInputs()
 {
     std::vector<const Description*> inputs;
-    inputs.push_back(new Description(INPUT_1, DataVariant::NONE));
-    inputs.push_back(new Description(INPUT_2, DataVariant::NONE));
+    Description* description = 0;
+    
+    description = new Description(INPUT_1, DataVariant::NONE);
+    description->setName("Input 1");
+    inputs.push_back(description);
+    
+    description = new Description(INPUT_2, DataVariant::NONE);
+    description->setName("Input 2");
+    inputs.push_back(description);
     
     return inputs;
 }
@@ -90,8 +97,15 @@ const std::vector<const Description*> TestOperator::setupInputs()
 const std::vector<const Description*> TestOperator::setupOutputs()
 {
     std::vector<const Description*> outputs;
-    outputs.push_back(new Description(OUTPUT_1, DataVariant::NONE));
-    outputs.push_back(new Description(OUTPUT_2, DataVariant::NONE));
+    Description* description = 0;
+    
+    description = new Description(OUTPUT_1, DataVariant::NONE);
+    description->setName("Output 1");
+    outputs.push_back(description);
+    
+    description = new Description(OUTPUT_2, DataVariant::NONE);
+    description->setName("Output 2");
+    outputs.push_back(description);
     
     return outputs;
 }

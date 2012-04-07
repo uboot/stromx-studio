@@ -65,6 +65,8 @@ private slots:
     void resetAllConnectors();
     
 private:
+    static const int SIZE = 50;
+    
     void initialize();
     void deinitialize();
     void updateConnectionPositions();

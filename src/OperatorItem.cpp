@@ -12,12 +12,12 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
     m_model(model)
 {
     m_opRect = new QGraphicsRectItem(this);
-    m_opRect->setRect(0, 0, 50, 50);
+    m_opRect->setRect(0, 0, SIZE, SIZE);
     setPos(m_model->pos());
     
     m_label = new QGraphicsTextItem(this);
-    m_label->setPos(0, 55);
     m_label->setPlainText(QString::fromStdString(m_model->op()->name()));
+    m_label->setPos((SIZE - m_label->boundingRect().width()) / 2, SIZE + 5);
     
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);
