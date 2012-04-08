@@ -139,7 +139,6 @@ private:
     QMenu* m_viewMenu;
     QMenu* m_helpMenu;
     QMenu* m_streamMenu;
-    QMenu* m_observerMenu;
     
     QToolBar* m_streamToolBar;
     

@@ -240,13 +240,10 @@ void MainWindow::createMenus()
      m_streamMenu->addSeparator();
      m_streamMenu->addAction(m_addThreadAct);
      m_streamMenu->addAction(m_removeThreadAct);
-     
-     m_observerMenu = menuBar()->addMenu(tr("&Observer"));
-     m_observerMenu->addAction(m_addObserverAct);
-     m_observerMenu->addAction(m_removeObserverAct);
-     m_observerMenu->addAction(m_removeInputAct);
-     m_observerSeparatorAct = m_observerMenu->addSeparator();
-     m_observerSeparatorAct->setVisible(false);
+     m_streamMenu->addSeparator();
+     m_streamMenu->addAction(m_addObserverAct);
+     m_streamMenu->addAction(m_removeObserverAct);
+     m_streamMenu->addAction(m_removeInputAct);
 
      m_viewMenu = menuBar()->addMenu(tr("&View"));
 
@@ -709,8 +706,7 @@ void MainWindow::createObserverWindow(ObserverModel* observer)
 {
     ObserverWindow* observerWindow = new ObserverWindow(observer, this);
     m_observerWindows.append(observerWindow);
-    m_observerMenu->addAction(observerWindow->showAction());
-    m_observerSeparatorAct->setVisible(true);
+    m_viewMenu->addAction(observerWindow->showAction());
 }
 
 void MainWindow::destroyObserverWindow(ObserverModel* observer)
@@ -724,9 +720,8 @@ void MainWindow::destroyObserverWindow(ObserverModel* observer)
     }
     
     Q_ASSERT(window);
-    m_observerMenu->removeAction(window->showAction());
+    m_viewMenu->removeAction(window->showAction());
     m_observerWindows.removeAll(window);
-    m_observerSeparatorAct->setVisible(m_observerWindows.count() > 0);
     
     delete window;
 }
@@ -735,10 +730,9 @@ void MainWindow::resetObserverWindows(StreamModel* model)
 {
     foreach(ObserverWindow* window, m_observerWindows)
     {
-        m_observerMenu->removeAction(window->showAction());
+        m_viewMenu->removeAction(window->showAction());
         delete window;
     }
-    m_observerSeparatorAct->setVisible(false);
     m_observerWindows.clear();
     
     foreach(ObserverModel* observer, model->observerModel()->observers())
