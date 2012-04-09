@@ -314,11 +314,33 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
                 int destObserverPos = parent.row();
                 int destInputPos = inputPos;
                 
+                QUndoCommand* cmd = 0;
                 if(srcObserverPos == destObserverPos && srcInputPos == destInputPos)
                     return true;
                 
-                QUndoCommand* cmd = new MoveInputCmd(this, srcObserverPos, srcInputPos,
+                // the input is moved within the same observer
+                if(srcObserverPos == destObserverPos)
+                {
+                    int numInputs = m_observers[srcInputPos]->numInputs();
+                    Q_ASSERT(numInputs);
+                    
+                    // the input was moved to the end of the list
+                    if(destInputPos >= numInputs)
+                    {
+                        cmd = new MoveInputCmd(this, srcObserverPos, srcInputPos,
+                                                     destObserverPos, destInputPos - 1, input);
+                    }
+                    else
+                    {
+                        cmd = new MoveInputCmd(this, srcObserverPos, srcInputPos,
                                                      destObserverPos, destInputPos, input);
+                    } 
+                }
+                else
+                {
+                    cmd = new MoveInputCmd(this, srcObserverPos, srcInputPos,
+                                           destObserverPos, destInputPos, input);
+                }
                 m_undoStack->push(cmd);
             }
             

@@ -20,12 +20,12 @@
 #ifndef OBSERVERWINDOW_H
 #define OBSERVERWINDOW_H
 
-#include <QWidget>
+#include <QMainWindow>
 
 class ObserverModel;
 class ObserverTreeModel;
 
-class ObserverWindow : public QWidget
+class ObserverWindow : public QMainWindow
 {
     Q_OBJECT
     

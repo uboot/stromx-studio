@@ -1,6 +1,7 @@
 #include "ObserverWindow.h"
 
 #include <QAction>
+#include <QDockWidget>
 #include <QHeaderView>
 #include <QTableView>
 #include <QVBoxLayout>
@@ -12,10 +13,12 @@
 #include "ObserverModel.h"
 
 ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent) 
-  : QWidget(parent, Qt::Window),
+  : QMainWindow(parent, Qt::Window),
     m_observer(observer)
 {
     DataVisualizer* visualizer = new DataVisualizer();
+    setCentralWidget(visualizer);
+    
     QTableView* inputList = new QTableView();
     inputList->setModel(observer);
     inputList->setDragDropMode(QAbstractItemView::DragDrop);
@@ -24,13 +27,10 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     inputList->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     inputList->setItemDelegate(new ItemDelegate(this));
     
-    QSplitter* splitter = new QSplitter(Qt::Vertical);
-    splitter->addWidget(visualizer);
-    splitter->addWidget(inputList);
-    
-    QVBoxLayout* layout = new QVBoxLayout;
-    layout->addWidget(splitter);
-    setLayout(layout);
+    QDockWidget* inputWidget = new QDockWidget("Inputs");
+    inputWidget->setWidget(inputList);
+    inputWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
+    addDockWidget(Qt::BottomDockWidgetArea, inputWidget);
     
     m_showAct = new QAction(observer->name(), this);
     m_showAct->setStatusTip(tr("Open the observer window"));
