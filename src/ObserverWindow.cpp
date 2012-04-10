@@ -28,6 +28,7 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     inputList->setItemDelegate(new ItemDelegate(this));
     
     QDockWidget* inputWidget = new QDockWidget("Inputs");
+    inputWidget->setObjectName("InputList");
     inputWidget->setWidget(inputList);
     inputWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
     addDockWidget(Qt::BottomDockWidgetArea, inputWidget);

@@ -797,6 +797,9 @@ void MainWindow::readObserverWindowStates(stromx::core::FileInput& input, const 
         window->restoreGeometry(data);
         dataStream >> data;
         window->restoreState(data);
+        bool visible;
+        dataStream >> visible;
+        window->setVisible(visible);
     }
 }
 
@@ -811,12 +814,13 @@ void MainWindow::writeObserverWindowStates(stromx::core::FileOutput& output, con
     {
         dataStream << window->saveGeometry();
         dataStream << window->saveState();
+        dataStream << window->isVisible();
     }
     
     try
     {
         output.initialize(basename.toStdString());
-        output.openFile("studio", stromx::core::OutputProvider::BINARY);
+        output.openFile("studio.geometry", stromx::core::OutputProvider::BINARY);
         output.file().write(data.data(), data.size());
     }
     catch(stromx::core::FileAccessFailed& e)
