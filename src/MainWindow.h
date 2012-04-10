@@ -30,6 +30,15 @@
 
 #include <QMainWindow>
 
+namespace stromx
+{
+    namespace core
+    { 
+        class FileInput;
+        class FileOutput;
+    }
+}
+
 class QAction;
 class QMenu;
 class LimitUndoStack;
@@ -105,6 +114,12 @@ private:
     
     /** Saves the stream before it is going to be closed. */
     bool saveBeforeClosing();
+    
+    /** Saves the geometry of the observer windows. */
+    void writeObserverWindowStates(stromx::core::FileOutput & output, const QString & basename) const;
+    
+    /** Reads and restores the geometry of the observer windows. */
+    void readObserverWindowStates(stromx::core::FileInput & input, const QString & basename);
     
     QAction* m_openAct;
     QAction* m_saveAct;

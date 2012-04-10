@@ -431,7 +431,6 @@ void MainWindow::readFile(const QString& filepath)
     
     try
     {
-        
         if(extension == "xml")
         {
             stream->readStudioData(*input, basename);
@@ -451,6 +450,25 @@ void MainWindow::readFile(const QString& filepath)
     // reading was successful
     // set the new stream
     setModel(stream);
+    
+    // read and restore the geometry of the observer windows
+    try
+    {
+        if(extension == "xml")
+        {
+            readObserverWindowStates(*input, basename);
+        }
+        else if(extension == "zip")
+        {
+            readObserverWindowStates(*input, "stream");
+        }
+        
+    }
+    catch(ReadStreamFailed& e)
+    {
+        QMessageBox::warning(this, tr("Loaded only part of file"), e.what(),
+                             QMessageBox::Ok, QMessageBox::Ok);
+    }
     
     // remember the last file
     QSettings settings("stromx", "stromx-studio");
@@ -591,12 +609,14 @@ void MainWindow::writeFile(const QString& filepath)
             location = QFileInfo(filepath).absoluteDir().absolutePath();
             stromx::core::DirectoryFileOutput output(location.toStdString());
             m_streamEditor->scene()->model()->write(output, basename);
+            writeObserverWindowStates(output, basename);
         }
         else if(extension == "zip")
         {
             location = filepath;
             stromx::core::ZipFileOutput output(location.toStdString());
             m_streamEditor->scene()->model()->write(output, "stream");
+            writeObserverWindowStates(output, "stream");
         }
     
         updateCurrentFile(filepath);
@@ -738,6 +758,78 @@ void MainWindow::resetObserverWindows(StreamModel* model)
     foreach(ObserverModel* observer, model->observerModel()->observers())
         createObserverWindow(observer);
 }
+
+void MainWindow::readObserverWindowStates(stromx::core::FileInput& input, const QString& basename)
+{
+    QByteArray data;
+    
+    try
+    {
+        input.initialize("", (basename + ".studio.geometry").toStdString());
+        input.openFile(stromx::core::InputProvider::BINARY);
+        
+        // read all data from the input stream
+        int dataSize = 0;
+        const int CHUNK_SIZE = 10;
+        while(! input.file().eof())
+        {
+            data.resize(data.size() + CHUNK_SIZE);
+            char* dataPtr = data.data() + dataSize;
+            input.file().read(dataPtr, CHUNK_SIZE);
+            dataSize += (int)(input.file().gcount());
+        }
+        data.resize(dataSize);
+    }
+    catch(stromx::core::FileAccessFailed& e)
+    {
+        // simply ignore errors and do not update the window geometry
+        qWarning(e.what());
+    }
+    
+    // construct a input stream from the data
+    QDataStream dataStream(data);
+    
+    // read the state and geometry of each observer window
+    foreach(ObserverWindow* window, m_observerWindows)
+    {
+        QByteArray data;
+        dataStream >> data;
+        window->restoreGeometry(data);
+        dataStream >> data;
+        window->restoreState(data);
+    }
+}
+
+void MainWindow::writeObserverWindowStates(stromx::core::FileOutput& output, const QString& basename) const
+{
+    // construct an output stream
+    QByteArray data;
+    QDataStream dataStream(&data, QIODevice::WriteOnly | QIODevice::Truncate);
+      
+    // write the state and geometry of each observer window
+    foreach(ObserverWindow* window, m_observerWindows)
+    {
+        dataStream << window->saveGeometry();
+        dataStream << window->saveState();
+    }
+    
+    try
+    {
+        output.initialize(basename.toStdString());
+        output.openFile("studio", stromx::core::OutputProvider::BINARY);
+        output.file().write(data.data(), data.size());
+    }
+    catch(stromx::core::FileAccessFailed& e)
+    {
+        qWarning(e.what());
+        QString error = e.container().empty() 
+                        ? tr("The file %1 could not be opened for writing.").arg(QString::fromStdString(e.filename()))
+                        : tr("The file %1 in %2 could not be opened for writing.").arg(QString::fromStdString(e.filename()),
+                                                                                      QString::fromStdString(e.container()));
+        throw WriteStreamFailed(error);
+    }
+}
+
 
 
 

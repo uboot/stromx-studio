@@ -24,7 +24,6 @@
 #include <QPointF>
 #include <QList>
 
-class ObserverTreeModel;
 namespace stromx
 {
     namespace core
@@ -42,6 +41,7 @@ class QAbstractItemModel;
 class QUndoStack;
 class ConnectionModel;
 class JoinStreamTask;
+class ObserverTreeModel;
 class OperatorData;
 class OperatorModel;
 class OperatorLibraryModel;
