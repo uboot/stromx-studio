@@ -282,9 +282,7 @@ bool MainWindow::save()
             return false;
     }
     
-    writeFile(m_currentFile);
-    
-    return true;
+    return writeFile(m_currentFile);
 }
 
 void MainWindow::start()
@@ -585,12 +583,10 @@ bool MainWindow::saveAs()
     if(file.isNull())
         return false;
     
-    writeFile(file);
-    
-    return true;
+    return writeFile(file);
 }
 
-void MainWindow::writeFile(const QString& filepath)
+bool MainWindow::writeFile(const QString& filepath)
 {
     QString basename = QFileInfo(filepath).baseName();
     QString extension = QFileInfo(filepath).suffix();
@@ -630,12 +626,16 @@ void MainWindow::writeFile(const QString& filepath)
         QMessageBox::critical(this, tr("Failed to save file"),
                               tr("The location %1 could not be openend for writing").arg(location),
                               QMessageBox::Ok, QMessageBox::Ok);
+        return false;
     }
     catch(WriteStreamFailed& e)
     {
         QMessageBox::critical(this, tr("Failed to save file"), e.what(),
                               QMessageBox::Ok, QMessageBox::Ok);
+        return false;
     }
+    
+    return true;
 }
 
 void MainWindow::readSettings()

@@ -105,7 +105,12 @@ private:
     void setModel(StreamModel* model);
     void readSettings();
     void writeSettings();
-    void writeFile(const QString & filepath);
+    
+    /** 
+     * Writes the currently opened file to file at \c filepath.
+     * Returns true if the file was successfully written and false otherwise.
+     */
+    bool writeFile(const QString & filepath);
     void readFile(const QString & filepath);
     void updateRecentFileActions();
     
