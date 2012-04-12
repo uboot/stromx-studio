@@ -51,7 +51,7 @@ void ItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) cons
     QVariant data = index.model()->data(index, ColorRole);
     if(data.canConvert(QVariant::Color))
     {
-        QColor color = qvariant_cast<QColor>(data);
+        QColor color = data.value<QColor>();
         if(QComboBox* comboBox = qobject_cast<QComboBox*>(editor))
             comboBox->setCurrentIndex(comboBox->findData(color, int(Qt::DecorationRole)));
         return;
