@@ -51,6 +51,7 @@ class OperatorModel : public QAbstractTableModel
     
     friend class MoveOperatorCmd;
     friend class RenameOperatorCmd;
+    friend class SetParameterCmd;
     friend class StreamModel;
     friend QDataStream & operator<< (QDataStream & stream, const OperatorModel * op);
     friend QDataStream & operator>> (QDataStream & stream, OperatorModel * op);

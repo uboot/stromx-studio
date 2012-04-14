@@ -22,9 +22,22 @@ SetParameterCmd::~SetParameterCmd()
 
 void SetParameterCmd::redo()
 {
-    
+    try
+    {
+        m_model->op()->setParameter(m_parameter, *m_newValue);
+    } 
+    catch(stromx::core::Exception&)
+    {
+    }
 }
 
 void SetParameterCmd::undo()
 {
+    try
+    {
+        m_model->op()->setParameter(m_parameter, *m_oldValue);
+    } 
+    catch(stromx::core::Exception&)
+    {
+    }
 }
