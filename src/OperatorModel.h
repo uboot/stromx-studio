@@ -137,7 +137,8 @@ private:
     void doSetPos(const QPointF & pos);
     void setInitialized(bool initialized);
     int accessibleParametersCount() const;
-    bool accessibleParameter(const stromx::core::Parameter* const par) const;
+    bool parameterIsReadAccessible(const stromx::core::Parameter* const par) const;
+    bool parameterIsWriteAccessible(const stromx::core::Parameter* const par) const;
     QString convertDataToQString(const stromx::core::Data& data, const stromx::core::Parameter* param) const;
     
     stromx::core::Operator* m_op;
