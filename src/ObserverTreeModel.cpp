@@ -321,7 +321,7 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
                 // the input is moved within the same observer
                 if(srcObserverPos == destObserverPos)
                 {
-                    int numInputs = m_observers[srcInputPos]->numInputs();
+                    int numInputs = m_observers[srcObserverPos]->numInputs();
                     Q_ASSERT(numInputs);
                     
                     // the input was moved to the end of the list
