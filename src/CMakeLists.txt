@@ -15,6 +15,7 @@ set(stromxstudio_SOURCES
     ConnectorOccupyEvent.cpp
     ConnectorObserver.cpp
     ConnectionModel.cpp
+    DataConverter.cpp
     DataManager.cpp
     DataVisualizer.cpp
     DeinitializeOperatorCmd.cpp
