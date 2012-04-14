@@ -37,7 +37,7 @@ class DataConverter
 {   
 public:
     static QVariant toQVariant(const stromx::core::Data & data, const stromx::core::Parameter & param, int role);
-    static std::auto_ptr<stromx::core::Data> toStromxData(QVariant & variant, stromx::core::Parameter & description);
+    static std::auto_ptr<stromx::core::Data> toStromxData(const QVariant & variant, const stromx::core::Parameter & description);
 };
 
 #endif // DATACONVERTER_H

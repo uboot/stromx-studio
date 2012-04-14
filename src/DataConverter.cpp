@@ -144,7 +144,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
 
 }
 
-std::auto_ptr<stromx::core::Data> DataConverter::toStromxData(QVariant& variant, stromx::core::Parameter& description)
+std::auto_ptr<stromx::core::Data> DataConverter::toStromxData(const QVariant& variant, const stromx::core::Parameter& description)
 {
     return std::auto_ptr<stromx::core::Data>();
 }
