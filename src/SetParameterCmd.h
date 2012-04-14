@@ -36,7 +36,7 @@ class SetParameterCmd : public QUndoCommand
 {
 public:
     SetParameterCmd(OperatorModel* model, unsigned int parameter, const stromx::core::Data& newValue, QUndoCommand* parent = 0);
-    
+    virtual ~SetParameterCmd();
     virtual void undo();
     virtual void redo();
     
