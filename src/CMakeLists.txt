@@ -57,6 +57,7 @@ set(stromxstudio_SOURCES
     StreamEditor.cpp
     StreamEditorScene.cpp
     StreamModel.cpp
+    StromxImage.cpp
     ThreadEditor.cpp
     ThreadListModel.cpp
     ThreadModel.cpp

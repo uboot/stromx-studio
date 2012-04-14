@@ -1,5 +1,5 @@
 /* 
-*  Copyright 2012 Thomas Fidler
+*  Copyright 2012 Matthias Fuchs
 *
 *  This file is part of stromx-studio.
 *
@@ -17,27 +17,14 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef DATACONVERTER_H
-#define DATACONVERTER_H
+#ifndef STROMXIMAGE_H
+#define STROMXIMAGE_H
 
-#include <memory>
+#include <QUndoCommand>
+#include <stromx/core/ImageWrapper.h>
 
-class QVariant;
-
-namespace stromx
+class StromxImage : public stromx::core::ImageWrapper
 {
-    namespace core
-    { 
-        class Data;
-        class Parameter;
-    }
-}
-
-class DataConverter
-{   
-public:
-    static QVariant toQVariant(const stromx::core::Data & data, const stromx::core::Parameter & param, int role);
-    static std::auto_ptr<stromx::core::Data> toStromxData(const QVariant & variant, const stromx::core::Parameter & param);
 };
 
-#endif // DATACONVERTER_H
+#endif // STROMXIMAGE_H
