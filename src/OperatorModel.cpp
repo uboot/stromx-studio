@@ -156,7 +156,7 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
             return false;
         
         setName(newName);
-        emit dataChanged(index, index);
+        //emit dataChanged(index, index);
     }
     
     return false;

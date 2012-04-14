@@ -89,14 +89,12 @@ bool ThreadListModel::setData(const QModelIndex& index, const QVariant& value, i
         if(newName.isEmpty())
             return false;
         thread->setName(newName);
-        emit dataChanged(index, index);
         return true;
     }
     case 1:
     {
         QColor color(value.toString());
         thread->setColor(color);
-        emit dataChanged(index, index);
         return true;
     }
     default:
