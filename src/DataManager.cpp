@@ -68,7 +68,7 @@ void DataManager::moveInputLayer(InputModel* input, int srcPos, int destPos)
     // update the input list
     if(srcPos < destPos)
     {
-        m_inputs.insert(destPos, m_inputs[srcPos]);
+        m_inputs.insert(destPos + 1, m_inputs[srcPos]);
         m_inputs.removeAt(srcPos);
     }
     else
