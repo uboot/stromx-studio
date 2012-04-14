@@ -49,6 +49,7 @@ set(stromxstudio_SOURCES
     RenameOperatorCmd.cpp
     RemoveThreadCmd.cpp
     RenameThreadCmd.cpp
+    SetParameterCmd.cpp
     SetInputColorCmd.cpp
     SetThreadCmd.cpp
     SetThreadColorCmd.cpp
