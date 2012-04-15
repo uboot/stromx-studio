@@ -134,6 +134,7 @@ private:
     };
     
     void doSetName(const QString & name);
+    void doSetParameter(unsigned int paramId, const stromx::core::Data& newValue);
     void doSetPos(const QPointF & pos);
     void setInitialized(bool initialized);
     int accessibleParametersCount() const;
