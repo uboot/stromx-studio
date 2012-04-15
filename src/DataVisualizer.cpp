@@ -95,9 +95,12 @@ void DataVisualizer::setData(int layer, const stromx::core::Data& data)
             switch(image.pixelType())
             {
             case Image::MONO_8:
+            case Image::BAYERBG_8:
+            case Image::BAYERGB_8:
                 format = QImage::Format_Indexed8;
                 break;
             case Image::RGB_24:
+            case Image::BGR_24:
                 format = QImage::Format_RGB888;
                 break;
             default:

@@ -18,17 +18,16 @@
 */
 #include "DataConverter.h"
 
+#include "Common.h"
 #include <QVariant>
 #include <QString>
+#include <QStringList>
 #include <stromx/core/Image.h>
 #include <stromx/core/Parameter.h>
 #include <stromx/core/Trigger.h>
 
 QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx::core::Parameter& param, int role)
 {
-    if(role != Qt::DisplayRole && role != Qt::EditRole)
-        return QVariant();
-    
     try
     {
         QVariant variant;
@@ -36,18 +35,23 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::NONE))
         {
-            return QString("None");
+            if(role == Qt::DisplayRole)
+                return QString("None");
         }
         
         if (data.isVariant(stromx::core::DataVariant::TRIGGER))
         {
-            return QString("Trigger");
+            if(role == Qt::DisplayRole)
+                return QString("Trigger");
         }
         
         if (data.isVariant(stromx::core::DataVariant::BOOL))
         {
-            const stromx::core::Bool & boolData = stromx::core::data_cast<const stromx::core::Bool&>(data);
-            return bool(boolData);
+            if(role == Qt::DisplayRole || Qt::EditRole)
+            {
+                const stromx::core::Bool & boolData = stromx::core::data_cast<const stromx::core::Bool&>(data);
+                return bool(boolData);
+            }
         }
         
         if (data.isVariant(stromx::core::DataVariant::ENUM))
@@ -55,76 +59,133 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             const stromx::core::Enum& value = stromx::core::data_cast<const stromx::core::Enum &>(data);
             unsigned int intValue = (unsigned int)(value);
             const std::vector<stromx::core::EnumDescription> & vectorEnumDesc = param.descriptions();
-            for(std::vector<stromx::core::EnumDescription>::const_iterator iter_enumDesc = vectorEnumDesc.begin();
-                iter_enumDesc != vectorEnumDesc.end();
-                ++iter_enumDesc)
+            
+            if(role == Qt::DisplayRole)
+            {
+                for(std::vector<stromx::core::EnumDescription>::const_iterator iter_enumDesc = vectorEnumDesc.begin();
+                    iter_enumDesc != vectorEnumDesc.end();
+                    ++iter_enumDesc)
                 {
                     if (intValue == iter_enumDesc->value())
                         return QString::fromStdString(iter_enumDesc->description());
                 }
-            
-            return QString(QObject::tr("<Unknown ENUM>"));
+                return QString(QObject::tr("<Unknown ENUM>"));
+            }
+            else if(role == Qt::EditRole)
+            {
+                int choice = 0;
+                for(std::vector<stromx::core::EnumDescription>::const_iterator iter_enumDesc = vectorEnumDesc.begin();
+                    iter_enumDesc != vectorEnumDesc.end();
+                    ++iter_enumDesc)
+                {
+                    if (intValue == iter_enumDesc->value())
+                        return choice;
+                    ++choice;
+                }
+                return -1;
+            } 
+            else if(role == ChoicesRole)
+            {
+                QStringList choices;
+                for(std::vector<stromx::core::EnumDescription>::const_iterator iter_enumDesc = vectorEnumDesc.begin();
+                    iter_enumDesc != vectorEnumDesc.end();
+                    ++iter_enumDesc)
+                {
+                    choices.append(QString::fromStdString(iter_enumDesc->description()));
+                }
+                return choices;
+            }
         }
         
         if (data.isVariant(stromx::core::DataVariant::INT_8))
         {
-            const stromx::core::Int8 & int8Data = stromx::core::data_cast<const stromx::core::Int8&>(data);
-            return int(int8Data);
+            if(role == Qt::DisplayRole || Qt::EditRole)
+            {
+                const stromx::core::Int8 & int8Data = stromx::core::data_cast<const stromx::core::Int8&>(data);
+                return int(int8Data);
+            }
         }
         
         if (data.isVariant(stromx::core::DataVariant::UINT_8))
         {
-            const stromx::core::UInt8 & uint8Data = stromx::core::data_cast<const stromx::core::UInt8&>(data);
-            return int(uint8Data);
+            if(role == Qt::DisplayRole || Qt::EditRole)
+            {
+                const stromx::core::UInt8 & uint8Data = stromx::core::data_cast<const stromx::core::UInt8&>(data);
+                return int(uint8Data);
+            }
         }
         
         if (data.isVariant(stromx::core::DataVariant::INT_16))
         {
-            const stromx::core::Int16 & int16Data = stromx::core::data_cast<const stromx::core::Int16&>(data);
-            return int(int16Data);
+            if(role == Qt::DisplayRole || Qt::EditRole)
+            {
+                const stromx::core::Int16 & int16Data = stromx::core::data_cast<const stromx::core::Int16&>(data);
+                return int(int16Data);
+            }
         }
         
         if (data.isVariant(stromx::core::DataVariant::UINT_16))
         {
-            const stromx::core::UInt16 & uint16Data = stromx::core::data_cast<const stromx::core::UInt16&>(data);
-            return int(uint16Data);
+            if(role == Qt::DisplayRole || Qt::EditRole)
+            {
+                const stromx::core::UInt16 & uint16Data = stromx::core::data_cast<const stromx::core::UInt16&>(data);
+                return int(uint16Data);
+            }
         }
         
         if (data.isVariant(stromx::core::DataVariant::INT_32))
         {
-            const stromx::core::Int32 & int32Data = stromx::core::data_cast<const stromx::core::Int32&>(data);
-            return int(int32Data);
+            if(role == Qt::DisplayRole || Qt::EditRole)
+            {
+                const stromx::core::Int32 & int32Data = stromx::core::data_cast<const stromx::core::Int32&>(data);
+                return int(int32Data);
+            }
         }
         
         if (data.isVariant(stromx::core::DataVariant::UINT_32))
         {
-            const stromx::core::UInt32 & uint32Data = stromx::core::data_cast<const stromx::core::UInt32&>(data);
-            return int(uint32Data);
+            if(role == Qt::DisplayRole || Qt::EditRole)
+            {
+                const stromx::core::UInt32 & uint32Data = stromx::core::data_cast<const stromx::core::UInt32&>(data);
+                return int(uint32Data);
+            }
         }
         
         if (data.isVariant(stromx::core::DataVariant::FLOAT))
         {
-            const stromx::core::Float & floatData = stromx::core::data_cast<const stromx::core::Float&>(data);
-            return double(floatData);
+            if(role == Qt::DisplayRole || Qt::EditRole)
+            {
+                const stromx::core::Float & floatData = stromx::core::data_cast<const stromx::core::Float&>(data);
+                return double(floatData);
+            }
         }
         
         if (data.isVariant(stromx::core::DataVariant::DOUBLE))
         {
-            const stromx::core::Double & doubleData = stromx::core::data_cast<const stromx::core::Double&>(data);
-            return double(doubleData);
+            if(role == Qt::DisplayRole || Qt::EditRole)
+            {
+                const stromx::core::Double & doubleData = stromx::core::data_cast<const stromx::core::Double&>(data);
+                return double(doubleData);
+            }
         }
         
         if (data.isVariant(stromx::core::DataVariant::IMAGE))
         {
-            QString label1;
-            QString label2;
-            const stromx::core::Image & imageData = stromx::core::data_cast<const stromx::core::Image&>(data);
-            return QString(QObject::tr("Height: %1 | Width: %2")).arg(label1.setNum(imageData.height()),label2.setNum(imageData.height()));
+            if(role == Qt::DisplayRole)
+            {
+                QString label1;
+                QString label2;
+                const stromx::core::Image & imageData = stromx::core::data_cast<const stromx::core::Image&>(data);
+                return QString(QObject::tr("Height: %1 | Width: %2")).arg(label1.setNum(imageData.height()),label2.setNum(imageData.height()));
+            }
         }
         
         if (data.isVariant(stromx::core::DataVariant::DATA))
         {
-            return QString("Data");
+            if(role == Qt::DisplayRole)
+            {
+                return QString("Data");
+            }
         }
         
         return QString("<Unknown>");
@@ -188,7 +249,15 @@ std::auto_ptr<stromx::core::Data> DataConverter::toStromxData(const QVariant& va
     if(param.variant().isVariant(stromx::core::DataVariant::ENUM))
     {
         if(variant.type() == QVariant::Int)
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::UInt32(variant.toInt()));
+        {  
+            // find the description whose value equals the input data
+            int index = variant.toInt();
+            if((unsigned int)(index) < param.descriptions().size())
+            {    
+                unsigned int value = param.descriptions()[index].value();
+                return std::auto_ptr<stromx::core::Data>(new stromx::core::Enum(value));
+            }
+        }
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::FLOAT))

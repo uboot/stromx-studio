@@ -4,6 +4,7 @@
 #include <QUndoStack>
 #include <stromx/core/Operator.h>
 #include <stromx/core/Parameter.h>
+#include "Common.h"
 #include "DataConverter.h"
 #include "RenameOperatorCmd.h"
 #include "MoveOperatorCmd.h"
@@ -83,7 +84,7 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
 
 QVariant OperatorModel::data(const QModelIndex& index, int role) const
 {
-    if(role != Qt::DisplayRole && role != Qt::EditRole)
+    if(role != Qt::DisplayRole && role != Qt::EditRole && role != ChoicesRole)
         return QVariant();
 
     if(!index.isValid() || m_op == 0)
