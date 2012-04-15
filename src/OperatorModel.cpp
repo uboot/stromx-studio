@@ -4,13 +4,14 @@
 #include <QUndoStack>
 #include <stromx/core/Operator.h>
 #include <stromx/core/Parameter.h>
-#include "DataConverter.h"
-#include "RenameOperatorCmd.h"
-#include "MoveOperatorCmd.h"
 #include "ConnectorObserver.h"
 #include "ConnectorDataEvent.h"
 #include "ConnectorOccupyEvent.h"
+#include "DataConverter.h"
+#include "MoveOperatorCmd.h"
+#include "RenameOperatorCmd.h"
 #include "StreamModel.h"
+#include "SetParameterCmd.h"
 
 OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
   : QAbstractTableModel(stream),
@@ -192,7 +193,8 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
                     if(stromxData.get() == 0)
                         return false;
                     
-                    m_op->setParameter(paramId, *stromxData);
+                    SetParameterCmd* cmd = new SetParameterCmd(this, paramId,*stromxData);
+                    m_stream->undoStack()->push(cmd);
                     return true;
                 }
                 catch(stromx::core::Exception&)
@@ -242,6 +244,32 @@ void OperatorModel::doSetName(const QString& name)
     m_op->setName(name.toStdString());
     emit nameChanged(m_name);
     emit dataChanged(createIndex(NAME, 1), createIndex(NAME, 1));
+}
+
+void OperatorModel::doSetParameter(unsigned int paramId, const stromx::core::Data& newValue)
+{
+    try
+    {
+        m_op->setParameter(paramId, newValue);   
+    } 
+    catch(stromx::core::Exception&)
+    {
+    }
+    
+    unsigned int index = 0;
+    
+    //Translate paramId to index of the row in table which is assigned to the parameter
+    for(std::vector<const stromx::core::Parameter*>::const_iterator iter_param = m_op->info().parameters().begin();
+        iter_param != m_op->info().parameters().end();
+        ++iter_param)
+    {   
+        if((*iter_param)->id() == paramId)
+        {
+            emit dataChanged(createIndex(index + PARAMETER_OFFSET,1), createIndex(index + PARAMETER_OFFSET,1));
+            break;
+        }
+        ++index;    
+    }     
 }
 
 void OperatorModel::doSetPos(const QPointF& pos)
