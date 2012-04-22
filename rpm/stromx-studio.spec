@@ -19,7 +19,7 @@
 Name:           stromx-studio
 Version:
 Release:
-Summary:        A graphical user interace to edit stromx streams
+Summary:        A graphical user interface to edit stromx streams
 Group:          Development/Tools/Other
 
 License:        GNU Public License 3
