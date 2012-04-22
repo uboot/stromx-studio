@@ -1,6 +1,7 @@
 #include "ItemDelegate.h"
 
 #include <QComboBox>
+#include <QPushButton>
 #include "Common.h"
 
 ItemDelegate::ItemDelegate(QObject* parent)
@@ -10,17 +11,17 @@ ItemDelegate::ItemDelegate(QObject* parent)
 
 QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    QVariant choices = index.model()->data(index, ChoicesRole);
-    if(choices.canConvert(QVariant::List))
+    QVariant data = index.model()->data(index, ChoicesRole);
+    if(data.canConvert(QVariant::List))
     {
-        QList<QVariant> list = choices.toList();
+        QList<QVariant> list = data.toList();
         QComboBox* comboBox = new QComboBox(parent);
         foreach(QVariant label, list)
             comboBox->addItem(label.toString());
         return comboBox;
     }
     
-    QVariant data = index.model()->data(index, ColorRole);
+    data = index.model()->data(index, ColorRole);
     if(data.canConvert(QVariant::Color))
     {
         QStringList colorNames = QColor::colorNames();
@@ -34,26 +35,42 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
         return comboBox;
     }
     
+    data = index.model()->data(index, TriggerRole);
+    if(data.canConvert(QVariant::String))
+    {
+        QPushButton* button = new QPushButton(parent);
+        return button;
+    }
+    
     return QStyledItemDelegate::createEditor(parent, option, index);
 }
 
 void ItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
-    QVariant choices = index.model()->data(index, ChoicesRole);
-    if(choices.canConvert(QVariant::List))
+    QVariant data = index.model()->data(index, ChoicesRole);
+    if(data.canConvert(QVariant::List))
     {
-        QVariant data = index.model()->data(index, Qt::EditRole);
+        QVariant intData = index.model()->data(index, Qt::EditRole);
         if(QComboBox* comboBox = qobject_cast<QComboBox*>(editor))
-            comboBox->setCurrentIndex(data.toInt());
+            comboBox->setCurrentIndex(intData.toInt());
         return;
     }
     
-    QVariant data = index.model()->data(index, ColorRole);
+    data = index.model()->data(index, ColorRole);
     if(data.canConvert(QVariant::Color))
     {
         QColor color = data.value<QColor>();
         if(QComboBox* comboBox = qobject_cast<QComboBox*>(editor))
             comboBox->setCurrentIndex(comboBox->findData(color, int(Qt::DecorationRole)));
+        return;
+    }
+    
+    data = index.model()->data(index, TriggerRole);
+    if(data.canConvert(QVariant::String))
+    {
+        QString text = data.value<QString>();
+        if(QPushButton* button = qobject_cast<QPushButton*>(editor))
+            button->setText(text);
         return;
     }
     

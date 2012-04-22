@@ -43,6 +43,9 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         {
             if(role == Qt::DisplayRole)
                 return QString("Trigger");
+            
+            if(role == TriggerRole)
+                return QString("Trigger");
         }
         
         if (data.isVariant(stromx::core::DataVariant::BOOL))

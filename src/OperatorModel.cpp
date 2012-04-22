@@ -85,8 +85,11 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
 
 QVariant OperatorModel::data(const QModelIndex& index, int role) const
 {
-    if(role != Qt::DisplayRole && role != Qt::EditRole && role != ChoicesRole)
+    if(role != Qt::DisplayRole && role != Qt::EditRole
+        && role != ChoicesRole && role != TriggerRole)
+    {
         return QVariant();
+    }
 
     if(!index.isValid() || m_op == 0)
         return QVariant();

@@ -26,7 +26,8 @@
 enum Roles
 {
     ChoicesRole = Qt::UserRole,
-    ColorRole
+    ColorRole,
+    TriggerRole
 };
 
 #endif // COMMON_H
