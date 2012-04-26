@@ -97,14 +97,18 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     switch(index.row())
     {
         case TYPE:
+        if(role == Qt::DisplayRole)
         {
             if(index.column() == 0)
                 return tr("Type");
             else
                 return QVariant(QString::fromStdString(m_op->info().type()));
         }
+        else
+            break;
         
         case STATUS:
+        if(role == Qt::DisplayRole)
         {
             if(index.column() == 0)
             {
@@ -121,19 +125,20 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
                 }
             }
         }
+        else
+            break;
         
         case NAME:
-        {
-            if(index.column() == 0)
-                return tr("Name");
-            else
-                return QVariant(QString::fromStdString(m_op->name()));
-        }
-    
+        if(index.column() == 0 && role == Qt::DisplayRole)
+            return tr("Name");
+        else if(index.column() == 1 && (role == Qt::DisplayRole || role == Qt::EditRole))
+            return QVariant(QString::fromStdString(m_op->name()));
+        else
+            break;
     
         default:
         {
-            if(index.column() == 0)
+            if(index.column() == 0 && role == Qt::DisplayRole)
                 return QVariant(QString::fromStdString(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]->name()));
             
             if(parameterIsReadAccessible(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]))
@@ -146,12 +151,12 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
                 }
                 catch(stromx::core::Exception&)
                 {
-                    return QVariant(tr("<X:not accessible>"));
+                    return QVariant();
                 }
             }
             else
             {
-                return QVariant(tr("<not accessible>"));
+                return QVariant();
             }
         }
     }
