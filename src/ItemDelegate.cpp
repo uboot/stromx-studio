@@ -1,7 +1,8 @@
 #include "ItemDelegate.h"
 
 #include <QComboBox>
-#include <QPushButton>
+#include <QRadioButton>
+#include <QApplication>
 #include "Common.h"
 
 ItemDelegate::ItemDelegate(QObject* parent)
@@ -38,7 +39,7 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
     data = index.model()->data(index, TriggerRole);
     if(data.canConvert(QVariant::String))
     {
-        QPushButton* button = new QPushButton(parent);
+        QRadioButton* button = new QRadioButton(parent);
         return button;
     }
     
@@ -65,14 +66,14 @@ void ItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) cons
         return;
     }
     
-    data = index.model()->data(index, TriggerRole);
-    if(data.canConvert(QVariant::String))
-    {
-        QString text = data.value<QString>();
-        if(QPushButton* button = qobject_cast<QPushButton*>(editor))
-            button->setText(text);
-        return;
-    }
+//     data = index.model()->data(index, TriggerRole);
+//     if(data.canConvert(QVariant::String))
+//     {
+//         QString text = data.value<QString>();
+//         if(QRadioButton* button = qobject_cast<QRadioButton*>(editor))
+//             button->setText(text);
+//         return;
+//     }
     
     QStyledItemDelegate::setEditorData(editor, index);
 }
@@ -100,6 +101,21 @@ void ItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, cons
     
     QStyledItemDelegate::setModelData(editor, model, index);
 }
+
+void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    QVariant trigger = index.model()->data(index, TriggerRole);
+    if(trigger.canConvert(QVariant::String))
+    {
+        QStyleOptionButton buttonOption;
+        buttonOption.rect = option.rect;
+        buttonOption.text = QString("Scheissdreck");
+        QApplication::style()->drawControl(QStyle::CE_RadioButton, &buttonOption, painter);
+    }
+    else
+        QStyledItemDelegate::paint(painter, option, index);
+}
+
 
 void ItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
