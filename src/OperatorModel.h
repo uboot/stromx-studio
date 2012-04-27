@@ -133,6 +133,8 @@ private:
         PARAMETER_OFFSET
     };
     
+    static QString statusToString(int status);
+    
     void doSetName(const QString & name);
     void doSetParameter(unsigned int paramId, const stromx::core::Data& newValue);
     void doSetPos(const QPointF & pos);
