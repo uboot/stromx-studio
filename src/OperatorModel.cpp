@@ -14,6 +14,7 @@
 #include "StreamModel.h"
 #include "SetParameterCmd.h"
 
+
 OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
   : QAbstractTableModel(stream),
     m_op(op),
@@ -85,83 +86,127 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
 
 QVariant OperatorModel::data(const QModelIndex& index, int role) const
 {
-    if(role != Qt::DisplayRole && role != Qt::EditRole
-        && role != ChoicesRole && role != TriggerRole)
-    {
-        return QVariant();
-    }
-
-    if(!index.isValid() || m_op == 0)
+    // return if any of the conditions below is not satisfied
+    if(!index.isValid() || index.column() > 1 || m_op == 0)
         return QVariant();
     
-    switch(index.row())
+    // possible rows
+    enum
     {
-        case TYPE:
-        if(role == Qt::DisplayRole)
-        {
-            if(index.column() == 0)
-                return tr("Type");
-            else
-                return QVariant(QString::fromStdString(m_op->info().type()));
-        }
-        else
-            break;
-        
-        case STATUS:
-        if(role == Qt::DisplayRole)
-        {
-            if(index.column() == 0)
-            {
-                return tr("Status");
-            }
-            else
-            {
-                switch(m_op->status())
-                {
-                case stromx::core::Operator::NONE:
-                    return QVariant(tr("None"));
-                default:
-                    return QVariant(tr("Initialized"));
-                }
-            }
-        }
-        else
-            break;
-        
-        case NAME:
-        if(index.column() == 0 && role == Qt::DisplayRole)
-            return tr("Name");
-        else if(index.column() == 1 && (role == Qt::DisplayRole || role == Qt::EditRole))
-            return QVariant(QString::fromStdString(m_op->name()));
-        else
-            break;
+        TYPE_ROW, // 0
+        STATUS_ROW, // 1
+        NAME_ROW, // 2
+        PARAMETER_ROW // 3
+    };
     
-        default:
-        {
-            if(index.column() == 0 && role == Qt::DisplayRole)
-                return QVariant(QString::fromStdString(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]->name()));
-            
-            if(parameterIsReadAccessible(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]))
-            {
-                const stromx::core::Parameter* param = m_op->info().parameters()[index.row()-PARAMETER_OFFSET];
-                unsigned int paramId = param->id();
-                try
-                {
-                    return DataConverter::toQVariant(m_op->getParameter(paramId), *param, role);
-                }
-                catch(stromx::core::Exception&)
-                {
-                    return QVariant();
-                }
-            }
-            else
-            {
-                return QVariant();
-            }
-        }
+    // possible columns
+    enum
+    {
+        DESCRIPTION,
+        VALUE
+    };
+    
+    // possible roles
+    enum
+    {
+        DISPLAY, // 0
+        EDIT, // 1
+        TRIGGER, // 2
+        CHOICES, // 3
+        OTHER // 5
+    };
+    
+    // possible return values
+    enum ReturnValue
+    {
+        NOTHING, // 0
+        STRING_TYPE, // 1
+        TYPE, // 2
+        STRING_STATUS, // 3
+        STATUS, // 4
+        STRING_NAME, // 5
+        NAME, // 6
+        PARAMETER_NAME, // 7
+        PARAMETER_VALUE // 8
+    };
+    
+    // the decision table
+    int table[4][2][5] =
+    /* Row          0  0  0  0  0    0  0  0  0  0      1  1  1  1  1    1  1  1  1  1 
+     * Column       0  0  0  0  0    1  1  1  1  1      0  0  0  0  0    1  1  1  1  1
+     * Role         0  1  2  3  4    0  1  2  3  4      0  1  2  3  4    0  1  2  3  4 */
+    /* Action */ {{{1, 0, 0, 0, 0}, {2, 0, 0, 0, 0}}, {{3, 0, 0, 0, 0}, {4, 0, 0, 0, 0}},
+                 
+    /* Row          2  2  2  2  2    2  2  2  2  2      3  3  3  3  3    3  3  3  3  3 
+     * Column       0  0  0  0  0    1  1  1  1  1      0  0  0  0  0    1  1  1  1  1
+     * Role         0  1  2  3  4    0  1  2  3  4      0  1  2  3  4    0  1  2  3  4 */
+    /* Action */  {{5, 0, 0, 0, 0}, {6, 6, 0, 0, 0}}, {{7, 0, 0, 0, 0}, {8, 8, 8, 8, 0}}};
+     
+    // extract row, column and role type
+    int row = index.row() > 2 ? PARAMETER_ROW : index.row();
+    int column = index.column() == 0 ? 0 : 1;
+    int roleType = 0;
+    switch(role)
+    {
+    case Qt::DisplayRole:
+        roleType = DISPLAY;
+        break;
+    case Qt::EditRole:
+        roleType = EDIT;
+        break;
+    case ChoicesRole:
+        roleType = CHOICES;
+        break;
+    case TriggerRole:
+        roleType = TRIGGER;
+        break;
+    default:
+        roleType = OTHER;
+        break;
     }
     
-    return QVariant();
+    // ask the decision table
+    ReturnValue action = ReturnValue(table[row][column][roleType]);
+    
+    // act accordingly
+    switch(action)
+    {
+    case STRING_TYPE:
+        return tr("Type");
+    case TYPE:
+        return QString::fromStdString(m_op->info().type());
+    case STRING_STATUS:
+        return tr("Status");
+    case STATUS:
+        return statusToString(m_op->status());
+    case STRING_NAME:
+        return tr("Name");
+    case NAME:
+        return QString::fromStdString(m_op->name());
+    case PARAMETER_NAME:
+        return QVariant(QString::fromStdString(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]->name()));
+    case PARAMETER_VALUE:            
+        if(parameterIsReadAccessible(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]))
+        {
+            const stromx::core::Parameter* param = m_op->info().parameters()[index.row()-PARAMETER_OFFSET];
+            unsigned int paramId = param->id();
+            try
+            {
+                return DataConverter::toQVariant(m_op->getParameter(paramId), *param, role);
+            }
+            catch(stromx::core::Exception&)
+            {
+                QVariant(tr("<X:not accessible>"));
+            }
+        }
+        else
+        {
+            return QVariant(tr("<not accessible>"));
+        }
+    case NOTHING:
+    default:
+        return QVariant();
+    }
 }
 
 bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int role)
@@ -387,11 +432,13 @@ void OperatorModel::customEvent(QEvent* event)
 
 void OperatorModel::setActiveFalse()
 {
+    reset();
     emit activeChanged(false);
 }
 
 void OperatorModel::setActiveTrue()
 {
+    reset();
     emit activeChanged(true);
 }
 
@@ -407,6 +454,24 @@ void OperatorModel::disconnectNotify(const char* signal)
     // if there are no receivers for data change signals do not send the events
     if(! receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer))))
         m_observer->setObserveData(false); 
+}
+
+QString OperatorModel::statusToString(int status)
+{
+    switch(status)
+    {
+    case stromx::core::Operator::NONE:
+        return tr("None");
+    case stromx::core::Operator::INITIALIZED:
+        return tr("Initialized");
+    case stromx::core::Operator::ACTIVE:
+    case stromx::core::Operator::EXECUTING:
+        return tr("Active");
+    default:
+        Q_ASSERT(false);
+    }
+    
+    return QString();
 }
 
 QDataStream& operator<<(QDataStream& stream, const OperatorModel* op)

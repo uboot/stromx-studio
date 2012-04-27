@@ -17,14 +17,18 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef STROMXIMAGE_H
-#define STROMXIMAGE_H
+#ifndef IMAGETEST_H
+#define IMAGETEST_H
 
-#include <QUndoCommand>
-#include <stromx/core/ImageWrapper.h>
+#include <QObject>
 
-class StromxImage : public stromx::core::ImageWrapper
+class ImageTest : public QObject
 {
+    Q_OBJECT
+    
+private slots:
+    void testFileConstructorColor();
+    void testFileConstructorGray();
 };
 
-#endif // STROMXIMAGE_H
+#endif // IMAGETEST_H

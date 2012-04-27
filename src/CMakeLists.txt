@@ -19,6 +19,7 @@ set(stromxstudio_SOURCES
     DataManager.cpp
     DataVisualizer.cpp
     DeinitializeOperatorCmd.cpp
+    Image.cpp
     InitializeOperatorCmd.cpp
     InputData.cpp
     InputModel.cpp
@@ -57,7 +58,6 @@ set(stromxstudio_SOURCES
     StreamEditor.cpp
     StreamEditorScene.cpp
     StreamModel.cpp
-    StromxImage.cpp
     ThreadEditor.cpp
     ThreadListModel.cpp
     ThreadModel.cpp
