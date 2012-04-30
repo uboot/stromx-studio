@@ -103,7 +103,7 @@ qt4_wrap_cpp(stromxstudio_HEADERS_MOC ${stromxstudio_HEADERS})
 #qt4_wrap_ui(stromxstudio_FORMS_HEADERS ${stromxstudio_FORMS})
 qt4_add_resources(stromxstudio_RESOURCES_RCC ${stromxstudio_RESOURCES})
 
-add_executable(stromx-studio 
+add_executable(stromx-studio WIN32
     ${stromxstudio_SOURCES} 
     ${stromxstudio_HEADERS_MOC} 
 #    ${stromxstudio_FORMS_HEADERS} 
@@ -116,13 +116,13 @@ target_link_libraries(stromx-studio
     ${stromx_CORE_LIB}
 )
 
-if(MSVC)
+if(WIN32)
     install (TARGETS stromx-studio 
         RUNTIME DESTINATION .
     )
-else(MSVC)
+else(WIN32)
     install (TARGETS stromx-studio 
         RUNTIME DESTINATION bin
     )
-endif(MSVC)
+endif(WIN32)
 
