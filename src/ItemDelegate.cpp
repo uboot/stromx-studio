@@ -66,14 +66,14 @@ void ItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) cons
         return;
     }
     
-//     data = index.model()->data(index, TriggerRole);
-//     if(data.canConvert(QVariant::String))
-//     {
-//         QString text = data.value<QString>();
-//         if(QRadioButton* button = qobject_cast<QRadioButton*>(editor))
-//             button->setText(text);
-//         return;
-//     }
+    data = index.model()->data(index, TriggerRole);
+    if(data.canConvert(QVariant::String))
+    {
+        QString text = data.value<QString>();
+        if(QRadioButton* button = qobject_cast<QRadioButton*>(editor))
+            button->setText(text);
+        return;
+    }
     
     QStyledItemDelegate::setEditorData(editor, index);
 }
@@ -109,7 +109,7 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
     {
         QStyleOptionButton buttonOption;
         buttonOption.rect = option.rect;
-        buttonOption.text = QString("Scheissdreck");
+        buttonOption.text = QString(trigger.toString());
         QApplication::style()->drawControl(QStyle::CE_RadioButton, &buttonOption, painter);
     }
     else

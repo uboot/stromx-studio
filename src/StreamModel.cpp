@@ -88,7 +88,7 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
         QString error = e.container().empty() 
                         ? tr("The format of file %1 is invalid.").arg(QString::fromStdString(e.filename()))
                         : tr("The format of file %1 in %2 is invalid.").arg(QString::fromStdString(e.filename()),
-                                                                           QString::fromStdString(e.container()));
+                                                                            QString::fromStdString(e.container()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::core::OperatorAllocationFailed& e)
@@ -110,6 +110,25 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
         qWarning(e.what());
         QString error = tr("Failed to deserialize data of type %1 in package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
+        throw ReadStreamFailed(error);
+    }
+    catch(stromx::core::ParameterError& e)
+    {
+        qWarning(e.what());
+        const stromx::core::OperatorInfo& op = e.op();
+        QString error = tr("Failed to set parameter %1 ('%2') of operator of type %3 in package %4.")
+                        .arg(QString("%1").arg(e.parameter().id()),
+                             QString::fromStdString(e.parameter().name()),
+                             QString::fromStdString(op.type()),
+                             QString::fromStdString(op.package()));
+        throw ReadStreamFailed(error);
+    }
+    catch(stromx::core::OperatorError& e)
+    {
+        qWarning(e.what());
+        const stromx::core::OperatorInfo& op = e.op();
+        QString error = tr("Unknown error related to operator of type %1 in package %2.")
+                        .arg(QString::fromStdString(op.type()), QString::fromStdString(op.package()));
         throw ReadStreamFailed(error);
     }
     
