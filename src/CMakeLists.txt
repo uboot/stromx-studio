@@ -116,7 +116,13 @@ target_link_libraries(stromx-studio
     ${stromx_CORE_LIB}
 )
 
-install (TARGETS stromx-studio 
-    RUNTIME DESTINATION bin
-)
+if(MSVC)
+    install (TARGETS stromx-studio 
+        RUNTIME DESTINATION .
+    )
+else(MSVC)
+    install (TARGETS stromx-studio 
+        RUNTIME DESTINATION bin
+    )
+endif(MSVC)
 
