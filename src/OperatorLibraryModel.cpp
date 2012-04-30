@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QLibrary>
 #include <QSettings>
+#include <stromx/base/Base.h>
 #include <stromx/core/Core.h>
 #include <stromx/core/Factory.h>
 #include <stromx/core/Operator.h>
@@ -17,9 +18,7 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
   : QAbstractItemModel(parent),
     m_factory(0)
 {
-    m_factory = new stromx::core::Factory();
-    stromxRegisterCore(*m_factory);
-    
+    setupFactory();
     updateOperators();
     
     QSettings settings("stromx", "stromx-studio");
@@ -179,10 +178,17 @@ void OperatorLibraryModel::resetLibraries()
     delete m_factory;
     m_loadedLibraries.clear();
     
+    setupFactory();
+    updateOperators();
+}
+
+void OperatorLibraryModel::setupFactory()
+{
+    Q_ASSERT(m_factory == 0);
+    
     m_factory = new stromx::core::Factory();
     stromxRegisterCore(*m_factory);
-    
-    updateOperators();
+    stromxRegisterBase(*m_factory);
 }
 
 void OperatorLibraryModel::updateOperators()
