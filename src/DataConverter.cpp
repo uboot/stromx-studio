@@ -50,7 +50,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::BOOL))
         {
-            if(role == Qt::DisplayRole || Qt::EditRole)
+            if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::Bool & boolData = stromx::core::data_cast<const stromx::core::Bool&>(data);
                 return bool(boolData);
@@ -102,7 +102,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::INT_8))
         {
-            if(role == Qt::DisplayRole || Qt::EditRole)
+            if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::Int8 & int8Data = stromx::core::data_cast<const stromx::core::Int8&>(data);
                 return int(int8Data);
@@ -111,7 +111,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::UINT_8))
         {
-            if(role == Qt::DisplayRole || Qt::EditRole)
+            if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::UInt8 & uint8Data = stromx::core::data_cast<const stromx::core::UInt8&>(data);
                 return int(uint8Data);
@@ -120,7 +120,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::INT_16))
         {
-            if(role == Qt::DisplayRole || Qt::EditRole)
+            if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::Int16 & int16Data = stromx::core::data_cast<const stromx::core::Int16&>(data);
                 return int(int16Data);
@@ -129,7 +129,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::UINT_16))
         {
-            if(role == Qt::DisplayRole || Qt::EditRole)
+            if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::UInt16 & uint16Data = stromx::core::data_cast<const stromx::core::UInt16&>(data);
                 return int(uint16Data);
@@ -138,7 +138,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::INT_32))
         {
-            if(role == Qt::DisplayRole || Qt::EditRole)
+            if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::Int32 & int32Data = stromx::core::data_cast<const stromx::core::Int32&>(data);
                 return int(int32Data);
@@ -147,7 +147,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::UINT_32))
         {
-            if(role == Qt::DisplayRole || Qt::EditRole)
+            if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::UInt32 & uint32Data = stromx::core::data_cast<const stromx::core::UInt32&>(data);
                 return int(uint32Data);
@@ -156,7 +156,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::FLOAT))
         {
-            if(role == Qt::DisplayRole || Qt::EditRole)
+            if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::Float & floatData = stromx::core::data_cast<const stromx::core::Float&>(data);
                 return double(floatData);
@@ -165,7 +165,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::DOUBLE))
         {
-            if(role == Qt::DisplayRole || Qt::EditRole)
+            if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::Double & doubleData = stromx::core::data_cast<const stromx::core::Double&>(data);
                 return double(doubleData);
@@ -191,11 +191,11 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             }
         }
         
-        return QString("<Unknown>");
+        return QVariant();
     }
     catch(stromx::core::BadCast&)
     {
-        return QString("<Invalid conversion>");
+        return QVariant();
     }  
 }
 

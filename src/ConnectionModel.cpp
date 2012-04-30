@@ -18,6 +18,7 @@ ConnectionModel::ConnectionModel(OperatorModel* sourceOp, unsigned int outputId,
     m_stream(stream),
     m_thread(0)
 {
+    Q_ASSERT(stream);
 }
 
 int ConnectionModel::columnCount(const QModelIndex& index) const
@@ -106,6 +107,10 @@ bool ConnectionModel::setData(const QModelIndex& index, const QVariant& value, i
     {
         case THREAD:
         {
+            // can not change threads while the stream is active
+            if(m_stream->isActive())
+                return false;
+            
             int index = value.toInt();
             ThreadModel* thread = 0;
             if(index > 0)
@@ -126,6 +131,10 @@ bool ConnectionModel::setData(const QModelIndex& index, const QVariant& value, i
 Qt::ItemFlags ConnectionModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    
+    if(m_stream->isActive())
+        return flags;
+    
     if(index.column() == 1 && index.row() == 0)
         return flags |= Qt::ItemIsEditable;
         
@@ -165,6 +174,7 @@ void ConnectionModel::doSetThread(ThreadModel* thread)
                 thread->thread()->addInput(m_targetOp->op(), m_inputId);
             
             connect(thread, SIGNAL(colorChanged(QColor)), this, SIGNAL(colorChanged(QColor)));
+            connect(thread, SIGNAL(nameChanged(QString)), this, SLOT(updateThread()));
         }
         
         m_thread = thread;
@@ -172,6 +182,11 @@ void ConnectionModel::doSetThread(ThreadModel* thread)
         emit colorChanged(color());
         emit dataChanged(createIndex(THREAD, 1), createIndex(THREAD, 1));
     }
+}
+
+void ConnectionModel::updateThread()
+{
+    emit dataChanged(createIndex(THREAD, 1), createIndex(THREAD, 1));
 }
 
 const QColor ConnectionModel::color() const
