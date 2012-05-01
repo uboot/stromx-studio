@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QLibrary>
 #include <QSettings>
+#include <QtDebug>
 #include <stromx/base/Base.h>
 #include <stromx/core/Core.h>
 #include <stromx/core/Factory.h>
@@ -33,7 +34,7 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
         }
         catch(LoadLibraryFailed & e)
         {
-            qWarning(e.what());
+            qWarning() << e.what();
         }
     }
 }
