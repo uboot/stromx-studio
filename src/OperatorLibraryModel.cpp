@@ -37,6 +37,9 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
             qWarning() << e.what();
         }
     }
+    
+    // reset the library list
+    settings.setValue("loadedLibraries", QStringList());
 }
 
 OperatorLibraryModel::~OperatorLibraryModel()
@@ -177,6 +180,7 @@ void OperatorLibraryModel::loadLibrary(const QString& libPath)
 void OperatorLibraryModel::resetLibraries()
 {
     delete m_factory;
+    m_factory = 0;
     m_loadedLibraries.clear();
     
     setupFactory();
