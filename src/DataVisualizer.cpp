@@ -11,10 +11,10 @@ DataVisualizer::DataVisualizer(QWidget* parent)
     setScene(new QGraphicsScene);
 }
 
-void DataVisualizer::addLayer(int layer)
+void DataVisualizer::addLayer(int pos)
 {
-    if(! m_items.contains(layer))
-        m_items[layer] = 0;
+    if(! m_items.contains(pos))
+        m_items[pos] = 0;
 }
 
 void DataVisualizer::moveLayer(int src, int dest)
@@ -34,32 +34,32 @@ void DataVisualizer::moveLayer(int src, int dest)
     m_items.remove(src);
 }
 
-void DataVisualizer::removeLayer(int layer)
+void DataVisualizer::removeLayer(int pos)
 {
-    if(m_items.contains(layer))
+    if(m_items.contains(pos))
     {
-        delete m_items[layer];
-        m_items.remove(layer);
+        delete m_items[pos];
+        m_items.remove(pos);
     }
 }
 
-void DataVisualizer::setActive(int layer, bool active)
+void DataVisualizer::setActive(int pos, bool active)
 {
 
 }
 
-void DataVisualizer::setAlpha(int layer, int alpha)
+void DataVisualizer::setAlpha(int pos, int alpha)
 {
 
 }
 
-void DataVisualizer::setColor(int layer, const QColor& color)
+void DataVisualizer::setColor(int pos, const QColor& color)
 {
-    if(! m_items.contains(layer))
+    if(! m_items.contains(pos))
         return;  
 
     // get the item of this layer
-    QGraphicsItem* item = m_items[layer];
+    QGraphicsItem* item = m_items[pos];
     
     if(! item)
         return;
@@ -74,15 +74,15 @@ void DataVisualizer::setColor(int layer, const QColor& color)
     }
 }
 
-void DataVisualizer::setData(int layer, const stromx::core::Data& data)
+void DataVisualizer::setData(int pos, const stromx::core::Data& data)
 {
     using namespace stromx::core;
     
-    if(! m_items.contains(layer))
+    if(! m_items.contains(pos))
         return;
     
-    delete m_items[layer];
-    m_items[layer] = 0;
+    delete m_items[pos];
+    m_items[pos] = 0;
     
     QGraphicsItem* item = 0;
     if(data.isVariant(DataVariant::IMAGE))
@@ -135,8 +135,8 @@ void DataVisualizer::setData(int layer, const stromx::core::Data& data)
     
     if(item)
     {
-        item->setZValue(-layer);
-        m_items[layer] = item;
+        item->setZValue(-pos);
+        m_items[pos] = item;
     }
 }
 

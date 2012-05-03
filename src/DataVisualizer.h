@@ -25,6 +25,13 @@
 
 #include "AbstractDataVisualizer.h"
 
+/** 
+ * \brief Data visualizer based on QGraphicsView
+ * 
+ * This implementation of an AbstractDataVisualizer is derived from QGraphicsView
+ * and uses QGraphicsItem objects to display data. The position of a layer translates
+ * into the z-value of the graphic items.
+ */
 class DataVisualizer : public QGraphicsView, public AbstractDataVisualizer
 {
 public:

@@ -40,6 +40,7 @@ class ConnectionModel;
 class ConnectorObserver;
 class StreamModel;
 
+/** \brief Model of a stromx operator. */
 class OperatorModel : public QAbstractTableModel
 {
     Q_OBJECT

@@ -63,7 +63,7 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     try
     {
         stromx::core::XmlReader reader;
-        stream = reader.readStream(input, streamFilename, *m_operatorLibrary->factory());
+        stream = reader.readStream(input, streamFilename, m_operatorLibrary->factory());
     }
     catch(stromx::core::FileAccessFailed& e)
     {
@@ -168,7 +168,7 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
 
         stromx::core::XmlReader reader;
         reader.readParameters(input, parametersFilename,
-                                *m_operatorLibrary->factory(), uninitializedOperators);
+                              m_operatorLibrary->factory(), uninitializedOperators);
     }
     catch(stromx::core::FileAccessFailed& e)
     {
@@ -644,7 +644,7 @@ void StreamModel::deserializeModel(const QByteArray& data)
     dataStream.setVersion(QDataStream::Qt_4_7);
 
     dataStream >> count;
-    stromx::core::Factory* factory = m_operatorLibrary->factory();
+    stromx::core::Factory& factory = m_operatorLibrary->factory();
     for(int i = 0; i < count; ++i)
     {
         QString package, type;
@@ -659,7 +659,7 @@ void StreamModel::deserializeModel(const QByteArray& data)
         OperatorModel* opModel = 0;
         try
         {
-            stromx::core::Operator* op = factory->newOperator(package.toStdString(), type.toStdString());
+            stromx::core::Operator* op = factory.newOperator(package.toStdString(), type.toStdString());
             opModel = new OperatorModel(op, this);
             m_uninitializedOperators.append(opModel);
             m_operators.append(opModel);

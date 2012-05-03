@@ -26,6 +26,7 @@ class OperatorModel;
 class StreamModel;
 class ThreadModel;
 
+/** \brief Model of a connection in a stromx stream. */
 class ConnectionModel : public QAbstractTableModel
 {
     Q_OBJECT

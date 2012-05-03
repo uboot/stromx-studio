@@ -22,6 +22,7 @@
 
 #include <QAction>
 
+/** \brief Action representing an undo or redo action. */
 class UndoStackAction : public QAction
 {
     Q_OBJECT

@@ -25,6 +25,7 @@
 
 class ConnectionModel;
 
+/** \brief Graphical representation of a connection model. */
 class ConnectionItem : public QGraphicsObject
 {
     Q_OBJECT

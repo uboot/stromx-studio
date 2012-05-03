@@ -26,6 +26,7 @@
 class ConnectionItem;
 class OperatorModel;
 
+/** \brief Graphical representation of a connector of an operator. */
 class ConnectorItem : public QGraphicsRectItem
 {
 public:

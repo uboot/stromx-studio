@@ -29,6 +29,7 @@ class ConnectionItem;
 class ConnectorItem;
 class OperatorModel;
 
+/** \brief Graphical representation of an operator model. */
 class OperatorItem : public QGraphicsObject
 {
     Q_OBJECT
