@@ -77,6 +77,10 @@ signals:
      */
     void colorChanged(const QColor & color);
     
+private slots:
+    /** Emits a changed signal for all data concerning the thread of the connection. */
+    void updateThread();
+    
 private:
     enum Row
     {

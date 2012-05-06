@@ -71,6 +71,7 @@ private:
     };
     
     void updateOperators();
+    void setupFactory();
     
     QList<Package> m_packages;
     QStringList m_loadedLibraries;
