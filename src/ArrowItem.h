@@ -44,16 +44,6 @@ public:
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     
-protected:
-    /** Updates the appearance of the arrow when it is de-/selected. */
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value);
-    
-    virtual QPainterPath shape() const;
-    
-private slots:
-    /** Sets the color of the connection. */
-    void setColor(const QColor & color);
-    
 private:
     enum Width
     {

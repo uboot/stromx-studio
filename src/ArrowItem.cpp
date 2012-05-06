@@ -25,30 +25,8 @@ QRectF ArrowItem::boundingRect() const
     return m_shaft->boundingRect();
 }
 
-QPainterPath ArrowItem::shape() const
-{
-    return m_shaft->shape();
-}
-
 void ArrowItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-}
-
-QVariant ArrowItem::itemChange(GraphicsItemChange change, const QVariant &value)
-{
-    if(change == ItemSelectedHasChanged)
-    {
-        if(isSelected())
-            m_pen.setStyle(Qt::DashLine);
-        else
-            m_pen.setStyle(Qt::SolidLine);
-
-        applyPen();
-        
-        return value;
-    }
-
-    return QGraphicsItem::itemChange(change, value);
 }
 
 void ArrowItem::rotateHead()
@@ -81,12 +59,6 @@ void ArrowItem::setActive(bool value)
     else
         m_pen.setWidth(INACTIVE_WIDTH);
     
-    applyPen();
-}
-
-void ArrowItem::setColor(const QColor& color)
-{
-    m_pen.setColor(color);
     applyPen();
 }
 
