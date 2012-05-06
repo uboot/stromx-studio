@@ -31,6 +31,7 @@ class ConnectionItem : public QGraphicsObject
     Q_OBJECT
     
 public:
+    /** Constructs a connection item for a connection model. */
     explicit ConnectionItem(ConnectionModel* model, QGraphicsItem * parent = 0);
     
     enum { Type = UserType + 2 };
