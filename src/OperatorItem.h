@@ -24,7 +24,7 @@
 #include <QPointF>
 #include "OperatorModel.h"
 
-class QGraphicsRectItem;
+class QAbstractGraphicsShapeItem;
 class ConnectionItem;
 class ConnectorItem;
 class OperatorModel;
@@ -67,13 +67,14 @@ private slots:
     
 private:
     static const int SIZE = 50;
+    static const int RADIUS = 3;
     
     void initialize();
     void deinitialize();
     void updateConnectionPositions();
     
     OperatorModel* m_model;
-    QGraphicsRectItem* m_opRect;
+    QAbstractGraphicsShapeItem* m_opRect;
     QGraphicsTextItem* m_label;
     
     QMap<unsigned int, ConnectorItem*> m_inputs;

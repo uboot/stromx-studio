@@ -11,8 +11,11 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
   : QGraphicsObject(parent),
     m_model(model)
 {
-    m_opRect = new QGraphicsRectItem(this);
-    m_opRect->setRect(0, 0, SIZE, SIZE);
+    QPainterPath path;
+    path.addRoundedRect(QRectF(0, 0, SIZE, SIZE), RADIUS, RADIUS);
+    m_opRect = new QGraphicsPathItem(path, this);
+//     m_opRect = new QGraphicsRectItem(this);
+//     m_opRect->setRect(0, 0, SIZE, SIZE);
     setPos(m_model->pos());
     
     m_label = new QGraphicsTextItem(this);
