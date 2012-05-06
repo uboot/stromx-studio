@@ -9,6 +9,7 @@ set(stromxstudio_SOURCES
     AddConnectionCmd.cpp
     AddThreadCmd.cpp
     AddOperatorCmd.cpp
+    ArrowItem.cpp
     ConnectionItem.cpp
     ConnectorItem.cpp
     ConnectorDataEvent.cpp
@@ -65,6 +66,7 @@ set(stromxstudio_SOURCES
 )
 
 set(stromxstudio_HEADERS
+    ArrowItem.h
     ConnectionItem.h
     ConnectionModel.h
     DataManager.h

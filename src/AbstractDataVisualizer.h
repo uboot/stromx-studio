@@ -40,8 +40,8 @@ class QColor;
  * 
  * In addition to the z-value each layer has several properties such as color and
  * alpha value wich can influence the way how data in the layer is displayed. 
- * These properties of a layer (including the position) are persistent even if the 
- * data of the layer changes.
+ * However, these properties of a layer are not persistent, i.e. they are note preserved
+ * if the data of a layer changes.
  */
 class AbstractDataVisualizer
 {
@@ -63,25 +63,28 @@ public:
     virtual void removeLayer(int pos) = 0;
     
     /** 
-     * Sets the color of the objects in the layer at \c pos to \c color. 
+     * Sets the color of the data in the layer \c pos to \c color. 
      * If no layer exists at \c src the function does not do anything.
      */
     virtual void setColor(int pos, const QColor & color) = 0;
     
     /** 
-     * Sets the alpha value of the objects in the layer at \c pos to \c alpha.
+     * Sets the alpha value of the data in the layer \c pos to \c alpha.
      * If no layer exists at \c src the function does not do anything.
      */
     virtual void setAlpha(int pos, int alpha) = 0;
     
     /** 
-     * Sets the data in the layer at \c pos to \c data. If no layer exists
-     * at \c pos the function does not do anything.
+     * Sets the data in the layer at \c pos to \c data. Any other data is
+     * automatically removed from the layer.
+     * If no layer exists at \c pos the function does not do anything.
+     * Properties such as alpha value and color of the layer are reset by
+     * this function and must be set again for the new data object.
      */
     virtual void setData(int pos, const stromx::core::Data& data) = 0;
     
     /**
-     * Sets the layer at \c pos to be active or inactive, i.e. it is visible or 
+     * Sets the data at the layer \c pos to be active or inactive, i.e. it is visible or 
      * invisible. If no layer exists at \c src the function does not do anything.
      */
     virtual void setActive(int pos, bool active) = 0;

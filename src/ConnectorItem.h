@@ -23,6 +23,7 @@
 #include <QGraphicsRectItem>
 #include <QSet>
 
+class ArrowItem;
 class ConnectionItem;
 class OperatorModel;
 
@@ -68,7 +69,7 @@ private:
     OperatorModel* m_op;
     unsigned int m_id;
     ConnectorType m_connectorType;
-    ConnectionItem* m_currentConnection;
+    ArrowItem* m_currentArrow;
     QSet<ConnectionItem*> m_connections;
     QGraphicsTextItem* m_label;
 };

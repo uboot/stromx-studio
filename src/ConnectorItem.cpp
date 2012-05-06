@@ -3,6 +3,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <stromx/core/Operator.h>
+#include "ArrowItem.h"
 #include "ConnectionItem.h"
 #include "OperatorModel.h"
 #include "StreamEditorScene.h"
@@ -13,7 +14,7 @@ ConnectorItem::ConnectorItem(OperatorModel* op, unsigned int id, ConnectorType t
     m_op(op),
     m_id(id),
     m_connectorType(type),
-    m_currentConnection(0),
+    m_currentArrow(0),
     m_label(0)
 {
     setRect(0, 0, 10, 10);
@@ -25,40 +26,40 @@ void ConnectorItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
     if(! canConnect())
         return;
     
-    m_currentConnection = new ConnectionItem(0, this);
+    m_currentArrow = new ArrowItem(this);
     if(m_connectorType == INPUT)
     {
-        m_currentConnection->setStart(mapFromScene(event->scenePos()));
-        m_currentConnection->setEnd(QPointF(5, 5));
+        m_currentArrow->setStart(mapFromScene(event->scenePos()));
+        m_currentArrow->setEnd(QPointF(5, 5));
     }
     else
     {
-        m_currentConnection->setStart(QPointF(5, 5));
-        m_currentConnection->setEnd(mapFromScene(event->scenePos()));
+        m_currentArrow->setStart(QPointF(5, 5));
+        m_currentArrow->setEnd(mapFromScene(event->scenePos()));
     }
 }
 
 void ConnectorItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-    if(m_currentConnection)
+    if(m_currentArrow)
     {
         if(m_connectorType == INPUT)
         {
             QPointF start(mapFromScene(event->scenePos()));
-            m_currentConnection->setStart(start);
+            m_currentArrow->setStart(start);
         }
         else
         {
             QPointF end(mapFromScene(event->scenePos()));
-            m_currentConnection->setEnd(end);
+            m_currentArrow->setEnd(end);
         }
         
         ConnectorItem* connectorItem = connectorItemAt(event->scenePos());
             
         if(connectorItem)
-            m_currentConnection->setActive(true);
+            m_currentArrow->setActive(true);
         else
-            m_currentConnection->setActive(false);
+            m_currentArrow->setActive(false);
     }
 }
 
@@ -102,10 +103,10 @@ bool ConnectorItem::canConnect() const
 
 void ConnectorItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    if(m_currentConnection)
+    if(m_currentArrow)
     {
-        delete m_currentConnection;
-        m_currentConnection = 0;
+        delete m_currentArrow;
+        m_currentArrow = 0;
     }
     
     ConnectorItem* connectorItem = connectorItemAt(event->scenePos());

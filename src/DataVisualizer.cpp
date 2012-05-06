@@ -125,7 +125,6 @@ void DataVisualizer::setData(int pos, const stromx::core::Data& data)
         {
             const UInt32 & uint = data_cast<const UInt32 &>(data);
             QGraphicsSimpleTextItem* textItem = scene()->addSimpleText(QString("%1").arg(uint));
-            textItem->setBrush(Qt::red);
             item = textItem;
         }
         catch(BadCast&)
