@@ -44,7 +44,8 @@ void StreamEditorScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 {
     const OperatorData* data = qobject_cast<const OperatorData*>(event->mimeData());
     
-    if(data)
+    // accept operator data only is stream is inactive
+    if(data && ! m_model->isActive())
     {  
         event->setDropAction(Qt::CopyAction);
         event->accept();
