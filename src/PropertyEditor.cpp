@@ -12,6 +12,7 @@ PropertyEditor::PropertyEditor(QWidget* parent)
     
     m_table = new QTableView;
     m_table->verticalHeader()->hide();
+    m_table->setEditTriggers(QAbstractItemView::AllEditTriggers);
     setWidget(m_table);
     
     m_table->setItemDelegate(new ItemDelegate(this));

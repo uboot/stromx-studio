@@ -100,6 +100,13 @@ void ItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, cons
         return;
     }
     
+    data = index.model()->data(index, TriggerRole);
+    if(data.canConvert(QVariant::String))
+    {
+        model->setData(index, true, Qt::EditRole);
+        return;
+    }
+    
     QStyledItemDelegate::setModelData(editor, model, index);
 }
 
