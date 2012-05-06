@@ -36,6 +36,18 @@ namespace stromx
     }
 }
 
+/**
+ * \brief Manages the communication between observers and the data visualizer.
+ * 
+ * A data manager object connects an observer model, i.e. a list of observers,
+ * to a data visualizer. It receives data from the inputs in the observer list and
+ * sends it to the data visualizer. Also input changes, such as a new
+ * input color or alpha value, are sent to the data visualizer.
+ * 
+ * If an input is added to the observer model, removed from it or moved within the 
+ * model, the data manager calls the right visualizer functions to reflect these 
+ * actions correctly.
+ */
 class DataManager : public QObject
 {
     Q_OBJECT
@@ -76,6 +88,7 @@ private slots:
      * Updates the properties (color, alpha, etc.) of all layers which correspond to this input.
      */
     void updateInputProperties(InputModel* input);
+    
 private:
     /** 
      * Connects to the operator of the input if the connections has not yet been established

@@ -133,8 +133,6 @@ private:
      */
     bool concernsThisObserver(const QModelIndex & parentModelIndex) const;
     
-    
-    
     QUndoStack* m_undoStack;
     ObserverTreeModel* m_parent;
     QList<InputModel*> m_inputs;
