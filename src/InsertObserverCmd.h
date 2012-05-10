@@ -26,6 +26,7 @@ class ObserverModel;
 class ObserverTreeModel;
 class StreamModel;
 
+/** \brief Inserts an observer model into an observer tree. */
 class InsertObserverCmd : public QUndoCommand
 {
 public:

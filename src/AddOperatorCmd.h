@@ -25,6 +25,7 @@
 class OperatorModel;
 class StreamModel;
 
+/** \brief Adds an operator to a stream. */
 class AddOperatorCmd : public QUndoCommand
 {
 public:

@@ -25,6 +25,7 @@
 class ConnectionModel;
 class StreamModel;
 
+/** \brief Removes a connection between operators from the stream. */
 class RemoveConnectionCmd : public QUndoCommand
 {
 public:

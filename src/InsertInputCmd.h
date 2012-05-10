@@ -26,6 +26,7 @@ class InputModel;
 class ObserverTreeModel;
 class StreamModel;
 
+/** \brief Inserts an input model into an observer tree. */
 class InsertInputCmd : public QUndoCommand
 {
 public:

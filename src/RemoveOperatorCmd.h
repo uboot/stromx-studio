@@ -25,6 +25,7 @@
 class OperatorModel;
 class StreamModel;
 
+/** \brief Removes an operator from a stream. */
 class RemoveOperatorCmd : public QUndoCommand
 {
 public:

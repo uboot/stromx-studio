@@ -22,6 +22,17 @@
 
 #include <QUndoStack>
 
+/** 
+ * \brief Undo stack with a limit of undoable actions.
+ *
+ * If the \em limit of this undo stack is activated it prevents the undo
+ * stack from undoing commands which where pushed prior to the activiation
+ * of the limit.
+ * In stromx-studio the limit is activated if a stream is started. After the
+ * activation no changes which happened before the start of the stream can 
+ * be undone. This prevents e.g. the removal of an previously added operator
+ * while the stream is active.
+ */
 class LimitUndoStack : public QUndoStack
 {
     Q_OBJECT
@@ -32,7 +43,7 @@ public:
     QAction* createLimitUndoAction(QObject* parent, const QString & prefix = QString());
     
     /** 
-     * Stops the undo stack from undoing actions with an index smaller or equal
+     * Stops the undo stack from undoing commands with an index smaller or equal
      * to the current index.
      */ 
     void activateLimit();

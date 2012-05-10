@@ -27,6 +27,7 @@ class StreamModel;
 
 class ThreadModel;
 
+/** \brief Adds a thread to a stream. */
 class AddThreadCmd : public QUndoCommand
 {
 public:

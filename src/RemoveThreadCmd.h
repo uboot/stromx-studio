@@ -27,6 +27,7 @@ class StreamModel;
 
 class ThreadModel;
 
+/** \brief Removes a thread from a stream. */
 class RemoveThreadCmd : public QUndoCommand
 {
 public:

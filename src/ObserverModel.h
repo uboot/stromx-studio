@@ -26,7 +26,14 @@ class QUndoStack;
 class InputModel;
 class ObserverTreeModel;
 
-/** \brief Model of an observer. */
+/**
+ * \brief Model of a list of input observers.
+ * 
+ * An observer model contains a list of input models. The data arriving at the operator
+ * inputs corresponding to these input models are displayed by a common visualizer.
+ * The position of the input models in the list determine the display order in the
+ * visualizer (assuming the visualizer supports some kind of layered drawing).
+ */
 class ObserverModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -34,15 +41,37 @@ class ObserverModel : public QAbstractTableModel
     friend class RenameObserverCmd;
 
 public:
+    /** Constructs an observer model. */
     ObserverModel(QUndoStack* undoStack, ObserverTreeModel* parent);
     
+    /** 
+     * Returns the name of the observer model. This is also the title of the window
+     * which displays the observer.
+     */
     const QString & name() const { return m_name; }
+    
+    /**
+     * Sets the name of the observer model. This is also the title of the window
+     * which displays the observer.
+     */
     void setName(const QString & name);
     
+    /** 
+     * Returns the input model at \c position. Returns 0 if there is no input model
+     * at the requested position.
+     */
     InputModel* input(int position);
+    
+    /** Returns the list of inputs of the observer. */
     const QList<InputModel*> inputs() const { return m_inputs; }
+    
+    /** Returns the number of inputs of the observer. */
     int numInputs() const { return m_inputs.count(); }
+    
+    /** Inserts \c input at \c position. */
     void insertInput(int position, InputModel* input);
+    
+    /** Removes the input at \c position. */
     void removeInput(int position);
     
     virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;

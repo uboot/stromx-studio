@@ -24,6 +24,7 @@
 
 class ObserverModel;
 
+/** \brief Sets the name of the observer model. */
 class RenameObserverCmd : public QUndoCommand
 {
 public:

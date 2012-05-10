@@ -36,6 +36,15 @@ namespace stromx
     }
 }
 
+/** \brief Manager of the communication between an observer model and a data visualizer
+ * 
+ * A data manager contains references to an observer model and a data visualizer.
+ * It connects to signals of the observer model and the input models of the observer.
+ * Whenever the observer (i.e. inputs are added, moved or removed) or properties 
+ * of an input change the respective commands of the data visualizer are called.
+ * In particular if data is observed by an input model the data manager updates
+ * it in the visualizer.
+ */
 class DataManager : public QObject
 {
     Q_OBJECT

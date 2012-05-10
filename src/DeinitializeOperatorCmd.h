@@ -25,6 +25,7 @@
 class OperatorModel;
 class StreamModel;
 
+/** \brief Deinitializes an operator. */
 class DeinitializeOperatorCmd : public QUndoCommand
 {
 public:

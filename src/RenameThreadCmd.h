@@ -24,6 +24,7 @@
 
 class ThreadModel;
 
+/** \brief Sets the name of a thread model. */
 class RenameThreadCmd : public QUndoCommand
 {
 public:

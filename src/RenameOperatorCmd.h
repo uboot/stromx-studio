@@ -24,6 +24,7 @@
 
 class OperatorModel;
 
+/** \brief Sets the name of an operator. */
 class RenameOperatorCmd : public QUndoCommand
 {
 public:

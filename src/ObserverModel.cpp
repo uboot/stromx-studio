@@ -63,6 +63,9 @@ void ObserverModel::removeInput(int position)
 
 InputModel* ObserverModel::input(int position)
 {
+    if(position < 0 || position >= m_inputs.size())
+        return 0;
+    
     return m_inputs[position];
 }
 

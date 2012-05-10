@@ -26,6 +26,7 @@
 class ConnectionModel;
 class StreamModel;
 
+/** \brief Adds a connection to a stream. */
 class AddConnectionCmd : public QUndoCommand
 {
 public:

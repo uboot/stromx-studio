@@ -26,6 +26,7 @@
 class OperatorModel;
 class StreamModel;
 
+/** \brief Moves an operator on the stream scene. */
 class MoveOperatorCmd : public QUndoCommand
 {
 public:

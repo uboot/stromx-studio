@@ -27,6 +27,14 @@ class QUndoStack;
 class ObserverTreeModel;
 class OperatorModel;
 
+/** 
+ * \brief Model of an input observer
+ * 
+ * This class models observers of single operator inputs. Each input model
+ * is associated with an operator input and observes the data arriving at
+ * this input. In addition, properties such as color and alpha value of the
+ * input model control how this data is visualized..
+ */
 class InputModel : public QObject
 {
     Q_OBJECT
@@ -35,17 +43,23 @@ class InputModel : public QObject
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * model);
     
 public:
+    /** Constructs an input model for the input \c id of the operator \c op. */
     InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject * parent);
     
     /** Pushes a set color command on the undo stack. */
     void setColor(const QColor & color);
     
+    /** Returns the current color. */
     const QColor & color() const { return m_color; }
     
+    /** Returns the operator model. */
     OperatorModel* op() const { return m_op; }
+    
+    /** Returns the ID of the operator input associated with this model. */
     unsigned int id() const { return m_id; }
     
 public slots:
+    /** Triggers an update of the operator name in all connected views. */
     void updateOperatorName(const QString & name);
     
 signals:

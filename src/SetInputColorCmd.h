@@ -25,6 +25,7 @@
 
 class InputModel;
 
+/** \brief Sets the color of an input model. */
 class SetInputColorCmd : public QUndoCommand
 {
 public:

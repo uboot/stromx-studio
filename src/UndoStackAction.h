@@ -28,9 +28,14 @@ class UndoStackAction : public QAction
     Q_OBJECT
     
 public:
+    /** 
+     * Constructs an undo stack action. The text of this action
+     * is always appended to \c prefix.
+     */
     UndoStackAction(const QString & prefix, QObject * parent = 0);
     
 public slots:
+    /** Sets the text of the action to the prefix followed by \c text. */
     void setUndoText(const QString & text);
     
 private:
