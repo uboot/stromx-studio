@@ -9,6 +9,8 @@
 #include "StreamEditorScene.h"
 #include "StreamModel.h"
 
+const qreal ConnectorItem::SIZE = 8;
+
 ConnectorItem::ConnectorItem(OperatorModel* op, unsigned int id, ConnectorType type, QGraphicsItem* parent)
   : QGraphicsRectItem(parent),
     m_op(op),
@@ -17,8 +19,9 @@ ConnectorItem::ConnectorItem(OperatorModel* op, unsigned int id, ConnectorType t
     m_currentArrow(0),
     m_label(0)
 {
-    setRect(0, 0, 10, 10);
+    setRect(-SIZE/2, -SIZE/2, SIZE, SIZE);
     setAcceptHoverEvents(true);
+    setBrush(Qt::black);
 }
 
 void ConnectorItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
@@ -30,11 +33,11 @@ void ConnectorItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
     if(m_connectorType == INPUT)
     {
         m_currentArrow->setStart(mapFromScene(event->scenePos()));
-        m_currentArrow->setEnd(QPointF(5, 5));
+        m_currentArrow->setEnd(QPointF(0, 0));
     }
     else
     {
-        m_currentArrow->setStart(QPointF(5, 5));
+        m_currentArrow->setStart(QPointF(0, 0));
         m_currentArrow->setEnd(mapFromScene(event->scenePos()));
     }
 }
@@ -146,9 +149,9 @@ void ConnectorItem::updateConnectionPositions() const
 void ConnectorItem::updateConnectionPosition(ConnectionItem* connection) const
 {
     if(connectorType() == INPUT)
-        connection->setEnd(mapToScene(QPointF(5, 5)));
+        connection->setEnd(mapToScene(QPointF(0, 0)));
     else
-        connection->setStart(mapToScene(QPointF(5, 5)));
+        connection->setStart(mapToScene(QPointF(0, 0)));
 }
 
 void ConnectorItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)

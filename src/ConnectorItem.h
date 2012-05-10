@@ -31,6 +31,9 @@ class OperatorModel;
 class ConnectorItem : public QGraphicsRectItem
 {
 public:
+    /** The length of the side of the connector square. */
+    static const qreal SIZE;
+    
     enum ConnectorType
     {
         INPUT,
@@ -62,6 +65,7 @@ protected:
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
     
 private:
+    
     ConnectorItem* connectorItemAt(const QPointF & pos) const;
     bool canConnect() const;
     void updateConnectionPosition(ConnectionItem* connection) const;

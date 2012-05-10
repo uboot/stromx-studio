@@ -66,9 +66,12 @@ private slots:
     void resetAllConnectors();
     
 private:
-    static const int SIZE = 50;
-    static const int RADIUS = 3;
+    static const qreal SIZE;
+    static const qreal RADIUS;
+    static const qreal WIDTH;
+    static const qreal CONNECTOR_OFFSET;
     
+    static qreal computeFirstYPos(int numConnectors);
     void initialize();
     void deinitialize();
     void updateConnectionPositions();

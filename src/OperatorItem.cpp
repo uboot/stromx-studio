@@ -7,15 +7,22 @@
 #include "ConnectorItem.h"
 #include "StreamEditorScene.h"
 
+
+const qreal OperatorItem::SIZE = 55;
+const qreal OperatorItem::RADIUS = 3;
+const qreal OperatorItem::WIDTH = 1.5;
+const qreal OperatorItem::CONNECTOR_OFFSET = 5;
+    
 OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
   : QGraphicsObject(parent),
     m_model(model)
 {
     QPainterPath path;
-    path.addRoundedRect(QRectF(0, 0, SIZE, SIZE), RADIUS, RADIUS);
+    path.addRoundedRect(QRectF(-SIZE/2, -SIZE/2, SIZE, SIZE), RADIUS, RADIUS);
     m_opRect = new QGraphicsPathItem(path, this);
-//     m_opRect = new QGraphicsRectItem(this);
-//     m_opRect->setRect(0, 0, SIZE, SIZE);
+    QPen pen = m_opRect->pen();
+    pen.setWidthF(WIDTH);
+    m_opRect->setPen(pen);
     setPos(m_model->pos());
     
     m_label = new QGraphicsTextItem(this);
@@ -80,7 +87,11 @@ void OperatorItem::setInitialized(bool value)
 void OperatorItem::initialize()
 {
     typedef std::vector<const stromx::core::Description*> DescriptionVector;
+    
     DescriptionVector inputs = m_model->op()->info().inputs();
+    qreal firstInputYPos = computeFirstYPos(inputs.size());
+    qreal yOffset = ConnectorItem::SIZE + CONNECTOR_OFFSET;
+    qreal inputXPos = -SIZE/2 - ConnectorItem::SIZE/2;
     
     unsigned int i = 0;
     for(DescriptionVector::iterator iter = inputs.begin();
@@ -88,19 +99,22 @@ void OperatorItem::initialize()
         ++iter, ++i)
     {
         ConnectorItem* inputItem = new ConnectorItem(this->m_model, (*iter)->id(), ConnectorItem::INPUT, this);
-        inputItem->setPos(0, i * 10);
+        inputItem->setPos(inputXPos, firstInputYPos + i*yOffset);
         
         m_inputs[(*iter)->id()] = inputItem;
     }
     
     DescriptionVector outputs = m_model->op()->info().outputs();
+    qreal firstOutputYPos = computeFirstYPos(outputs.size());
+    qreal outputXPos = SIZE/2 + ConnectorItem::SIZE/2;
+    
     i = 0;
     for(DescriptionVector::iterator iter = outputs.begin();
         iter != outputs.end();
         ++iter, ++i)
     {
         ConnectorItem* outputItem = new ConnectorItem(this->m_model, (*iter)->id(), ConnectorItem::OUTPUT, this);
-        outputItem->setPos(40, i * 10);
+        outputItem->setPos(outputXPos, firstOutputYPos + i*yOffset);
         
         m_outputs[(*iter)->id()] = outputItem;
     }
@@ -229,6 +243,16 @@ void OperatorItem::resetAllConnectors()
         output.value()->setOccupied(false);
     }
 }
+
+qreal OperatorItem::computeFirstYPos(int numConnectors)
+{
+    if(numConnectors <= 0)
+        return 0;
+    
+    qreal totalHeight = (numConnectors - 1) * (ConnectorItem::SIZE + CONNECTOR_OFFSET);
+    return -totalHeight / 2;
+}
+
 
 
 
