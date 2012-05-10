@@ -36,9 +36,13 @@ namespace stromx
     }
 }
 
-/** \brief Manager of the communication between an observer model and a data visualizer
+/** 
+ * \brief Manager of the communication between an observer model and a data visualizer
  * 
- * A data manager contains references to an observer model and a data visualizer.
+ * A data manager object connects an observer model, i.e. a list of observers,
+ * to a data visualizer. It receives data from the inputs in the observer list and
+ * sends it to the data visualizer.
+ * 
  * It connects to signals of the observer model and the input models of the observer.
  * Whenever the observer (i.e. inputs are added, moved or removed) or properties 
  * of an input change the respective commands of the data visualizer are called.
