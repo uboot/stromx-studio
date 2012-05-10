@@ -8,9 +8,7 @@
 
 ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
   : QGraphicsObject(parent),
-    m_shaft(new QGraphicsLineItem(this)),
-    m_head1(new QGraphicsLineItem(0, 0, -5, -5, this)),
-    m_head2(new QGraphicsLineItem(0, 0, -5, 5, this)),
+    m_line(new QGraphicsLineItem(this)),
     m_model(model)
 {
     setFlag(ItemIsSelectable, true);
@@ -22,19 +20,17 @@ ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
     }
     
     m_pen.setWidth(INACTIVE_WIDTH);
-    m_shaft->setPen(m_pen);
-    m_head1->setPen(m_pen);
-    m_head2->setPen(m_pen);
+    m_line->setPen(m_pen);
 }
 
 QRectF ConnectionItem::boundingRect() const
 {
-    return m_shaft->boundingRect();
+    return m_line->boundingRect();
 }
 
 QPainterPath ConnectionItem::shape() const
 {
-    return m_shaft->shape();
+    return m_line->shape();
 }
 
 void ConnectionItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -58,27 +54,16 @@ QVariant ConnectionItem::itemChange(GraphicsItemChange change, const QVariant &v
     return QGraphicsItem::itemChange(change, value);
 }
 
-void ConnectionItem::rotateHead()
-{
-    double angle = - m_shaft->line().angle();
-    m_head1->setRotation(angle);
-    m_head2->setRotation(angle);
-}
-
 void ConnectionItem::setStart(const QPointF& start)
 {
-    m_shaft->setLine(start.x(), start.y(),
-                     m_shaft->line().p2().x(), m_shaft->line().p2().y());
-    rotateHead();
+    m_line->setLine(start.x(), start.y(),
+                     m_line->line().p2().x(), m_line->line().p2().y());
 }
 
 void ConnectionItem::setEnd(const QPointF& end)
 {
-    m_shaft->setLine(m_shaft->line().p1().x(),
-                     m_shaft->line().p1().y(), end.x(), end.y());
-    m_head1->setPos(end);
-    m_head2->setPos(end);
-    rotateHead();
+    m_line->setLine(m_line->line().p1().x(),
+                    m_line->line().p1().y(), end.x(), end.y());
 }
 
 void ConnectionItem::setActive(bool value)
@@ -99,9 +84,7 @@ void ConnectionItem::setColor(const QColor& color)
 
 void ConnectionItem::applyPen()
 {
-    m_shaft->setPen(m_pen);
-    m_head1->setPen(m_pen);
-    m_head2->setPen(m_pen);
+    m_line->setPen(m_pen);
 }
 
 

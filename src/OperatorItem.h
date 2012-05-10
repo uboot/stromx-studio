@@ -70,6 +70,7 @@ private:
     static const qreal RADIUS;
     static const qreal WIDTH;
     static const qreal CONNECTOR_OFFSET;
+    static const qreal LABEL_OFFSET;
     
     static qreal computeFirstYPos(int numConnectors);
     void initialize();

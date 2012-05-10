@@ -12,6 +12,7 @@ const qreal OperatorItem::SIZE = 55;
 const qreal OperatorItem::RADIUS = 3;
 const qreal OperatorItem::WIDTH = 1.5;
 const qreal OperatorItem::CONNECTOR_OFFSET = 5;
+const qreal OperatorItem::LABEL_OFFSET = 5;
     
 OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
   : QGraphicsObject(parent),
@@ -27,7 +28,7 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
     
     m_label = new QGraphicsTextItem(this);
     m_label->setPlainText(QString::fromStdString(m_model->op()->name()));
-    m_label->setPos((SIZE - m_label->boundingRect().width()) / 2, SIZE + 5);
+    m_label->setPos(-m_label->boundingRect().width()/2, SIZE/2 + LABEL_OFFSET);
     
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsSelectable, true);

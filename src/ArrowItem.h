@@ -64,7 +64,6 @@ private:
     QGraphicsLineItem* m_head1;
     QGraphicsLineItem* m_head2;
     
-    QPointF m_startPos;
     QPen m_pen;
 };
 

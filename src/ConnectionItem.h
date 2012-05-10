@@ -72,11 +72,7 @@ private:
     /** Applies the current pen to all graphic items of the connection. */
     void applyPen();
     
-    QGraphicsLineItem* m_shaft;
-    QGraphicsLineItem* m_head1;
-    QGraphicsLineItem* m_head2;
-    
-    QPointF m_startPos;
+    QGraphicsLineItem* m_line;
     ConnectionModel* m_model;
     QPen m_pen;
 };
