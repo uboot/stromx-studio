@@ -26,6 +26,7 @@ class InputModel;
 class ObserverTreeModel;
 class StreamModel;
 
+/** \brief Moves an input model to a different position of an observer tree. */
 class MoveInputCmd : public QUndoCommand
 {
 public:

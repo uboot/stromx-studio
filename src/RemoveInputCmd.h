@@ -26,6 +26,7 @@ class InputModel;
 class ObserverTreeModel;
 class StreamModel;
 
+/** \brief Removes an input model from an observer tree. */
 class RemoveInputCmd : public QUndoCommand
 {
 public:

@@ -32,6 +32,7 @@ namespace stromx
     }
 }
 
+/** \brief Sets the parameter of an operator. */
 class SetParameterCmd : public QUndoCommand
 {
 public:

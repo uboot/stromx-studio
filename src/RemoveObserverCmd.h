@@ -26,6 +26,7 @@ class ObserverModel;
 class ObserverTreeModel;
 class StreamModel;
 
+/** \brief Removes an observer model from an observer tree. */
 class RemoveObserverCmd : public QUndoCommand
 {
 public:

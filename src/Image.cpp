@@ -12,6 +12,22 @@ Image::Image(const QString& fileName)
 {
     QImage image = QImage(fileName);
     
+    constructFromImage(image);
+}
+
+Image::Image(const QImage& image)
+{
+    constructFromImage(image);
+}
+
+Image::Image(const Image& image)
+{
+    m_image = image.m_image;
+    initializeParent();
+}
+
+void Image::constructFromImage(const QImage& image)
+{
     switch(image.format())
     {
     case QImage::Format_Indexed8:
@@ -24,12 +40,6 @@ Image::Image(const QString& fileName)
         return;
     }
     
-    initializeParent();
-}
-
-Image::Image(const Image& image)
-{
-    m_image = image.m_image;
     initializeParent();
 }
 

@@ -25,6 +25,7 @@
 
 class ThreadModel;
 
+/** \brief Sets the color of a thread. */
 class SetThreadColorCmd : public QUndoCommand
 {
 public:

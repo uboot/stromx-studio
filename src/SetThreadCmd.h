@@ -26,6 +26,7 @@ class ConnectionModel;
 class StreamModel;
 class ThreadModel;
 
+/** \brief Sets the thread of a connection. */
 class SetThreadCmd : public QUndoCommand
 {
 public:

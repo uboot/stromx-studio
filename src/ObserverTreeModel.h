@@ -27,7 +27,15 @@ class QUndoStack;
 class InputModel;
 class ObserverModel;
 
-/** \brief List of observers of a stream model. */
+/** 
+ * \brief List of observers models.
+ *
+ * An observer tree model contains a list of observers each of which
+ * consists of a sequence of input models.
+ * Observers can be added and removed from an observer tree model using 
+ * the respective functions of QAbstractItemModel to insert and remove
+ * rows.
+ */
 class ObserverTreeModel : public QAbstractItemModel
 {
     Q_OBJECT

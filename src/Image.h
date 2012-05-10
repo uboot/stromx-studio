@@ -25,10 +25,17 @@
 #include <stromx/core/ImageWrapper.h>
 #include <stromx/core/Version.h>
 
+/** \brief Stromx image wrapper for QImage objects. */
 class Image : public stromx::core::ImageWrapper
 {
 public:
+    /** Constructs an image from a file. */
     Image(const QString & fileName);
+    
+    /** Constructs an image from a QImage object. */
+    Image(const QImage & image);
+    
+    /** Copy constructs an image from another image. */
     Image(const Image & image);
             
     virtual const stromx::core::Version & version() const { return VERSION; }
@@ -42,7 +49,17 @@ private:
     static const std::string PACKAGE;
     static const stromx::core::Version VERSION;
     
+    /** 
+     * Initializes the stromx::core::ImageWrapper parent
+     * from the information in m_image.
+     */
     void initializeParent();
+    
+    /** 
+     * Helper function for the constructors which initializes the object 
+     * from a QImage object.
+     */
+    void constructFromImage(const QImage & image);
             
     QImage m_image;
 };
