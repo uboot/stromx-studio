@@ -183,15 +183,5 @@ void ThreadListModel::updateThread(ThreadModel* thread)
         emit dataChanged(createIndex(pos, 0), createIndex(pos, NUM_COLUMNS - 1));
 }
 
-QDataStream& operator<<(QDataStream& stream, const ThreadListModel* threadList)
-{
-    return stream << threadList->m_threads;
-}
-
-QDataStream& operator>>(QDataStream& stream, ThreadListModel* threadList)
-{
-    return stream >> threadList->m_threads;
-}
-
 
 

@@ -26,6 +26,7 @@ class QUndoStack;
 class InputModel;
 class ObserverTreeModel;
 
+/** \brief Model of an observer. */
 class ObserverModel : public QAbstractTableModel
 {
     Q_OBJECT

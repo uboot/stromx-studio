@@ -40,6 +40,7 @@ class ConnectionModel;
 class ConnectorObserver;
 class StreamModel;
 
+/** \brief Model of a stromx operator. */
 class OperatorModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -118,10 +119,10 @@ protected:
     virtual void disconnectNotify(const char * signal);
 
 private slots:
-    /** Emits <tt>activeChanged(true)</tt>. */
+    /** Resets the model and emits <tt>activeChanged(true)</tt>. */
     void setActiveTrue();
     
-    /** Emits <tt>activeChanged(false)</tt>. */
+    /** Resets the model and emits <tt>activeChanged(false)</tt>. */
     void setActiveFalse();
     
 private:

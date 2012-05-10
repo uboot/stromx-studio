@@ -26,6 +26,7 @@ class OperatorModel;
 class StreamModel;
 class ThreadModel;
 
+/** \brief Model of a connection in a stromx stream. */
 class ConnectionModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -76,6 +77,10 @@ signals:
      * thread changes or the connection is assigned to a different thread.
      */
     void colorChanged(const QColor & color);
+    
+private slots:
+    /** Emits a changed signal for all data concerning the thread of the connection. */
+    void updateThread();
     
 private:
     enum Row

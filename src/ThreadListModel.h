@@ -25,6 +25,13 @@
 
 class ThreadModel;
 
+/**
+ * \brief List of thread models
+ * 
+ * This class contains a list of ThreadModel objects and provides all necessary
+ * functions of QAbstractTableModel to display and edit the thread list via a table view.
+ * This class is usually owned and used by a StreamModel object.
+ */
 class ThreadListModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -32,6 +39,7 @@ class ThreadListModel : public QAbstractTableModel
     friend class StreamModel;
     
 public:
+    /** Constructs a thread list model. */
     explicit ThreadListModel(QObject *parent = 0);
     
     virtual int rowCount(const QModelIndex & parent) const;
@@ -42,7 +50,13 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
     
+    /** Returns the threads in the list. */
     const QList<ThreadModel*> threads() const { return m_threads; }
+    
+    /** 
+     * Returns the thread displayed at the \c index. If \c index does not point to
+     * a thread 0 is returned.
+     */
     ThreadModel* thread(const QModelIndex & index) const;
     
     friend QDataStream & operator<< (QDataStream & stream, const ThreadListModel * threadList);
@@ -62,8 +76,5 @@ private:
     
     QList<ThreadModel*> m_threads;
 };
-
-QDataStream & operator<< (QDataStream & stream, const ThreadListModel * threadList);
-QDataStream & operator>> (QDataStream & stream, ThreadListModel * threadList);
     
 #endif // THREADLISTMODEL_H

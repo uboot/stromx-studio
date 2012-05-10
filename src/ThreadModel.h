@@ -33,6 +33,7 @@ namespace stromx
 
 class StreamModel;
 
+/** \brief Model of a stromx thread. */
 class ThreadModel : public QObject
 {
     Q_OBJECT

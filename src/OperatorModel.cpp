@@ -196,12 +196,12 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
             }
             catch(stromx::core::Exception&)
             {
-                QVariant(tr("<X:not accessible>"));
+                QVariant();
             }
         }
         else
         {
-            return QVariant(tr("<not accessible>"));
+            return QVariant();
         }
     case NOTHING:
     default:

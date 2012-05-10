@@ -20,6 +20,7 @@
 #include "ThreadModel.h"
 #include <QDir>
 #include <QFileInfo>
+#include <QtDebug>
 #include <stromx/core/Description.h>
 #include <stromx/core/DirectoryFileInput.h>
 #include <stromx/core/FileOutput.h>
@@ -62,11 +63,11 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     try
     {
         stromx::core::XmlReader reader;
-        stream = reader.readStream(input, streamFilename, *m_operatorLibrary->factory());
+        stream = reader.readStream(input, streamFilename, m_operatorLibrary->factory());
     }
     catch(stromx::core::FileAccessFailed& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = e.container().empty() 
                         ? tr("The file %1 could not be opened for reading.").arg(QString::fromStdString(e.filename()))
                         : tr("The file %1 in %2 could not be opened for reading.").arg(QString::fromStdString(e.filename()),
@@ -75,7 +76,7 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     }
     catch(stromx::core::InconsistentFileContent& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = e.container().empty() 
                         ? tr("The content of file %1 is inconsistent.").arg(QString::fromStdString(e.filename()))
                         : tr("The content of file %1 in %2 is inconsistent.").arg(QString::fromStdString(e.filename()),
@@ -84,32 +85,51 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     }
     catch(stromx::core::InvalidFileFormat& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = e.container().empty() 
                         ? tr("The format of file %1 is invalid.").arg(QString::fromStdString(e.filename()))
                         : tr("The format of file %1 in %2 is invalid.").arg(QString::fromStdString(e.filename()),
-                                                                           QString::fromStdString(e.container()));
+                                                                            QString::fromStdString(e.container()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::core::OperatorAllocationFailed& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = tr("Failed to allocate the operator of type %1 of package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::core::DataAllocationFailed& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = tr("Failed to allocate the data of type %1 of package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::core::DeserializationError& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = tr("Failed to deserialize data of type %1 in package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
+        throw ReadStreamFailed(error);
+    }
+    catch(stromx::core::ParameterError& e)
+    {
+        qWarning() << e.what();
+        const stromx::core::OperatorInfo& op = e.op();
+        QString error = tr("Failed to set parameter %1 ('%2') of operator of type %3 in package %4.")
+                        .arg(QString("%1").arg(e.parameter().id()),
+                             QString::fromStdString(e.parameter().name()),
+                             QString::fromStdString(op.type()),
+                             QString::fromStdString(op.package()));
+        throw ReadStreamFailed(error);
+    }
+    catch(stromx::core::OperatorError& e)
+    {
+        qWarning() << e.what();
+        const stromx::core::OperatorInfo& op = e.op();
+        QString error = tr("Unknown error related to operator of type %1 in package %2.")
+                        .arg(QString::fromStdString(op.type()), QString::fromStdString(op.package()));
         throw ReadStreamFailed(error);
     }
     
@@ -148,11 +168,11 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
 
         stromx::core::XmlReader reader;
         reader.readParameters(input, parametersFilename,
-                                *m_operatorLibrary->factory(), uninitializedOperators);
+                              m_operatorLibrary->factory(), uninitializedOperators);
     }
     catch(stromx::core::FileAccessFailed& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = e.container().empty() 
                         ? tr("The file %1 could not be opened for reading.").arg(QString::fromStdString(e.filename()))
                         : tr("The file %1 in %2 could not be opened for reading.").arg(QString::fromStdString(e.filename()),
@@ -161,7 +181,7 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
     }
     catch(stromx::core::InconsistentFileContent& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = e.container().empty() 
                         ? tr("The content of file %1 is inconsistent.").arg(QString::fromStdString(e.filename()))
                         : tr("The content of file %1 in %2 is inconsistent.").arg(QString::fromStdString(e.filename()),
@@ -170,7 +190,7 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
     }
     catch(stromx::core::InvalidFileFormat& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = e.container().empty() 
                         ? tr("The format of file %1 is invalid.").arg(QString::fromStdString(e.filename()))
                         : tr("The format of file %1 in %2 is invalid.").arg(QString::fromStdString(e.filename()),
@@ -179,14 +199,14 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
     }
     catch(stromx::core::DataAllocationFailed& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = tr("Failed to allocate the data of type %1 of package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::core::DeserializationError& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = tr("Failed to deserialize data of type %1 in package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
@@ -418,7 +438,7 @@ void StreamModel::write(stromx::core::FileOutput & output, const QString& basena
     }
     catch(stromx::core::FileAccessFailed& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = e.container().empty() 
                         ? tr("The file %1 could not be opened for writing.").arg(QString::fromStdString(e.filename()))
                         : tr("The file %1 in %2 could not be opened for writing.").arg(QString::fromStdString(e.filename()),
@@ -427,7 +447,7 @@ void StreamModel::write(stromx::core::FileOutput & output, const QString& basena
     }
     catch(stromx::core::SerializationError & e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = tr("Failed to serialize data of type %1 in package %2.").arg(QString::fromStdString(e.type()),
                                                                                       QString::fromStdString(e.package()));
         throw WriteStreamFailed(error);
@@ -624,7 +644,7 @@ void StreamModel::deserializeModel(const QByteArray& data)
     dataStream.setVersion(QDataStream::Qt_4_7);
 
     dataStream >> count;
-    stromx::core::Factory* factory = m_operatorLibrary->factory();
+    stromx::core::Factory& factory = m_operatorLibrary->factory();
     for(int i = 0; i < count; ++i)
     {
         QString package, type;
@@ -639,7 +659,7 @@ void StreamModel::deserializeModel(const QByteArray& data)
         OperatorModel* opModel = 0;
         try
         {
-            stromx::core::Operator* op = factory->newOperator(package.toStdString(), type.toStdString());
+            stromx::core::Operator* op = factory.newOperator(package.toStdString(), type.toStdString());
             opModel = new OperatorModel(op, this);
             m_uninitializedOperators.append(opModel);
             m_operators.append(opModel);

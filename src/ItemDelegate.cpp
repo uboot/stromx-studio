@@ -1,7 +1,7 @@
 #include "ItemDelegate.h"
 
 #include <QComboBox>
-#include <QRadioButton>
+#include <QPushButton>
 #include <QApplication>
 #include "Common.h"
 
@@ -39,7 +39,8 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
     data = index.model()->data(index, TriggerRole);
     if(data.canConvert(QVariant::String))
     {
-        QRadioButton* button = new QRadioButton(parent);
+        QPushButton* button = new QPushButton(parent);
+        connect(button, SIGNAL(clicked()), this, SLOT(commitTriggerEvent()));
         return button;
     }
     
@@ -66,14 +67,14 @@ void ItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) cons
         return;
     }
     
-//     data = index.model()->data(index, TriggerRole);
-//     if(data.canConvert(QVariant::String))
-//     {
-//         QString text = data.value<QString>();
-//         if(QRadioButton* button = qobject_cast<QRadioButton*>(editor))
-//             button->setText(text);
-//         return;
-//     }
+    data = index.model()->data(index, TriggerRole);
+    if(data.canConvert(QVariant::String))
+    {
+        QString text = data.value<QString>();
+        if(QPushButton* button = qobject_cast<QPushButton*>(editor))
+            button->setText(text);
+        return;
+    }
     
     QStyledItemDelegate::setEditorData(editor, index);
 }
@@ -109,11 +110,17 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
     {
         QStyleOptionButton buttonOption;
         buttonOption.rect = option.rect;
-        buttonOption.text = QString("Scheissdreck");
-        QApplication::style()->drawControl(QStyle::CE_RadioButton, &buttonOption, painter);
+        buttonOption.text = QString(trigger.toString());
+        QApplication::style()->drawControl(QStyle::CE_PushButton, &buttonOption, painter);
     }
     else
         QStyledItemDelegate::paint(painter, option, index);
+}
+
+void ItemDelegate::commitTriggerEvent()
+{
+    QPushButton* pushButton = qobject_cast<QPushButton* >(sender());
+    emit commitData(pushButton);
 }
 
 

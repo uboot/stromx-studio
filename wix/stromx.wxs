@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="*" UpgradeCode="7e72fb91-8763-4b03-883d-957a9ccd3d44" Version="0.1.0" Language="1033" Name="stromx" Manufacturer="The stromx developer team">
+        <Package InstallerVersion="300" Compressed="yes"/>
+        <Media Id="1" Cabinet="stromx.cab" EmbedCab="yes" />
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="APPLICATIONROOTDIRECTORY" Name="stromx"/>
+            </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ApplicationProgramsFolder" Name="stromx"/>
+            </Directory>
+        </Directory>
+
+        <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
+            <Component Id="boost_date_time" Guid="">
+                <File Id="boost_date_time" Source="boost_date_time-vc100-mt-gd-1_47.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="boost_filesystem" Guid="">
+                <File Id="boost_filesystem" Source="boost_filesystem-vc100-mt-gd-1_47.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="boost_system" Guid="">
+                <File Id="boost_system" Source="boost_system-vc100-mt-gd-1_47.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="boost_thread" Guid="">
+                <File Id="boost_thread" Source="boost_thread-vc100-mt-gd-1_47.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="msvcp100" Guid="">
+                <File Id="msvcp100" Source="msvcp100d.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="msvcr100" Guid="">
+                <File Id="msvcr100" Source="msvcr100d.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="opencv_core" Guid="">
+                <File Id="opencv_core" Source="opencv_core231d.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="opencv_highgui" Guid="">
+                <File Id="opencv_highgui" Source="opencv_highgui231d.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="opencv_imgproc" Guid="">
+                <File Id="opencv_imgproc" Source="opencv_imgproc231d.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="QtCore4" Guid="">
+                <File Id="QtCore4" Source="QtCored4.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="QtGui4" Guid="">
+                <File Id="QtGui4" Source="QtGuid4.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="stromx_base" Guid="">
+                <File Id="stromx_base" Source="stromx_base.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="stromx_core" Guid="">
+                <File Id="stromx_core" Source="stromx_core.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="stromx_studio" Guid="">
+                <File Id="stromx_studio" Source="stromx-studio.exe" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="xerces_c" Guid="">
+                <File Id="xerces_c" Source="xerces-c_3_1D.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="zip" Guid="">
+                <File Id="zip" Source="zip.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="zlib" Guid="">
+                <File Id="zlib" Source="zlibd1.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="ApplicationProgramsFolder">
+            <Component Id="ApplicationShortcut" Guid="33282008-ec2d-4227-bd16-69cbad17d87c">
+                <Shortcut Id="ApplicationStartMenuShortcut" Name="stromx-studio" Description="The stromx library and studio" Target="[APPLICATIONROOTDIRECTORY]stromx-studio.exe"
+                          WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
+                <!-- Step 1: Add the uninstall shortcut to your installer package -->
+                <Shortcut Id="UninstallProduct"
+                          Name="Uninstall stromx"
+                          Description="Uninstalls stromx"
+                          Target="[System64Folder]msiexec.exe"
+                          Arguments="/x [ProductCode]"/>
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+                <RegistryValue Root="HKCU" Key="Software\Microsoft\stromx" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+
+        <Feature Id="stromx_studio" Title="stromx-studio" Level="1">
+            <ComponentRef Id="boost_date_time" />
+            <ComponentRef Id="boost_filesystem" />
+            <ComponentRef Id="boost_system" />
+            <ComponentRef Id="boost_thread" />
+            <ComponentRef Id="msvcp100" />
+            <ComponentRef Id="msvcr100" />
+            <ComponentRef Id="opencv_core" />
+            <ComponentRef Id="opencv_highgui" />
+            <ComponentRef Id="opencv_imgproc" />
+            <ComponentRef Id="QtCore4" />
+            <ComponentRef Id="QtGui4" />
+            <ComponentRef Id="stromx_base" />
+            <ComponentRef Id="stromx_core" />
+            <ComponentRef Id="stromx_studio" />
+            <ComponentRef Id="xerces_c" />
+            <ComponentRef Id="zip" />
+            <ComponentRef Id="zlib" />
+            <ComponentRef Id="ApplicationShortcut" />
+        </Feature>
+    </Product>
+</Wix>

@@ -29,6 +29,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QSettings>
+#include <QtDebug>
 #include <QtGlobal>
 #include <iostream>
 #include <memory>
@@ -783,7 +784,7 @@ void MainWindow::readObserverWindowStates(stromx::core::FileInput& input, const 
     catch(stromx::core::FileAccessFailed& e)
     {
         // simply ignore errors and do not update the window geometry
-        qWarning(e.what());
+        qWarning() << e.what();
     }
     
     // construct a input stream from the data
@@ -825,7 +826,7 @@ void MainWindow::writeObserverWindowStates(stromx::core::FileOutput& output, con
     }
     catch(stromx::core::FileAccessFailed& e)
     {
-        qWarning(e.what());
+        qWarning() << e.what();
         QString error = e.container().empty() 
                         ? tr("The file %1 could not be opened for writing.").arg(QString::fromStdString(e.filename()))
                         : tr("The file %1 in %2 could not be opened for writing.").arg(QString::fromStdString(e.filename()),

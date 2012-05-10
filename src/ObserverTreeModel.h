@@ -27,7 +27,7 @@ class QUndoStack;
 class InputModel;
 class ObserverModel;
 
-/** Represents all observers of a stream model. */
+/** \brief List of observers of a stream model. */
 class ObserverTreeModel : public QAbstractItemModel
 {
     Q_OBJECT
