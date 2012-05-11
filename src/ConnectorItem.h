@@ -27,7 +27,9 @@ class ArrowItem;
 class ConnectionItem;
 class OperatorModel;
 
-/** \brief Graphical representation of a connector of an operator. */
+/** 
+ * \brief Graphical representation of a connector of an operator.
+ */
 class ConnectorItem : public QGraphicsRectItem
 {
 public:
@@ -52,9 +54,28 @@ public:
     /** Returns the number of connections connected to this connector. */
     int numConnections() const;
     
+    /** Adds a connection to the connector. */
     void addConnection(ConnectionItem* connection);
+    
+    /** Removes a connection from the connector. */
     void removeConnection(ConnectionItem* connection);
+    
+    /** 
+     * Updates the geometry of the connections of this connector
+     * to the current position of the connector. Depending on the
+     * type of the connector either the start or end point of the 
+     * connection item is changed such that it matches the current
+     * position of the connector.
+     */
     void updateConnectionPositions() const;
+    
+    /**
+     * Marks this connector as either occupied or unoccupied.
+     * An connector is occupied if data is present at the operator
+     * input or output which is represented by this connector.
+     * The visual representation of an occupied connector is different
+     * from that of an unoccupied.
+     */
     void setOccupied(bool occupied);
 
 protected:
@@ -65,9 +86,25 @@ protected:
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
     
 private:
-    
+    /** 
+     * Returns the connector at the position \c pos of the scene of t
+     * this connector. Returns 0 if there is no connector at that position.
+     */
     ConnectorItem* connectorItemAt(const QPointF & pos) const;
+    
+    /**
+     * Returns true if this connector can be connected to. Connections can only
+     * be made if the current stream is inactive. Also not more than on connection
+     * can be connected to an input (outputs can connect to several connections.
+     */
     bool canConnect() const;
+    
+    /** 
+     * Updates the geometry of \c connection to the current position of
+     * the connector. Depending on the type of the connector either the
+     * start or end point of \c connection is changed such that it matches
+     * the current position of the connector.
+     */
     void updateConnectionPosition(ConnectionItem* connection) const;
     
     OperatorModel* m_op;
