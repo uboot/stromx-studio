@@ -1,8 +1,9 @@
 #include "ItemDelegate.h"
 
+#include <QApplication>
 #include <QComboBox>
 #include <QPushButton>
-#include <QApplication>
+#include <QMap>
 #include "Common.h"
 
 ItemDelegate::ItemDelegate(QObject* parent)
@@ -25,13 +26,16 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
     data = index.model()->data(index, ColorRole);
     if(data.canConvert(QVariant::Color))
     {
-        QStringList colorNames = QColor::colorNames();
         QComboBox* comboBox = new QComboBox(parent);
-        for (int i = 0; i < colorNames.size(); ++i)
+        
+        int i = 0;
+        QMapIterator<QString, QColor> iter(colorTable());
+        while (iter.hasNext())
         {
-            QColor color(colorNames[i]);
-            comboBox->insertItem(i, colorNames[i]);
-            comboBox->setItemData(i, color, Qt::DecorationRole);
+            iter.next();
+            comboBox->insertItem(i, iter.key());
+            comboBox->setItemData(i, iter.value(), Qt::DecorationRole);
+            ++i;
         }
         return comboBox;
     }
@@ -130,8 +134,9 @@ void ItemDelegate::commitTriggerEvent()
     emit commitData(pushButton);
 }
 
-
 void ItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     QStyledItemDelegate::updateEditorGeometry(editor, option, index);
 }
+
+

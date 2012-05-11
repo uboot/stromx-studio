@@ -22,6 +22,8 @@
 #define COMMON_H
 
 #include <Qt>
+#include <QColor>
+#include <QMap>
 
 enum Roles
 {
@@ -29,5 +31,7 @@ enum Roles
     ColorRole,
     TriggerRole
 };
+
+const QMap<QString, QColor> & colorTable();
 
 #endif // COMMON_H

@@ -45,12 +45,11 @@ QVariant ThreadListModel::data(const QModelIndex& index, int role) const
         case 1:
         {
             QColor color = m_threads[index.row()]->color();
-            foreach(QString name, QColor::colorNames())
-            {
-                if(QColor(name) == color)
-                    return name;
-            }
-            return color;
+            QString name = colorTable().key(color);
+            if(name.isEmpty())
+                return color;
+            else
+                return name;
         }
         default:
             ;

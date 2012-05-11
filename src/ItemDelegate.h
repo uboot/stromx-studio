@@ -22,6 +22,17 @@
 
 #include <QStyledItemDelegate>
 
+/** 
+ * \brief Delegate to support custom data in item views.
+ * 
+ * This class provides the following custom item view editors:
+ * - A popup menu if the item view returns a QStringList object
+ *   for the role Roles::ChoicesRole. 
+ * - A popup menu with colors if the item view returns a QColor
+ *   object for the role Roles::ColorRole.
+ * - A push button if the item view returns a QString object for 
+ *   the role Roles::TriggerRole.
+ */
 class ItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT

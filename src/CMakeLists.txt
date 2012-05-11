@@ -10,6 +10,7 @@ set(stromxstudio_SOURCES
     AddThreadCmd.cpp
     AddOperatorCmd.cpp
     ArrowItem.cpp
+    Common.cpp
     ConnectionItem.cpp
     ConnectorItem.cpp
     ConnectorDataEvent.cpp
