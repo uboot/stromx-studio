@@ -8,7 +8,7 @@
 
 ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
   : QGraphicsObject(parent),
-    m_line(new QGraphicsLineItem(this)),
+    m_path(new QGraphicsPathItem(this)),
     m_model(model)
 {
     setFlag(ItemIsSelectable, true);
@@ -20,17 +20,17 @@ ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
     }
     
     m_pen.setWidth(INACTIVE_WIDTH);
-    m_line->setPen(m_pen);
+    update();
 }
 
 QRectF ConnectionItem::boundingRect() const
 {
-    return m_line->boundingRect();
+    return m_path->boundingRect();
 }
 
 QPainterPath ConnectionItem::shape() const
 {
-    return m_line->shape();
+    return m_path->shape();
 }
 
 void ConnectionItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -46,7 +46,7 @@ QVariant ConnectionItem::itemChange(GraphicsItemChange change, const QVariant &v
         else
             m_pen.setStyle(Qt::SolidLine);
 
-        applyPen();
+        update();
         
         return value;
     }
@@ -56,14 +56,14 @@ QVariant ConnectionItem::itemChange(GraphicsItemChange change, const QVariant &v
 
 void ConnectionItem::setStart(const QPointF& start)
 {
-    m_line->setLine(start.x(), start.y(),
-                     m_line->line().p2().x(), m_line->line().p2().y());
+    m_start = start;
+    update();
 }
 
 void ConnectionItem::setEnd(const QPointF& end)
 {
-    m_line->setLine(m_line->line().p1().x(),
-                    m_line->line().p1().y(), end.x(), end.y());
+    m_end = end;
+    update();
 }
 
 void ConnectionItem::setActive(bool value)
@@ -73,18 +73,25 @@ void ConnectionItem::setActive(bool value)
     else
         m_pen.setWidth(INACTIVE_WIDTH);
     
-    applyPen();
+    update();
 }
 
 void ConnectionItem::setColor(const QColor& color)
 {
     m_pen.setColor(color);
-    applyPen();
+    update();
 }
 
-void ConnectionItem::applyPen()
+void ConnectionItem::update()
 {
-    m_line->setPen(m_pen);
+    m_path->setPen(m_pen);
+    
+    QPainterPath path;
+    path.moveTo(m_start);
+    path.lineTo((m_end.x() + m_start.x())/2, m_start.y());
+    path.lineTo((m_end.x() + m_start.x())/2, m_end.y());
+    path.lineTo(m_end);
+    m_path->setPath(path);
 }
 
 

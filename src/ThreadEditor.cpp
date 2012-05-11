@@ -15,6 +15,7 @@ ThreadEditor::ThreadEditor(QWidget* parent)
     m_table = new QTableView;
     m_table->verticalHeader()->hide();
     m_table->setItemDelegate(new ItemDelegate(this));
+    m_table->setEditTriggers(QAbstractItemView::AllEditTriggers);
     
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(m_table);

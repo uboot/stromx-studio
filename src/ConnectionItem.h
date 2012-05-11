@@ -69,12 +69,14 @@ private:
      */
     void rotateHead();
     
-    /** Applies the current pen to all graphic items of the connection. */
-    void applyPen();
+    /** Updates the current geometry and pen settings of the connection. */
+    void update();
     
-    QGraphicsLineItem* m_line;
+    QGraphicsPathItem* m_path;
     ConnectionModel* m_model;
     QPen m_pen;
+    QPointF m_start;
+    QPointF m_end;
 };
 
 #endif // CONNECTIONITEM_H

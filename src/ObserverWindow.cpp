@@ -26,6 +26,7 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     inputList->setSelectionMode(QAbstractItemView::SingleSelection);
     inputList->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     inputList->setItemDelegate(new ItemDelegate(this));
+    inputList->setEditTriggers(QAbstractItemView::AllEditTriggers);
     
     QDockWidget* inputWidget = new QDockWidget("Inputs");
     inputWidget->setObjectName("InputList");

@@ -74,6 +74,7 @@ ConnectorItem* ConnectorItem::connectorItemAt(const QPointF& pos) const
     foreach(QGraphicsItem* item, items)
     {
         if((connectorItem = qgraphicsitem_cast<ConnectorItem*>(item)))
+        {
             if(connectorType() != connectorItem->connectorType())
             {
                 if(! connectorItem->canConnect())
@@ -81,6 +82,7 @@ ConnectorItem* ConnectorItem::connectorItemAt(const QPointF& pos) const
                 
                 return connectorItem;
             }
+        }
     }
     
     return 0;
