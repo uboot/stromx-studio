@@ -7,8 +7,6 @@
 #include "ConnectionModel.h"
 #include "ConnectorItem.h"
 
-const qreal ConnectionItem::WIDTH = 5.0;
-
 ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
   : QGraphicsObject(parent),
     m_path(new QGraphicsPathItem(this)),
@@ -22,7 +20,7 @@ ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
         connect(m_model, SIGNAL(colorChanged(QColor)), this, SLOT(setColor(QColor)));
     }
     
-    m_pen.setWidthF(WIDTH);
+    m_pen.setWidthF(ConnectorItem::SIZE);
     update();
 }
 
@@ -78,14 +76,46 @@ void ConnectionItem::setColor(const QColor& color)
 void ConnectionItem::update()
 {
     QPainterPath path;
-    path.moveTo(m_start);
-    path.lineTo((m_end.x() + m_start.x())/2, m_start.y());
-    path.lineTo((m_end.x() + m_start.x())/2, m_end.y());
-    path.lineTo(m_end);
+    QPointF start(m_start.x() + ConnectorItem::SIZE, m_start.y());
+    QPointF end(m_end.x() - ConnectorItem::SIZE, m_end.y());
+    drawPath(start, end, path);
     m_path->setPath(path);
     
     m_path->setPen(m_pen);
 }
+
+void ConnectionItem::drawPath(const QPointF& start, const QPointF& end, QPainterPath& path)
+{
+    const qreal RADIUS = 1.5 * ConnectorItem::SIZE;
+    
+    QRectF arcRect(0, 0, RADIUS, RADIUS);
+    qreal xCenter = (start.x() + end.x()) / 2;
+    
+    path.moveTo(start);
+    
+    if(start.y() < end.y())
+    {
+        // connections goes downwards
+        arcRect.moveTo(xCenter - RADIUS, start.y());
+        path.arcTo(arcRect, 90, -90);
+        path.lineTo(xCenter, start.y() + RADIUS);
+        arcRect.moveTo(xCenter, end.y() - RADIUS);
+        path.arcTo(arcRect, 180, 90);
+    }
+    else
+    {
+        // connections goes upwards
+        arcRect.moveTo(xCenter - RADIUS, start.y() - RADIUS);
+        path.arcTo(arcRect, -90, 90);
+        path.lineTo(xCenter, start.y() - RADIUS);
+        arcRect.moveTo(xCenter, end.y());
+        path.arcTo(arcRect, 180, -90);
+    }
+    
+    path.lineTo(xCenter + RADIUS, end.y());
+    path.lineTo(end);
+}
+
 
 
 

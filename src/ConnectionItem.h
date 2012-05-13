@@ -56,13 +56,8 @@ private slots:
     void setColor(const QColor & color);
     
 private:
-    const static qreal WIDTH;
-    
-    /** 
-     * Rotates the head of the connection arrow according to 
-     * the angle of the connection shaft.
-     */
-    void rotateHead();
+    /** Draws a path from \c start to \c end into \c path. */
+    static void drawPath(const QPointF & start, const QPointF & end, QPainterPath & path);
     
     /** Updates the current geometry and pen settings of the connection. */
     void update();

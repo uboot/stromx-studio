@@ -22,6 +22,7 @@ ConnectorItem::ConnectorItem(OperatorModel* op, unsigned int id, ConnectorType t
     setRect(-SIZE/2, -SIZE/2, SIZE, SIZE);
     setAcceptHoverEvents(true);
     setBrush(Qt::black);
+    setPen(QPen(Qt::black, 0));
 }
 
 void ConnectorItem::mousePressEvent(QGraphicsSceneMouseEvent* event)

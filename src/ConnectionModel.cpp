@@ -31,6 +31,19 @@ int ConnectionModel::rowCount(const QModelIndex& index) const
     return 1;
 }
 
+QVariant ConnectionModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    {
+        if(section == 0)
+            return tr("Property");
+        else
+            return tr("Value");
+    }
+    
+    return QVariant();
+}
+
 QVariant ConnectionModel::data(const QModelIndex& index, int role) const
 {
     if(index.column() == 0)
@@ -117,7 +130,7 @@ bool ConnectionModel::setData(const QModelIndex& index, const QVariant& value, i
             {
                 // 0 means no thread; values > 0 must decremented to get
                 // the thread index
-                Q_ASSERT(index >= m_stream->threads().count());
+                Q_ASSERT(index <= m_stream->threads().count());
                 thread = m_stream->threads()[index - 1];
             }
             setThread(thread);

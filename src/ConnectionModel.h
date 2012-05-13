@@ -42,6 +42,7 @@ public:
     virtual QVariant data(const QModelIndex & index, int role) const;
     virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
     virtual Qt::ItemFlags flags(const QModelIndex& index) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
     /** Returns the thread which this input is assigned to. */
     ThreadModel* thread() const { return m_thread; }
