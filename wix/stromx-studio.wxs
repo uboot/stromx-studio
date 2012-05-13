@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="*" UpgradeCode="7e72fb91-8763-4b03-883d-957a9ccd3d44" Version="0.1.0" Language="1033" Name="stromx" Manufacturer="The stromx developer team">
+    <Product Id="*" UpgradeCode="7e72fb91-8763-4b03-883d-957a9ccd3d44" Version="0.1.0" Language="1033" Name="stromx-studio" Manufacturer="The stromx developer team">
         <Package InstallerVersion="300" Compressed="yes"/>
-        <Media Id="1" Cabinet="stromx.cab" EmbedCab="yes" />
+        <Media Id="1" Cabinet="stromx_studio.cab" EmbedCab="yes" />
 
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="ProgramFilesFolder">
-                <Directory Id="APPLICATIONROOTDIRECTORY" Name="stromx"/>
+                <Directory Id="APPLICATIONROOTDIRECTORY" Name="stromx-studio"/>
             </Directory>
             <Directory Id="ProgramMenuFolder">
-                <Directory Id="ApplicationProgramsFolder" Name="stromx"/>
+                <Directory Id="ApplicationProgramsFolder" Name="stromx-studio"/>
             </Directory>
         </Directory>
 
