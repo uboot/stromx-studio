@@ -39,7 +39,6 @@ public:
     
     void setStart(const QPointF & start);
     void setEnd(const QPointF & end);
-    void setActive(bool value);
     
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
@@ -57,11 +56,7 @@ private slots:
     void setColor(const QColor & color);
     
 private:
-    enum Width
-    {
-        ACTIVE_WIDTH = 4,
-        INACTIVE_WIDTH = 2
-    };
+    const static qreal WIDTH;
     
     /** 
      * Rotates the head of the connection arrow according to 

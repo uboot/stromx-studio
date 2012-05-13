@@ -6,6 +6,8 @@
 #include <math.h>
 #include "ConnectionModel.h"
 
+const qreal ConnectionItem::WIDTH = 2.0;
+
 ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
   : QGraphicsObject(parent),
     m_path(new QGraphicsPathItem(this)),
@@ -19,7 +21,7 @@ ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
         connect(m_model, SIGNAL(colorChanged(QColor)), this, SLOT(setColor(QColor)));
     }
     
-    m_pen.setWidth(INACTIVE_WIDTH);
+    m_pen.setWidth(ConnectionItem::WIDTH);
     update();
 }
 
@@ -63,16 +65,6 @@ void ConnectionItem::setStart(const QPointF& start)
 void ConnectionItem::setEnd(const QPointF& end)
 {
     m_end = end;
-    update();
-}
-
-void ConnectionItem::setActive(bool value)
-{
-    if(value)
-        m_pen.setWidth(ACTIVE_WIDTH);
-    else
-        m_pen.setWidth(INACTIVE_WIDTH);
-    
     update();
 }
 
