@@ -5,8 +5,9 @@
 #include <QVector2D>
 #include <math.h>
 #include "ConnectionModel.h"
+#include "ConnectorItem.h"
 
-const qreal ConnectionItem::WIDTH = 2.0;
+const qreal ConnectionItem::WIDTH = 5.0;
 
 ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
   : QGraphicsObject(parent),
@@ -21,7 +22,7 @@ ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
         connect(m_model, SIGNAL(colorChanged(QColor)), this, SLOT(setColor(QColor)));
     }
     
-    m_pen.setWidth(ConnectionItem::WIDTH);
+    m_pen.setWidthF(WIDTH);
     update();
 }
 
@@ -76,14 +77,14 @@ void ConnectionItem::setColor(const QColor& color)
 
 void ConnectionItem::update()
 {
-    m_path->setPen(m_pen);
-    
     QPainterPath path;
     path.moveTo(m_start);
     path.lineTo((m_end.x() + m_start.x())/2, m_start.y());
     path.lineTo((m_end.x() + m_start.x())/2, m_end.y());
     path.lineTo(m_end);
     m_path->setPath(path);
+    
+    m_path->setPen(m_pen);
 }
 
 
