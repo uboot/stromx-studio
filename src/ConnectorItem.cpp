@@ -22,7 +22,7 @@ ConnectorItem::ConnectorItem(OperatorModel* op, unsigned int id, ConnectorType t
     setRect(-SIZE/2, -SIZE/2, SIZE, SIZE);
     setAcceptHoverEvents(true);
     setBrush(Qt::black);
-    setPen(QPen(Qt::black, 0));
+    setPen(Qt::NoPen);
 }
 
 void ConnectorItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
@@ -196,7 +196,23 @@ void ConnectorItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 
 void ConnectorItem::setOccupied(bool occupied)
 {
-    // setBrush(occupied ? Qt::gray : Qt::black);
+    // activate all connections of an activated output
+    if(occupied && m_connectorType == OUTPUT)
+    {
+        foreach(ConnectionItem* connection, m_connections)
+            connection->setOccupied(true);
+    }
+    
+    // deactivate all connections of an deactivated input
+    if(! occupied && m_connectorType == INPUT)
+    {
+        foreach(ConnectionItem* connection, m_connections)
+            connection->setOccupied(false);
+    }
+    
+    // Do not change the status in the other two cases.
+    // Thus, the connection stays activated until its output
+    // is deactivated (even if its input is not activated anymore).
 }
 
 

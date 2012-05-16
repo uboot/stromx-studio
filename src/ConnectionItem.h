@@ -37,13 +37,28 @@ public:
     enum { Type = UserType + 2 };
     virtual int type() const { return Type; }
     
+    /** Sets the start point of the connection in scene coordinates. */
     void setStart(const QPointF & start);
+    
+    /** Sets the end point of the connection in scene coordinates. */
     void setEnd(const QPointF & end);
     
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
     
+    /** Returns the connection model of this item. */
     ConnectionModel* model() const { return m_model; }
+    
+public slots:  
+    /**
+     * Marks this connection as either occupied or unoccupied.
+     * An connection is occupied if data is present at either the input
+     * at the start of the connection or at the output at the end of 
+     * the connection.
+     * The visual representation of an occupied connection is different
+     * from that of an unoccupied.
+     */
+    void setOccupied(bool occupied);
     
 protected:
     /** Updates the appearance of the connection when it is de-/selected. */
@@ -59,14 +74,19 @@ private:
     /** Draws a path from \c start to \c end into \c path. */
     static void drawPath(const QPointF & start, const QPointF & end, QPainterPath & path);
     
+    /** Returns a double arrow shape item. */
+    static QGraphicsPathItem* createDoubleArrow(QGraphicsItem* parent);
+    
     /** Updates the current geometry and pen settings of the connection. */
     void update();
     
     QGraphicsPathItem* m_path;
+    QGraphicsPathItem* m_arrows[3];
     ConnectionModel* m_model;
     QPen m_pen;
     QPointF m_start;
     QPointF m_end;
+    bool m_occupied;
 };
 
 #endif // CONNECTIONITEM_H

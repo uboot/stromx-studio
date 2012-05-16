@@ -37,8 +37,18 @@ public:
     enum { Type = UserType + 2 };
     virtual int type() const { return Type; }
     
+    /** Sets the start point of the arrow in scene coordinates. */
     void setStart(const QPointF & start);
+    
+    /** Sets the end point of the arrow in scene coordinates. */
     void setEnd(const QPointF & end);
+    
+    /** 
+     * Activates or deactivates the arrow. Arrows should be activated
+     * if the connect valid start point to an end point (i.e. the user moves
+     * the mouse pointer to a valid connector while dragging an arrow).
+     * Activated arrows are drawn bold.
+     */
     void setActive(bool value);
     
     virtual QRectF boundingRect() const;
@@ -47,7 +57,10 @@ public:
 private:
     enum Width
     {
+        /** The width of an active arrow. */
         ACTIVE_WIDTH = 4,
+        
+        /** The width of an inactive arrow. */
         INACTIVE_WIDTH = 2
     };
     
