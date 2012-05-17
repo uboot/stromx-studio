@@ -4,6 +4,7 @@
 #include <QUndoStack>
 #include <stromx/core/Operator.h>
 #include <stromx/core/Parameter.h>
+#include <stromx/core/Trigger.h>
 #include "Common.h"
 #include "ConnectorObserver.h"
 #include "ConnectorDataEvent.h"
@@ -247,8 +248,22 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
                     if(stromxData.get() == 0)
                         return false;
                     
-                    SetParameterCmd* cmd = new SetParameterCmd(this, paramId,*stromxData);
-                    m_stream->undoStack()->push(cmd);
+                    // test if this data is trigger data
+                    stromx::core::Trigger* trigger =
+                        stromx::core::data_cast<stromx::core::Trigger*>(stromxData.get());
+                        
+                    if(trigger)
+                    {
+                        // triggers are set without informing the undo stack (they can not 
+                        // be undone)
+                        doSetParameter(paramId, *stromxData);
+                    }
+                    else
+                    {
+                        // any other parameters are set via an undo stack command
+                        SetParameterCmd* cmd = new SetParameterCmd(this, paramId,*stromxData);
+                        m_stream->undoStack()->push(cmd);
+                    }
                     return true;
                 }
                 catch(stromx::core::Exception&)
