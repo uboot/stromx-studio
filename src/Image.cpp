@@ -64,9 +64,9 @@ void Image::initializeParent()
         m_image = QImage();
     }
     
-    setBuffer(reinterpret_cast<uint8_t*>(m_image.data_ptr()));
+    setBuffer(reinterpret_cast<uint8_t*>(m_image.bits()));
     setBufferSize(m_image.byteCount());
     
     initialize(m_image.width(), m_image.height(), m_image.bytesPerLine(),
-               reinterpret_cast<uint8_t*>(m_image.data_ptr()), pixelType);
+               m_image.bits(), pixelType);
 }
