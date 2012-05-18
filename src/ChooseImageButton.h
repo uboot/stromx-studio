@@ -17,19 +17,30 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMAGETEST_H
-#define IMAGETEST_H
+#ifndef CHOOSEIMAGEBUTTON_H
+#define CHOOSEIMAGEBUTTON_H
 
-#include <QObject>
+#include <QPushButton>
 
-class ImageTest : public QObject
-{
+class ChooseImageButton : public QPushButton
+{   
     Q_OBJECT
     
+public:
+    explicit ChooseImageButton(QWidget* parent = 0);
+    
+    const QImage & image() const { return m_image; }
+    
+    void reset();
+   
+signals:
+    void choseImage();
+    
 private slots:
-    void testFileConstructorColor();
-    void testFileConstructorGray();
-    void testFileConstructorNullImage();
+    void chooseImage();
+    
+private:
+    QImage m_image;
 };
 
-#endif // IMAGETEST_H
+#endif // CHOOSEIMAGEBUTTON_H

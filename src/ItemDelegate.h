@@ -47,7 +47,7 @@ public:
     virtual void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index ) const;
 
 private slots:
-    void commitTriggerEvent();
+    void commitEditEvent();
 };
 
 #endif // ITEMDELEGATE_H
