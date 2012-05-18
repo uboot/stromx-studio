@@ -29,6 +29,7 @@ class ImageTest : public QObject
 private slots:
     void testFileConstructorColor();
     void testFileConstructorGray();
+    void testQImageConstructor();
     void testFileConstructorNullImage();
 };
 

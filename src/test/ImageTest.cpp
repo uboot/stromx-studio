@@ -8,7 +8,7 @@ void ImageTest::testFileConstructorColor()
 {
     Image image("lenna.jpg");
      
-    QCOMPARE(image.pixelType(), stromx::core::Image::RGB_24);
+    QCOMPARE(image.pixelType(), stromx::core::Image::RGB_24);  
 }
 
 void ImageTest::testFileConstructorGray()
@@ -28,4 +28,17 @@ void ImageTest::testFileConstructorNullImage()
     QCOMPARE(image.data(), (uint8_t*)(0));
     QCOMPARE(image.pixelType(), stromx::core::Image::NONE);
 }
+
+void ImageTest::testQImageConstructor()
+{
+    QImage qImage("lenna.jpg");
+    QImage::DataPtr qPtr = qImage.data_ptr();
+    
+    Image image(qImage);
+    uint8_t* data = image.data();
+    
+    QImage out(image.data(), image.width(), image.height(), image.stride(), QImage::Format_RGB888);
+    out.save("ImageTest_testQImageConstructor.png");
+}
+
 
