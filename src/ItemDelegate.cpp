@@ -5,6 +5,8 @@
 #include <QPushButton>
 #include <QMap>
 #include "Common.h"
+#include "ChooseImageButton.h"
+#include "TriggerButton.h"
 
 ItemDelegate::ItemDelegate(QObject* parent)
   : QStyledItemDelegate(parent)
@@ -43,8 +45,16 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
     data = index.model()->data(index, TriggerRole);
     if(data.canConvert(QVariant::String))
     {
-        QPushButton* button = new QPushButton(parent);
-        connect(button, SIGNAL(clicked()), this, SLOT(commitTriggerEvent()));
+        TriggerButton* button = new TriggerButton(parent);
+        connect(button, SIGNAL(pushedTriggerButton()), this, SLOT(commitEditEvent()));
+        return button;
+    }
+    
+    data = index.model()->data(index, ImageRole);
+    if(data.canConvert(QVariant::String))
+    {
+        QPushButton* button = new ChooseImageButton(parent);
+        connect(button, SIGNAL(choseImage()), this, SLOT(commitEditEvent()));
         return button;
     }
     
@@ -107,7 +117,25 @@ void ItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, cons
     data = index.model()->data(index, TriggerRole);
     if(data.canConvert(QVariant::String))
     {
-        model->setData(index, true, Qt::EditRole);
+        if(TriggerButton* button = qobject_cast<TriggerButton*>(editor))
+        {
+            if(button->triggerPending())
+                model->setData(index, true, Qt::EditRole);
+            button->reset();
+        }
+        return;
+    }
+    
+    data = index.model()->data(index, ImageRole);
+    if(data.canConvert(QVariant::String))
+    {
+        if(ChooseImageButton* button = qobject_cast<ChooseImageButton*>(editor))
+        {
+            QImage image = button->image();
+            if(! image.isNull())
+                model->setData(index, image, Qt::EditRole);
+            button->reset();
+        }
         return;
     }
     
@@ -128,9 +156,9 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
         QStyledItemDelegate::paint(painter, option, index);
 }
 
-void ItemDelegate::commitTriggerEvent()
+void ItemDelegate::commitEditEvent()
 {
-    QPushButton* pushButton = qobject_cast<QPushButton* >(sender());
+    QWidget* pushButton = qobject_cast<QWidget* >(sender());
     emit commitData(pushButton);
 }
 

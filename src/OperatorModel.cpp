@@ -14,6 +14,7 @@
 #include "RenameOperatorCmd.h"
 #include "StreamModel.h"
 #include "SetParameterCmd.h"
+#include "Image.h"
 
 
 OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
@@ -112,9 +113,8 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     {
         DISPLAY, // 0
         EDIT, // 1
-        TRIGGER, // 2
-        CHOICES, // 3
-        OTHER // 5
+        USER, // 2
+        OTHER // 3
     };
     
     // possible return values
@@ -133,15 +133,15 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     
     // the decision table
     int table[4][2][5] =
-    /* Row          0  0  0  0  0    0  0  0  0  0      1  1  1  1  1    1  1  1  1  1 
-     * Column       0  0  0  0  0    1  1  1  1  1      0  0  0  0  0    1  1  1  1  1
-     * Role         0  1  2  3  4    0  1  2  3  4      0  1  2  3  4    0  1  2  3  4 */
-    /* Action */ {{{1, 0, 0, 0, 0}, {2, 0, 0, 0, 0}}, {{3, 0, 0, 0, 0}, {4, 0, 0, 0, 0}},
+    /* Row          0  0  0  0    0  0  0  0      1  1  1  1    1  1  1  1 
+     * Column       0  0  0  0    1  1  1  1      0  0  0  0    1  1  1  1
+     * Role         0  1  2  3    0  1  2  3      0  1  2  3    0  1  2  3 */
+    /* Action */ {{{1, 0, 0, 0}, {2, 0, 0, 0}}, {{3, 0, 0, 0}, {4, 0, 0, 0}},
                  
-    /* Row          2  2  2  2  2    2  2  2  2  2      3  3  3  3  3    3  3  3  3  3 
-     * Column       0  0  0  0  0    1  1  1  1  1      0  0  0  0  0    1  1  1  1  1
-     * Role         0  1  2  3  4    0  1  2  3  4      0  1  2  3  4    0  1  2  3  4 */
-    /* Action */  {{5, 0, 0, 0, 0}, {6, 6, 0, 0, 0}}, {{7, 0, 0, 0, 0}, {8, 8, 8, 8, 0}}};
+    /* Row          2  2  2  2    2  2  2  2      3  3  3  3    3  3  3  3 
+     * Column       0  0  0  0    1  1  1  1      0  0  0  0    1  1  1  1
+     * Role         0  1  2  3    0  1  2  3      0  1  2  3    0  1  2  3 */
+    /* Action */  {{5, 0, 0, 0}, {6, 6, 0, 0}}, {{7, 0, 0, 0}, {8, 8, 8, 0}}};
      
     // extract row, column and role type
     int row = index.row() > 2 ? PARAMETER_ROW : index.row();
@@ -156,10 +156,9 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
         roleType = EDIT;
         break;
     case ChoicesRole:
-        roleType = CHOICES;
-        break;
     case TriggerRole:
-        roleType = TRIGGER;
+    case ImageRole:
+        roleType = USER;
         break;
     default:
         roleType = OTHER;

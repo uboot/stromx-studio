@@ -10,6 +10,7 @@ set(stromxstudio_SOURCES
     AddThreadCmd.cpp
     AddOperatorCmd.cpp
     ArrowItem.cpp
+    ChooseImageButton.cpp
     Common.cpp
     ConnectionItem.cpp
     ConnectorItem.cpp
@@ -63,11 +64,13 @@ set(stromxstudio_SOURCES
     ThreadEditor.cpp
     ThreadListModel.cpp
     ThreadModel.cpp
+    TriggerButton.cpp
     UndoStackAction.cpp
 )
 
 set(stromxstudio_HEADERS
     ArrowItem.h
+    ChooseImageButton.h
     ConnectionItem.h
     ConnectionModel.h
     DataManager.h
@@ -93,6 +96,7 @@ set(stromxstudio_HEADERS
     ThreadEditor.h
     ThreadListModel.h
     ThreadModel.h
+    TriggerButton.h
     UndoStackAction.h
 )
 

@@ -17,19 +17,29 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMAGETEST_H
-#define IMAGETEST_H
+#ifndef TRIGGERBUTTON_H
+#define TRIGGERBUTTON_H
 
-#include <QObject>
+#include <QPushButton>
 
-class ImageTest : public QObject
-{
+class TriggerButton : public QPushButton
+{   
     Q_OBJECT
     
+public:
+    explicit TriggerButton(QWidget* parent = 0);
+    
+    bool triggerPending() const { return m_triggerPending; }
+    void reset();
+   
+signals:
+    void pushedTriggerButton();
+    
 private slots:
-    void testFileConstructorColor();
-    void testFileConstructorGray();
-    void testFileConstructorNullImage();
+    void trigger();
+    
+private:
+    bool m_triggerPending;
 };
 
-#endif // IMAGETEST_H
+#endif // TRIGGERBUTTON_H

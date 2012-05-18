@@ -19,6 +19,7 @@
 #include "DataConverter.h"
 
 #include "Common.h"
+#include "Image.h"
 #include <QVariant>
 #include <QString>
 #include <QStringList>
@@ -174,7 +175,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::IMAGE))
         {
-            if(role == Qt::DisplayRole)
+            if(role == Qt::DisplayRole || role == ImageRole)
             {
                 QString label1;
                 QString label2;
@@ -278,7 +279,7 @@ std::auto_ptr<stromx::core::Data> DataConverter::toStromxData(const QVariant& va
     if(param.variant().isVariant(stromx::core::DataVariant::IMAGE))
     {
         if(variant.type() == QVariant::Image)
-            return std::auto_ptr<stromx::core::Data>(); // allocate stromx image from variant
+            return std::auto_ptr<stromx::core::Data>(new Image(variant.value<QImage>()));
     }
     
     return std::auto_ptr<stromx::core::Data>();

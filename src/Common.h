@@ -25,11 +25,35 @@
 #include <QColor>
 #include <QMap>
 
+/** Custom roles of stromx-studio. */
 enum Roles
 {
+    /** 
+     * Describes data which represents one item of a list of possible choices.
+     * Upon edit the user should be presented the list of choices and select one
+     * one of them.
+     */
     ChoicesRole = Qt::UserRole,
+    
+    /**
+     * Describes data which represents a color. Upon edit the user should be presented 
+     * an editor to choose a color such as a list of predefined colors or a
+     * color picker.
+     */
     ColorRole,
-    TriggerRole
+    
+    /**
+     * Describes trigger data, i.e. dummy data objects which trigger an action
+     * if they are passed to an object. Trigger data does not have a real representation.
+     * The user should be presented a push button which triggers setting the data.
+     */
+    TriggerRole,
+    
+    /**
+     * Describes image data. Upon edit the user should be presented an editor to
+     * open or generate new image data.
+     */
+    ImageRole
 };
 
 const QMap<QString, QColor> & colorTable();
