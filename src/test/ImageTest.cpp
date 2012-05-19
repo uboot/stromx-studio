@@ -32,10 +32,7 @@ void ImageTest::testFileConstructorNullImage()
 void ImageTest::testQImageConstructor()
 {
     QImage qImage("lenna.jpg");
-    QImage::DataPtr qPtr = qImage.data_ptr();
-    
     Image image(qImage);
-    uint8_t* data = image.data();
     
     QImage out(image.data(), image.width(), image.height(), image.stride(), QImage::Format_RGB888);
     out.save("ImageTest_testQImageConstructor.png");

@@ -53,6 +53,9 @@
             <Component Id="stromx_core" Guid="">
                 <File Id="stromx_core" Source="stromx_core.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
+            <Component Id="camera" Guid="">
+                <File Id="camera" Source="camera.zip" KeyPath="yes" Checksum="yes"/>
+            </Component>
             <Component Id="stromx_studio" Guid="">
                 <File Id="stromx_studio" Source="stromx-studio.exe" KeyPath="yes" Checksum="yes"/>
             </Component>
