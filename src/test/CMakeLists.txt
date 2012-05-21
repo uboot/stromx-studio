@@ -1,4 +1,6 @@
-project(stromx_test)
+project(stromx_studio_test)
+
+add_test(NAME stromx_studio_test COMMAND stromx_studio_test)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lenna.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lenna_bw.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
