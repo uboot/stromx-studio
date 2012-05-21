@@ -100,6 +100,7 @@
             <ComponentRef Id="stromx_base" />
             <ComponentRef Id="stromx_core" />
             <ComponentRef Id="stromx_studio" />
+            <ComponentRef Id="camera" />
             <ComponentRef Id="xerces_c" />
             <ComponentRef Id="zip" />
             <ComponentRef Id="zlib" />
