@@ -32,11 +32,19 @@ class OperatorModel;
 class StreamModel;
 class ThreadModel;
 
+/** 
+ * \brief Visual editor for stream models.
+ * 
+ * A stream editor scene visualizes the contents of a stream model
+ * and allows the user to edit them. It is derived from QGraphicsScene,
+ * i.e. it must be embedded into a QGraphicsView widget to be displayed.
+ */
 class StreamEditorScene : public QGraphicsScene
 {
     Q_OBJECT
 
 public:
+    /** Constructs a stream editor scene. */
     explicit StreamEditorScene(QObject *parent = 0);
     
     virtual void dropEvent(QGraphicsSceneDragDropEvent* event);

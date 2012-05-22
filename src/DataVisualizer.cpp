@@ -8,7 +8,7 @@
 DataVisualizer::DataVisualizer(QWidget* parent)
   : QGraphicsView(parent)
 {
-    setScene(new QGraphicsScene);
+    setScene(new QGraphicsScene(this));
 }
 
 void DataVisualizer::addLayer(int pos)

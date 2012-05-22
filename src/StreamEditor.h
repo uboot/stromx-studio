@@ -27,14 +27,21 @@ class ConnectionItem;
 class StreamEditorScene;
 class StreamModel;
 
+/** 
+ * \brief Stream editor widget.
+ *
+ * A stream editor is a widget which displays a stream editor scene.
+ */
 class StreamEditor : public QGraphicsView
 {
     Q_OBJECT
 
 public:
+    /** Constructs a stream editor. */
     explicit StreamEditor(QWidget *parent = 0);
     
-    StreamEditorScene* scene() const { return m_scene; }
+    /** Returns the scene of the stream editor. */
+    StreamEditorScene* streamEditorScene() const { return m_scene; }
     
 protected:
     virtual void mousePressEvent(QMouseEvent *event);

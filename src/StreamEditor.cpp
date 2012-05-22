@@ -15,7 +15,7 @@ StreamEditor::StreamEditor(QWidget* parent)
     m_targetOp(0),
     m_inputId(0)
 {
-    m_scene = new StreamEditorScene;
+    m_scene = new StreamEditorScene(this);
     
     m_scene->setSceneRect(0, 0, 512, 512);
     setScene(m_scene);
