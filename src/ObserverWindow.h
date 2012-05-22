@@ -25,18 +25,33 @@
 class ObserverModel;
 class ObserverTreeModel;
 
+/**
+ * \brief Window which displays data of an observer.
+ * 
+ * An observer windows displays the data of the input observers of
+ * an observer model. Whenever the data at a given input changes the 
+ * display is updated.
+ */
 class ObserverWindow : public QMainWindow
 {
     Q_OBJECT
     
 public:
+    /** Constructs an observer windows from an observer model. */
     explicit ObserverWindow(ObserverModel* observer, QWidget* parent);
     
+    /** Returns the observer model of the window. */
     ObserverModel* model() const { return m_observer; }
+    
+    /** Returns an action which shows this window when triggered. */
     QAction* showAction() const { return m_showAct; }
     
 private slots:
-    void updateActionText(const QString & name);
+    /**
+     * Changes the window title to \c name. This also updates the display
+     * text of the action which shows the window.
+     */
+    void updateWindowTitle(const QString & name);
     
 private:
     ObserverModel* m_observer;

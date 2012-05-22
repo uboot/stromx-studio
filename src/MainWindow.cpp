@@ -117,7 +117,7 @@ void MainWindow::setModel(StreamModel* model)
     }
     
     // set all editors to the new model
-    m_streamEditor->scene()->setModel(model);
+    m_streamEditor->streamEditorScene()->setModel(model);
     m_threadEditor->setModel(model);
     m_observerEditor->setModel(model->observerModel());
     
@@ -138,11 +138,11 @@ void MainWindow::createActions()
     m_undoAct->setShortcuts(QKeySequence::Undo);
     m_redoAct = m_undoStack->createRedoAction(this);
     m_redoAct->setShortcuts(QKeySequence::Redo);
-    m_initializeAct = m_streamEditor->scene()->createInitializeAction(this);
-    m_deinitializeAct = m_streamEditor->scene()->createDeinitializeAction(this);
+    m_initializeAct = m_streamEditor->streamEditorScene()->createInitializeAction(this);
+    m_deinitializeAct = m_streamEditor->streamEditorScene()->createDeinitializeAction(this);
     m_addThreadAct = m_threadEditor->createAddThreadAction(this);
     m_removeThreadAct = m_threadEditor->createRemoveThreadAction(this);
-    m_removeSelectedItemsAct = m_streamEditor->scene()->createRemoveAction(this);
+    m_removeSelectedItemsAct = m_streamEditor->streamEditorScene()->createRemoveAction(this);
     m_addObserverAct = m_observerEditor->createAddObserverAction(this);
     m_removeObserverAct = m_observerEditor->createRemoveObserverAction(this);
     m_removeInputAct = m_observerEditor->createRemoveInputAction(this);
@@ -611,14 +611,14 @@ bool MainWindow::writeFile(const QString& filepath)
         {
             location = QFileInfo(filepath).absoluteDir().absolutePath();
             stromx::core::DirectoryFileOutput output(location.toStdString());
-            m_streamEditor->scene()->model()->write(output, basename);
+            m_streamEditor->streamEditorScene()->model()->write(output, basename);
             writeObserverWindowStates(output, basename);
         }
         else if(extension == "zip")
         {
             location = filepath;
             stromx::core::ZipFileOutput output(location.toStdString());
-            m_streamEditor->scene()->model()->write(output, "stream");
+            m_streamEditor->streamEditorScene()->model()->write(output, "stream");
             writeObserverWindowStates(output, "stream");
         }
     

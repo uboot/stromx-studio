@@ -39,7 +39,7 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     m_showAct->setEnabled(true);
     connect(m_showAct, SIGNAL(triggered()), this, SLOT(show()));
     connect(observer, SIGNAL(nameChanged(QString)), this, SLOT(setWindowTitle(QString)));
-    connect(observer, SIGNAL(nameChanged(QString)), this, SLOT(updateActionText(QString)));
+    connect(observer, SIGNAL(nameChanged(QString)), this, SLOT(updateWindowTitle(QString)));
     
     setWindowTitle(observer->name());
     
@@ -47,7 +47,7 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     new DataManager(observer, visualizer, this);
 }
 
-void ObserverWindow::updateActionText(const QString& name)
+void ObserverWindow::updateWindowTitle(const QString& name)
 {
     setWindowTitle(name);
     m_showAct->setText(name);
