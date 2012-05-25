@@ -116,31 +116,47 @@ void ConnectionItem::drawPath(const QPointF& start, const QPointF& end, QPainter
     const qreal RADIUS = 1.5 * ConnectorItem::SIZE;
     
     QRectF arcRect(0, 0, RADIUS, RADIUS);
-    qreal xCenter = (start.x() + end.x()) / 2;
+    qreal xDiff = end.x() - start.x();
+    qreal yDiff = end.y() - start.y();
+    qreal yOffset = 0;
+    
+    if(yDiff <= 0)
+        yOffset = yDiff;
+    else
+        yOffset = 0;
     
     path.moveTo(start);
     
-    if(start.y() < end.y())
+    if(xDiff > 0)
     {
-        // connections goes downwards
-        arcRect.moveTo(xCenter - RADIUS, start.y());
-        path.arcTo(arcRect, 90, -90);
-        path.lineTo(xCenter, start.y() + RADIUS);
-        arcRect.moveTo(xCenter, end.y() - RADIUS);
+        path.lineTo(start.x() + xDiff/2, start.y());
+        arcRect.moveTo(start.x() + xDiff/2, start.y() - RADIUS);
+        path.arcTo(arcRect, -90, 90);
+        path.lineTo(start.x() + xDiff/2 + RADIUS, start.y() - RADIUS + yOffset);
+        arcRect.moveTo(start.x() + xDiff/2, start.y() - 2 * RADIUS + yOffset);
+        path.arcTo(arcRect, 0, 90);
+        arcRect.moveTo(start.x() + xDiff/2 - RADIUS, start.y() - 2 * RADIUS + yOffset);
+        path.arcTo(arcRect, 90, 90);
+        path.lineTo(start.x() + xDiff/2 - RADIUS, end.y() - RADIUS);
+        arcRect.moveTo(start.x() + xDiff/2 - RADIUS, end.y() - RADIUS);
         path.arcTo(arcRect, 180, 90);
+        path.lineTo(end);
     }
     else
     {
-        // connections goes upwards
-        arcRect.moveTo(xCenter - RADIUS, start.y() - RADIUS);
+        arcRect.moveTo(start.x(), start.y() - RADIUS);
         path.arcTo(arcRect, -90, 90);
-        path.lineTo(xCenter, start.y() - RADIUS);
-        arcRect.moveTo(xCenter, end.y());
-        path.arcTo(arcRect, 180, -90);
+        path.lineTo(start.x() + RADIUS, start.y() - RADIUS + yOffset);
+        arcRect.moveTo(start.x(), start.y() - 2 * RADIUS + yOffset);
+        path.arcTo(arcRect, 0, 90);
+        path.lineTo(end.x(), start.y() - 2 * RADIUS + yOffset);
+        arcRect.moveTo(end.x() - RADIUS, start.y() - 2 * RADIUS + yOffset);
+        path.arcTo(arcRect, 90, 90);
+        path.lineTo(end.x() - RADIUS, end.y() - RADIUS);
+        arcRect.moveTo(end.x() - RADIUS, end.y() - RADIUS);
+        path.arcTo(arcRect, 180, 90);
+        path.lineTo(end);
     }
-    
-    path.lineTo(xCenter + RADIUS, end.y());
-    path.lineTo(end);
 }
 
 QGraphicsPathItem* ConnectionItem::createDoubleArrow(QGraphicsItem* parent)
