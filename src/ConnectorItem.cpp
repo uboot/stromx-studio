@@ -65,6 +65,8 @@ void ConnectorItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         else
             m_currentArrow->setActive(false);
     }
+    
+    QGraphicsRectItem::mouseMoveEvent(event);
 }
 
 ConnectorItem* ConnectorItem::connectorItemAt(const QPointF& pos) const
