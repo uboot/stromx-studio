@@ -8,7 +8,9 @@
 #include "ConnectorItem.h"
 
 const qreal ConnectionItem::EXTRA_HEIGHT = 30;
-
+const qreal ConnectionItem::PI = 3.141592;
+const qreal ConnectionItem::EPSILON = 0.1;
+    
 ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
   : QGraphicsObject(parent),
     m_path(new QGraphicsPathItem(this)),
@@ -114,8 +116,9 @@ void ConnectionItem::update()
 
 QPainterPath ConnectionItem::drawPath(const QPointF& start, const QPointF& end)
 {
-    const qreal RADIUS = ConnectorItem::SIZE;
-    QRectF arcRect(0, 0, RADIUS, RADIUS);
+    const qreal RADIUS = 1.5 * ConnectorItem::SIZE;
+    const qreal ARC_RECT_SIZE = 2*RADIUS;
+    QRectF arcRect(0, 0, ARC_RECT_SIZE, ARC_RECT_SIZE);
     qreal xDiff = end.x() - start.x();
     qreal yDiff = end.y() - start.y();
     qreal yOffset = 0;
@@ -126,49 +129,75 @@ QPainterPath ConnectionItem::drawPath(const QPointF& start, const QPointF& end)
         yOffset = 0;
     
     QPainterPath path;
-    path.moveTo(start);
     
+    path.moveTo(start);
     if(xDiff > 0)
     {
         // the connections points forward
-        if(xDiff > 2 * RADIUS)
+        if(xDiff > 2*RADIUS)
         {
             // start and end are so far from each other that the can
             // be directly connected (without loop)
-            path.lineTo(start.x() + xDiff/2 - RADIUS, start.y());
             if(yDiff > 0)
             {
                 // the connection points downwards
-                arcRect.moveTo(start.x() + xDiff/2 - RADIUS, start.y());
-                path.arcTo(arcRect, 90, -90);
-                path.lineTo(start.x() + xDiff/2, end.y() - RADIUS);
-                arcRect.moveTo(start.x() + xDiff/2, end.y() - RADIUS);
-                path.arcTo(arcRect, 180, 90);
+                if(fabs(yDiff) < 2*RADIUS)
+                {
+                    // start and end point are so close too each other that
+                    // the arcs must be less than 90 degrees
+                    qreal angle = computeAngle(RADIUS, yDiff/2);
+                    qreal width = computeWidth(yDiff/2, angle);
+                    
+                    arcRect.moveTo(start.x() + xDiff/2 - width - RADIUS, start.y());
+                    path.arcTo(arcRect, 90, -angle);
+                    arcRect.moveTo(start.x() + xDiff/2 + width - RADIUS, end.y() - ARC_RECT_SIZE);
+                    path.arcTo(arcRect, -90 - angle, angle);
+                }
+                else
+                {
+                    // two 90 degree arcs are possible
+                    arcRect.moveTo(start.x() + xDiff/2 - ARC_RECT_SIZE, start.y());
+                    path.arcTo(arcRect, 90, -90);
+                    arcRect.moveTo(start.x() + xDiff/2, end.y() - ARC_RECT_SIZE);
+                    path.arcTo(arcRect, 180, 90);
+                }
             }
             else
             {
                 // the connection points upwards
-                arcRect.moveTo(start.x() + xDiff/2 - RADIUS, start.y() - RADIUS);
-                path.arcTo(arcRect, 270, 90);
-                path.lineTo(start.x() + xDiff/2, end.y() + RADIUS);
-                arcRect.moveTo(start.x() + xDiff/2, end.y());
-                path.arcTo(arcRect, 180, -90);
+                if(fabs(yDiff) < 2*RADIUS)
+                {
+                    // start and end point are so close too each other that
+                    // the arcs must be less than 90 degrees
+                    qreal angle = computeAngle(RADIUS, yDiff/2);
+                    qreal width = computeWidth(yDiff/2, angle);
+                    
+                    arcRect.moveTo(start.x() + xDiff/2 - width - RADIUS, start.y() - ARC_RECT_SIZE);
+                    path.arcTo(arcRect, 270, angle);
+                    arcRect.moveTo(start.x() + xDiff/2 + width - RADIUS, end.y());
+                    path.arcTo(arcRect, 90 + angle, -angle);
+                }
+                else
+                {
+                    // two 90 degree arcs are possible
+                    arcRect.moveTo(start.x() + xDiff/2 - ARC_RECT_SIZE, start.y() - ARC_RECT_SIZE);
+                    path.arcTo(arcRect, 270, 90);
+                    arcRect.moveTo(start.x() + xDiff/2, end.y());
+                    path.arcTo(arcRect, 180, -90);
+                }
             }
         }
         else
         {
             // start and end are so close to each other to each other
             // that the connections must have loop
-            path.lineTo(start.x() + xDiff/2, start.y());
-            arcRect.moveTo(start.x() + xDiff/2, start.y() - RADIUS);
+            arcRect.moveTo(start.x() + xDiff/2 - RADIUS, start.y() - ARC_RECT_SIZE);
             path.arcTo(arcRect, -90, 90);
-            path.lineTo(start.x() + xDiff/2 + RADIUS, start.y() - RADIUS + yOffset);
-            arcRect.moveTo(start.x() + xDiff/2, start.y() - 2*RADIUS + yOffset);
+            arcRect.moveTo(start.x() + xDiff/2 - RADIUS, start.y() + yOffset - 2*RADIUS);
             path.arcTo(arcRect, 0, 90);
-            arcRect.moveTo(start.x() + xDiff/2 - RADIUS, start.y() - 2*RADIUS + yOffset);
+            arcRect.moveTo(start.x() + xDiff/2 - RADIUS, start.y() + yOffset - 2*RADIUS);
             path.arcTo(arcRect, 90, 90);
-            path.lineTo(start.x() + xDiff/2 - RADIUS, end.y() - RADIUS);
-            arcRect.moveTo(start.x() + xDiff/2 - RADIUS, end.y() - RADIUS);
+            arcRect.moveTo(start.x() + xDiff/2 - RADIUS, end.y() - ARC_RECT_SIZE);
             path.arcTo(arcRect, 180, 90);
         }
     }
@@ -182,30 +211,24 @@ QPainterPath ConnectionItem::drawPath(const QPointF& start, const QPointF& end)
             if(yDiff > 0)
             {
                 // the connection points downwards
-                arcRect.moveTo(start.x(), start.y());
+                arcRect.moveTo(start.x() - RADIUS, start.y());
                 path.arcTo(arcRect, 90, -90);
-                path.lineTo(start.x() + RADIUS, start.y() + yDiff/2 - RADIUS);
-                arcRect.moveTo(start.x(), start.y() + yDiff/2 - RADIUS);
+                arcRect.moveTo(start.x() - RADIUS, start.y() + yDiff/2 - ARC_RECT_SIZE);
                 path.arcTo(arcRect, 0, -90);
-                path.lineTo(end.x(), start.y() + yDiff/2);
                 arcRect.moveTo(end.x() - RADIUS, start.y() + yDiff/2);
                 path.arcTo(arcRect, 90, 90);
-                path.lineTo(end.x() - RADIUS, end.y() - RADIUS);
-                arcRect.moveTo(end.x() - RADIUS, end.y() - RADIUS);
+                arcRect.moveTo(end.x() - RADIUS, end.y() - ARC_RECT_SIZE);
                 path.arcTo(arcRect, 180, 90);
             }
             else
             {
                 // the connection points upwards
-                arcRect.moveTo(start.x(), start.y() - RADIUS);
+                arcRect.moveTo(start.x() - RADIUS, start.y() - ARC_RECT_SIZE);
                 path.arcTo(arcRect, 270, 90);
-                path.lineTo(start.x() + RADIUS, start.y() + yDiff/2 + RADIUS);
-                arcRect.moveTo(start.x(), start.y() + yDiff/2);
+                arcRect.moveTo(start.x() - RADIUS, start.y() + yDiff/2);
                 path.arcTo(arcRect, 0, 90);
-                path.lineTo(end.x(), start.y() + yDiff/2);
-                arcRect.moveTo(end.x() - RADIUS, start.y() + yDiff/2 - RADIUS);
+                arcRect.moveTo(end.x() - RADIUS, start.y() + yDiff/2 - ARC_RECT_SIZE);
                 path.arcTo(arcRect, 270, -90);
-                path.lineTo(end.x() - RADIUS, end.y() + RADIUS);
                 arcRect.moveTo(end.x() - RADIUS, end.y());
                 path.arcTo(arcRect, 180, -90);
             }
@@ -214,18 +237,14 @@ QPainterPath ConnectionItem::drawPath(const QPointF& start, const QPointF& end)
         {
             // start and end are so close to each other to each other
             // that the connection must run around one of the operators
-            arcRect.moveTo(start.x(), start.y() - RADIUS);
+            arcRect.moveTo(start.x() - RADIUS, start.y() - ARC_RECT_SIZE);
             path.arcTo(arcRect, -90, 90);
-            path.lineTo(start.x() + RADIUS, start.y() - RADIUS + yOffset - EXTRA_HEIGHT);
-            arcRect.moveTo(start.x(), start.y() - 2*RADIUS + yOffset - EXTRA_HEIGHT);
+            arcRect.moveTo(start.x() - RADIUS, start.y() - 2*ARC_RECT_SIZE + yOffset - EXTRA_HEIGHT);
             path.arcTo(arcRect, 0, 90);
-            path.lineTo(end.x(), start.y() - 2*RADIUS + yOffset - EXTRA_HEIGHT);
-            arcRect.moveTo(end.x() - RADIUS, start.y() - 2*RADIUS + yOffset - EXTRA_HEIGHT);
+            arcRect.moveTo(end.x() - RADIUS, start.y() - 2*ARC_RECT_SIZE + yOffset - EXTRA_HEIGHT);
             path.arcTo(arcRect, 90, 90);
-            path.lineTo(end.x() - RADIUS, end.y() - RADIUS);
-            arcRect.moveTo(end.x() - RADIUS, end.y() - RADIUS);
+            arcRect.moveTo(end.x() - RADIUS, end.y() - ARC_RECT_SIZE);
             path.arcTo(arcRect, 180, 90);
-            path.lineTo(end);
         }
     }
     path.lineTo(end);
@@ -267,6 +286,21 @@ void ConnectionItem::setOccupied(bool occupied)
 {
     m_occupied = occupied;
     update();
+}
+
+qreal ConnectionItem::computeAngle(qreal radius, qreal height)
+{
+    qreal c = fabs(height)/fabs(radius);
+    qreal sin = sqrt(c/2);
+    return 2 * asin(sin) * 180 / M_PI;
+}
+
+qreal ConnectionItem::computeWidth(qreal height, qreal angle)
+{
+    if(fabs(height) < EPSILON)
+        return 0.0;
+    else
+        return fabs(height) / tan(angle / 2 / 180 * PI);
 }
 
 

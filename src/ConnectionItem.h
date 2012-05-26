@@ -77,6 +77,15 @@ private:
      */
     static const qreal EXTRA_HEIGHT;
     
+    /** 3.141592 */
+    static const qreal PI;
+    
+    /** Angles for height less than \c EPSILON are always 0. */
+    static const qreal EPSILON;
+    
+    static qreal computeAngle(qreal radius, qreal height);
+    static qreal computeWidth(qreal height, qreal angle);
+    
     /** Draws a path from \c start to \c end into \c path. */
     static QPainterPath drawPath(const QPointF & start, const QPointF & end);
     
