@@ -15,37 +15,37 @@
 
         <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
             <Component Id="boost_date_time" Guid="">
-                <File Id="boost_date_time" Source="boost_date_time-vc100-mt-gd-1_47.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="boost_date_time" Source="boost_date_time-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="boost_filesystem" Guid="">
-                <File Id="boost_filesystem" Source="boost_filesystem-vc100-mt-gd-1_47.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="boost_filesystem" Source="boost_filesystem-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="boost_system" Guid="">
-                <File Id="boost_system" Source="boost_system-vc100-mt-gd-1_47.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="boost_system" Source="boost_system-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="boost_thread" Guid="">
-                <File Id="boost_thread" Source="boost_thread-vc100-mt-gd-1_47.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="boost_thread" Source="boost_thread-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="msvcp100" Guid="">
-                <File Id="msvcp100" Source="msvcp100d.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="msvcp100" Source="msvcp100.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="msvcr100" Guid="">
-                <File Id="msvcr100" Source="msvcr100d.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="msvcr100" Source="msvcr100.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="opencv_core" Guid="">
-                <File Id="opencv_core" Source="opencv_core231d.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="opencv_core" Source="opencv_core231.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="opencv_highgui" Guid="">
-                <File Id="opencv_highgui" Source="opencv_highgui231d.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="opencv_highgui" Source="opencv_highgui231.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="opencv_imgproc" Guid="">
-                <File Id="opencv_imgproc" Source="opencv_imgproc231d.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="opencv_imgproc" Source="opencv_imgproc231.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="QtCore4" Guid="">
-                <File Id="QtCore4" Source="QtCored4.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="QtCore4" Source="QtCore4.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="QtGui4" Guid="">
-                <File Id="QtGui4" Source="QtGuid4.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="QtGui4" Source="QtGui4.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="stromx_base" Guid="">
                 <File Id="stromx_base" Source="stromx_base.dll" KeyPath="yes" Checksum="yes"/>
@@ -60,13 +60,13 @@
                 <File Id="stromx_studio" Source="stromx-studio.exe" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="xerces_c" Guid="">
-                <File Id="xerces_c" Source="xerces-c_3_1D.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="xerces_c" Source="xerces-c_3_1.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="zip" Guid="">
                 <File Id="zip" Source="zip.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="zlib" Guid="">
-                <File Id="zlib" Source="zlibd1.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="zlib" Source="zlib1.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
         </DirectoryRef>
 
