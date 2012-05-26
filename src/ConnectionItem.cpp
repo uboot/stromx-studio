@@ -7,7 +7,7 @@
 #include "ConnectionModel.h"
 #include "ConnectorItem.h"
 
-const qreal ConnectionItem::EXTRA_HEIGHT = 30;
+const qreal ConnectionItem::EXTRA_HEIGHT = 20;
 const qreal ConnectionItem::PI = 3.141592;
 const qreal ConnectionItem::EPSILON = 0.1;
     
@@ -239,9 +239,9 @@ QPainterPath ConnectionItem::drawPath(const QPointF& start, const QPointF& end)
             // that the connection must run around one of the operators
             arcRect.moveTo(start.x() - RADIUS, start.y() - ARC_RECT_SIZE);
             path.arcTo(arcRect, -90, 90);
-            arcRect.moveTo(start.x() - RADIUS, start.y() - 2*ARC_RECT_SIZE + yOffset - EXTRA_HEIGHT);
+            arcRect.moveTo(start.x() - RADIUS, start.y() - ARC_RECT_SIZE + yOffset - EXTRA_HEIGHT);
             path.arcTo(arcRect, 0, 90);
-            arcRect.moveTo(end.x() - RADIUS, start.y() - 2*ARC_RECT_SIZE + yOffset - EXTRA_HEIGHT);
+            arcRect.moveTo(end.x() - RADIUS, start.y() - ARC_RECT_SIZE + yOffset - EXTRA_HEIGHT);
             path.arcTo(arcRect, 90, 90);
             arcRect.moveTo(end.x() - RADIUS, end.y() - ARC_RECT_SIZE);
             path.arcTo(arcRect, 180, 90);
