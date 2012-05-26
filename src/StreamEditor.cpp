@@ -11,7 +11,7 @@
 #include "StreamModel.h"
 
 StreamEditor::StreamEditor(QWidget* parent)
-  : QGraphicsView(parent),
+  : GraphicsView(parent),
     m_targetOp(0),
     m_inputId(0)
 {

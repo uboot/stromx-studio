@@ -16,8 +16,8 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
   : QMainWindow(parent, Qt::Window),
     m_observer(observer)
 {
-    DataVisualizer* visualizer = new DataVisualizer();
-    setCentralWidget(visualizer);
+    m_visualizer = new DataVisualizer();
+    setCentralWidget(m_visualizer);
     
     QTableView* inputList = new QTableView();
     inputList->setModel(observer);
@@ -44,7 +44,7 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     setWindowTitle(observer->name());
     
     // allocate the data manager
-    new DataManager(observer, visualizer, this);
+    new DataManager(observer, m_visualizer, this);
 }
 
 void ObserverWindow::updateWindowTitle(const QString& name)

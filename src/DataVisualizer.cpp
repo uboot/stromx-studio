@@ -6,7 +6,7 @@
 #include <QGraphicsObject>
 
 DataVisualizer::DataVisualizer(QWidget* parent)
-  : QGraphicsView(parent)
+  : GraphicsView(parent)
 {
     setScene(new QGraphicsScene(this));
 }

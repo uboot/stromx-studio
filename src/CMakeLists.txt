@@ -22,6 +22,7 @@ set(stromxstudio_SOURCES
     DataManager.cpp
     DataVisualizer.cpp
     DeinitializeOperatorCmd.cpp
+    GraphicsView.cpp
     Image.cpp
     InitializeOperatorCmd.cpp
     InputData.cpp
@@ -74,6 +75,7 @@ set(stromxstudio_HEADERS
     ConnectionItem.h
     ConnectionModel.h
     DataManager.h
+    GraphicsView.h
     InputData.h
     InputModel.h
     ItemDelegate.h

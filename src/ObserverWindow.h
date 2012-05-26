@@ -22,6 +22,7 @@
 
 #include <QMainWindow>
 
+class DataVisualizer;
 class ObserverModel;
 class ObserverTreeModel;
 
@@ -46,6 +47,9 @@ public:
     /** Returns an action which shows this window when triggered. */
     QAction* showAction() const { return m_showAct; }
     
+    /** Returns a pointer to the data visualizer in the observer window. */
+    DataVisualizer* visualizer() const { return m_visualizer; }
+    
 private slots:
     /**
      * Changes the window title to \c name. This also updates the display
@@ -56,6 +60,7 @@ private slots:
 private:
     ObserverModel* m_observer;
     QAction* m_showAct;
+    DataVisualizer* m_visualizer;
 };
 
 #endif // OBSERVERWINDOW_H

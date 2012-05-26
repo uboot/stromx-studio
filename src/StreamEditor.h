@@ -20,7 +20,7 @@
 #ifndef STREAMEDITOR_H
 #define STREAMEDITOR_H
 
-#include <QGraphicsView>
+#include "GraphicsView.h"
 #include "StreamModel.h"
 
 class ConnectionItem;
@@ -32,7 +32,7 @@ class StreamModel;
  *
  * A stream editor is a widget which displays a stream editor scene.
  */
-class StreamEditor : public QGraphicsView
+class StreamEditor : public GraphicsView
 {
     Q_OBJECT
 

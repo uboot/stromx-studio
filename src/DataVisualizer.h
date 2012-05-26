@@ -20,10 +20,10 @@
 #ifndef DATAVISUALIZER_H
 #define DATAVISUALIZER_H
 
-#include <QGraphicsView>
 #include <QMap>
 
 #include "AbstractDataVisualizer.h"
+#include "GraphicsView.h"
 
 /** 
  * \brief Data visualizer based on QGraphicsView
@@ -32,7 +32,7 @@
  * and uses QGraphicsItem objects to display data. The position of a layer translates
  * into the z-value of the graphic items.
  */
-class DataVisualizer : public QGraphicsView, public AbstractDataVisualizer
+class DataVisualizer : public GraphicsView, public AbstractDataVisualizer
 {
 public:
     DataVisualizer(QWidget* parent = 0);
