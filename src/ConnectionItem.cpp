@@ -7,6 +7,8 @@
 #include "ConnectionModel.h"
 #include "ConnectorItem.h"
 
+const qreal ConnectionItem::EXTRA_HEIGHT = 30;
+
 ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
   : QGraphicsObject(parent),
     m_path(new QGraphicsPathItem(this)),
@@ -112,7 +114,7 @@ void ConnectionItem::update()
 
 QPainterPath ConnectionItem::drawPath(const QPointF& start, const QPointF& end)
 {
-    const qreal RADIUS = 1.5 * ConnectorItem::SIZE;
+    const qreal RADIUS = ConnectorItem::SIZE;
     QRectF arcRect(0, 0, RADIUS, RADIUS);
     qreal xDiff = end.x() - start.x();
     qreal yDiff = end.y() - start.y();
@@ -128,32 +130,103 @@ QPainterPath ConnectionItem::drawPath(const QPointF& start, const QPointF& end)
     
     if(xDiff > 0)
     {
-        path.lineTo(start.x() + xDiff/2, start.y());
-        arcRect.moveTo(start.x() + xDiff/2, start.y() - RADIUS);
-        path.arcTo(arcRect, -90, 90);
-        path.lineTo(start.x() + xDiff/2 + RADIUS, start.y() - RADIUS + yOffset);
-        arcRect.moveTo(start.x() + xDiff/2, start.y() - 2 * RADIUS + yOffset);
-        path.arcTo(arcRect, 0, 90);
-        arcRect.moveTo(start.x() + xDiff/2 - RADIUS, start.y() - 2 * RADIUS + yOffset);
-        path.arcTo(arcRect, 90, 90);
-        path.lineTo(start.x() + xDiff/2 - RADIUS, end.y() - RADIUS);
-        arcRect.moveTo(start.x() + xDiff/2 - RADIUS, end.y() - RADIUS);
-        path.arcTo(arcRect, 180, 90);
+        // the connections points forward
+        if(xDiff > 2 * RADIUS)
+        {
+            // start and end are so far from each other that the can
+            // be directly connected (without loop)
+            path.lineTo(start.x() + xDiff/2 - RADIUS, start.y());
+            if(yDiff > 0)
+            {
+                // the connection points downwards
+                arcRect.moveTo(start.x() + xDiff/2 - RADIUS, start.y());
+                path.arcTo(arcRect, 90, -90);
+                path.lineTo(start.x() + xDiff/2, end.y() - RADIUS);
+                arcRect.moveTo(start.x() + xDiff/2, end.y() - RADIUS);
+                path.arcTo(arcRect, 180, 90);
+            }
+            else
+            {
+                // the connection points upwards
+                arcRect.moveTo(start.x() + xDiff/2 - RADIUS, start.y() - RADIUS);
+                path.arcTo(arcRect, 270, 90);
+                path.lineTo(start.x() + xDiff/2, end.y() + RADIUS);
+                arcRect.moveTo(start.x() + xDiff/2, end.y());
+                path.arcTo(arcRect, 180, -90);
+            }
+        }
+        else
+        {
+            // start and end are so close to each other to each other
+            // that the connections must have loop
+            path.lineTo(start.x() + xDiff/2, start.y());
+            arcRect.moveTo(start.x() + xDiff/2, start.y() - RADIUS);
+            path.arcTo(arcRect, -90, 90);
+            path.lineTo(start.x() + xDiff/2 + RADIUS, start.y() - RADIUS + yOffset);
+            arcRect.moveTo(start.x() + xDiff/2, start.y() - 2*RADIUS + yOffset);
+            path.arcTo(arcRect, 0, 90);
+            arcRect.moveTo(start.x() + xDiff/2 - RADIUS, start.y() - 2*RADIUS + yOffset);
+            path.arcTo(arcRect, 90, 90);
+            path.lineTo(start.x() + xDiff/2 - RADIUS, end.y() - RADIUS);
+            arcRect.moveTo(start.x() + xDiff/2 - RADIUS, end.y() - RADIUS);
+            path.arcTo(arcRect, 180, 90);
+        }
     }
     else
     {
-        arcRect.moveTo(start.x(), start.y() - RADIUS);
-        path.arcTo(arcRect, -90, 90);
-        path.lineTo(start.x() + RADIUS, start.y() - RADIUS + yOffset);
-        arcRect.moveTo(start.x(), start.y() - 2 * RADIUS + yOffset);
-        path.arcTo(arcRect, 0, 90);
-        path.lineTo(end.x(), start.y() - 2 * RADIUS + yOffset);
-        arcRect.moveTo(end.x() - RADIUS, start.y() - 2 * RADIUS + yOffset);
-        path.arcTo(arcRect, 90, 90);
-        path.lineTo(end.x() - RADIUS, end.y() - RADIUS);
-        arcRect.moveTo(end.x() - RADIUS, end.y() - RADIUS);
-        path.arcTo(arcRect, 180, 90);
-        path.lineTo(end);
+        // the connections points backward
+        if(fabs(yDiff) > 4 * RADIUS)
+        {            
+            // start and end are so far from each other that the can
+            // be directly with a line between the to operators
+            if(yDiff > 0)
+            {
+                // the connection points downwards
+                arcRect.moveTo(start.x(), start.y());
+                path.arcTo(arcRect, 90, -90);
+                path.lineTo(start.x() + RADIUS, start.y() + yDiff/2 - RADIUS);
+                arcRect.moveTo(start.x(), start.y() + yDiff/2 - RADIUS);
+                path.arcTo(arcRect, 0, -90);
+                path.lineTo(end.x(), start.y() + yDiff/2);
+                arcRect.moveTo(end.x() - RADIUS, start.y() + yDiff/2);
+                path.arcTo(arcRect, 90, 90);
+                path.lineTo(end.x() - RADIUS, end.y() - RADIUS);
+                arcRect.moveTo(end.x() - RADIUS, end.y() - RADIUS);
+                path.arcTo(arcRect, 180, 90);
+            }
+            else
+            {
+                // the connection points upwards
+                arcRect.moveTo(start.x(), start.y() - RADIUS);
+                path.arcTo(arcRect, 270, 90);
+                path.lineTo(start.x() + RADIUS, start.y() + yDiff/2 + RADIUS);
+                arcRect.moveTo(start.x(), start.y() + yDiff/2);
+                path.arcTo(arcRect, 0, 90);
+                path.lineTo(end.x(), start.y() + yDiff/2);
+                arcRect.moveTo(end.x() - RADIUS, start.y() + yDiff/2 - RADIUS);
+                path.arcTo(arcRect, 270, -90);
+                path.lineTo(end.x() - RADIUS, end.y() + RADIUS);
+                arcRect.moveTo(end.x() - RADIUS, end.y());
+                path.arcTo(arcRect, 180, -90);
+            }
+        }
+        else
+        {
+            // start and end are so close to each other to each other
+            // that the connection must run around one of the operators
+            arcRect.moveTo(start.x(), start.y() - RADIUS);
+            path.arcTo(arcRect, -90, 90);
+            path.lineTo(start.x() + RADIUS, start.y() - RADIUS + yOffset - EXTRA_HEIGHT);
+            arcRect.moveTo(start.x(), start.y() - 2*RADIUS + yOffset - EXTRA_HEIGHT);
+            path.arcTo(arcRect, 0, 90);
+            path.lineTo(end.x(), start.y() - 2*RADIUS + yOffset - EXTRA_HEIGHT);
+            arcRect.moveTo(end.x() - RADIUS, start.y() - 2*RADIUS + yOffset - EXTRA_HEIGHT);
+            path.arcTo(arcRect, 90, 90);
+            path.lineTo(end.x() - RADIUS, end.y() - RADIUS);
+            arcRect.moveTo(end.x() - RADIUS, end.y() - RADIUS);
+            path.arcTo(arcRect, 180, 90);
+            path.lineTo(end);
+        }
     }
     path.lineTo(end);
     

@@ -71,6 +71,12 @@ private slots:
     void setColor(const QColor & color);
     
 private:
+    /** 
+     * The extra height added to backward point connection to loop around the
+     * operator.
+     */
+    static const qreal EXTRA_HEIGHT;
+    
     /** Draws a path from \c start to \c end into \c path. */
     static QPainterPath drawPath(const QPointF & start, const QPointF & end);
     
