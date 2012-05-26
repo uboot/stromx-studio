@@ -81,13 +81,12 @@ void ConnectionItem::setColor(const QColor& color)
 
 void ConnectionItem::update()
 {
-    QPainterPath path;
     QPointF start(m_start.x() + ConnectorItem::SIZE, m_start.y());
     QPointF end(m_end.x() - ConnectorItem::SIZE, m_end.y());
     qreal width = m_end.x() - m_start.x();
     qreal height = m_end.y() - m_start.y();
     
-    drawPath(start, end, path);
+    QPainterPath path = drawPath(start, end);
     m_path->setPath(path);
     m_path->setPen(m_pen);
     
@@ -111,10 +110,9 @@ void ConnectionItem::update()
     }
 }
 
-void ConnectionItem::drawPath(const QPointF& start, const QPointF& end, QPainterPath& path)
+QPainterPath ConnectionItem::drawPath(const QPointF& start, const QPointF& end)
 {
     const qreal RADIUS = 1.5 * ConnectorItem::SIZE;
-    
     QRectF arcRect(0, 0, RADIUS, RADIUS);
     qreal xDiff = end.x() - start.x();
     qreal yDiff = end.y() - start.y();
@@ -125,6 +123,7 @@ void ConnectionItem::drawPath(const QPointF& start, const QPointF& end, QPainter
     else
         yOffset = 0;
     
+    QPainterPath path;
     path.moveTo(start);
     
     if(xDiff > 0)
@@ -140,7 +139,6 @@ void ConnectionItem::drawPath(const QPointF& start, const QPointF& end, QPainter
         path.lineTo(start.x() + xDiff/2 - RADIUS, end.y() - RADIUS);
         arcRect.moveTo(start.x() + xDiff/2 - RADIUS, end.y() - RADIUS);
         path.arcTo(arcRect, 180, 90);
-        path.lineTo(end);
     }
     else
     {
@@ -157,6 +155,9 @@ void ConnectionItem::drawPath(const QPointF& start, const QPointF& end, QPainter
         path.arcTo(arcRect, 180, 90);
         path.lineTo(end);
     }
+    path.lineTo(end);
+    
+    return path;
 }
 
 QGraphicsPathItem* ConnectionItem::createDoubleArrow(QGraphicsItem* parent)

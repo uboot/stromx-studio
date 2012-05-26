@@ -72,7 +72,7 @@ private slots:
     
 private:
     /** Draws a path from \c start to \c end into \c path. */
-    static void drawPath(const QPointF & start, const QPointF & end, QPainterPath & path);
+    static QPainterPath drawPath(const QPointF & start, const QPointF & end);
     
     /** Returns a double arrow shape item. */
     static QGraphicsPathItem* createDoubleArrow(QGraphicsItem* parent);

@@ -54,24 +54,40 @@ void StreamEditor::mousePressEvent(QMouseEvent* event)
                 m_startPos = event->pos();
                 m_targetOp = connection->model()->targetOp();
                 m_inputId = connection->model()->inputId();
-                return;
             }
             else if(ConnectorItem* connector = qgraphicsitem_cast<ConnectorItem*>(item))
             {
                 if(connector->connectorType() == ConnectorItem::INPUT
-                && connector->numConnections())
+                    && connector->numConnections())
                 {
                     m_startPos = event->pos();
                     m_targetOp = connector->op();
                     m_inputId = connector->id();
-                    return;
                 }
+                else
+                {
+                    m_targetOp = 0;
+                    m_inputId = 0;
+                }    
+            }
+            else
+            {
+                m_targetOp = 0;
+                m_inputId = 0;
             }
         }
+        else
+        {
+            m_targetOp = 0;
+            m_inputId = 0;
+        }
+    }
+    else
+    {
+        m_targetOp = 0;
+        m_inputId = 0;
     }
     
-    m_targetOp = 0;
-    m_inputId = 0;
     QGraphicsView::mousePressEvent(event);
 }
 
