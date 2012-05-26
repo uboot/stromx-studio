@@ -405,7 +405,7 @@ qreal ConnectionItem::computeAngle(qreal radius, qreal height)
 {
     qreal c = fabs(height)/fabs(radius);
     qreal sin = sqrt(c/2);
-    return 2 * asin(sin) * 180 / M_PI;
+    return 2 * asin(sin) * 180 / PI;
 }
 
 qreal ConnectionItem::computeWidth(qreal height, qreal angle)
