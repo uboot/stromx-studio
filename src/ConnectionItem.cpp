@@ -14,13 +14,13 @@ const qreal ConnectionItem::EPSILON = 0.1;
 ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
   : QGraphicsObject(parent),
     m_path(new QGraphicsPathItem(this)),
+    m_startArrow(0),
+    m_endArrow(0),
+    m_centerArrow(0),
     m_model(model),
     m_occupied(false)
 {
     Q_ASSERT(model);
-    
-    for(unsigned int i = 0; i < 3; ++i)
-        m_arrows[i] = 0;
     
     setFlag(ItemIsSelectable, true);
     
@@ -28,8 +28,9 @@ ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
     m_pen.setColor(m_model->color());
     connect(m_model, SIGNAL(colorChanged(QColor)), this, SLOT(setColor(QColor)));
     
-    for(unsigned int i = 0; i < 3; ++i)
-        m_arrows[i] = createDoubleArrow(this);
+    m_startArrow = createDoubleArrow(this);
+    m_endArrow = createDoubleArrow(this);
+    m_centerArrow = createDoubleArrow(this);
     
     update();
 }
@@ -87,31 +88,22 @@ void ConnectionItem::update()
 {
     QPointF start(m_start.x() + ConnectorItem::SIZE, m_start.y());
     QPointF end(m_end.x() - ConnectorItem::SIZE, m_end.y());
-    qreal width = m_end.x() - m_start.x();
-    qreal height = m_end.y() - m_start.y();
     
     QPainterPath path = drawPath(start, end);
     m_path->setPath(path);
     m_path->setPen(m_pen);
     
-    m_arrows[0]->setPos(m_start.x() + 0.25 * width, m_start.y());
-    m_arrows[1]->setPos(m_start.x() + 0.5 * width, m_start.y() + 0.5 * height);
-    if(height > 0.0)
-        m_arrows[1]->setRotation(90);
-    else
-        m_arrows[1]->setRotation(-90);
-    m_arrows[2]->setPos(start.x() + 0.75 * width, end.y());
+    updateArrowPositions(start, end);
     
-    for(unsigned int i = 0; i < 3; ++i)
-    {
-        QBrush brush;
-        if(m_occupied)
-            brush = QBrush(m_pen.color().darker(130));
-        else
-            brush = QBrush(m_pen.color().lighter(130));
-        
-        m_arrows[i]->setBrush(brush);
-    }
+    QBrush brush;
+    if(m_occupied)
+        brush = QBrush(m_pen.color().darker(130));
+    else
+        brush = QBrush(m_pen.color().lighter(130));
+       
+    m_startArrow->setBrush(brush);
+    m_endArrow->setBrush(brush);
+    m_centerArrow->setBrush(brush);
 }
 
 QPainterPath ConnectionItem::drawPath(const QPointF& start, const QPointF& end)
@@ -250,6 +242,127 @@ QPainterPath ConnectionItem::drawPath(const QPointF& start, const QPointF& end)
     path.lineTo(end);
     
     return path;
+}
+
+void ConnectionItem::updateArrowPositions(const QPointF& start, const QPointF& end)
+{
+    static const qreal ARROW_LENGTH = 2 * ConnectorItem::SIZE;
+    const qreal RADIUS = 1.5 * ConnectorItem::SIZE;
+    const qreal ARC_RECT_SIZE = 2*RADIUS;
+    QRectF arcRect(0, 0, ARC_RECT_SIZE, ARC_RECT_SIZE);
+    qreal xDiff = end.x() - start.x();
+    qreal yDiff = end.y() - start.y();
+    qreal yOffset = 0;
+    
+    
+    if(yDiff <= 0)
+        yOffset = yDiff;
+    else
+        yOffset = 0;
+    
+    // hide all arrows
+    m_startArrow->setVisible(false);
+    m_endArrow->setVisible(false);
+    m_centerArrow->setVisible(false);
+    
+    if(xDiff > 0) // the connections points forward
+    {
+        if(xDiff > 2*RADIUS)
+        {
+            // start and end are so far from each other that the can
+            // be directly connected (without loop)
+            if(xDiff > 2*RADIUS + 2*ARROW_LENGTH) 
+            {
+                m_startArrow->setVisible(true);
+                m_startArrow->setPos(start.x() + (xDiff - 2*RADIUS)/4, start.y());
+                m_startArrow->setRotation(0);
+                
+                m_endArrow->setVisible(true);
+                m_endArrow->setPos(end.x() - (xDiff - 2*RADIUS)/4, end.y());
+                m_endArrow->setRotation(0);
+            }
+            
+            if(fabs(yDiff) > 2*RADIUS + ARROW_LENGTH)
+            {
+                // start and end point are so far from each other that a
+                // center arrow can be drawn
+                m_centerArrow->setVisible(true);
+                m_centerArrow->setPos(start.x() + xDiff/2, start.y() + yDiff/2);
+                
+                if(yDiff > 0) // the connection points downwards
+                    m_centerArrow->setRotation(90);
+                else // the connection points upwards
+                    m_centerArrow->setRotation(-90);
+            }
+        }
+        else
+        {
+            // start and end are so close to each other to each other
+            // that the connections must have loop
+            if(fabs(yDiff) > ARROW_LENGTH)
+            {
+                if(yOffset < 0)
+                {
+                    m_startArrow->setVisible(true);
+                    m_startArrow->setPos(start.x() + xDiff/2 + RADIUS, start.y() - RADIUS + yDiff/2);
+                    m_startArrow->setRotation(-90);
+                }
+                else
+                {
+                    m_endArrow->setVisible(true);
+                    m_endArrow->setPos(start.x() + xDiff/2 - RADIUS, start.y() - RADIUS + yDiff/2);
+                    m_endArrow->setRotation(90);
+                }
+            }
+        }
+    }
+    else // the connections points backward
+    {
+        // the backward section is long enough to display an arrow
+        if(fabs(xDiff) > ARROW_LENGTH)
+        {
+            m_centerArrow->setVisible(true);
+            m_centerArrow->setRotation(180);
+        }
+        
+        if(fabs(yDiff) > 4*RADIUS)
+        {            
+            // start and end are so far from each other that the can
+            // be directly with a line between the to operators
+            if(fabs(yDiff) > 4*RADIUS + 2*ARROW_LENGTH)
+            {
+                m_startArrow->setVisible(true);
+                m_endArrow->setVisible(true);
+                m_startArrow->setPos(start.x() + RADIUS, start.y() + yDiff/4);
+                m_endArrow->setPos(end.x() - RADIUS, end.y() - yDiff/4);
+                if(yDiff > 0)
+                {
+                    m_startArrow->setRotation(90);
+                    m_endArrow->setRotation(90);
+                }
+                else
+                {
+                    m_startArrow->setRotation(-90);
+                    m_endArrow->setRotation(-90);
+                }
+            }
+            
+            m_centerArrow->setPos(start.x() + xDiff/2, start.y() + yDiff/2);
+        }
+        else
+        {
+            // start and end are so close to each other to each other
+            // that the connection must run around one of the operators
+            m_startArrow->setVisible(true);
+            m_endArrow->setVisible(true);
+            m_startArrow->setPos(start.x() + RADIUS, start.y() + (yOffset - EXTRA_HEIGHT)/2 - RADIUS);
+            m_endArrow->setPos(end.x() - RADIUS, end.y() - RADIUS - ((yDiff - yOffset) + EXTRA_HEIGHT)/2);
+            m_startArrow->setRotation(-90);
+            m_endArrow->setRotation(90);
+            
+            m_centerArrow->setPos(start.x() + xDiff/2, start.y() + yOffset - EXTRA_HEIGHT - ARC_RECT_SIZE);
+        }
+    }
 }
 
 QGraphicsPathItem* ConnectionItem::createDoubleArrow(QGraphicsItem* parent)

@@ -82,21 +82,39 @@ private:
     
     /** Angles for height less than \c EPSILON are always 0. */
     static const qreal EPSILON;
+
     
+    /**
+     * Computes the angle of a arc of a given \c height.
+     * The arc is assumed to start at 90 degrees.
+     */
     static qreal computeAngle(qreal radius, qreal height);
+    
+    /**
+     * Computes the width of the arc of given \c height and
+     * \c angle. The arc is assumed to start at 90 degrees.
+     */
     static qreal computeWidth(qreal height, qreal angle);
     
     /** Draws a path from \c start to \c end into \c path. */
     static QPainterPath drawPath(const QPointF & start, const QPointF & end);
     
-    /** Returns a double arrow shape item. */
+    /** Returns a double arrow shape item as a child of \c parent. */
     static QGraphicsPathItem* createDoubleArrow(QGraphicsItem* parent);
     
     /** Updates the current geometry and pen settings of the connection. */
     void update();
     
+    /** 
+     * Moves and rotates the arrows of the connection such that the fit
+     * the connection. This functions is called by update().
+     */
+    void updateArrowPositions(const QPointF & start, const QPointF & end);
+    
     QGraphicsPathItem* m_path;
-    QGraphicsPathItem* m_arrows[3];
+    QGraphicsPathItem* m_startArrow;
+    QGraphicsPathItem* m_endArrow;
+    QGraphicsPathItem* m_centerArrow;
     ConnectionModel* m_model;
     QPen m_pen;
     QPointF m_start;
