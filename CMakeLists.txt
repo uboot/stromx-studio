@@ -36,5 +36,5 @@ add_subdirectory(src)
 
 if(WIN32)
     install (FILES ${PROJECT_SOURCE_DIR}/wix/stromx-studio.wxs DESTINATION .)
-    install (FILES ${PROJECT_SOURCE_DIR}/example/camera.zip DESTINATION .)
+    install (FILES ${PROJECT_SOURCE_DIR}/example/camera.stromx DESTINATION .)
 endif(WIN32)
