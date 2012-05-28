@@ -25,7 +25,24 @@
 #include <QStringList>
 #include <stromx/core/Image.h>
 #include <stromx/core/Parameter.h>
+#include <stromx/core/String.h>
 #include <stromx/core/Trigger.h>
+
+namespace
+{
+    template<class T>
+    bool isEqual(const stromx::core::Data & lhs, const stromx::core::Data & rhs)
+    {
+        try
+        {
+            return stromx::core::data_cast<const T &>(lhs) == stromx::core::data_cast<const T &>(rhs);
+        }
+        catch(stromx::core::BadCast&)
+        {
+            return false;
+        }
+    }
+}
 
 QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx::core::Parameter& param, int role)
 {
@@ -284,3 +301,68 @@ std::auto_ptr<stromx::core::Data> DataConverter::toStromxData(const QVariant& va
     
     return std::auto_ptr<stromx::core::Data>();
 }
+
+bool DataConverter::stromxDataEqualsTarget(const stromx::core::Data& newValue, const stromx::core::Data& targetValue)
+{
+    if(! newValue.isVariant(targetValue.variant()))
+        return false;
+    
+    if(targetValue.isVariant(stromx::core::DataVariant::BOOL))
+    {
+        return isEqual<stromx::core::Bool>(newValue, targetValue);
+    }
+    
+    if(targetValue.isVariant(stromx::core::DataVariant::INT_8))
+    {
+        return isEqual<stromx::core::Int8>(newValue, targetValue);
+    }
+    
+    if(targetValue.isVariant(stromx::core::DataVariant::UINT_8))
+    {
+        return isEqual<stromx::core::UInt8>(newValue, targetValue);
+    }
+    
+    if(targetValue.isVariant(stromx::core::DataVariant::INT_16))
+    {
+        return isEqual<stromx::core::Int16>(newValue, targetValue);
+    }
+    
+    if(targetValue.isVariant(stromx::core::DataVariant::UINT_16))
+    {
+        return isEqual<stromx::core::UInt16>(newValue, targetValue);
+    }
+    
+    if(targetValue.isVariant(stromx::core::DataVariant::INT_32))
+    {
+        return isEqual<stromx::core::Int32>(newValue, targetValue);
+    }
+    
+    if(targetValue.isVariant(stromx::core::DataVariant::UINT_32))
+    {
+        return isEqual<stromx::core::UInt32>(newValue, targetValue);
+    }
+    
+    if(targetValue.isVariant(stromx::core::DataVariant::ENUM))
+    {
+        return isEqual<stromx::core::Enum>(newValue, targetValue);
+    }
+    
+    if(targetValue.isVariant(stromx::core::DataVariant::FLOAT))
+    {
+        return isEqual<stromx::core::Float>(newValue, targetValue);
+    }
+    
+    if(targetValue.isVariant(stromx::core::DataVariant::DOUBLE))
+    {
+        return isEqual<stromx::core::Double>(newValue, targetValue);
+    }
+    
+    if(targetValue.isVariant(stromx::core::DataVariant::STRING))
+    {
+        return isEqual<stromx::core::String>(newValue, targetValue);
+    }
+    
+    return false;
+}
+
+

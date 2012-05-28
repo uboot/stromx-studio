@@ -6,12 +6,15 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lenna.jpg DESTINATION ${CMAKE_CURRENT_BINA
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lenna_bw.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 set(stromxstudiotest_HEADERS
+    DataConverterTest.h
     ImageTest.h
 )
 
 set(stromxstudiotest_SOURCES
     main.cpp
+    DataConverterTest.cpp
     ImageTest.cpp
+    ../DataConverter.cpp
     ../Image.cpp
 )
 

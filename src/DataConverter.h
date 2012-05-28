@@ -33,11 +33,28 @@ namespace stromx
     }
 }
 
+/** \brief Convenience functions to translate and compare QVariants and stromx data. */
 class DataConverter
 {   
 public:
+    /** 
+     * Converts the stromx data object \c data of the parameter \c param to a QVariant object.
+     * The type of the returned QVariant depends on \c role.
+     */
     static QVariant toQVariant(const stromx::core::Data & data, const stromx::core::Parameter & param, int role);
+    
+    /**
+     * Converts the input \c variant to the type defined by the parameter \c param and writes the
+     * result to a new object of the correct stromx data type.
+     */
     static std::auto_ptr<stromx::core::Data> toStromxData(const QVariant & variant, const stromx::core::Parameter & param);
+    
+    /**
+     * Returns true if the data if \c newValue is of a type derived from \c targetValue and
+     * \c newValue equals \c targetValue .
+     */
+    static bool stromxDataEqualsTarget(const stromx::core::Data & newValue, const stromx::core::Data & targetValue);
+    
 };
 
 #endif // DATACONVERTER_H

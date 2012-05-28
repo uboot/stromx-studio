@@ -270,11 +270,18 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
                         // be undone)
                         doSetParameter(paramId, *stromxData);
                     }
-                    else
+                    else // any other parameters are set via an undo stack command
                     {
-                        // any other parameters are set via an undo stack command
-                        SetParameterCmd* cmd = new SetParameterCmd(this, paramId,*stromxData);
-                        m_stream->undoStack()->push(cmd);
+                        // obtain the current parameter value
+                        const stromx::core::Data & currentValue = m_op->getParameter(paramId);
+                        
+                        // if the new value is different from the old one
+                        // construct a set parameter command 
+                        if(! DataConverter::stromxDataEqualsTarget(*stromxData, currentValue))
+                        {
+                            SetParameterCmd* cmd = new SetParameterCmd(this, paramId, *stromxData);
+                            m_stream->undoStack()->push(cmd);
+                        }
                     }
                     return true;
                 }
@@ -361,7 +368,8 @@ void OperatorModel::doSetPos(const QPointF& pos)
 
 const stromx::core::Parameter* OperatorModel::parameterAtRow(int row) const
 {
-    Q_ASSERT(row - PARAMETER_OFFSET >= 0);
+    if(row - PARAMETER_OFFSET < 0)
+        return 0;
     
     const std::vector<const stromx::core::Parameter*> & parameters = m_op->info().parameters();
     int currentRow = PARAMETER_OFFSET;
@@ -379,7 +387,7 @@ const stromx::core::Parameter* OperatorModel::parameterAtRow(int row) const
         }
     }
     
-    Q_ASSERT(false);
+    return 0;
 }
 
 int OperatorModel::accessibleParametersCount() const
