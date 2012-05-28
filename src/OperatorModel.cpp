@@ -68,6 +68,8 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
     if(index.column() == 0 || m_op == 0 || !index.isValid())
         return flags;
     
+    const stromx::core::Parameter* param = reinterpret_cast<stromx::core::Parameter*>(index.internalPointer());
+  
     switch(index.row())
     {
         case TYPE:
@@ -78,10 +80,8 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
             return flags | Qt::ItemIsEditable;
             
         default:
-        {
-            if(parameterIsWriteAccessible(parameterAtRow(index.row())))
+            if(parameterIsWriteAccessible(param))
                 return flags | Qt::ItemIsEditable;
-        }
     }    
     return flags;
 }
@@ -176,6 +176,9 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     // ask the decision table
     ReturnValue action = ReturnValue(table[row][column][roleType]);
     
+    // get a pointer to the parameter (is 0 if this index does not point to a parameter)
+    const stromx::core::Parameter* param = reinterpret_cast<stromx::core::Parameter*>(index.internalPointer());
+        
     // act accordingly
     switch(action)
     {
@@ -192,11 +195,12 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     case NAME:
         return QString::fromStdString(m_op->name());
     case PARAMETER_NAME:
-        return QVariant(QString::fromStdString(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]->name()));
-    case PARAMETER_VALUE:            
-        if(parameterIsReadAccessible(parameterAtRow(index.row())))
+    {
+        return QVariant(QString::fromStdString(param->name()));
+    }
+    case PARAMETER_VALUE:
+        if(parameterIsReadAccessible(param))
         {
-            const stromx::core::Parameter* param = m_op->info().parameters()[index.row()-PARAMETER_OFFSET];
             unsigned int paramId = param->id();
             try
             {
@@ -225,6 +229,8 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
     if(!index.isValid() || index.column() == 0)
         return false;
     
+    const stromx::core::Parameter* param = reinterpret_cast<stromx::core::Parameter*>(index.internalPointer());
+
     switch(index.row())
     {
         case NAME:
@@ -243,7 +249,6 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
             
         default:
         {
-            const stromx::core::Parameter* param = parameterAtRow(index.row());
             if(parameterIsWriteAccessible(param))
             {
                 unsigned int paramId = param->id();
