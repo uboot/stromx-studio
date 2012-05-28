@@ -188,19 +188,25 @@ private:
      * Returns the number of parameters of the operator which can currently be read
      * or which are non-empty parameter groups.
      */
-    int accessibleParametersCount() const;
+    int accessibleParametersCount(const QModelIndex & parent) const;
     
     /**
      * Returns the parameter at \c row. The row index is the position of the parameter
      * in the list of the currently accessible parameters.
      */
-    const stromx::core::Parameter* parameterAtRow(int row) const;
+    const stromx::core::Parameter* parameterAtRow(const QModelIndex & parent, int row) const;
     
     /** Returns whether this parameter can currently be read. */
     bool parameterIsReadAccessible(const stromx::core::Parameter* par) const;
     
     /** Returns whether this parameter can currently be written. */
     bool parameterIsWriteAccessible(const stromx::core::Parameter* par) const;
+    
+    /** 
+     * Returns all parameters which are children of the parameter at the position
+     * \c parent. Returns all top-level parameters if \c parent is invalid.
+     */
+    QList<const stromx::core::Parameter*> children(const QModelIndex & parent) const;
     
     stromx::core::Operator* m_op;
     StreamModel* m_stream;
