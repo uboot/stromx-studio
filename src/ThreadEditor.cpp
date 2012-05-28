@@ -12,13 +12,12 @@ ThreadEditor::ThreadEditor(QWidget* parent)
   : QWidget(parent),
     m_model(0)
 {    
-    m_table = new QTableView;
-    m_table->verticalHeader()->hide();
-    m_table->setItemDelegate(new ItemDelegate(this));
-    m_table->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    m_view = new QTableView;
+    m_view->setItemDelegate(new ItemDelegate(this));
+    m_view->setEditTriggers(QAbstractItemView::AllEditTriggers);
     
     QHBoxLayout* layout = new QHBoxLayout;
-    layout->addWidget(m_table);
+    layout->addWidget(m_view);
     
     setLayout(layout);
 }
@@ -27,11 +26,13 @@ void ThreadEditor::setModel(StreamModel* model)
 {
     m_model = model;
     
-    m_table->setModel(m_model->threadListModel());
-    m_table->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
-    m_table->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(m_table->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), 
+    m_view->setModel(m_model->threadListModel());
+    m_view->setShowGrid(false);
+    m_view->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    m_view->verticalHeader()->hide();
+    m_view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_view->setSelectionMode(QAbstractItemView::SingleSelection);
+    connect(m_view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), 
             this, SLOT(updateThreadSelected(QModelIndex,QModelIndex)));
     connect(m_model, SIGNAL(streamStarted()), this, SLOT(updateStreamActive()));
     connect(m_model, SIGNAL(streamJoined()), this, SLOT(updateStreamActive()));
@@ -75,9 +76,9 @@ void ThreadEditor::removeThread() const
 
 ThreadModel* ThreadEditor::selectedThread() const
 {
-    if(m_table->selectionModel())
+    if(m_view->selectionModel())
     {
-        QModelIndex index = m_table->selectionModel()->currentIndex();
+        QModelIndex index = m_view->selectionModel()->currentIndex();
         if(index.isValid())
             return reinterpret_cast<ThreadModel*>(index.internalPointer());
     }

@@ -11,7 +11,10 @@ ThreadListModel::ThreadListModel(QObject* parent)
 
 int ThreadListModel::rowCount(const QModelIndex& parent) const
 {
-    return m_threads.size();
+    if(! parent.isValid())
+        return m_threads.size();
+    else
+        return 0;
 }
 
 int ThreadListModel::columnCount(const QModelIndex& parent) const

@@ -24,6 +24,9 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
     
     QSettings settings("stromx", "stromx-studio");
     QStringList loadedLibraries = settings.value("loadedLibraries").toStringList();
+            
+    // reset the library list
+    settings.setValue("loadedLibraries", QStringList());
     
     foreach(QString file, loadedLibraries)
     {
@@ -38,8 +41,6 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
         }
     }
     
-    // reset the library list
-    settings.setValue("loadedLibraries", QStringList());
 }
 
 OperatorLibraryModel::~OperatorLibraryModel()
@@ -154,7 +155,6 @@ void OperatorLibraryModel::loadLibrary(const QString& libPath)
         throw LoadLibraryFailed();
     }
     
-    
     // try to register the library
     try
     {
@@ -185,6 +185,10 @@ void OperatorLibraryModel::resetLibraries()
     
     setupFactory();
     updateOperators();
+    
+    // reset the library list
+    QSettings settings("stromx", "stromx-studio");
+    settings.setValue("loadedLibraries", QStringList());
 }
 
 void OperatorLibraryModel::setupFactory()

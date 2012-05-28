@@ -1,7 +1,7 @@
 #include "PropertyEditor.h"
 
 #include <QHeaderView>
-#include <QTableView>
+#include <QTreeView>
 #include "ItemDelegate.h"
 
 PropertyEditor::PropertyEditor(QWidget* parent)
@@ -10,17 +10,16 @@ PropertyEditor::PropertyEditor(QWidget* parent)
     setWindowTitle(tr("Properties"));
     setObjectName("PropertyEditor");
     
-    m_table = new QTableView;
-    m_table->verticalHeader()->hide();
-    m_table->setEditTriggers(QAbstractItemView::AllEditTriggers);
-    setWidget(m_table);
+    m_view = new QTreeView;
+    m_view->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    setWidget(m_view);
     
-    m_table->setItemDelegate(new ItemDelegate(this));
+    m_view->setItemDelegate(new ItemDelegate(this));
 }
 
-void PropertyEditor::setModel(QAbstractTableModel* model)
+void PropertyEditor::setModel(QAbstractItemModel* model)
 {
-    m_table->setModel(model);
-    m_table->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    m_view->setModel(model);
+    m_view->header()->setResizeMode(QHeaderView::Stretch);
 }
 

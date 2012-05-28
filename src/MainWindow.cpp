@@ -87,8 +87,8 @@ MainWindow::MainWindow(QWidget *parent)
     
     readSettings();
     
-    connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractTableModel*)),
-            m_propertyEditor, SLOT(setModel(QAbstractTableModel*)));
+    connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractItemModel*)),
+            m_propertyEditor, SLOT(setModel(QAbstractItemModel*)));
     connect(m_streamEditor->scene(), SIGNAL(modelWasReset(StreamModel*)),
             this, SLOT(resetObserverWindows(StreamModel*)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), this, SLOT(updateWindowTitle(bool)));

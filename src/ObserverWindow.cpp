@@ -21,10 +21,12 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     
     QTableView* inputList = new QTableView();
     inputList->setModel(observer);
+    inputList->setShowGrid(false);
     inputList->setDragDropMode(QAbstractItemView::DragDrop);
     inputList->setSelectionBehavior(QAbstractItemView::SelectRows);
     inputList->setSelectionMode(QAbstractItemView::SingleSelection);
     inputList->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    inputList->verticalHeader()->hide();
     inputList->setItemDelegate(new ItemDelegate(this));
     inputList->setEditTriggers(QAbstractItemView::AllEditTriggers);
     

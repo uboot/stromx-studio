@@ -55,7 +55,7 @@ private slots:
 private:
     ThreadModel* selectedThread() const;
     
-    QTableView* m_table;
+    QTableView* m_view;
     StreamModel* m_model;
 };
 

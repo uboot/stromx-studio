@@ -76,7 +76,10 @@ int ObserverModel::columnCount(const QModelIndex& parent) const
 
 int ObserverModel::rowCount(const QModelIndex& parent) const
 {
-    return numInputs();
+    if(parent.isValid())
+        return 0;
+    else
+        return numInputs();
 }
 
 QVariant ObserverModel::headerData(int section, Qt::Orientation orientation, int role) const

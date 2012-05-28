@@ -18,7 +18,7 @@
 
 
 OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
-  : QAbstractTableModel(stream),
+  : QAbstractItemModel(stream),
     m_op(op),
     m_stream(stream),
     m_package(QString::fromStdString(m_op->info().package())),
@@ -41,7 +41,24 @@ OperatorModel::~OperatorModel()
 
 int OperatorModel::rowCount(const QModelIndex& index) const
 {
-    return accessibleParametersCount(QModelIndex()) + PARAMETER_OFFSET;
+    if(index.isValid())
+    {
+        const stromx::core::Parameter* group = 0;
+        
+        if(index.internalPointer())
+        {
+            group = reinterpret_cast<const stromx::core::Parameter*>(index.internalPointer());
+            return numDisplayedParameters(group);
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return numDisplayedParameters(0) + PARAMETER_OFFSET;
+    }
 }
 
 int OperatorModel::columnCount(const QModelIndex& index) const
@@ -70,7 +87,9 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
     
     const stromx::core::Parameter* param = reinterpret_cast<stromx::core::Parameter*>(index.internalPointer());
   
-    switch(index.row())
+    int row = index.parent().isValid() ? PARAMETER_OFFSET : index.row();
+    
+    switch(row)
     {
         case TYPE:
         case STATUS:
@@ -86,12 +105,44 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
     return flags;
 }
 
+QModelIndex OperatorModel::parent(const QModelIndex& child) const
+{
+//     if(child.column() != 0)
+//         return QModelIndex();
+    
+    const stromx::core::Parameter* param = reinterpret_cast<const stromx::core::Parameter*>(child.internalPointer());
+    
+    // this is no parameter
+    if(! param)
+        return QModelIndex();
+    
+    // this is a top-level parameter
+    if(! param->group())
+        return QModelIndex();
+    
+    int row = rowOfDisplayedParameter(param->group());
+    
+    if(! param->group()->group())
+        row += PARAMETER_OFFSET;
+    
+    return createIndex(row, 0, (void*)(param->group()));
+}
+
 QModelIndex OperatorModel::index(int row, int column, const QModelIndex& parent) const
 {
-    if(row >= PARAMETER_OFFSET)
-        return createIndex(row, column, (void*)(parameterAtRow(QModelIndex(), row)));
-    else
-        return createIndex(row, column);
+    const stromx::core::Parameter* group = 0;
+    
+    if(parent.isValid() && parent.internalPointer())
+        group = reinterpret_cast<const stromx::core::Parameter*>(parent.internalPointer());
+    
+    const stromx::core::Parameter* param = 0;
+    
+    if(parent.isValid())
+        param = parameterAtRow(group, row);
+    else if(row >= PARAMETER_OFFSET)
+        param = parameterAtRow(group, row - PARAMETER_OFFSET);
+    
+    return createIndex(row, column, (void*)(param));
 }
 
 QVariant OperatorModel::data(const QModelIndex& index, int role) const
@@ -152,7 +203,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     /* Action */  {{5, 0, 0, 0}, {6, 6, 0, 0}}, {{7, 0, 0, 0}, {8, 8, 8, 0}}};
      
     // extract row, column and role type
-    int row = index.row() > 2 ? PARAMETER_ROW : index.row();
+    int row = (index.row() >= PARAMETER_OFFSET || index.parent().isValid()) ? PARAMETER_ROW : index.row();
     int column = index.column() == 0 ? 0 : 1;
     int roleType = 0;
     switch(role)
@@ -231,7 +282,9 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
     
     const stromx::core::Parameter* param = reinterpret_cast<stromx::core::Parameter*>(index.internalPointer());
 
-    switch(index.row())
+    int row = index.parent().isValid() ? PARAMETER_OFFSET : index.row();
+    
+    switch(row)
     {
         case NAME:
         { 
@@ -366,14 +419,34 @@ void OperatorModel::doSetPos(const QPointF& pos)
     emit posChanged(m_pos);
 }
 
-const stromx::core::Parameter* OperatorModel::parameterAtRow(const QModelIndex & parent, int row) const
+int OperatorModel::rowOfDisplayedParameter(const stromx::core::Parameter* param) const
 {
-    int currentRow = PARAMETER_OFFSET;
-    const QList<const stromx::core::Parameter*> parameters = children(parent);
+    const QList<const stromx::core::Parameter*> parameters = members(param->group());
+    
+    int row = 0;
+    
+    foreach(const stromx::core::Parameter* p, parameters)
+    {
+        if(parameterIsDisplayed(param))
+        {
+            if(param == p)
+                return row;
+            
+            row++;
+        }
+    }
+    
+    return -1;
+}
+
+const stromx::core::Parameter* OperatorModel::parameterAtRow(const stromx::core::Parameter* group, int row) const
+{
+    int currentRow = 0;
+    const QList<const stromx::core::Parameter*> parameters = members(group);
     
     foreach(const stromx::core::Parameter* param, parameters)
     {
-        if(parameterIsReadAccessible(param) || (param)->members().size())
+        if(parameterIsDisplayed(param))
         {
             if(currentRow == row)
                 return param;
@@ -385,11 +458,11 @@ const stromx::core::Parameter* OperatorModel::parameterAtRow(const QModelIndex &
     return 0;
 }
 
-QList<const stromx::core::Parameter*> OperatorModel::children(const QModelIndex& parent) const
+QList<const stromx::core::Parameter*> OperatorModel::members(const stromx::core::Parameter* group) const
 {
     QList<const stromx::core::Parameter*> params;
     
-    if(! parent.isValid())
+    if(! group)
     {    
         const std::vector<const stromx::core::Parameter*> & parameters = m_op->info().parameters();
         
@@ -401,9 +474,8 @@ QList<const stromx::core::Parameter*> OperatorModel::children(const QModelIndex&
                 params.push_back(*iter);
         }
     }
-    else if(parent.internalPointer())
+    else
     { 
-        stromx::core::Parameter* group = reinterpret_cast<stromx::core::Parameter*>(parent.internalPointer());
         const std::vector<const stromx::core::Parameter*> & parameters = group->members();
         
         for(std::vector<const stromx::core::Parameter*>::const_iterator iter = parameters.begin();
@@ -417,17 +489,22 @@ QList<const stromx::core::Parameter*> OperatorModel::children(const QModelIndex&
     return params;
 }
 
-int OperatorModel::accessibleParametersCount(const QModelIndex & parent) const
+int OperatorModel::numDisplayedParameters(const stromx::core::Parameter* group) const
 {
     int count = 0;
-    const QList<const stromx::core::Parameter*> parameters = children(parent);
+    const QList<const stromx::core::Parameter*> parameters = members(group);
     
     foreach(const stromx::core::Parameter* param, parameters)
     {
-        if(parameterIsReadAccessible(param) || (param)->members().size())
+        if(parameterIsDisplayed(param))
             count++;
     }
     return count;    
+}
+
+bool OperatorModel::parameterIsDisplayed(const stromx::core::Parameter* par) const
+{
+    return parameterIsReadAccessible(par) || (par)->members().size();
 }
 
 bool OperatorModel::parameterIsReadAccessible(const stromx::core::Parameter* par) const

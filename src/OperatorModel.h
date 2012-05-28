@@ -41,7 +41,7 @@ class ConnectorObserver;
 class StreamModel;
 
 /** \brief Model of a stromx operator. */
-class OperatorModel : public QAbstractTableModel
+class OperatorModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(QString package READ package)
@@ -122,6 +122,7 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     virtual Qt::ItemFlags flags(const QModelIndex & index) const;
     virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
+    virtual QModelIndex parent(const QModelIndex& child) const;
     
     virtual void customEvent(QEvent* event);
     
@@ -185,28 +186,42 @@ private:
     void setInitialized(bool initialized);
     
     /**
-     * Returns the number of parameters of the operator which can currently be read
-     * or which are non-empty parameter groups.
+     * Returns the number of members \c group which are currently displayed.
+     * If \c group is 0 the number of displayed top-level parameters is returned.
      */
-    int accessibleParametersCount(const QModelIndex & parent) const;
+    int numDisplayedParameters(const stromx::core::Parameter* group) const;
     
     /**
-     * Returns the parameter at \c row. The row index is the position of the parameter
-     * in the list of the currently accessible parameters.
+     * Returns the parameter at the position \c row of the displayed parameters in \c group. 
+     * The row index \c row is the position of the parameter in the list of the currently
+     * displayed parameters of \c group. If \c group is 0 the parameter at the
+     * position \c row of all displayed top-level parameters is returned.
      */
-    const stromx::core::Parameter* parameterAtRow(const QModelIndex & parent, int row) const;
+    const stromx::core::Parameter* parameterAtRow(const stromx::core::Parameter* group, int row) const;
     
-    /** Returns whether this parameter can currently be read. */
+    /** 
+     * Returns the row at which the parameter \c param is displayed. Returns -1 of the parameter
+     * is not currently displayed.
+     */
+    int rowOfDisplayedParameter(const stromx::core::Parameter* param) const;
+    
+    /** 
+     * Returns true if the parameter \c par is read-accessible or it is a non-empty parameter
+     * group, i.e. it has at least one member. 
+     */
+    bool parameterIsDisplayed(const stromx::core::Parameter* par) const;
+    
+    /** Returns whether the parameter \c par can currently be read. */
     bool parameterIsReadAccessible(const stromx::core::Parameter* par) const;
     
-    /** Returns whether this parameter can currently be written. */
+    /** Returns whether the parameter \c par can currently be written. */
     bool parameterIsWriteAccessible(const stromx::core::Parameter* par) const;
     
     /** 
-     * Returns all parameters which are children of the parameter at the position
-     * \c parent. Returns all top-level parameters if \c parent is invalid.
+     * Returns all parameters which are members of the parameter \c group. Returns all top-level
+     * parameters if \c group is 0.
      */
-    QList<const stromx::core::Parameter*> children(const QModelIndex & parent) const;
+    QList<const stromx::core::Parameter*> members(const stromx::core::Parameter* group) const;
     
     stromx::core::Operator* m_op;
     StreamModel* m_stream;

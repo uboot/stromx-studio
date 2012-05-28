@@ -40,7 +40,8 @@ class TestOperator : public stromx::core::OperatorKernel
     enum Parameters
     { 
         INITIALIZE_PARAM,
-        PARAM_GROUP,
+        PARAM_GROUP_1,
+        PARAM_GROUP_2,
         INT_PARAM,
         ENUM_PARAM
     };

@@ -198,7 +198,7 @@ void StreamEditorScene::updateSelection()
     if(selectedItems().size() == 1)
     {
         QGraphicsItem* item = selectedItems()[0];
-        QAbstractTableModel* model = 0;
+        QAbstractItemModel* model = 0;
         
         if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
             model = opItem->model();

@@ -65,7 +65,7 @@ signals:
     void initializeEnabledChanged(bool enabled);
     void deinitializeEnabledChanged(bool enabled);
     void removeEnabledChanged(bool enabled);
-    void selectedModelChanged(QAbstractTableModel* model);
+    void selectedModelChanged(QAbstractItemModel* model);
     
     /** The model of the stream editor was reset, i.e. setModel() was called. */
     void modelWasReset(StreamModel* model);

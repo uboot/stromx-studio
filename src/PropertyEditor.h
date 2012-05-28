@@ -22,8 +22,8 @@
 
 #include <QDockWidget>
 
-class QAbstractTableModel;
-class QTableView;
+class QAbstractItemModel;
+class QTreeView;
 
 class PropertyEditor : public QDockWidget
 {
@@ -33,10 +33,10 @@ public:
     explicit PropertyEditor(QWidget *parent = 0);
     
 public slots:
-    void setModel(QAbstractTableModel* model);
+    void setModel(QAbstractItemModel* model);
     
 private:
-    QTableView* m_table;
+    QTreeView* m_view;
 };
 
 #endif // PROPERTYEDITOR_H

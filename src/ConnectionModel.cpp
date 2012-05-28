@@ -28,7 +28,10 @@ int ConnectionModel::columnCount(const QModelIndex& index) const
 
 int ConnectionModel::rowCount(const QModelIndex& index) const
 {
-    return 1;
+    if(index.isValid())
+        return 0;
+    else
+        return 1;
 }
 
 QVariant ConnectionModel::headerData(int section, Qt::Orientation orientation, int role) const
