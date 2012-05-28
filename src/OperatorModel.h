@@ -185,7 +185,8 @@ private:
     void setInitialized(bool initialized);
     
     /**
-     * Returns the number of parameters of the operator which can currently be read.
+     * Returns the number of parameters of the operator which can currently be read
+     * or which are non-empty parameter groups.
      */
     int accessibleParametersCount() const;
     

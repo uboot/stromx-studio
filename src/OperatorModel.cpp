@@ -378,7 +378,7 @@ const stromx::core::Parameter* OperatorModel::parameterAtRow(int row) const
         iter != parameters.end();
         ++iter)
     {
-        if(parameterIsReadAccessible(*iter))
+        if(parameterIsReadAccessible(*iter) || (*iter)->members().size())
         {
             if(currentRow == row)
                 return *iter;
@@ -399,7 +399,7 @@ int OperatorModel::accessibleParametersCount() const
         iter != parameters.end();
         ++iter)
     {
-        if(parameterIsReadAccessible(*iter))
+        if(parameterIsReadAccessible(*iter) || (*iter)->members().size())
             count++;
     }
     return count;    
