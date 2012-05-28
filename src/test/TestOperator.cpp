@@ -6,6 +6,7 @@
 #include <stromx/core/Id2DataPair.h>
 #include <stromx/core/NumericParameter.h>
 #include <stromx/core/OperatorException.h>
+#include <stromx/core/ParameterGroup.h>
 #include <stromx/core/Primitive.h>
 
 using namespace stromx::core;
@@ -121,7 +122,11 @@ const std::vector<const Parameter*> TestOperator::setupParameters()
     intParam->setAccessMode(Parameter::INITIALIZED_WRITE);
     parameters.push_back(intParam);
     
-    EnumParameter* enumParam = new EnumParameter(ENUM_PARAM);
+    ParameterGroup* group = new ParameterGroup(PARAM_GROUP);
+    group->setName("Group");
+    parameters.push_back(group);
+    
+    EnumParameter* enumParam = new EnumParameter(ENUM_PARAM, group);
     enumParam->setName("Enum parameter");
     enumParam->setAccessMode(Parameter::ACTIVATED_WRITE);
     enumParam->add(EnumDescription(Enum(0), "Choice 0"));
