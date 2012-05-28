@@ -79,11 +79,19 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
             
         default:
         {
-            if(parameterIsWriteAccessible(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]))
+            if(parameterIsWriteAccessible(parameterAtRow(index.row())))
                 return flags | Qt::ItemIsEditable;
         }
     }    
     return flags;
+}
+
+QModelIndex OperatorModel::index(int row, int column, const QModelIndex& parent) const
+{
+    if(row >= PARAMETER_OFFSET)
+        return createIndex(row, column, (void*)(parameterAtRow(row)));
+    else
+        return createIndex(row, column);
 }
 
 QVariant OperatorModel::data(const QModelIndex& index, int role) const
@@ -186,7 +194,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     case PARAMETER_NAME:
         return QVariant(QString::fromStdString(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]->name()));
     case PARAMETER_VALUE:            
-        if(parameterIsReadAccessible(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]))
+        if(parameterIsReadAccessible(parameterAtRow(index.row())))
         {
             const stromx::core::Parameter* param = m_op->info().parameters()[index.row()-PARAMETER_OFFSET];
             unsigned int paramId = param->id();
@@ -235,9 +243,9 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
             
         default:
         {
-            if(parameterIsWriteAccessible(m_op->info().parameters()[index.row()-PARAMETER_OFFSET]))
+            const stromx::core::Parameter* param = parameterAtRow(index.row());
+            if(parameterIsWriteAccessible(param))
             {
-                const stromx::core::Parameter* param = m_op->info().parameters()[index.row()-PARAMETER_OFFSET];
                 unsigned int paramId = param->id();
                 try
                 {
@@ -346,12 +354,45 @@ void OperatorModel::doSetPos(const QPointF& pos)
     emit posChanged(m_pos);
 }
 
-int OperatorModel::accessibleParametersCount() const
+const stromx::core::Parameter* OperatorModel::parameterAtRow(int row) const
 {
-    return m_op->info().parameters().size();    
+    Q_ASSERT(row - PARAMETER_OFFSET >= 0);
+    
+    const std::vector<const stromx::core::Parameter*> & parameters = m_op->info().parameters();
+    int currentRow = PARAMETER_OFFSET;
+    
+    for(std::vector<const stromx::core::Parameter*>::const_iterator iter = parameters.begin();
+        iter != parameters.end();
+        ++iter)
+    {
+        if(parameterIsReadAccessible(*iter))
+        {
+            if(currentRow == row)
+                return *iter;
+            
+            currentRow++;
+        }
+    }
+    
+    Q_ASSERT(false);
 }
 
-bool OperatorModel::parameterIsReadAccessible(const stromx::core::Parameter* const par) const
+int OperatorModel::accessibleParametersCount() const
+{
+    int count = 0;
+    const std::vector<const stromx::core::Parameter*> & parameters = m_op->info().parameters();
+    
+    for(std::vector<const stromx::core::Parameter*>::const_iterator iter = parameters.begin();
+        iter != parameters.end();
+        ++iter)
+    {
+        if(parameterIsReadAccessible(*iter))
+            count++;
+    }
+    return count;    
+}
+
+bool OperatorModel::parameterIsReadAccessible(const stromx::core::Parameter* par) const
 {
     if(m_op->status() != stromx::core::Operator::NONE)
     {
@@ -369,7 +410,7 @@ bool OperatorModel::parameterIsReadAccessible(const stromx::core::Parameter* con
     }
 }
 
-bool OperatorModel::parameterIsWriteAccessible(const stromx::core::Parameter*const par) const
+bool OperatorModel::parameterIsWriteAccessible(const stromx::core::Parameter* par) const
 {
     switch(m_op->status())
     {

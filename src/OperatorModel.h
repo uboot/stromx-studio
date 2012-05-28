@@ -67,7 +67,53 @@ public:
     explicit OperatorModel(stromx::core::Operator* op, StreamModel *stream);
     virtual ~OperatorModel();
     
+    /** Returns the stromx operator of this model. */
     stromx::core::Operator* const op() const { return m_op; }
+    
+    /** Returns the package the operator belongs to. */
+    const QString & package() const;
+    
+    /** Returns the type of the operator. */
+    const QString & type() const;
+    
+    /** Returns the name of the operator. */
+    const QString & name() const { return m_name; }
+    
+    /** Pushes a set name command on the undo stack. */
+    void setName(const QString & name);
+    
+    /** Returns the position of the operator in the stream scene. */
+    const QPointF & pos() const { return m_pos; }
+    
+    /** Pushes a set position command on the undo stack. */
+    void setPos(const QPointF & pos);
+    
+    /** 
+     * Returns true if the operator is initialized, i.e. the status of the
+     * stromx operator different from stromx::core::Operator::NONE.
+     */
+    bool isInitialized() const;
+    
+    /** 
+     * Returns true if the operator is activated, i.e. the status of the
+     * stromx operator is stromx::core::Operator::ACTIVE or 
+     * stromx::core::Operator::EXECUTING.
+     */
+    bool isActive() const;
+    
+    /** 
+     * Returns the connections which end or start at this operator.
+     */
+    const QSet<ConnectionModel*> connections() const { return m_connections; }
+    
+    /** Adds the connection to the list of current connections of this operator. */
+    void addConnection(ConnectionModel* connection);
+    
+    /** Removes a connection from the list of current connections of this operator */
+    void removeConnection(ConnectionModel* connection);
+    
+    /** Returns the undo stack. */
+    QUndoStack* undoStack() const;
     
     virtual int rowCount(const QModelIndex & index) const;
     virtual int columnCount(const QModelIndex & index) const;
@@ -75,28 +121,15 @@ public:
     virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     virtual Qt::ItemFlags flags(const QModelIndex & index) const;
+    virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
+    
     virtual void customEvent(QEvent* event);
     
-    const QString & package() const;
-    const QString & type() const;
-    
-    const QString & name() const { return m_name; }
-    void setName(const QString & name);
-    
-    const QPointF & pos() const { return m_pos; }
-    void setPos(const QPointF & pos);
-    
-    bool isInitialized() const;
-    bool isActive() const;
-    
-    const QSet<ConnectionModel*> connections() const { return m_connections; }
-    void addConnection(ConnectionModel* connection);
-    void removeConnection(ConnectionModel* connection);
-    
-    QUndoStack* undoStack() const;
-    
 signals:
+    /** The position of the operator on the stream scene has changed. */
     void posChanged(const QPointF & pos);
+    
+    /** The name of the operator has changed. */
     void nameChanged(const QString & name);
     
     /** The stromx operator was initialized or deinitialized. */
@@ -136,14 +169,37 @@ private:
     
     static QString statusToString(int status);
     
+    /** Sets the name of the operator. */
     void doSetName(const QString & name);
+    
+    /** Sets the parameter \c paramId to \c newValue. */
     void doSetParameter(unsigned int paramId, const stromx::core::Data& newValue);
+    
+    /** Sets the position of the operator in the stream scene. */
     void doSetPos(const QPointF & pos);
+    
+    /** 
+     * Initializes or deinitializes the operator. This functions is called by 
+     * the class StreamModel.
+     */
     void setInitialized(bool initialized);
+    
+    /**
+     * Returns the number of parameters of the operator which can currently be read.
+     */
     int accessibleParametersCount() const;
-    bool parameterIsReadAccessible(const stromx::core::Parameter* const par) const;
-    bool parameterIsWriteAccessible(const stromx::core::Parameter* const par) const;
-    QString convertDataToQString(const stromx::core::Data& data, const stromx::core::Parameter* param) const;
+    
+    /**
+     * Returns the parameter at \c row. The row index is the position of the parameter
+     * in the list of the currently accessible parameters.
+     */
+    const stromx::core::Parameter* parameterAtRow(int row) const;
+    
+    /** Returns whether this parameter can currently be read. */
+    bool parameterIsReadAccessible(const stromx::core::Parameter* par) const;
+    
+    /** Returns whether this parameter can currently be written. */
+    bool parameterIsWriteAccessible(const stromx::core::Parameter* par) const;
     
     stromx::core::Operator* m_op;
     StreamModel* m_stream;
