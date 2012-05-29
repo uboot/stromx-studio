@@ -26,6 +26,7 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     inputList->setSelectionBehavior(QAbstractItemView::SelectRows);
     inputList->setSelectionMode(QAbstractItemView::SingleSelection);
     inputList->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    inputList->verticalHeader()->setDefaultSectionSize(ItemDelegate::ROW_HEIGHT);
     inputList->verticalHeader()->hide();
     inputList->setItemDelegate(new ItemDelegate(this));
     inputList->setEditTriggers(QAbstractItemView::AllEditTriggers);

@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QHeaderView>
 #include <QMouseEvent>
+#include "ItemDelegate.h"
 #include "OperatorLibraryModel.h"
 #include "OperatorData.h"
 
@@ -16,6 +17,7 @@ void OperatorLibraryList::setOperatorLibraryModel(OperatorLibraryModel* model)
 {
     m_model = model;
     setModel(model);
+    setItemDelegate(new ItemDelegate(this));
     header()->setResizeMode(QHeaderView::Stretch);
 }
 

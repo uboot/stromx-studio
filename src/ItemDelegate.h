@@ -38,6 +38,8 @@ class ItemDelegate : public QStyledItemDelegate
     Q_OBJECT
     
 public:
+    static const int ROW_HEIGHT;
+    
     explicit ItemDelegate(QObject* parent = 0);
     
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -45,7 +47,8 @@ public:
     virtual void setEditorData (QWidget* editor, const QModelIndex & index) const;
     virtual void updateEditorGeometry(QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index) const;
     virtual void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index ) const;
-
+    virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    
 private slots:
     void commitEditEvent();
 };

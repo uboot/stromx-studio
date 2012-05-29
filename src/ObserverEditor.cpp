@@ -3,6 +3,7 @@
 #include <QAction>
 #include <QHeaderView>
 #include <QTreeView>
+#include "ItemDelegate.h"
 #include "ObserverModel.h"
 #include "ObserverTreeModel.h"
 
@@ -20,6 +21,7 @@ ObserverEditor::ObserverEditor(QWidget* parent)
 void ObserverEditor::setModel(QAbstractItemModel* model)
 {
     m_observerView->setModel(model);
+    m_observerView->setItemDelegate(new ItemDelegate(this));
     m_observerView->setDragDropMode(QAbstractItemView::DragDrop);
     m_observerView->header()->setResizeMode(QHeaderView::Stretch);
     m_observerView->setSelectionBehavior(QAbstractItemView::SelectRows);

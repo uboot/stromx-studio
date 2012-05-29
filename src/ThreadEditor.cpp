@@ -14,6 +14,7 @@ ThreadEditor::ThreadEditor(QWidget* parent)
 {    
     m_view = new QTableView;
     m_view->setItemDelegate(new ItemDelegate(this));
+    m_view->verticalHeader()->setDefaultSectionSize(ItemDelegate::ROW_HEIGHT);
     m_view->setEditTriggers(QAbstractItemView::AllEditTriggers);
     
     QHBoxLayout* layout = new QHBoxLayout;

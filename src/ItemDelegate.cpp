@@ -2,11 +2,14 @@
 
 #include <QApplication>
 #include <QComboBox>
+#include <QPainter>
 #include <QPushButton>
 #include <QMap>
 #include "Common.h"
 #include "ChooseImageButton.h"
 #include "TriggerButton.h"
+
+const int ItemDelegate::ROW_HEIGHT = 25;
 
 ItemDelegate::ItemDelegate(QObject* parent)
   : QStyledItemDelegate(parent)
@@ -153,7 +156,17 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
         QApplication::style()->drawControl(QStyle::CE_PushButton, &buttonOption, painter);
     }
     else
+    {
         QStyledItemDelegate::paint(painter, option, index);
+    }
+}
+
+QSize ItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    QSize size = QStyledItemDelegate::sizeHint(option, index);
+    size.setHeight(ROW_HEIGHT);
+    
+    return size;
 }
 
 void ItemDelegate::commitEditEvent()
