@@ -247,7 +247,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
         return QString::fromStdString(m_op->name());
     case PARAMETER_NAME:
     {
-        return QVariant(QString::fromStdString(param->name()));
+        return QVariant(QString::fromStdString(param->doc().title()));
     }
     case PARAMETER_VALUE:
         if(parameterIsReadAccessible(param))

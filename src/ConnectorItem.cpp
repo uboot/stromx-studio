@@ -164,10 +164,11 @@ void ConnectorItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
     if(! m_label)
     {
         std::string text;
+        const stromx::core::OperatorInfo & info = m_op->op()->info();
         if(connectorType() == INPUT)
-            text = m_op->op()->info().inputs()[m_id]->name();
+            text = info.inputs()[m_id]->doc().title();
         else
-            text = m_op->op()->info().outputs()[m_id]->name();
+            text = info.outputs()[m_id]->doc().title();
         
         m_label = new QGraphicsTextItem(this);
         m_label->setPlainText(QString::fromStdString(text));

@@ -85,11 +85,11 @@ const std::vector<const Description*> TestOperator::setupInputs()
     Description* description = 0;
     
     description = new Description(INPUT_1, DataVariant::NONE);
-    description->setName("Input 1");
+    description->setDoc("Input 1");
     inputs.push_back(description);
     
     description = new Description(INPUT_2, DataVariant::NONE);
-    description->setName("Input 2");
+    description->setDoc("Input 2");
     inputs.push_back(description);
     
     return inputs;
@@ -101,11 +101,11 @@ const std::vector<const Description*> TestOperator::setupOutputs()
     Description* description = 0;
     
     description = new Description(OUTPUT_1, DataVariant::NONE);
-    description->setName("Output 1");
+    description->setDoc("Output 1");
     outputs.push_back(description);
     
     description = new Description(OUTPUT_2, DataVariant::NONE);
-    description->setName("Output 2");
+    description->setDoc("Output 2");
     outputs.push_back(description);
     
     return outputs;
@@ -116,22 +116,22 @@ const std::vector<const Parameter*> TestOperator::setupParameters()
     std::vector<const Parameter*> parameters;
     
     ParameterGroup* group1 = new ParameterGroup(PARAM_GROUP_1);
-    group1->setName("Group 1");
+    group1->setDoc("Group 1");
     parameters.push_back(group1);
     
     ParameterGroup* group2 = new ParameterGroup(PARAM_GROUP_2, group1);
-    group2->setName("Group 2");
+    group2->setDoc("Group 2");
     parameters.push_back(group2);
     
     NumericParameter<Int32>* intParam = new NumericParameter<Int32>(INT_PARAM, DataVariant::INT_32, group1);
-    intParam->setName("Integer parameter");
+    intParam->setDoc("Integer parameter");
     intParam->setMax(Int32(1000));
     intParam->setMin(Int32(-1000));
     intParam->setAccessMode(Parameter::INITIALIZED_WRITE);
     parameters.push_back(intParam);
     
     EnumParameter* enumParam = new EnumParameter(ENUM_PARAM, group2);
-    enumParam->setName("Enum parameter");
+    enumParam->setDoc("Enum parameter");
     enumParam->setAccessMode(Parameter::ACTIVATED_WRITE);
     enumParam->add(EnumDescription(Enum(0), "Choice 0"));
     enumParam->add(EnumDescription(Enum(1), "Choice 1"));
@@ -146,7 +146,7 @@ const std::vector<const Parameter*> TestOperator::setupInitParameters()
     std::vector<const Parameter*> parameters;
     
     Parameter* initializeParam = new Parameter(INITIALIZE_PARAM, DataVariant::UINT_32);
-    initializeParam->setName("Initialize parameter");
+    initializeParam->setDoc("Initialize parameter");
     initializeParam->setAccessMode(Parameter::NONE_WRITE);
     parameters.push_back(initializeParam);
     

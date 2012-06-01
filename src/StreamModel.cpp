@@ -119,7 +119,7 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
         const stromx::core::OperatorInfo& op = e.op();
         QString error = tr("Failed to set parameter %1 ('%2') of operator of type %3 in package %4.")
                         .arg(QString("%1").arg(e.parameter().id()),
-                             QString::fromStdString(e.parameter().name()),
+                             QString::fromStdString(e.parameter().doc().title()),
                              QString::fromStdString(op.type()),
                              QString::fromStdString(op.package()));
         throw ReadStreamFailed(error);
