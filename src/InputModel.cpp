@@ -1,5 +1,6 @@
 #include "InputModel.h"
 
+#include "Common.h"
 #include "OperatorModel.h"
 #include "SetInputColorCmd.h"
 #include "StreamModel.h"
@@ -8,7 +9,7 @@ InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack
   : QObject(parent),
     m_op(op),
     m_id(id),
-    m_color(Qt::black),
+    m_color(*(colorTable().begin())),
     m_undoStack(undoStack) 
 {
     connect(op, SIGNAL(nameChanged(QString)), this, SLOT(updateOperatorName(QString)));

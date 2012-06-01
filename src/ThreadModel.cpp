@@ -1,6 +1,7 @@
 #include "ThreadModel.h"
 
 #include <stromx/core/Thread.h>
+#include "Common.h"
 #include "RenameThreadCmd.h"
 #include "SetThreadColorCmd.h"
 #include "StreamModel.h"
@@ -9,7 +10,7 @@ ThreadModel::ThreadModel(stromx::core::Thread* thread, StreamModel* stream)
   : QObject(stream),
     m_thread(thread),
     m_stream(stream),
-    m_color(Qt::black)
+    m_color(*(colorTable().begin()))
 {
     if(m_thread)
         m_name = QString::fromStdString(m_thread->name());

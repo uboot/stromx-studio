@@ -92,7 +92,7 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
                 case ChoicesRole:
                 {
                     QList<QVariant> choices;
-                    choices << tr("no thread");
+                    choices << tr("No thread");
                     foreach(ThreadModel* thread, m_stream->threads())
                     {
                         choices << thread->name();
@@ -210,7 +210,7 @@ const QColor ConnectionModel::color() const
     if(m_thread)
         return m_thread->color();
     else
-        return QColor(Qt::black);
+        return QColor(Qt::gray);
 }
 
 void ConnectionModel::connectToOperators()

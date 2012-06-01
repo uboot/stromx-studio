@@ -107,9 +107,6 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
 
 QModelIndex OperatorModel::parent(const QModelIndex& child) const
 {
-//     if(child.column() != 0)
-//         return QModelIndex();
-    
     const stromx::core::Parameter* param = reinterpret_cast<const stromx::core::Parameter*>(child.internalPointer());
     
     // this is no parameter
@@ -150,15 +147,6 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     // return if any of the conditions below is not satisfied
     if(!index.isValid() || index.column() > 1 || m_op == 0)
         return QVariant();
-    
-    // possible rows
-    enum
-    {
-        TYPE_ROW, // 0
-        STATUS_ROW, // 1
-        NAME_ROW, // 2
-        PARAMETER_ROW // 3
-    };
     
     // possible columns
     enum
@@ -203,7 +191,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     /* Action */  {{5, 0, 0, 0}, {6, 6, 0, 0}}, {{7, 0, 0, 0}, {8, 8, 8, 0}}};
      
     // extract row, column and role type
-    int row = (index.row() >= PARAMETER_OFFSET || index.parent().isValid()) ? PARAMETER_ROW : index.row();
+    int row = rowType(index);
     int column = index.column() == 0 ? 0 : 1;
     int roleType = 0;
     switch(role)
@@ -282,8 +270,7 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
     
     const stromx::core::Parameter* param = reinterpret_cast<stromx::core::Parameter*>(index.internalPointer());
 
-    int row = index.parent().isValid() ? PARAMETER_OFFSET : index.row();
-    
+    Row row = rowType(index);
     switch(row)
     {
         case NAME:
@@ -642,6 +629,11 @@ QString OperatorModel::statusToString(int status)
     }
     
     return QString();
+}
+
+OperatorModel::Row OperatorModel::rowType(const QModelIndex& index) const
+{
+    return (index.parent().isValid() || index.row() >= PARAMETER_OFFSET) ? PARAMETER_OFFSET : Row(index.row());
 }
 
 QDataStream& operator<<(QDataStream& stream, const OperatorModel* op)

@@ -22,6 +22,7 @@ void ObserverEditor::setModel(QAbstractItemModel* model)
 {
     m_observerView->setModel(model);
     m_observerView->setAlternatingRowColors(true);
+    m_observerView->setDropIndicatorShown(true);
     m_observerView->setItemDelegate(new ItemDelegate(this));
     m_observerView->setDragDropMode(QAbstractItemView::DragDrop);
     m_observerView->header()->setResizeMode(QHeaderView::Stretch);

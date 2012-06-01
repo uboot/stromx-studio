@@ -223,6 +223,12 @@ private:
      */
     QList<const stromx::core::Parameter*> members(const stromx::core::Parameter* group) const;
     
+    
+    /** 
+     * Returns the row type of the row \c index refers to.
+     */
+    Row rowType(const QModelIndex & index) const;
+    
     stromx::core::Operator* m_op;
     StreamModel* m_stream;
     QPointF m_pos;
