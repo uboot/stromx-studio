@@ -22,6 +22,7 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     QTableView* inputList = new QTableView();
     inputList->setModel(observer);
     inputList->setShowGrid(false);
+    inputList->setAlternatingRowColors(true);
     inputList->setDragDropMode(QAbstractItemView::DragDrop);
     inputList->setSelectionBehavior(QAbstractItemView::SelectRows);
     inputList->setSelectionMode(QAbstractItemView::SingleSelection);

@@ -12,6 +12,7 @@ PropertyEditor::PropertyEditor(QWidget* parent)
     
     m_view = new QTreeView;
     m_view->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    m_view->setAlternatingRowColors(true);
     setWidget(m_view);
     
     m_view->setItemDelegate(new ItemDelegate(this));

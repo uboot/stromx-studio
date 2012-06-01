@@ -19,6 +19,7 @@ void OperatorLibraryList::setOperatorLibraryModel(OperatorLibraryModel* model)
     setModel(model);
     setItemDelegate(new ItemDelegate(this));
     header()->setResizeMode(QHeaderView::Stretch);
+    setAlternatingRowColors(true);
 }
 
 

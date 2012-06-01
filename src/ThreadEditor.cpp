@@ -16,6 +16,8 @@ ThreadEditor::ThreadEditor(QWidget* parent)
     m_view->setItemDelegate(new ItemDelegate(this));
     m_view->verticalHeader()->setDefaultSectionSize(ItemDelegate::ROW_HEIGHT);
     m_view->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    m_view->setShowGrid(false);
+    m_view->setAlternatingRowColors(true);
     
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(m_view);
@@ -28,7 +30,6 @@ void ThreadEditor::setModel(StreamModel* model)
     m_model = model;
     
     m_view->setModel(m_model->threadListModel());
-    m_view->setShowGrid(false);
     m_view->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     m_view->verticalHeader()->hide();
     m_view->setSelectionBehavior(QAbstractItemView::SelectRows);
