@@ -89,6 +89,17 @@ void ObserverTreeModel::doInsertObserver(int pos, ObserverModel* observer)
     emit observerAdded(observer);
 }
 
+void ObserverTreeModel::removeInput(ObserverModel* observer, int inputPos)
+{
+    InputModel* input = observer->input(inputPos);
+    int observerPos = m_observers.indexOf(observer);
+    Q_ASSERT(observer >= 0);
+    
+    QUndoCommand* cmd = new RemoveInputCmd(this, observerPos, inputPos, input);
+    m_undoStack->push(cmd);
+}
+
+
 bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & parent)
 {
     Q_ASSERT(count == 1);

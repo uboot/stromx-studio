@@ -74,6 +74,12 @@ public:
     /** Removes the input at \c position. */
     void removeInput(int position);
     
+    /** Returns the observer tree model this model belongs to. */
+    ObserverTreeModel* parentModel() const { return m_parent; }
+    
+    /** Returns the undo stack. */
+    QUndoStack* undoStack() const { return m_undoStack; }
+    
     virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);

@@ -6,6 +6,7 @@
 #include "DataVisualizer.h"
 #include "ObserverModel.h"
 #include "ObserverView.h"
+#include <QUndoStack>
 
 ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent) 
   : QMainWindow(parent, Qt::Window),

@@ -68,7 +68,18 @@ public:
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
-    /** Pushes an insert observer command on the undo stack. */
+    /** 
+     * Pushes an remove input command on the undo stack. The 
+     * command removes the input at the position \c pos of \c observer.
+     */
+    void removeInput(ObserverModel* observer, int pos);
+    
+    /** 
+     *
+     * Pushes an insert observer command on the undo stack and returns true if 
+     * the position in the view refers to a top-level element, i.e. \c parent is invalid. 
+     * Returns false if \c parent is valid.
+     */
     virtual bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
     
     /** 

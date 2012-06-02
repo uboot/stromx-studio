@@ -47,13 +47,19 @@ signals:
     void removeThreadActiveChanged(bool selected);
     void addThreadActiveChanged(bool selected);
     
+protected:
+    void contextMenuEvent(QContextMenuEvent* event);
+    
 private slots:
     void updateThreadSelected( const QModelIndex & current, const QModelIndex & previous );
     void updateStreamActive();
     
 private:
     ThreadModel* selectedThread() const;
+    
     StreamModel* m_model;
+    QAction* m_addThreadAct;
+    QAction* m_removeThreadAct;
 };
 
 #endif // THREADLISTVIEW_H

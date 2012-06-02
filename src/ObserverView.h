@@ -40,8 +40,18 @@ public:
     /** Returns the observer model of the view. */
     ObserverModel* model() const { return m_observer; }
     
+    /** Returns an action which removes the selected input from the observer when triggered. */
+    QAction* createRemoveInputAction(QObject* parent);
+    
+protected:
+    void contextMenuEvent(QContextMenuEvent* event);
+    
+private slots:
+    void removeInput();
+    
 private:
     ObserverModel* m_observer;
+    QAction* m_removeInputAct;
 };
 
 #endif // OBSERVERVIEW_H

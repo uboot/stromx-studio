@@ -2,6 +2,8 @@
 
 #include <QAction>
 #include <QHeaderView>
+#include <QContextMenuEvent>
+#include <QMenu>
 #include <QTableView>
 #include "ItemDelegate.h"
 #include "StreamModel.h"
@@ -9,16 +11,20 @@
 
 ThreadListView::ThreadListView(QWidget* parent)
   : QTableView(parent),
-    m_model(0)
+    m_model(0),
+    m_addThreadAct(0),
+    m_removeThreadAct(0)
 {    
     setItemDelegate(new ItemDelegate(this));
     verticalHeader()->setDefaultSectionSize(ItemDelegate::ROW_HEIGHT);
-    setEditTriggers(QAbstractItemView::AllEditTriggers);
     setShowGrid(false);
     setAlternatingRowColors(true);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
     verticalHeader()->hide();
+    
+    m_addThreadAct = createAddThreadAction(this);
+    m_removeThreadAct = createRemoveThreadAction(this);
 }
 
 void ThreadListView::setStreamModel(StreamModel* model)
@@ -81,6 +87,16 @@ ThreadModel* ThreadListView::selectedThread() const
     return 0;
 }
 
+void ThreadListView::contextMenuEvent(QContextMenuEvent* event)
+{
+    QMenu menu(this);
+    menu.addAction(m_addThreadAct);
+    
+    if(indexAt(event->pos()).isValid())
+        menu.addAction(m_removeThreadAct);
+    menu.exec(event->globalPos());
+}
+
 void ThreadListView::updateThreadSelected(const QModelIndex& current, const QModelIndex& previous)
 {
     if(current.isValid() && ! m_model->isActive())
@@ -104,8 +120,7 @@ void ThreadListView::updateStreamActive()
     {
         emit addThreadActiveChanged(false);
         emit removeThreadActiveChanged(false);
-    }
-            
+    }       
 }
 
 

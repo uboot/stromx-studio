@@ -57,10 +57,18 @@ signals:
     /** This signal is emitted if an input is selected or deselected in the view. */
     void inputSelectedChanged(bool selected);
     
+protected:
+    void contextMenuEvent(QContextMenuEvent* event);
+    
 private slots:
     void addObserver();
     void removeSelectedEntry();
     void updateObserverSelected(const QModelIndex& current, const QModelIndex& previous);
+    
+private:
+    QAction* m_addObserverAct;
+    QAction* m_removeInputAct;
+    QAction* m_removeObserverAct;
 };
 
 #endif // OBSERVERTREEVIEW_H

@@ -1,13 +1,18 @@
 #include "ObserverTreeView.h"
 
 #include <QAction>
+#include <QContextMenuEvent>
 #include <QHeaderView>
+#include <QMenu>
 #include "ItemDelegate.h"
 #include "ObserverModel.h"
 #include "ObserverTreeModel.h"
 
 ObserverTreeView::ObserverTreeView(QWidget* parent)
-  : QTreeView(parent)
+  : QTreeView(parent),
+    m_addObserverAct(0),
+    m_removeInputAct(0),
+    m_removeObserverAct(0)
 {
     setAlternatingRowColors(true);
     setDropIndicatorShown(true);
@@ -15,6 +20,10 @@ ObserverTreeView::ObserverTreeView(QWidget* parent)
     setDragDropMode(QAbstractItemView::DragDrop);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
+    
+    m_addObserverAct = createAddObserverAction(this);
+    m_removeInputAct = createRemoveInputAction(this);
+    m_removeObserverAct = createRemoveObserverAction(this);
 }
 
 void ObserverTreeView::setModel(QAbstractItemModel* model)
@@ -34,6 +43,22 @@ QAction* ObserverTreeView::createAddObserverAction(QObject* parent)
     connect(action, SIGNAL(triggered()), this, SLOT(addObserver()));
     
     return action;
+}
+
+void ObserverTreeView::contextMenuEvent(QContextMenuEvent* event)
+{
+    QMenu menu(this);
+    menu.addAction(m_addObserverAct);
+    
+    QModelIndex index = indexAt(event->pos());
+    if(index.isValid())
+    {
+        if(index.parent().isValid())
+            menu.addAction(m_removeInputAct);
+        else
+            menu.addAction(m_removeObserverAct);
+    }
+    menu.exec(event->globalPos());
 }
 
 QAction* ObserverTreeView::createRemoveObserverAction(QObject* parent)
