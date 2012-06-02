@@ -1,46 +1,39 @@
-#include "ThreadEditor.h"
+#include "ThreadListView.h"
 
 #include <QAction>
-#include <QHBoxLayout>
 #include <QHeaderView>
 #include <QTableView>
 #include "ItemDelegate.h"
 #include "StreamModel.h"
 #include "ThreadListModel.h"
 
-ThreadEditor::ThreadEditor(QWidget* parent)
-  : QWidget(parent),
+ThreadListView::ThreadListView(QWidget* parent)
+  : QTableView(parent),
     m_model(0)
 {    
-    m_view = new QTableView;
-    m_view->setItemDelegate(new ItemDelegate(this));
-    m_view->verticalHeader()->setDefaultSectionSize(ItemDelegate::ROW_HEIGHT);
-    m_view->setEditTriggers(QAbstractItemView::AllEditTriggers);
-    m_view->setShowGrid(false);
-    m_view->setAlternatingRowColors(true);
-    
-    QHBoxLayout* layout = new QHBoxLayout;
-    layout->addWidget(m_view);
-    
-    setLayout(layout);
+    setItemDelegate(new ItemDelegate(this));
+    verticalHeader()->setDefaultSectionSize(ItemDelegate::ROW_HEIGHT);
+    setEditTriggers(QAbstractItemView::AllEditTriggers);
+    setShowGrid(false);
+    setAlternatingRowColors(true);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    verticalHeader()->hide();
 }
 
-void ThreadEditor::setModel(StreamModel* model)
+void ThreadListView::setStreamModel(StreamModel* model)
 {
     m_model = model;
     
-    m_view->setModel(m_model->threadListModel());
-    m_view->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    m_view->verticalHeader()->hide();
-    m_view->setSelectionBehavior(QAbstractItemView::SelectRows);
-    m_view->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(m_view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), 
+    setModel(m_model->threadListModel());
+    horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    connect(selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), 
             this, SLOT(updateThreadSelected(QModelIndex,QModelIndex)));
     connect(m_model, SIGNAL(streamStarted()), this, SLOT(updateStreamActive()));
     connect(m_model, SIGNAL(streamJoined()), this, SLOT(updateStreamActive()));
 }
 
-QAction* ThreadEditor::createAddThreadAction(QObject* parent)
+QAction* ThreadListView::createAddThreadAction(QObject* parent)
 {    
     QAction* action = new QAction(tr("Add thread"), parent);
     action->setStatusTip(tr("Add a thread to the stream"));
@@ -52,7 +45,7 @@ QAction* ThreadEditor::createAddThreadAction(QObject* parent)
     return action;
 }
 
-QAction* ThreadEditor::createRemoveThreadAction(QObject* parent)
+QAction* ThreadListView::createRemoveThreadAction(QObject* parent)
 {
     QAction* action = new QAction(tr("Remove thread"), parent);
     action->setStatusTip(tr("Remove the selected thread from the stream"));
@@ -64,23 +57,23 @@ QAction* ThreadEditor::createRemoveThreadAction(QObject* parent)
     return action;
 }
 
-void ThreadEditor::addThread() const
+void ThreadListView::addThread() const
 {
     m_model->addThread();
 }
 
-void ThreadEditor::removeThread() const
+void ThreadListView::removeThread() const
 {
     ThreadModel* thread = selectedThread();
     if(thread)
         m_model->removeThread(thread);
 }
 
-ThreadModel* ThreadEditor::selectedThread() const
+ThreadModel* ThreadListView::selectedThread() const
 {
-    if(m_view->selectionModel())
+    if(selectionModel())
     {
-        QModelIndex index = m_view->selectionModel()->currentIndex();
+        QModelIndex index = selectionModel()->currentIndex();
         if(index.isValid())
             return reinterpret_cast<ThreadModel*>(index.internalPointer());
     }
@@ -88,7 +81,7 @@ ThreadModel* ThreadEditor::selectedThread() const
     return 0;
 }
 
-void ThreadEditor::updateThreadSelected(const QModelIndex& current, const QModelIndex& previous)
+void ThreadListView::updateThreadSelected(const QModelIndex& current, const QModelIndex& previous)
 {
     if(current.isValid() && ! m_model->isActive())
         emit removeThreadActiveChanged(true);
@@ -96,7 +89,7 @@ void ThreadEditor::updateThreadSelected(const QModelIndex& current, const QModel
         emit removeThreadActiveChanged(false);
 }
 
-void ThreadEditor::updateStreamActive()
+void ThreadListView::updateStreamActive()
 {
     if(! m_model->isActive())
     {

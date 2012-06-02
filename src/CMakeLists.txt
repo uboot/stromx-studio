@@ -62,8 +62,8 @@ set(stromxstudio_SOURCES
     StreamEditor.cpp
     StreamEditorScene.cpp
     StreamModel.cpp
-    ThreadEditor.cpp
     ThreadListModel.cpp
+    ThreadListView.cpp
     ThreadModel.cpp
     TriggerButton.cpp
     UndoStackAction.cpp
@@ -95,8 +95,8 @@ set(stromxstudio_HEADERS
     StreamEditor.h 
     StreamEditorScene.h
     StreamModel.h
-    ThreadEditor.h
     ThreadListModel.h
+    ThreadListView.h
     ThreadModel.h
     TriggerButton.h
     UndoStackAction.h

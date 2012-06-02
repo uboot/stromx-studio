@@ -17,28 +17,27 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef THREADEDITOR_H
-#define THREADEDITOR_H
+#ifndef THREADLISTVIEW_H
+#define THREADLISTVIEW_H
 
-#include <QWidget>
+#include <QTableView>
 
 class QAbstractTableModel;
 class QModelIndex;
-class QTableView;
 class ThreadModel;
 class StreamModel;
 
-class ThreadEditor : public QWidget
+class ThreadListView : public QTableView
 {
     Q_OBJECT
 
 public:
-    explicit ThreadEditor(QWidget *parent = 0);
+    explicit ThreadListView(QWidget *parent = 0);
     
     QAction* createAddThreadAction(QObject* parent);
     QAction* createRemoveThreadAction(QObject* parent);
     
-    void setModel(StreamModel* model);
+    void setStreamModel(StreamModel* model);
     
 public slots:
     void addThread() const;
@@ -54,9 +53,7 @@ private slots:
     
 private:
     ThreadModel* selectedThread() const;
-    
-    QTableView* m_view;
     StreamModel* m_model;
 };
 
-#endif // THREADEDITOR_H
+#endif // THREADLISTVIEW_H

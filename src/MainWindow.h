@@ -49,7 +49,7 @@ class OperatorLibrary;
 class PropertyView;
 class StreamEditor;
 class StreamModel;
-class ThreadEditor;
+class ThreadListView;
 
 class MainWindow : public QMainWindow
 {
@@ -164,7 +164,7 @@ private:
     QToolBar* m_streamToolBar;
     
     StreamEditor* m_streamEditor;
-    ThreadEditor* m_threadEditor;
+    ThreadListView* m_threadListView;
     ObserverTreeView* m_observerTreeView;
     OperatorLibrary* m_operatorLibrary;
     PropertyView* m_propertyView;

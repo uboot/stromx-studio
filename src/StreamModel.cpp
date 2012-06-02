@@ -404,7 +404,6 @@ void StreamModel::doRemoveConnection(ConnectionModel* connection)
 void StreamModel::doAddThread(ThreadModel* threadModel)
 {
     stromx::core::Thread* thread = m_stream->addThread();
-    thread->setName("New thread");
     threadModel->setThread(thread);
     m_threadListModel->addThread(threadModel);
     emit threadAdded(threadModel);

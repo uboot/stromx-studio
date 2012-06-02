@@ -28,6 +28,7 @@
 #include <QToolBar>
 #include <QDir>
 #include <QFileDialog>
+#include <QHBoxLayout>
 #include <QSettings>
 #include <QtDebug>
 #include <QtGlobal>
@@ -50,7 +51,7 @@
 #include "StreamEditor.h"
 #include "StreamEditorScene.h"
 #include "StreamModel.h"
-#include "ThreadEditor.h"
+#include "ThreadListView.h"
 
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent),
@@ -58,9 +59,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     m_undoStack = new LimitUndoStack(this);
     
-    QSplitter* splitter = new QSplitter(Qt::Vertical);
     m_streamEditor = new StreamEditor;
-    m_threadEditor = new ThreadEditor;
+    
+    m_threadListView = new ThreadListView(this);
+    QHBoxLayout* layout = new QHBoxLayout;
+    layout->addWidget(m_threadListView);
+    QWidget* threadListWidget = new QWidget(this);
+    threadListWidget->setLayout(layout);
+    
+    QSplitter* splitter = new QSplitter(Qt::Vertical);
+    splitter->addWidget(m_streamEditor);
+    splitter->addWidget(threadListWidget);
+    setCentralWidget(splitter);
     
     createDockWidgets();    
     createActions();
@@ -68,16 +78,11 @@ MainWindow::MainWindow(QWidget *parent)
     createToolBars();
     createStatusBar();
     
+    updateCurrentFile("");
+    readSettings();
+    
     StreamModel* streamModel = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
     setModel(streamModel);
-    
-    splitter->addWidget(m_streamEditor);
-    splitter->addWidget(m_threadEditor);
-    setCentralWidget(splitter);
-    
-    updateCurrentFile("");
-    
-    readSettings();
     
     connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractItemModel*)),
             m_propertyView, SLOT(setModel(QAbstractItemModel*)));
@@ -132,7 +137,7 @@ void MainWindow::setModel(StreamModel* model)
     
     // set all editors to the new model
     m_streamEditor->streamEditorScene()->setModel(model);
-    m_threadEditor->setModel(model);
+    m_threadListView->setStreamModel(model);
     m_observerTreeView->setModel(model->observerModel());
     
     // delete the old model
@@ -154,8 +159,8 @@ void MainWindow::createActions()
     m_redoAct->setShortcuts(QKeySequence::Redo);
     m_initializeAct = m_streamEditor->streamEditorScene()->createInitializeAction(this);
     m_deinitializeAct = m_streamEditor->streamEditorScene()->createDeinitializeAction(this);
-    m_addThreadAct = m_threadEditor->createAddThreadAction(this);
-    m_removeThreadAct = m_threadEditor->createRemoveThreadAction(this);
+    m_addThreadAct = m_threadListView->createAddThreadAction(this);
+    m_removeThreadAct = m_threadListView->createRemoveThreadAction(this);
     m_removeSelectedItemsAct = m_streamEditor->streamEditorScene()->createRemoveAction(this);
     m_addObserverAct = m_observerTreeView->createAddObserverAction(this);
     m_removeObserverAct = m_observerTreeView->createRemoveObserverAction(this);
