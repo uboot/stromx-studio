@@ -18,7 +18,7 @@
 
 
 OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
-  : QAbstractItemModel(stream),
+  : PropertyModel(stream),
     m_op(op),
     m_stream(stream),
     m_package(QString::fromStdString(m_op->info().package())),
@@ -59,24 +59,6 @@ int OperatorModel::rowCount(const QModelIndex& index) const
     {
         return numDisplayedParameters(0) + PARAMETER_OFFSET;
     }
-}
-
-int OperatorModel::columnCount(const QModelIndex& index) const
-{
-    return 2;
-}
-
-QVariant OperatorModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
-    {
-        if(section == 0)
-            return tr("Property");
-        else
-            return tr("Value");
-    }
-    
-    return QVariant();
 }
 
 Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const

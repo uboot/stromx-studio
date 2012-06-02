@@ -8,6 +8,7 @@ PropertyView::PropertyView(QWidget* parent)
 {
     setEditTriggers(QAbstractItemView::AllEditTriggers);
     setAlternatingRowColors(true);
+    header()->setResizeMode(QHeaderView::Stretch);
     
     setItemDelegate(new ItemDelegate(this));
 }
@@ -15,6 +16,5 @@ PropertyView::PropertyView(QWidget* parent)
 void PropertyView::setModel(QAbstractItemModel* model)
 {
     QTreeView::setModel(model);
-    header()->setResizeMode(QHeaderView::Stretch);
 }
 

@@ -20,14 +20,14 @@
 #ifndef CONNECTIONMODEL_H
 #define CONNECTIONMODEL_H
 
-#include <QAbstractTableModel>
+#include "PropertyModel.h"
 
 class OperatorModel;
 class StreamModel;
 class ThreadModel;
 
 /** \brief Model of a connection in a stromx stream. */
-class ConnectionModel : public QAbstractTableModel
+class ConnectionModel : public PropertyModel
 {
     Q_OBJECT
     
@@ -38,11 +38,9 @@ public:
                              OperatorModel* targetOp, unsigned int inputId, StreamModel * stream = 0);
     
     virtual int rowCount(const QModelIndex & index) const;
-    virtual int columnCount(const QModelIndex & index) const;
     virtual QVariant data(const QModelIndex & index, int role) const;
     virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
     virtual Qt::ItemFlags flags(const QModelIndex& index) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
     /** Returns the thread which this input is assigned to. */
     ThreadModel* thread() const { return m_thread; }

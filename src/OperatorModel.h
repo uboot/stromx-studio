@@ -20,10 +20,10 @@
 #ifndef OPERATORMODEL_H
 #define OPERATORMODEL_H
 
-#include <QAbstractTableModel>
 #include <QPointF>
 #include <QSet>
 #include <stromx/core/DataContainer.h>
+#include "PropertyModel.h"
 
 namespace stromx
 {
@@ -41,7 +41,7 @@ class ConnectorObserver;
 class StreamModel;
 
 /** \brief Model of a stromx operator. */
-class OperatorModel : public QAbstractItemModel
+class OperatorModel : public PropertyModel
 {
     Q_OBJECT
     Q_PROPERTY(QString package READ package)
@@ -116,10 +116,8 @@ public:
     QUndoStack* undoStack() const;
     
     virtual int rowCount(const QModelIndex & index) const;
-    virtual int columnCount(const QModelIndex & index) const;
     virtual QVariant data(const QModelIndex & index, int role) const;
     virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     virtual Qt::ItemFlags flags(const QModelIndex & index) const;
     virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
     virtual QModelIndex parent(const QModelIndex& child) const;

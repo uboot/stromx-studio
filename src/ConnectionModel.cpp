@@ -10,7 +10,7 @@
 
 ConnectionModel::ConnectionModel(OperatorModel* sourceOp, unsigned int outputId,
                                  OperatorModel* targetOp, unsigned int inputId, StreamModel * stream)
-  : QAbstractTableModel(stream),
+  : PropertyModel(stream),
     m_sourceOp(sourceOp),
     m_outputId(outputId),
     m_targetOp(targetOp),
@@ -21,30 +21,12 @@ ConnectionModel::ConnectionModel(OperatorModel* sourceOp, unsigned int outputId,
     Q_ASSERT(stream);
 }
 
-int ConnectionModel::columnCount(const QModelIndex& index) const
-{
-    return 2;
-}
-
 int ConnectionModel::rowCount(const QModelIndex& index) const
 {
     if(index.isValid())
         return 0;
     else
         return 1;
-}
-
-QVariant ConnectionModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
-    {
-        if(section == 0)
-            return tr("Property");
-        else
-            return tr("Value");
-    }
-    
-    return QVariant();
 }
 
 QVariant ConnectionModel::data(const QModelIndex& index, int role) const
