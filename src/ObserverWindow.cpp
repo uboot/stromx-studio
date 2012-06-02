@@ -2,40 +2,22 @@
 
 #include <QAction>
 #include <QDockWidget>
-#include <QHeaderView>
-#include <QTableView>
-#include <QVBoxLayout>
-#include <QSplitter>
-#include "DataVisualizer.h"
 #include "DataManager.h"
 #include "DataVisualizer.h"
-#include "ItemDelegate.h"
 #include "ObserverModel.h"
+#include "ObserverView.h"
 
 ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent) 
   : QMainWindow(parent, Qt::Window),
-    m_observer(observer)
+    m_observerView(0)
 {
     m_visualizer = new DataVisualizer();
     setCentralWidget(m_visualizer);
     
-    QTableView* inputList = new QTableView();
-    inputList->setModel(observer);
-    inputList->setShowGrid(false);
-    inputList->setAlternatingRowColors(true);
-    inputList->setDropIndicatorShown(true);
-    inputList->setDragDropMode(QAbstractItemView::DragDrop);
-    inputList->setSelectionBehavior(QAbstractItemView::SelectRows);
-    inputList->setSelectionMode(QAbstractItemView::SingleSelection);
-    inputList->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    inputList->verticalHeader()->setDefaultSectionSize(ItemDelegate::ROW_HEIGHT);
-    inputList->verticalHeader()->hide();
-    inputList->setItemDelegate(new ItemDelegate(this));
-    inputList->setEditTriggers(QAbstractItemView::AllEditTriggers);
-    
+    m_observerView = new ObserverView(observer);
     QDockWidget* inputWidget = new QDockWidget("Inputs");
     inputWidget->setObjectName("InputList");
-    inputWidget->setWidget(inputList);
+    inputWidget->setWidget(m_observerView);
     inputWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
     addDockWidget(Qt::BottomDockWidgetArea, inputWidget);
     

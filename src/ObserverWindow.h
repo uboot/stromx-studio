@@ -24,7 +24,7 @@
 
 class DataVisualizer;
 class ObserverModel;
-class ObserverTreeModel;
+class ObserverView;
 
 /**
  * \brief Window which displays data of an observer.
@@ -41,8 +41,8 @@ public:
     /** Constructs an observer windows from an observer model. */
     explicit ObserverWindow(ObserverModel* observer, QWidget* parent);
     
-    /** Returns the observer model of the window. */
-    ObserverModel* model() const { return m_observer; }
+    /** Returns the observer view of the window. */
+    ObserverView* observerView() const { return m_observerView; }
     
     /** Returns an action which shows this window when triggered. */
     QAction* showAction() const { return m_showAct; }
@@ -58,7 +58,7 @@ private slots:
     void updateWindowTitle(const QString & name);
     
 private:
-    ObserverModel* m_observer;
+    ObserverView* m_observerView;
     QAction* m_showAct;
     DataVisualizer* m_visualizer;
 };

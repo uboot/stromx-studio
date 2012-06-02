@@ -44,6 +44,7 @@
 #include "MainWindow.h"
 #include "ObserverTreeModel.h"
 #include "ObserverTreeView.h"
+#include "ObserverView.h"
 #include "ObserverWindow.h"
 #include "OperatorLibrary.h"
 #include "OperatorLibraryModel.h"
@@ -758,7 +759,7 @@ void MainWindow::destroyObserverWindow(ObserverModel* observer)
     
     foreach(ObserverWindow* w, m_observerWindows)
     {
-        if(w->model() == observer)
+        if(w->observerView()->model() == observer)
             window = w;
     }
     

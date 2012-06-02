@@ -39,6 +39,7 @@ set(stromxstudio_SOURCES
     ObserverModel.cpp
     ObserverTreeModel.cpp
     ObserverTreeView.cpp
+    ObserverView.cpp
     ObserverWindow.cpp
     OperatorItem.cpp
     OperatorData.cpp
@@ -84,6 +85,7 @@ set(stromxstudio_HEADERS
     ObserverModel.h
     ObserverTreeModel.h
     ObserverTreeView.h
+    ObserverView.h
     ObserverWindow.h
     OperatorItem.h
     OperatorData.h
