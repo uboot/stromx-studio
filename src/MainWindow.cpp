@@ -46,7 +46,7 @@
 #include "ObserverWindow.h"
 #include "OperatorLibrary.h"
 #include "OperatorLibraryModel.h"
-#include "PropertyEditor.h"
+#include "PropertyView.h"
 #include "StreamEditor.h"
 #include "StreamEditorScene.h"
 #include "StreamModel.h"
@@ -61,10 +61,8 @@ MainWindow::MainWindow(QWidget *parent)
     QSplitter* splitter = new QSplitter(Qt::Vertical);
     m_streamEditor = new StreamEditor;
     m_threadEditor = new ThreadEditor;
-    m_observerEditor = new ObserverEditor;
-    m_operatorLibrary = new OperatorLibrary;
-    m_propertyEditor = new PropertyEditor;
     
+    createDockWidgets();    
     createActions();
     createMenus();
     createToolBars();
@@ -75,12 +73,6 @@ MainWindow::MainWindow(QWidget *parent)
     
     splitter->addWidget(m_streamEditor);
     splitter->addWidget(m_threadEditor);
-     
-    m_operatorLibrary->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    
-    addDockWidget(Qt::LeftDockWidgetArea, m_operatorLibrary);
-    addDockWidget(Qt::RightDockWidgetArea, m_propertyEditor);
-    addDockWidget(Qt::RightDockWidgetArea, m_observerEditor);
     setCentralWidget(splitter);
     
     updateCurrentFile("");
@@ -88,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
     readSettings();
     
     connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractItemModel*)),
-            m_propertyEditor, SLOT(setModel(QAbstractItemModel*)));
+            m_propertyView, SLOT(setModel(QAbstractItemModel*)));
     connect(m_streamEditor->scene(), SIGNAL(modelWasReset(StreamModel*)),
             this, SLOT(resetObserverWindows(StreamModel*)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), this, SLOT(updateWindowTitle(bool)));
@@ -97,6 +89,23 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::createDockWidgets()
+{
+    m_observerEditor = new ObserverEditor;
+    m_operatorLibrary = new OperatorLibrary;
+    m_operatorLibrary->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    
+    m_propertyView = new PropertyView(this);
+    QDockWidget* propertyDockWidget = new QDockWidget(this);
+    propertyDockWidget->setWindowTitle(tr("Properties"));
+    propertyDockWidget->setObjectName("PropertyEditor");
+    propertyDockWidget->setWidget(m_propertyView);
+    
+    addDockWidget(Qt::LeftDockWidgetArea, m_operatorLibrary);
+    addDockWidget(Qt::RightDockWidgetArea, propertyDockWidget);
+    addDockWidget(Qt::RightDockWidgetArea, m_observerEditor);
 }
 
 void MainWindow::setModel(StreamModel* model)

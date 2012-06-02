@@ -46,7 +46,7 @@ set(stromxstudio_SOURCES
     OperatorLibraryList.cpp
     OperatorLibraryModel.cpp
     OperatorModel.cpp
-    PropertyEditor.cpp
+    PropertyView.cpp
     RemoveConnectionCmd.cpp
     RemoveInputCmd.cpp
     RemoveObserverCmd.cpp
@@ -91,7 +91,7 @@ set(stromxstudio_HEADERS
     OperatorLibraryList.h
     OperatorLibraryModel.h
     OperatorModel.h
-    PropertyEditor.h
+    PropertyView.h
     StreamEditor.h 
     StreamEditorScene.h
     StreamModel.h

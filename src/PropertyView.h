@@ -17,26 +17,23 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PROPERTYEDITOR_H
-#define PROPERTYEDITOR_H
+#ifndef PROPERTYVIEW_H
+#define PROPERTYVIEW_H
 
-#include <QDockWidget>
+#include <QTreeView>
 
 class QAbstractItemModel;
 class QTreeView;
 
-class PropertyEditor : public QDockWidget
+class PropertyView : public QTreeView
 {
     Q_OBJECT
 
 public:
-    explicit PropertyEditor(QWidget *parent = 0);
+    explicit PropertyView(QWidget *parent = 0);
     
 public slots:
     void setModel(QAbstractItemModel* model);
-    
-private:
-    QTreeView* m_view;
 };
 
-#endif // PROPERTYEDITOR_H
+#endif // PROPERTYVIEW_H

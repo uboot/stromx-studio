@@ -46,7 +46,7 @@ class ObserverEditor;
 class ObserverModel;
 class ObserverWindow;
 class OperatorLibrary;
-class PropertyEditor;
+class PropertyView;
 class StreamEditor;
 class StreamModel;
 class ThreadEditor;
@@ -101,6 +101,7 @@ private:
     void createMenus();
     void createToolBars();
     void createStatusBar();
+    void createDockWidgets();
     
     void setModel(StreamModel* model);
     void readSettings();
@@ -166,7 +167,7 @@ private:
     ThreadEditor* m_threadEditor;
     ObserverEditor* m_observerEditor;
     OperatorLibrary* m_operatorLibrary;
-    PropertyEditor* m_propertyEditor;
+    PropertyView* m_propertyView;
     
     StreamModel* m_model;
      
