@@ -57,6 +57,7 @@ set(stromxstudio_SOURCES
     RenameOperatorCmd.cpp
     RemoveThreadCmd.cpp
     RenameThreadCmd.cpp
+    SelectionModel.cpp
     SetParameterCmd.cpp
     SetInputColorCmd.cpp
     SetThreadCmd.cpp
@@ -96,6 +97,7 @@ set(stromxstudio_HEADERS
     OperatorModel.h
     PropertyModel.h
     PropertyView.h
+    SelectionModel.h
     StreamEditor.h 
     StreamEditorScene.h
     StreamModel.h

@@ -10,12 +10,16 @@
 #include "OperatorData.h"
 #include "OperatorItem.h"
 #include "OperatorModel.h"
+#include "SelectionModel.h"
 #include "StreamModel.h"
 
 StreamEditorScene::StreamEditorScene(QObject* parent)
   : QGraphicsScene(parent),
-    m_model(0)
+    m_model(0),
+    m_selectionModel(0)
 {
+    m_selectionModel = new SelectionModel(this);
+    
     connect(this, SIGNAL(selectionChanged()), this, SLOT(updateSelection()));
 }
 
@@ -211,6 +215,27 @@ void StreamEditorScene::updateSelection()
         // parameter of the shown operator to be initialized
         if(model)
             emit selectedModelChanged(model);
+    }
+    else if(selectedItems().size() > 1)
+    {
+        // collect all models
+        QList<QAbstractItemModel*> models;
+        foreach(QGraphicsItem* item, selectedItems())
+        {
+            if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
+                models.append(opItem->model());
+            
+            if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
+                models.append(connectionItem->model());
+        }
+        
+        // update the selection model
+        m_selectionModel->setSelection(models);
+        
+        if(m_selectionModel->isValid())
+            emit selectedModelChanged(m_selectionModel);
+        else
+            emit selectedModelChanged(0);
     }
     else
     {

@@ -29,6 +29,7 @@ class QGraphicsSceneDragDropEvent;
 class QUndoStack;
 class ConnectionModel;
 class OperatorModel;
+class SelectionModel;
 class StreamModel;
 class ThreadModel;
 
@@ -90,6 +91,7 @@ private:
     bool isOperatorSelection() const;
     
     StreamModel* m_model;
+    SelectionModel* m_selectionModel;
 };
 
 #endif // STREAMEDITORSCENE_H
