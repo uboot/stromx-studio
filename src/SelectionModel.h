@@ -45,6 +45,8 @@ public:
     
 private:
     QList<ConnectionModel*> m_connections;
+    
+    QAbstractItemModel* model() const;
 };
 
 #endif // SELECTIONMODEL_H

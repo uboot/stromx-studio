@@ -126,6 +126,16 @@ bool ConnectionModel::setData(const QModelIndex& index, const QVariant& value, i
     } 
 }
 
+QModelIndex ConnectionModel::index(int row, int column, const QModelIndex& parent) const
+{
+    return createIndex(row, column);
+}
+
+QModelIndex ConnectionModel::parent(const QModelIndex& child) const
+{
+    return QModelIndex();
+}
+
 Qt::ItemFlags ConnectionModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);

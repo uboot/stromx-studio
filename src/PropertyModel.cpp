@@ -1,7 +1,7 @@
 #include "PropertyModel.h"
 
 PropertyModel::PropertyModel(QObject* parent)
-  : QAbstractTableModel(parent)
+  : QAbstractItemModel(parent)
 {
 }
 

@@ -20,7 +20,7 @@
 #ifndef PROPERTYMODEL_H
 #define PROPERTYMODEL_H
 
-#include <QAbstractTableModel>
+#include <QAbstractItemModel>
 
 /**
  * \brief Abstract base class of property models.
@@ -29,7 +29,7 @@
  * Property models have two columns. The first one contains the identifiers of
  * the properties of an object, the second one their values.
  */
-class PropertyModel : public QAbstractTableModel
+class PropertyModel : public QAbstractItemModel
 {
     Q_OBJECT
     
