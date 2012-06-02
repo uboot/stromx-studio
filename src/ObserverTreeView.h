@@ -17,39 +17,50 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OBSERVEREDITOR_H
-#define OBSERVEREDITOR_H
+#ifndef OBSERVERTREEVIEW_H
+#define OBSERVERTREEVIEW_H
 
-#include <QDockWidget>
+#include <QTreeView>
 
 class QAbstractItemModel;
 class QModelIndex;
-class QTreeView;
 
-class ObserverEditor : public QDockWidget
+/** 
+ * \brief Tree view to display observer tree models.
+ * 
+ * This view displays an observer tree. It provides functions to add
+ * observers and inputs and move them around within the tree.
+ */
+class ObserverTreeView : public QTreeView
 {
     Q_OBJECT
 
 public:
-    explicit ObserverEditor(QWidget *parent = 0);
+    /** Constructs and observer tree view. */
+    explicit ObserverTreeView(QWidget *parent = 0);
     
     void setModel(QAbstractItemModel* model);
     
+    /** Returns an action which adds an observer to the tree when triggered. */
     QAction* createAddObserverAction(QObject* parent);
+    
+    /** Returns an action which removes the selected observer from the tree when triggered. */
     QAction* createRemoveObserverAction(QObject* parent);
+    
+    /** Returns an action which removes the selected input from the tree when triggered. */
     QAction* createRemoveInputAction(QObject* parent);
     
 signals:
+    /** This signal is emitted if an observer is selected or deselected in the view. */
     void observerSelectedChanged(bool selected);
+    
+    /** This signal is emitted if an input is selected or deselected in the view. */
     void inputSelectedChanged(bool selected);
     
 private slots:
     void addObserver();
     void removeSelectedEntry();
     void updateObserverSelected(const QModelIndex& current, const QModelIndex& previous);
-    
-private:
-    QTreeView* m_observerView;
 };
 
-#endif // OBSERVEREDITOR_H
+#endif // OBSERVERTREEVIEW_H

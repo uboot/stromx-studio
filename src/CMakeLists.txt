@@ -36,9 +36,9 @@ set(stromxstudio_SOURCES
     MainWindow.cpp
     MoveInputCmd.cpp
     MoveOperatorCmd.cpp
-    ObserverEditor.cpp
     ObserverModel.cpp
     ObserverTreeModel.cpp
+    ObserverTreeView.cpp
     ObserverWindow.cpp
     OperatorItem.cpp
     OperatorData.cpp
@@ -81,9 +81,9 @@ set(stromxstudio_HEADERS
     ItemDelegate.h
     LimitUndoStack.h
     MainWindow.h
-    ObserverEditor.h
     ObserverModel.h
     ObserverTreeModel.h
+    ObserverTreeView.h
     ObserverWindow.h
     OperatorItem.h
     OperatorData.h

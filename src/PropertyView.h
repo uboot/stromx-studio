@@ -25,15 +25,22 @@
 class QAbstractItemModel;
 class QTreeView;
 
+/** 
+ * \brief Tree view to display the properties of operators and connections. 
+ * 
+ * This class displays the contents of an item model. It is intended to be used
+ * to display and edit operator models and connection models.
+ */
 class PropertyView : public QTreeView
 {
     Q_OBJECT
 
 public:
+    /** Constructs a property view. */
     explicit PropertyView(QWidget *parent = 0);
     
 public slots:
-    void setModel(QAbstractItemModel* model);
+    virtual void setModel(QAbstractItemModel* model);
 };
 
 #endif // PROPERTYVIEW_H

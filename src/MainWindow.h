@@ -42,7 +42,7 @@ namespace stromx
 class QAction;
 class QMenu;
 class LimitUndoStack;
-class ObserverEditor;
+class ObserverTreeView;
 class ObserverModel;
 class ObserverWindow;
 class OperatorLibrary;
@@ -165,7 +165,7 @@ private:
     
     StreamEditor* m_streamEditor;
     ThreadEditor* m_threadEditor;
-    ObserverEditor* m_observerEditor;
+    ObserverTreeView* m_observerTreeView;
     OperatorLibrary* m_operatorLibrary;
     PropertyView* m_propertyView;
     

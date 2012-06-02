@@ -41,8 +41,8 @@
 #include "Exception.h"
 #include "LimitUndoStack.h"
 #include "MainWindow.h"
-#include "ObserverEditor.h"
 #include "ObserverTreeModel.h"
+#include "ObserverTreeView.h"
 #include "ObserverWindow.h"
 #include "OperatorLibrary.h"
 #include "OperatorLibraryModel.h"
@@ -93,9 +93,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::createDockWidgets()
 {
-    m_observerEditor = new ObserverEditor;
     m_operatorLibrary = new OperatorLibrary;
     m_operatorLibrary->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    
+    m_observerTreeView = new ObserverTreeView(this);
+    QDockWidget* observerTreeDockWidget = new QDockWidget(this);
+    observerTreeDockWidget->setWindowTitle("Observers");
+    observerTreeDockWidget->setObjectName("ObserverEditor");
+    observerTreeDockWidget->setWidget(m_observerTreeView);
     
     m_propertyView = new PropertyView(this);
     QDockWidget* propertyDockWidget = new QDockWidget(this);
@@ -105,7 +110,7 @@ void MainWindow::createDockWidgets()
     
     addDockWidget(Qt::LeftDockWidgetArea, m_operatorLibrary);
     addDockWidget(Qt::RightDockWidgetArea, propertyDockWidget);
-    addDockWidget(Qt::RightDockWidgetArea, m_observerEditor);
+    addDockWidget(Qt::RightDockWidgetArea, observerTreeDockWidget);
 }
 
 void MainWindow::setModel(StreamModel* model)
@@ -128,7 +133,7 @@ void MainWindow::setModel(StreamModel* model)
     // set all editors to the new model
     m_streamEditor->streamEditorScene()->setModel(model);
     m_threadEditor->setModel(model);
-    m_observerEditor->setModel(model->observerModel());
+    m_observerTreeView->setModel(model->observerModel());
     
     // delete the old model
     if(m_model)
@@ -152,9 +157,9 @@ void MainWindow::createActions()
     m_addThreadAct = m_threadEditor->createAddThreadAction(this);
     m_removeThreadAct = m_threadEditor->createRemoveThreadAction(this);
     m_removeSelectedItemsAct = m_streamEditor->streamEditorScene()->createRemoveAction(this);
-    m_addObserverAct = m_observerEditor->createAddObserverAction(this);
-    m_removeObserverAct = m_observerEditor->createRemoveObserverAction(this);
-    m_removeInputAct = m_observerEditor->createRemoveInputAction(this);
+    m_addObserverAct = m_observerTreeView->createAddObserverAction(this);
+    m_removeObserverAct = m_observerTreeView->createRemoveObserverAction(this);
+    m_removeInputAct = m_observerTreeView->createRemoveInputAction(this);
     
     m_saveAct = new QAction(tr("&Save"), this);
     m_saveAct->setShortcuts(QKeySequence::Save);
