@@ -300,7 +300,7 @@ void StreamModel::removeConnection(ConnectionModel* connection)
 
 void StreamModel::addThread()
 {
-    ThreadModel* threadModel = new ThreadModel(0, this);
+    ThreadModel* threadModel = new ThreadModel(this);
     
     AddThreadCmd* cmd = new AddThreadCmd(this, threadModel);
     m_undoStack->push(cmd);

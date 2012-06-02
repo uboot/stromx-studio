@@ -45,12 +45,37 @@ class ThreadModel : public QObject
     friend QDataStream & operator>> (QDataStream & stream, ThreadModel * thread);
     
 public:
+    /** 
+     * Constructs a thread model from a stromx thread. The name of the thread model is set to the 
+     * name of \c thread.
+     */
     explicit ThreadModel(stromx::core::Thread* thread, StreamModel *stream = 0);
     
+    /** Constructs a thread model. */
+    explicit ThreadModel(StreamModel *stream = 0);
+    
+    /** 
+     * Returns the stromx thread of this model. Returns 0 if no
+     * stromx thread is currently assigned to the model.
+     */
     stromx::core::Thread* thread() const { return m_thread; }
+    
+    /**
+     * Sets the stromx thread of the model. If \c thread is not 0 the current name of the 
+     * thread model is assigned to \c thread.
+     */
     void setThread(stromx::core::Thread* thread);
     
+    /**
+     * Returns the name of the thread. The thread model stores the thread name even if
+     * no stromx thread is currently assigned to it.
+     */
     const QString & name() const { return m_name; }
+    
+    /**
+     * Sets the name of thread. The thread model stores the thread name even if
+     * no stromx thread is currently assigned to it.
+     */
     void setName(const QString & name);
     
     const QColor & color() const { return m_color; }

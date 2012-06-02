@@ -12,17 +12,25 @@ ThreadModel::ThreadModel(stromx::core::Thread* thread, StreamModel* stream)
     m_stream(stream),
     m_color(*(colorTable().begin()))
 {
-    if(m_thread)
-        m_name = QString::fromStdString(m_thread->name());
+    Q_ASSERT(m_thread);
+    m_name = QString::fromStdString(m_thread->name());
 }
+
+ThreadModel::ThreadModel(StreamModel* stream)
+  : QObject(stream),
+    m_thread(0),
+    m_stream(stream),
+    m_color(*(colorTable().begin()))
+{
+    m_name = tr("New thread");
+}
+
 
 void ThreadModel::setThread(stromx::core::Thread* thread)
 {
     m_thread = thread;
     if(m_thread)
-        m_name = QString::fromStdString(m_thread->name());
-    else
-        m_name = "";
+        m_thread->setName(m_name.toStdString());
 }
 
 void ThreadModel::setName(const QString& name)
@@ -37,12 +45,11 @@ void ThreadModel::setName(const QString& name)
 void ThreadModel::doSetName(const QString& name)
 {
     if(m_thread)
-    {
         m_thread->setName(name.toStdString());
-        m_name = name;
-        emit nameChanged(m_name);
-        emit changed(this);
-    }
+    
+    m_name = name;
+    emit nameChanged(m_name);
+    emit changed(this);
 }
 
 void ThreadModel::setColor(const QColor& color)
