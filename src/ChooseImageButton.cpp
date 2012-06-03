@@ -2,6 +2,7 @@
 
 #include <QFileDialog>
 #include <QSettings>
+#include <iostream>
 
 ChooseImageButton::ChooseImageButton(QWidget* parent)
   : QPushButton(parent)
@@ -17,7 +18,7 @@ void ChooseImageButton::chooseImage()
     QString lastDir = settings.value("lastImageOpened", QDir::home().absolutePath()).toString();
     
     QString file = QFileDialog::getOpenFileName(this, tr("Select an image"),
-                                                lastDir, tr("Images (*.png *.xpm *.jpg *.bmp *.tif)")); 
+                                                lastDir, tr("Images (*.png *.xpm *.jpg *.bmp *.tif)"), 0, QFileDialog::DontUseNativeDialog); 
     
     if(file.isNull())
         return;
