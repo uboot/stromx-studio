@@ -24,15 +24,35 @@
 
 class ConnectionModel;
 
+/** 
+ * \brief Model of a selection of connection and operator models.
+ * 
+ * This model represents a set of connection and operator models as a
+ * PropertyModel object. It allows to display and set the common properties
+ * of the set together. Currently only connection models are supported, i.e.
+ * selections which include at least one operator model result in an empty
+ * model.
+ */
 class SelectionModel : public PropertyModel
 {
     Q_OBJECT
     
 public:
+    /** Constructs an empty selection model. */
     explicit SelectionModel(QObject* parent);
     
+    /** 
+     * Sets a selection of item models. Note that while any
+     * item model is allowed in \c selection only connection and operator models
+     * are recognized by this functions. Any other models are ignored.
+     */
     void setSelection(QList<QAbstractItemModel*> selection);
     
+    /**
+     * Returns true if the model contains a meaningful selection, i.e. a selection
+     * of objects of the same type. If this function returns false it makes no sense
+     * to display the model because it will not provide any values to an item view.
+     */
     bool isValid() const;
     
     // implementation of QAbstractItemModel
@@ -44,9 +64,11 @@ public:
     virtual Qt::ItemFlags flags(const QModelIndex & index) const;
     
 private:
+    /** Returns the first model of the current selection. */
+    QAbstractItemModel* model() const;
+    
     QList<ConnectionModel*> m_connections;
     
-    QAbstractItemModel* model() const;
 };
 
 #endif // SELECTIONMODEL_H

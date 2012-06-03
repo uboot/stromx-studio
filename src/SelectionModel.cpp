@@ -71,8 +71,21 @@ QVariant SelectionModel::data(const QModelIndex& index, int role) const
     if(isValid())
     {
         if(index.column() == 1 && role == Qt::DisplayRole)
-            return "-";
+        {
+            // if index points to the data column check if all values have
+            // the same data there
+            QString data = model()->data(index, role).toString();
+            
+            foreach(ConnectionModel* model, m_connections)
+            {
+                // if one model has different data return
+                if(data != model->data(index, role).toString())
+                    return "-";
+            }
+        }
         
+        // return the data of the first model which should be the same
+        // as the data of all other models
         return model()->data(index, role);
     }
         
@@ -91,5 +104,12 @@ Qt::ItemFlags SelectionModel::flags(const QModelIndex& index) const
 
 bool SelectionModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    return false;
+    bool success = true;
+    foreach(ConnectionModel* model, m_connections)
+    {
+        if(! model->setData(index, value, role))
+            success = false;
+    }
+    
+    return success;
 }
