@@ -34,6 +34,7 @@ void Image::constructFromImage(const QImage& image)
         m_image = image;
         break;
     case QImage::Format_RGB32:
+    case QImage::Format_ARGB32:
         m_image = image.convertToFormat(QImage::Format_RGB888);
         break;
     default:
@@ -58,6 +59,7 @@ void Image::initializeParent()
         pixelType = stromx::core::Image::MONO_8;
         break;
     case QImage::Format_RGB888:
+    case QImage::Format_ARGB32:
         pixelType = stromx::core::Image::RGB_24;
         break;
     default:
