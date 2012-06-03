@@ -40,6 +40,9 @@ void TestOperator::setParameter(unsigned int id, const Data& value)
         case ENUM_PARAM:
             m_enumParam = data_cast<const Enum &>(value);
             break;
+        case BOOL_PARAM:
+            m_boolParam = data_cast<const Bool &>(value);
+            break;
         default:
             throw WrongParameterId(id, *this);
         }
@@ -60,6 +63,8 @@ const Data& TestOperator::getParameter(const unsigned int id) const
         return m_initializeParam;
     case ENUM_PARAM:
         return m_enumParam;
+    case BOOL_PARAM:
+        return m_boolParam;
     default:
         throw WrongParameterId(id, *this);
     }
@@ -137,6 +142,11 @@ const std::vector<const Parameter*> TestOperator::setupParameters()
     enumParam->add(EnumDescription(Enum(1), "Choice 1"));
     enumParam->add(EnumDescription(Enum(2), "Choice 2"));
     parameters.push_back(enumParam);
+    
+    Parameter* boolParam = new Parameter(BOOL_PARAM, DataVariant::BOOL);
+    boolParam->setDoc("Boolean parameter");
+    boolParam->setAccessMode(Parameter::INITIALIZED_WRITE);
+    parameters.push_back(boolParam);
     
     return parameters;
 }

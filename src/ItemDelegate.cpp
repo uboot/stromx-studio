@@ -175,9 +175,5 @@ void ItemDelegate::commitEditEvent()
     emit commitData(pushButton);
 }
 
-void ItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    QStyledItemDelegate::updateEditorGeometry(editor, option, index);
-}
 
 

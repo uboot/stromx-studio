@@ -43,7 +43,8 @@ class TestOperator : public stromx::core::OperatorKernel
         PARAM_GROUP_1,
         PARAM_GROUP_2,
         INT_PARAM,
-        ENUM_PARAM
+        ENUM_PARAM,
+        BOOL_PARAM
     };
     
 public:
@@ -68,6 +69,7 @@ private:
     stromx::core::UInt32 m_initializeParam;
     stromx::core::Int32 m_intParam;
     stromx::core::Enum m_enumParam;
+    stromx::core::Bool m_boolParam;
 };
 
 #endif // TESTOPERATOR_H
