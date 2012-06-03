@@ -86,6 +86,9 @@ protected:
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
     
 private:
+    /** Z-value of the connector labels which should float above all other items. */
+    static const qreal FLOAT_Z_VALUE;
+    
     /** 
      * Returns the connector at the position \c pos of the scene of t
      * this connector. Returns 0 if there is no connector at that position.
@@ -107,12 +110,14 @@ private:
      */
     void updateConnectionPosition(ConnectionItem* connection) const;
     
+    /** Returns the text to display in the tool tip of the connector. */
+    QString connectorToolTip() const;
+    
     OperatorModel* m_op;
     unsigned int m_id;
     ConnectorType m_connectorType;
     ArrowItem* m_currentArrow;
     QSet<ConnectionItem*> m_connections;
-    QGraphicsTextItem* m_label;
 };
 
 #endif // CONNECTORITEM_H

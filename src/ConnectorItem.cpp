@@ -2,6 +2,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QToolTip>
 #include <stromx/core/Operator.h>
 #include "ArrowItem.h"
 #include "ConnectionItem.h"
@@ -10,14 +11,14 @@
 #include "StreamModel.h"
 
 const qreal ConnectorItem::SIZE = 8;
+const qreal ConnectorItem::FLOAT_Z_VALUE = 1;
 
 ConnectorItem::ConnectorItem(OperatorModel* op, unsigned int id, ConnectorType type, QGraphicsItem* parent)
   : QGraphicsRectItem(parent),
     m_op(op),
     m_id(id),
     m_connectorType(type),
-    m_currentArrow(0),
-    m_label(0)
+    m_currentArrow(0)
 {
     setRect(-SIZE/2, -SIZE/2, SIZE, SIZE);
     setAcceptHoverEvents(true);
@@ -61,9 +62,15 @@ void ConnectorItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         ConnectorItem* connectorItem = connectorItemAt(event->scenePos());
             
         if(connectorItem)
+        {
             m_currentArrow->setActive(true);
+            QToolTip::showText(event->screenPos(), connectorToolTip(), event->widget());
+        }
         else
+        {
             m_currentArrow->setActive(false);
+            QToolTip::hideText();
+        }
     }
     
     QGraphicsRectItem::mouseMoveEvent(event);
@@ -159,40 +166,28 @@ void ConnectorItem::updateConnectionPosition(ConnectionItem* connection) const
         connection->setStart(mapToScene(QPointF(0, 0)));
 }
 
+QString ConnectorItem::connectorToolTip() const
+{
+    std::string text;
+    const stromx::core::OperatorInfo & info = m_op->op()->info();
+    if(connectorType() == INPUT)
+        text = info.inputs()[m_id]->doc().title();
+    else
+        text = info.outputs()[m_id]->doc().title();
+    
+    return QString::fromStdString(text);
+}
+
 void ConnectorItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
-    if(! m_label)
-    {
-        std::string text;
-        const stromx::core::OperatorInfo & info = m_op->op()->info();
-        if(connectorType() == INPUT)
-            text = info.inputs()[m_id]->doc().title();
-        else
-            text = info.outputs()[m_id]->doc().title();
-        
-        m_label = new QGraphicsTextItem(this);
-        m_label->setPlainText(QString::fromStdString(text));
-        
-        QPointF pos;
-        pos.setY(-5);
-        if(connectorType() == INPUT)
-            pos.setX(-m_label->boundingRect().width());
-        else
-            pos.setX(10);
-            
-        m_label->setPos(pos);
-    }
+    QToolTip::showText(event->screenPos(), connectorToolTip(), event->widget());
     
     QGraphicsItem::hoverEnterEvent(event);
 }
 
 void ConnectorItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
-    if(m_label)
-    {
-        delete m_label;
-        m_label = 0;
-    }
+    QToolTip::hideText();
     
     QGraphicsItem::hoverLeaveEvent(event);
 }
