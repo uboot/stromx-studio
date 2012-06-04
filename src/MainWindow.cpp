@@ -230,6 +230,11 @@ void MainWindow::createActions()
     m_aboutQtAct = new QAction(tr("About &Qt"), this);
     m_aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
     connect(m_aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    
+    m_slowAction = new QAction(tr("Slow processing"), this);
+    m_slowAction->setStatusTip(tr("Delay each processing step by predefined time"));
+    m_slowAction->setCheckable(true);
+    connect(m_slowAction, SIGNAL(toggled(bool)), this, SLOT(setSlowProcessing(bool)));
 }
 
 void MainWindow::createMenus()
@@ -286,6 +291,7 @@ void MainWindow::createToolBars()
      m_streamToolBar->addAction(m_startAct);
      m_streamToolBar->addAction(m_pauseAct);
      m_streamToolBar->addAction(m_stopAct);
+     m_streamToolBar->addAction(m_slowAction);
 }
 
 void MainWindow::about()
@@ -591,6 +597,7 @@ bool MainWindow::closeStream()
     setModel(newModel);
     
     updateCurrentFile("");
+    m_slowAction->setChecked(false);
     
     return true;
 }
@@ -744,6 +751,11 @@ void MainWindow::closeEvent(QCloseEvent* event)
     }
     
     writeSettings();
+}
+
+void MainWindow::setSlowProcessing(bool isSlow)
+{
+    m_model->setDelay(isSlow);
 }
 
 void MainWindow::createObserverWindow(ObserverModel* observer)

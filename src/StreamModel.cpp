@@ -33,6 +33,7 @@
 #include <stromx/core/Factory.h>
 
 const quint32 StreamModel::MAGIC_NUMBER = 0x20111202;
+const unsigned int StreamModel::DELAY = 100;
 
 StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject* parent) 
   : QObject(parent),
@@ -742,6 +743,14 @@ void StreamModel::join()
 bool StreamModel::isActive() const
 {
     return m_stream->status() != stromx::core::Stream::INACTIVE;
+}
+
+void StreamModel::setDelay(bool active)
+{
+    if(active)
+        m_stream->setDelay(DELAY);
+    else
+        m_stream->setDelay(0);
 }
 
 

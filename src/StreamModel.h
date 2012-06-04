@@ -169,6 +169,12 @@ public slots:
     /** Stops the stromx stream. */
     void stop();
     
+    /** 
+     * Activates or deactivates the operator delay. If the delay is activated
+     * the data processing seems to be in slow-motion.
+     */
+    void setDelay(bool active);
+    
 private slots:
     /** Joins the stromx stream. */
     void join();
@@ -205,6 +211,9 @@ signals:
     void streamJoined();
     
 private:
+    /** The operator delay in milliseconds. */
+    static const unsigned int DELAY;
+    
     /** Magic number which identifies the first 4 bytes of stromx-studio data files. */
     static const quint32 MAGIC_NUMBER;
     

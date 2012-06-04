@@ -27,9 +27,6 @@ void ConnectorObserver::observe(const stromx::core::Connector& connector, const 
         ConnectorDataEvent* dataEvent = new ConnectorDataEvent(type, connector.id(), data);
         m_application->postEvent(m_opModel, dataEvent);
     }
-    
-    // uncomment for slow motion:
-    // usleep(100000);
 }
 
 void ConnectorObserver::setObserveData(bool observe)

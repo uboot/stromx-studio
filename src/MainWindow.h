@@ -80,6 +80,7 @@ private slots:
     void stop();
     void join();
     void updateWindowTitle(bool undoStackIsClean);
+    void setSlowProcessing(bool isSlow);
     
     /** Creates a window for \c observer. */
     void createObserverWindow(ObserverModel* observer);
@@ -152,6 +153,7 @@ private:
     QAction* m_removeObserverAct;
     QAction* m_removeInputAct;
     QAction* m_observerSeparatorAct;
+    QAction* m_slowAction;
     
     LimitUndoStack* m_undoStack;
     
