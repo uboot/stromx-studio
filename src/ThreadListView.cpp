@@ -13,7 +13,9 @@ ThreadListView::ThreadListView(QWidget* parent)
   : QTableView(parent),
     m_model(0),
     m_addThreadAct(0),
-    m_removeThreadAct(0)
+    m_removeThreadAct(0),
+    m_editNameAct(0),
+    m_editColorAct(0)
 {    
     setItemDelegate(new ItemDelegate(this));
     verticalHeader()->setDefaultSectionSize(ItemDelegate::ROW_HEIGHT);
@@ -25,6 +27,12 @@ ThreadListView::ThreadListView(QWidget* parent)
     
     m_addThreadAct = createAddThreadAction(this);
     m_removeThreadAct = createRemoveThreadAction(this);
+    
+    m_editNameAct = new QAction(tr("Edit name"), this);
+    connect(m_editNameAct, SIGNAL(triggered(bool)), this, SLOT(editName()));
+    
+    m_editColorAct = new QAction(tr("Edit color"), this);
+    connect(m_editColorAct, SIGNAL(triggered(bool)), this, SLOT(editColor()));
 }
 
 void ThreadListView::setStreamModel(StreamModel* model)
@@ -87,13 +95,37 @@ ThreadModel* ThreadListView::selectedThread() const
     return 0;
 }
 
+void ThreadListView::editName()
+{
+    if(selectionModel())
+    {
+        QModelIndexList indices = selectionModel()->selectedRows(ThreadListModel::NAME);
+        if(indices.count() == 1)
+            edit(indices[0]);
+    }
+}
+
+void ThreadListView::editColor()
+{
+    if(selectionModel())
+    {
+        QModelIndexList indices = selectionModel()->selectedRows(ThreadListModel::COLOR);
+        if(indices.count() == 1)
+            edit(indices[0]);
+    }
+}
+
 void ThreadListView::contextMenuEvent(QContextMenuEvent* event)
 {
     QMenu menu(this);
     menu.addAction(m_addThreadAct);
     
     if(indexAt(event->pos()).isValid())
+    {
         menu.addAction(m_removeThreadAct);
+        menu.addAction(m_editNameAct);
+        menu.addAction(m_editColorAct);
+    }
     menu.exec(event->globalPos());
 }
 

@@ -42,6 +42,8 @@ public:
 public slots:
     void addThread() const;
     void removeThread() const;
+    void editName();
+    void editColor();
     
 signals:
     void removeThreadActiveChanged(bool selected);
@@ -55,11 +57,14 @@ private slots:
     void updateStreamActive();
     
 private:
+    
     ThreadModel* selectedThread() const;
     
     StreamModel* m_model;
     QAction* m_addThreadAct;
     QAction* m_removeThreadAct;
+    QAction* m_editNameAct;
+    QAction* m_editColorAct;
 };
 
 #endif // THREADLISTVIEW_H

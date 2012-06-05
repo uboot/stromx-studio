@@ -39,6 +39,12 @@ class ThreadListModel : public QAbstractTableModel
     friend class StreamModel;
     
 public:
+    enum Column
+    {
+        NAME,
+        COLOR
+    };
+    
     /** Constructs a thread list model. */
     explicit ThreadListModel(QObject *parent = 0);
     
