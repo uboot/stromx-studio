@@ -194,8 +194,8 @@ void ConnectorItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 
 void ConnectorItem::setOccupied(bool occupied)
 {
-    // activate all connections of an activated output
-    if(occupied && m_connectorType == OUTPUT)
+    // activate all connections of an activated input or output
+    if(occupied)
     {
         foreach(ConnectionItem* connection, m_connections)
             connection->setOccupied(true);
@@ -208,7 +208,7 @@ void ConnectorItem::setOccupied(bool occupied)
             connection->setOccupied(false);
     }
     
-    // Do not change the status in the other two cases.
+    // Do not change the status in the remaining case.
     // Thus, the connection stays activated until its output
     // is deactivated (even if its input is not activated anymore).
 }
