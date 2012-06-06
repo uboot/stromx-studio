@@ -28,10 +28,10 @@ ThreadListView::ThreadListView(QWidget* parent)
     m_addThreadAct = createAddThreadAction(this);
     m_removeThreadAct = createRemoveThreadAction(this);
     
-    m_editNameAct = new QAction(tr("Edit name"), this);
+    m_editNameAct = new QAction(tr("Edit thread name"), this);
     connect(m_editNameAct, SIGNAL(triggered(bool)), this, SLOT(editName()));
     
-    m_editColorAct = new QAction(tr("Edit color"), this);
+    m_editColorAct = new QAction(tr("Edit thread color"), this);
     connect(m_editColorAct, SIGNAL(triggered(bool)), this, SLOT(editColor()));
 }
 

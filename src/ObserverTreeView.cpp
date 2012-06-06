@@ -24,6 +24,9 @@ ObserverTreeView::ObserverTreeView(QWidget* parent)
     m_addObserverAct = createAddObserverAction(this);
     m_removeInputAct = createRemoveInputAction(this);
     m_removeObserverAct = createRemoveObserverAction(this);
+    
+    m_editObserverNameAct = new QAction(tr("Edit observer name"), this);
+    connect(m_editObserverNameAct, SIGNAL(triggered(bool)), this, SLOT(editObserverName()));
 }
 
 void ObserverTreeView::setModel(QAbstractItemModel* model)
@@ -56,7 +59,10 @@ void ObserverTreeView::contextMenuEvent(QContextMenuEvent* event)
         if(index.parent().isValid())
             menu.addAction(m_removeInputAct);
         else
+        {
             menu.addAction(m_removeObserverAct);
+            menu.addAction(m_editObserverNameAct);
+        }
     }
     menu.exec(event->globalPos());
 }
@@ -122,5 +128,16 @@ void ObserverTreeView::updateObserverSelected(const QModelIndex& current, const 
         emit observerSelectedChanged(false);
     }
 }
+
+void ObserverTreeView::editObserverName()
+{
+    if(selectionModel())
+    {
+        QModelIndexList indices = selectionModel()->selectedRows(ObserverTreeModel::OBSERVER);
+        if(indices.count() == 1)
+            edit(indices[0]);
+    }
+}
+
 
 

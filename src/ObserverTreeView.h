@@ -62,6 +62,7 @@ protected:
     
 private slots:
     void addObserver();
+    void editObserverName();
     void removeSelectedEntry();
     void updateObserverSelected(const QModelIndex& current, const QModelIndex& previous);
     
@@ -69,6 +70,7 @@ private:
     QAction* m_addObserverAct;
     QAction* m_removeInputAct;
     QAction* m_removeObserverAct;
+    QAction* m_editObserverNameAct;
 };
 
 #endif // OBSERVERTREEVIEW_H

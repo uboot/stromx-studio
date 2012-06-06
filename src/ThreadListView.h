@@ -42,8 +42,6 @@ public:
 public slots:
     void addThread() const;
     void removeThread() const;
-    void editName();
-    void editColor();
     
 signals:
     void removeThreadActiveChanged(bool selected);
@@ -55,6 +53,8 @@ protected:
 private slots:
     void updateThreadSelected( const QModelIndex & current, const QModelIndex & previous );
     void updateStreamActive();
+    void editName();
+    void editColor();
     
 private:
     

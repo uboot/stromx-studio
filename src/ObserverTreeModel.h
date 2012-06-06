@@ -51,7 +51,8 @@ class ObserverTreeModel : public QAbstractItemModel
 public:
     enum Column
     {
-        OPERATOR,
+        OPERATOR = 0,
+        OBSERVER = 0,
         ID,
         COLOR,
         NUM_COLUMNS
