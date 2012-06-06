@@ -235,49 +235,55 @@ void MainWindow::createActions()
     m_slowAction->setStatusTip(tr("Delay each processing step by predefined time"));
     m_slowAction->setCheckable(true);
     connect(m_slowAction, SIGNAL(toggled(bool)), this, SLOT(setSlowProcessing(bool)));
+    
+    m_emptyRecentFilesAct = new QAction(tr("Empty recent files"), this);
+    m_emptyRecentFilesAct->setStatusTip(tr("Empties the list of recently opened files"));
+    connect(m_emptyRecentFilesAct, SIGNAL(triggered(bool)), this, SLOT(emptyRecentFiles()));
 }
 
 void MainWindow::createMenus()
 {
-     m_fileMenu = menuBar()->addMenu(tr("&File"));
-     m_fileMenu->addAction(m_openAct);
-     m_fileMenu->addAction(m_saveAct);
-     m_fileMenu->addAction(m_saveAsAct);
-     m_fileMenu->addAction(m_closeAct);
-     m_recentFilesSeparatorAct = m_fileMenu->addSeparator();
-     for (int i = 0; i < MAX_RECENT_FILES; ++i)
-         m_fileMenu->addAction(m_recentFileActs[i]);
-     m_fileMenu->addSeparator();
-     updateRecentFileActions();
-     m_fileMenu->addSeparator();
-     m_fileMenu->addAction(m_loadLibrariesAct);
-     m_fileMenu->addAction(m_resetLibrariesAct);
-     m_fileMenu->addSeparator();
-     m_fileMenu->addAction(m_quitAct);
+    m_fileMenu = menuBar()->addMenu(tr("&File"));
+    m_fileMenu->addAction(m_openAct);
+    m_fileMenu->addAction(m_saveAct);
+    m_fileMenu->addAction(m_saveAsAct);
+    m_fileMenu->addAction(m_closeAct);
+    m_recentFilesSeparatorAct = m_fileMenu->addSeparator();
+    for (int i = 0; i < MAX_RECENT_FILES; ++i)
+        m_fileMenu->addAction(m_recentFileActs[i]);
+    m_fileMenu->addSeparator();
+    m_fileMenu->addAction(m_emptyRecentFilesAct);
+    m_fileMenu->addSeparator();
+    m_fileMenu->addAction(m_loadLibrariesAct);
+    m_fileMenu->addAction(m_resetLibrariesAct);
+    m_fileMenu->addSeparator();
+    m_fileMenu->addAction(m_quitAct);
 
-     m_editMenu = menuBar()->addMenu(tr("&Edit"));
-     m_editMenu->addAction(m_undoAct);
-     m_editMenu->addAction(m_redoAct);
+    m_editMenu = menuBar()->addMenu(tr("&Edit"));
+    m_editMenu->addAction(m_undoAct);
+    m_editMenu->addAction(m_redoAct);
+
+    m_streamMenu = menuBar()->addMenu(tr("&Stream"));
+    m_streamMenu->addAction(m_removeSelectedItemsAct);
+    m_streamMenu->addAction(m_initializeAct);
+    m_streamMenu->addAction(m_deinitializeAct);
+    m_streamMenu->addSeparator();
+    m_streamMenu->addAction(m_addThreadAct);
+    m_streamMenu->addAction(m_removeThreadAct);
+    m_streamMenu->addSeparator();
+    m_streamMenu->addAction(m_addObserverAct);
+    m_streamMenu->addAction(m_removeObserverAct);
+    m_streamMenu->addAction(m_removeInputAct);
+
+    m_viewMenu = menuBar()->addMenu(tr("&View"));
+
+    menuBar()->addSeparator();
+
+    m_helpMenu = menuBar()->addMenu(tr("&Help"));
+    m_helpMenu->addAction(m_aboutAct);
+    m_helpMenu->addAction(m_aboutQtAct);
      
-     m_streamMenu = menuBar()->addMenu(tr("&Stream"));
-     m_streamMenu->addAction(m_removeSelectedItemsAct);
-     m_streamMenu->addAction(m_initializeAct);
-     m_streamMenu->addAction(m_deinitializeAct);
-     m_streamMenu->addSeparator();
-     m_streamMenu->addAction(m_addThreadAct);
-     m_streamMenu->addAction(m_removeThreadAct);
-     m_streamMenu->addSeparator();
-     m_streamMenu->addAction(m_addObserverAct);
-     m_streamMenu->addAction(m_removeObserverAct);
-     m_streamMenu->addAction(m_removeInputAct);
-
-     m_viewMenu = menuBar()->addMenu(tr("&View"));
-
-     menuBar()->addSeparator();
-
-     m_helpMenu = menuBar()->addMenu(tr("&Help"));
-     m_helpMenu->addAction(m_aboutAct);
-     m_helpMenu->addAction(m_aboutQtAct);
+    updateRecentFileActions();
 }
 
 void MainWindow::createStatusBar()
@@ -363,7 +369,18 @@ bool MainWindow::openRecentFile()
         if(! saveBeforeClosing())
             return false;
         
-        readFile(action->data().toString());
+        QString filepath = action->data().toString();
+        
+        if(! readFile(filepath))
+        {
+            // if the file could not be opened remove it from the list of recently opened files
+            QSettings settings("stromx", "stromx-studio");
+            QStringList files = settings.value("recentFileList").toStringList();
+            files.removeAll(filepath);
+            settings.setValue("recentFileList", files);
+            
+            updateRecentFileActions();
+        }
         
         return true;
     }
@@ -390,7 +407,7 @@ bool MainWindow::open()
     return true;
 }
 
-void MainWindow::readFile(const QString& filepath)
+bool MainWindow::readFile(const QString& filepath)
 { 
     QString basename = QFileInfo(filepath).baseName();
     QString extension = QFileInfo(filepath).suffix();
@@ -400,7 +417,7 @@ void MainWindow::readFile(const QString& filepath)
         QMessageBox::critical(this, tr("Failed to load file"),
                               tr("The file extension '%1' is not recognized").arg(extension),
                               QMessageBox::Ok, QMessageBox::Ok);
-        return;
+        return false;
     }
     
     // try to read the stream
@@ -426,7 +443,7 @@ void MainWindow::readFile(const QString& filepath)
         QMessageBox::critical(this, tr("Failed to load file"),
                               tr("The location %1 could not be openend for reading").arg(location),
                               QMessageBox::Ok, QMessageBox::Ok);
-        return;
+        return false;
     }
     
     try
@@ -447,13 +464,13 @@ void MainWindow::readFile(const QString& filepath)
         QMessageBox::critical(this, tr("Failed to load file"),
                               tr("The location %1 could not be openend for reading").arg(location),
                               QMessageBox::Ok, QMessageBox::Ok);
-        return;
+        return false;
     }
     catch(ReadStreamFailed& e)
     {
         QMessageBox::critical(this, tr("Failed to load file"), e.what(),
                               QMessageBox::Ok, QMessageBox::Ok);
-        return;
+        return false;
     }
     
     try
@@ -516,6 +533,8 @@ void MainWindow::readFile(const QString& filepath)
         if (mainWin)
             mainWin->updateRecentFileActions();
     }
+    
+    return true;
 }
 
 void MainWindow::updateWindowTitle(bool undoStackIsClean)
@@ -548,7 +567,8 @@ void MainWindow::updateRecentFileActions()
     }
     for (int j = numRecentFiles; j < MAX_RECENT_FILES; ++j)
         m_recentFileActs[j]->setVisible(false);
-
+    
+    m_emptyRecentFilesAct->setEnabled(numRecentFiles > 0);
     m_recentFilesSeparatorAct->setVisible(numRecentFiles > 0);
 }
 
@@ -756,6 +776,13 @@ void MainWindow::closeEvent(QCloseEvent* event)
 void MainWindow::setSlowProcessing(bool isSlow)
 {
     m_model->setDelay(isSlow);
+}
+
+void MainWindow::emptyRecentFiles()
+{
+    QSettings settings("stromx", "stromx-studio");
+    settings.setValue("recentFileList", QStringList());
+    updateRecentFileActions();
 }
 
 void MainWindow::createObserverWindow(ObserverModel* observer)

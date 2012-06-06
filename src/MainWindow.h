@@ -81,6 +81,7 @@ private slots:
     void join();
     void updateWindowTitle(bool undoStackIsClean);
     void setSlowProcessing(bool isSlow);
+    void emptyRecentFiles();
     
     /** Creates a window for \c observer. */
     void createObserverWindow(ObserverModel* observer);
@@ -113,7 +114,18 @@ private:
      * Returns true if the file was successfully written and false otherwise.
      */
     bool writeFile(const QString & filepath);
-    void readFile(const QString & filepath);
+    
+    /** 
+     * Opens the file at \c filepath and reads a stream from it. If successful 
+     * it replaces the currently displayed stream by the new one and returns true.
+     * Returns false if the stream could not be read.
+     */
+    bool readFile(const QString & filepath);
+    
+    /**
+     * Updates the recent file actions according to the list of the recently opened 
+     * files (the list is stored as an application setting).
+     */
     void updateRecentFileActions();
     
     /** Remembers the current file as being saved or opened and updates the undo stack. */
@@ -154,6 +166,7 @@ private:
     QAction* m_removeInputAct;
     QAction* m_observerSeparatorAct;
     QAction* m_slowAction;
+    QAction* m_emptyRecentFilesAct;
     
     LimitUndoStack* m_undoStack;
     
