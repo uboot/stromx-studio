@@ -27,13 +27,22 @@ ObserverView::ObserverView(ObserverModel* observer, QWidget* parent)
     setItemDelegate(new ItemDelegate(this));
     
     m_removeInputAct = createRemoveInputAction(this);
+    
+    m_editColorAct = new QAction(tr("Edit input color"), this);
+    connect(m_editColorAct, SIGNAL(triggered(bool)), this, SLOT(editInputColor()));
 }
 
 void ObserverView::contextMenuEvent(QContextMenuEvent* event)
 {
-    QMenu menu(this);
-    menu.addAction(m_removeInputAct);
-    menu.exec(event->globalPos());
+    QModelIndex index = indexAt(event->pos());
+    
+    if(index.isValid())
+    {
+        QMenu menu(this);
+        menu.addAction(m_removeInputAct);
+        menu.addAction(m_editColorAct);
+        menu.exec(event->globalPos());
+    }
 }
 
 QAction* ObserverView::createRemoveInputAction(QObject* parent)
@@ -52,6 +61,16 @@ void ObserverView::removeInput()
         QModelIndex index = selectionModel()->currentIndex();
         if(index.isValid())
             model()->parentModel()->removeInput(model(), index.row());
+    }
+}
+
+void ObserverView::editInputColor()
+{    
+    if(selectionModel())
+    {
+        QModelIndexList indices = selectionModel()->selectedRows(ObserverTreeModel::COLOR);
+        if(indices.count() == 1)
+            edit(indices[0]);
     }
 }
 

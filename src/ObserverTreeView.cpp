@@ -12,7 +12,8 @@ ObserverTreeView::ObserverTreeView(QWidget* parent)
   : QTreeView(parent),
     m_addObserverAct(0),
     m_removeInputAct(0),
-    m_removeObserverAct(0)
+    m_removeObserverAct(0),
+    m_editObserverNameAct(0)
 {
     setAlternatingRowColors(true);
     setDropIndicatorShown(true);

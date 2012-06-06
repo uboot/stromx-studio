@@ -48,10 +48,12 @@ protected:
     
 private slots:
     void removeInput();
+    void editInputColor();
     
 private:
     ObserverModel* m_observer;
     QAction* m_removeInputAct;
+    QAction* m_editColorAct;
 };
 
 #endif // OBSERVERVIEW_H
