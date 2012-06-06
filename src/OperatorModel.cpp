@@ -101,9 +101,6 @@ QModelIndex OperatorModel::parent(const QModelIndex& child) const
     
     int row = rowOfDisplayedParameter(param->group());
     
-    if(! param->group()->group())
-        row += PARAMETER_OFFSET;
-    
     return createIndex(row, 0, (void*)(param->group()));
 }
 
@@ -366,8 +363,6 @@ void OperatorModel::doSetParameter(unsigned int paramId, const stromx::core::Dat
     {
     }
     
-    unsigned int index = 0;
-    
     //Translate paramId to index of the row in table which is assigned to the parameter
     for(std::vector<const stromx::core::Parameter*>::const_iterator iter_param = m_op->info().parameters().begin();
         iter_param != m_op->info().parameters().end();
@@ -375,10 +370,11 @@ void OperatorModel::doSetParameter(unsigned int paramId, const stromx::core::Dat
     {   
         if((*iter_param)->id() == paramId)
         {
-            emit dataChanged(createIndex(index + PARAMETER_OFFSET,1), createIndex(index + PARAMETER_OFFSET,1));
+            int row = rowOfDisplayedParameter(*iter_param);
+            QModelIndex index = createIndex(row, 1, (void*)(*iter_param));
+            emit dataChanged(index, index);
             break;
-        }
-        ++index;    
+        }   
     }     
 }
 
@@ -393,6 +389,9 @@ int OperatorModel::rowOfDisplayedParameter(const stromx::core::Parameter* param)
     const QList<const stromx::core::Parameter*> parameters = members(param->group());
     
     int row = 0;
+    
+    if(! param->group())
+        row += PARAMETER_OFFSET;
     
     foreach(const stromx::core::Parameter* p, parameters)
     {
