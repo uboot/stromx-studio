@@ -9,6 +9,10 @@ set (STROMX_STUDIO_VERSION_MAJOR 0)
 set (STROMX_STUDIO_VERSION_MINOR 1)
 set (STROMX_STUDIO_VERSION_PATCH 0)
 
+if(NOT DOC_INSTALL_DIR)
+    set(DOC_INSTALL_DIR "" CACHE FILEPATH "Documentation install directory")
+endif()
+
 if(MSVC)
     add_definitions(/DBOOST_ALL_DYN_LINK)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275")
@@ -33,6 +37,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 add_subdirectory(src)
+add_subdirectory(example)
 
 if(WIN32)
     install (FILES ${PROJECT_SOURCE_DIR}/wix/stromx-studio.wxs DESTINATION .)

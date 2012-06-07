@@ -62,8 +62,9 @@ rm -rf %{buildroot}
 %files
 %defattr(0644, root, root, 0755)
 %attr(0755, root, root) %{_bindir}/stromx-studio
+%defattr(-, root, root, 0755)
+%{_docdir}/stromx-studio
 %doc
-
 
 
 %changelog
