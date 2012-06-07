@@ -1,4 +1,4 @@
-#include "TestOperator.h"
+#include "ParameterOperator.h"
 
 #include <stromx/core/DataProvider.h>
 #include <stromx/core/EnumParameter.h>
@@ -11,21 +11,21 @@
 
 using namespace stromx::core;
 
-const std::string TestOperator::TYPE("TestOperator");
-const std::string TestOperator::PACKAGE("TestPackage");
-const Version TestOperator::VERSION(1, 2, 3);
+const std::string ParameterOperator::TYPE("ParameterOperator");
+const std::string ParameterOperator::PACKAGE("TestPackage");
+const Version ParameterOperator::VERSION(1, 2, 3);
 
-TestOperator::TestOperator()
+ParameterOperator::ParameterOperator()
   : OperatorKernel(TYPE, PACKAGE, VERSION, setupInitParameters())
 {
 }
 
-void TestOperator::initialize()
+void ParameterOperator::initialize()
 {
     OperatorKernel::initialize(setupInputs(), setupOutputs(), setupParameters());
 }
 
-void TestOperator::setParameter(unsigned int id, const Data& value)
+void ParameterOperator::setParameter(unsigned int id, const Data& value)
 {
     try
     {
@@ -53,7 +53,7 @@ void TestOperator::setParameter(unsigned int id, const Data& value)
     }
 }
 
-const Data& TestOperator::getParameter(const unsigned int id) const
+const Data& ParameterOperator::getParameter(const unsigned int id) const
 {
     switch(id)
     {
@@ -70,7 +70,7 @@ const Data& TestOperator::getParameter(const unsigned int id) const
     }
 }  
 
-void TestOperator::execute(DataProvider& provider)
+void ParameterOperator::execute(DataProvider& provider)
 {
     Id2DataPair input1(INPUT_1);
     Id2DataPair input2(INPUT_2);
@@ -84,7 +84,7 @@ void TestOperator::execute(DataProvider& provider)
     provider.sendOutputData(output1 && output2);
 }
         
-const std::vector<const Description*> TestOperator::setupInputs()
+const std::vector<const Description*> ParameterOperator::setupInputs()
 {
     std::vector<const Description*> inputs;
     Description* description = 0;
@@ -100,7 +100,7 @@ const std::vector<const Description*> TestOperator::setupInputs()
     return inputs;
 }
 
-const std::vector<const Description*> TestOperator::setupOutputs()
+const std::vector<const Description*> ParameterOperator::setupOutputs()
 {
     std::vector<const Description*> outputs;
     Description* description = 0;
@@ -116,7 +116,7 @@ const std::vector<const Description*> TestOperator::setupOutputs()
     return outputs;
 }
 
-const std::vector<const Parameter*> TestOperator::setupParameters()
+const std::vector<const Parameter*> ParameterOperator::setupParameters()
 {
     std::vector<const Parameter*> parameters;
     
@@ -151,7 +151,7 @@ const std::vector<const Parameter*> TestOperator::setupParameters()
     return parameters;
 }
 
-const std::vector<const Parameter*> TestOperator::setupInitParameters()
+const std::vector<const Parameter*> ParameterOperator::setupInitParameters()
 {
     std::vector<const Parameter*> parameters;
     

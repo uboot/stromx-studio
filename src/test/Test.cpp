@@ -19,7 +19,8 @@
 
 #include <stromx/core/Registry.h>
 
-#include "TestOperator.h"
+#include "ExceptionOperator.h"
+#include "ParameterOperator.h"
 
 #ifdef WIN32
     #define TEST_API __declspec(dllexport)
@@ -33,6 +34,7 @@ extern "C"
     {
         using namespace stromx::core;
         
-        registry.registerOperator(new TestOperator);
+        registry.registerOperator(new ExceptionOperator);
+        registry.registerOperator(new ParameterOperator);
     }
 }

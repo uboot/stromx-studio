@@ -35,7 +35,8 @@ target_link_libraries(stromx_studio_test
 )
 
 add_library(stromx_test SHARED 
-    TestOperator.cpp
+    ExceptionOperator.cpp
+    ParameterOperator.cpp
     Test.cpp
 )
 

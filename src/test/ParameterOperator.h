@@ -17,13 +17,13 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TESTOPERATOR_H
-#define TESTOPERATOR_H
+#ifndef PARAMETEROPERATOR_H
+#define PARAMETEROPERATOR_H
 
 #include <stromx/core/OperatorKernel.h>
 #include <stromx/core/Primitive.h>
 
-class TestOperator : public stromx::core::OperatorKernel
+class ParameterOperator : public stromx::core::OperatorKernel
 {
     enum Inputs 
     { 
@@ -48,9 +48,9 @@ class TestOperator : public stromx::core::OperatorKernel
     };
     
 public:
-    TestOperator();
+    ParameterOperator();
     
-    virtual OperatorKernel* const clone() const { return new TestOperator; }
+    virtual OperatorKernel* const clone() const { return new ParameterOperator; }
     virtual void setParameter(const unsigned int id, const stromx::core::Data& value);
     const stromx::core::Data& getParameter(const unsigned int id) const;
     virtual void execute(stromx::core::DataProvider& provider);
@@ -72,4 +72,4 @@ private:
     stromx::core::Bool m_boolParam;
 };
 
-#endif // TESTOPERATOR_H
+#endif // PARAMETEROPERATOR_H
