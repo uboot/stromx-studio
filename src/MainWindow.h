@@ -171,6 +171,7 @@ private:
     QAction* m_showOperatorLibraryAct;
     QAction* m_showPropertyViewAct;
     QAction* m_showObserverTreeViewAct;
+    QAction* m_showErrorListViewAct;
     
     LimitUndoStack* m_undoStack;
     
@@ -185,6 +186,7 @@ private:
     QDockWidget* m_operatorLibraryDockWidget;
     QDockWidget* m_observerDockWidget;
     QDockWidget* m_propertyDockWidget;
+    QDockWidget* m_errorDockWidget;
     
     StreamEditor* m_streamEditor;
     ThreadListView* m_threadListView;

@@ -115,7 +115,7 @@ void MainWindow::createDockWidgets()
     m_observerTreeView = new ObserverTreeView(this);
     m_observerDockWidget = new QDockWidget(this);
     m_observerDockWidget->setWindowTitle("Observers");
-    m_observerDockWidget->setObjectName("ObserverEditor");
+    m_observerDockWidget->setObjectName("ObserverTree");
     m_observerDockWidget->setWidget(m_observerTreeView);
     m_observerDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     
@@ -126,9 +126,16 @@ void MainWindow::createDockWidgets()
     m_propertyDockWidget->setWidget(m_propertyView);
     m_propertyDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     
+    m_errorDockWidget = new QDockWidget(this);
+    m_errorDockWidget->setWindowTitle(tr("Error log"));
+    m_errorDockWidget->setObjectName("ErrorLog");
+    m_errorDockWidget->setAllowedAreas(Qt::BottomDockWidgetArea);
+    
     addDockWidget(Qt::LeftDockWidgetArea, m_propertyDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, m_propertyDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, m_observerDockWidget);
+    addDockWidget(Qt::BottomDockWidgetArea, m_errorDockWidget);
+    m_errorDockWidget->hide();
 }
 
 void MainWindow::setModel(StreamModel* model)
@@ -263,6 +270,10 @@ void MainWindow::createActions()
     m_showObserverTreeViewAct = new QAction(tr("Observers"), this);
     m_showObserverTreeViewAct->setStatusTip(tr("Show observers window"));
     connect(m_showObserverTreeViewAct, SIGNAL(triggered(bool)), m_observerDockWidget, SLOT(show()));
+    
+    m_showErrorListViewAct = new QAction(tr("Error log"), this);
+    m_showErrorListViewAct->setStatusTip(tr("Show error log window"));
+    connect(m_showErrorListViewAct, SIGNAL(triggered(bool)), m_errorDockWidget, SLOT(show()));
 }
 
 void MainWindow::createMenus()
@@ -303,6 +314,7 @@ void MainWindow::createMenus()
     m_viewMenu->addAction(m_showOperatorLibraryAct);
     m_viewMenu->addAction(m_showPropertyViewAct);
     m_viewMenu->addAction(m_showObserverTreeViewAct);
+    m_viewMenu->addAction(m_showErrorListViewAct);
     m_viewMenuSeparatorAct = m_viewMenu->addSeparator();
 
     menuBar()->addSeparator();
