@@ -26,6 +26,7 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     m_showAct->setStatusTip(tr("Open the observer window"));
     m_showAct->setEnabled(true);
     connect(m_showAct, SIGNAL(triggered()), this, SLOT(show()));
+    connect(m_showAct, SIGNAL(triggered()), this, SLOT(raise()));
     connect(observer, SIGNAL(nameChanged(QString)), this, SLOT(setWindowTitle(QString)));
     connect(observer, SIGNAL(nameChanged(QString)), this, SLOT(updateWindowTitle(QString)));
     

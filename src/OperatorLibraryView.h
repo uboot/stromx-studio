@@ -17,26 +17,33 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef OPERATORLIBRARY_H
-#define OPERATORLIBRARY_H
+#ifndef OPERATORLIBRARYVIEW_H
+#define OPERATORLIBRARYVIEW_H
 
-#include <QDockWidget>
+#include <QTreeView>
 
-class OperatorLibraryList;
 class OperatorLibraryModel;
 
-class OperatorLibrary : public QDockWidget
+class OperatorLibraryView : public QTreeView
 {
     Q_OBJECT
 
 public:
-    explicit OperatorLibrary(QWidget *parent = 0);
+    explicit OperatorLibraryView(QWidget *parent = 0);
     
-    OperatorLibraryModel* const model() const;
+    virtual void setOperatorLibraryModel(OperatorLibraryModel* model);
+    
+    OperatorLibraryModel* operatorLibraryModel() const { return m_model; }
+    
+protected:
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
     
 private:
-    OperatorLibraryList* m_list;
+    void startDrag();
+    
+    QPoint m_startPos;
     OperatorLibraryModel* m_model;
 };
 
-#endif // OPERATORLIBRARY_H
+#endif // OPERATORLIBRARYVIEW_H

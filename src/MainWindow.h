@@ -45,7 +45,7 @@ class LimitUndoStack;
 class ObserverTreeView;
 class ObserverModel;
 class ObserverWindow;
-class OperatorLibrary;
+class OperatorLibraryView;
 class PropertyView;
 class StreamEditor;
 class StreamModel;
@@ -167,6 +167,10 @@ private:
     QAction* m_observerSeparatorAct;
     QAction* m_slowAction;
     QAction* m_emptyRecentFilesAct;
+    QAction* m_viewMenuSeparatorAct;
+    QAction* m_showOperatorLibraryAct;
+    QAction* m_showPropertyViewAct;
+    QAction* m_showObserverTreeViewAct;
     
     LimitUndoStack* m_undoStack;
     
@@ -178,10 +182,14 @@ private:
     
     QToolBar* m_streamToolBar;
     
+    QDockWidget* m_operatorLibraryDockWidget;
+    QDockWidget* m_observerDockWidget;
+    QDockWidget* m_propertyDockWidget;
+    
     StreamEditor* m_streamEditor;
     ThreadListView* m_threadListView;
     ObserverTreeView* m_observerTreeView;
-    OperatorLibrary* m_operatorLibrary;
+    OperatorLibraryView* m_operatorLibraryView;
     PropertyView* m_propertyView;
     
     StreamModel* m_model;

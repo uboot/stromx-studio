@@ -43,8 +43,7 @@ set(stromxstudio_SOURCES
     ObserverWindow.cpp
     OperatorItem.cpp
     OperatorData.cpp
-    OperatorLibrary.cpp
-    OperatorLibraryList.cpp
+    OperatorLibraryView.cpp
     OperatorLibraryModel.cpp
     OperatorModel.cpp
     PropertyModel.cpp
@@ -91,8 +90,7 @@ set(stromxstudio_HEADERS
     ObserverWindow.h
     OperatorItem.h
     OperatorData.h
-    OperatorLibrary.h
-    OperatorLibraryList.h
+    OperatorLibraryView.h
     OperatorLibraryModel.h
     OperatorModel.h
     PropertyModel.h

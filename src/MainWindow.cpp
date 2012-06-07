@@ -20,6 +20,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QCloseEvent>
+#include <QDockWidget>
 #include <QLabel>
 #include <QMenu>
 #include <QMenuBar>
@@ -46,7 +47,7 @@
 #include "ObserverTreeView.h"
 #include "ObserverView.h"
 #include "ObserverWindow.h"
-#include "OperatorLibrary.h"
+#include "OperatorLibraryView.h"
 #include "OperatorLibraryModel.h"
 #include "PropertyView.h"
 #include "StreamEditor.h"
@@ -82,15 +83,20 @@ MainWindow::MainWindow(QWidget *parent)
     updateCurrentFile("");
     readSettings();
     
-    StreamModel* streamModel = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
-    setModel(streamModel);
-    
     connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractItemModel*)),
             m_propertyView, SLOT(setModel(QAbstractItemModel*)));
     connect(m_streamEditor->scene(), SIGNAL(modelWasReset(StreamModel*)),
             this, SLOT(resetObserverWindows(StreamModel*)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), this, SLOT(updateWindowTitle(bool)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), m_saveAct, SLOT(setDisabled(bool)));
+    
+    OperatorLibraryModel* operatorLibraryModel = new OperatorLibraryModel(this);
+    m_operatorLibraryView->setOperatorLibraryModel(operatorLibraryModel);
+    
+    StreamModel* streamModel = new StreamModel(m_undoStack,
+                                               m_operatorLibraryView->operatorLibraryModel(),
+                                               this);
+    setModel(streamModel);
 }
 
 MainWindow::~MainWindow()
@@ -99,24 +105,30 @@ MainWindow::~MainWindow()
 
 void MainWindow::createDockWidgets()
 {
-    m_operatorLibrary = new OperatorLibrary;
-    m_operatorLibrary->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_operatorLibraryView = new OperatorLibraryView(this);
+    m_operatorLibraryDockWidget = new QDockWidget(this);
+    m_operatorLibraryDockWidget->setWindowTitle(tr("Operator Library"));
+    m_operatorLibraryDockWidget->setObjectName("OperatorLibrary");
+    m_operatorLibraryDockWidget->setWidget(m_operatorLibraryView);
+    m_operatorLibraryDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     
     m_observerTreeView = new ObserverTreeView(this);
-    QDockWidget* observerTreeDockWidget = new QDockWidget(this);
-    observerTreeDockWidget->setWindowTitle("Observers");
-    observerTreeDockWidget->setObjectName("ObserverEditor");
-    observerTreeDockWidget->setWidget(m_observerTreeView);
+    m_observerDockWidget = new QDockWidget(this);
+    m_observerDockWidget->setWindowTitle("Observers");
+    m_observerDockWidget->setObjectName("ObserverEditor");
+    m_observerDockWidget->setWidget(m_observerTreeView);
+    m_observerDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     
     m_propertyView = new PropertyView(this);
-    QDockWidget* propertyDockWidget = new QDockWidget(this);
-    propertyDockWidget->setWindowTitle(tr("Properties"));
-    propertyDockWidget->setObjectName("PropertyEditor");
-    propertyDockWidget->setWidget(m_propertyView);
+    m_propertyDockWidget = new QDockWidget(this);
+    m_propertyDockWidget->setWindowTitle(tr("Properties"));
+    m_propertyDockWidget->setObjectName("PropertyEditor");
+    m_propertyDockWidget->setWidget(m_propertyView);
+    m_propertyDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     
-    addDockWidget(Qt::LeftDockWidgetArea, m_operatorLibrary);
-    addDockWidget(Qt::RightDockWidgetArea, propertyDockWidget);
-    addDockWidget(Qt::RightDockWidgetArea, observerTreeDockWidget);
+    addDockWidget(Qt::LeftDockWidgetArea, m_propertyDockWidget);
+    addDockWidget(Qt::RightDockWidgetArea, m_propertyDockWidget);
+    addDockWidget(Qt::RightDockWidgetArea, m_observerDockWidget);
 }
 
 void MainWindow::setModel(StreamModel* model)
@@ -239,6 +251,18 @@ void MainWindow::createActions()
     m_emptyRecentFilesAct = new QAction(tr("Empty recent files"), this);
     m_emptyRecentFilesAct->setStatusTip(tr("Empties the list of recently opened files"));
     connect(m_emptyRecentFilesAct, SIGNAL(triggered(bool)), this, SLOT(emptyRecentFiles()));
+    
+    m_showOperatorLibraryAct = new QAction(tr("Operator library"), this);
+    m_showOperatorLibraryAct->setStatusTip(tr("Show operator library window"));
+    connect(m_showOperatorLibraryAct, SIGNAL(triggered(bool)), m_operatorLibraryDockWidget, SLOT(show()));
+    
+    m_showPropertyViewAct = new QAction(tr("Properties"), this);
+    m_showPropertyViewAct->setStatusTip(tr("Show properties window"));
+    connect(m_showPropertyViewAct, SIGNAL(triggered(bool)), m_propertyDockWidget, SLOT(show()));
+    
+    m_showObserverTreeViewAct = new QAction(tr("Observers"), this);
+    m_showObserverTreeViewAct->setStatusTip(tr("Show observers window"));
+    connect(m_showObserverTreeViewAct, SIGNAL(triggered(bool)), m_observerDockWidget, SLOT(show()));
 }
 
 void MainWindow::createMenus()
@@ -276,6 +300,10 @@ void MainWindow::createMenus()
     m_streamMenu->addAction(m_removeInputAct);
 
     m_viewMenu = menuBar()->addMenu(tr("&View"));
+    m_viewMenu->addAction(m_showOperatorLibraryAct);
+    m_viewMenu->addAction(m_showPropertyViewAct);
+    m_viewMenu->addAction(m_showObserverTreeViewAct);
+    m_viewMenuSeparatorAct = m_viewMenu->addSeparator();
 
     menuBar()->addSeparator();
 
@@ -450,11 +478,13 @@ bool MainWindow::readFile(const QString& filepath)
     {
         if(extension == "xml")
         {
-            stream = new StreamModel(*input, basename, m_undoStack, m_operatorLibrary->model(), this);
+            stream = new StreamModel(*input, basename, m_undoStack,
+                                     m_operatorLibraryView->operatorLibraryModel(), this);
         }
         else if(extension == "zip" || extension == "stromx")
         {
-            stream = new StreamModel(*input, "stream", m_undoStack, m_operatorLibrary->model(), this);
+            stream = new StreamModel(*input, "stream", m_undoStack,
+                                     m_operatorLibraryView->operatorLibraryModel(), this);
         }
         
         updateCurrentFile(filepath);
@@ -613,7 +643,8 @@ bool MainWindow::closeStream()
         return false;
     
     // replace the current model with a new one
-    StreamModel* newModel = new StreamModel(m_undoStack, m_operatorLibrary->model(), this);
+    StreamModel* newModel = new StreamModel(m_undoStack, 
+                                            m_operatorLibraryView->operatorLibraryModel(), this);
     setModel(newModel);
     
     updateCurrentFile("");
@@ -726,7 +757,7 @@ void MainWindow::loadLibraries()
     {
         try
         {
-            m_operatorLibrary->model()->loadLibrary(file);
+            m_operatorLibraryView->operatorLibraryModel()->loadLibrary(file);
         }
         catch(LoadLibraryFailed&)
         {
@@ -751,7 +782,7 @@ void MainWindow::resetLibraries()
     int ret = msgBox.exec();
     
     if(ret == QMessageBox::Ok)
-        m_operatorLibrary->model()->resetLibraries();
+        m_operatorLibraryView->operatorLibraryModel()->resetLibraries();
 }
 
 QString MainWindow::strippedName(const QString &fullFileName)
@@ -790,6 +821,7 @@ void MainWindow::createObserverWindow(ObserverModel* observer)
     ObserverWindow* observerWindow = new ObserverWindow(observer, this);
     m_observerWindows.append(observerWindow);
     m_viewMenu->addAction(observerWindow->showAction());
+    m_viewMenuSeparatorAct->setVisible(m_observerWindows.count() > 0);
 }
 
 void MainWindow::destroyObserverWindow(ObserverModel* observer)
@@ -805,6 +837,8 @@ void MainWindow::destroyObserverWindow(ObserverModel* observer)
     Q_ASSERT(window);
     m_viewMenu->removeAction(window->showAction());
     m_observerWindows.removeAll(window);
+    
+    m_viewMenuSeparatorAct->setVisible(m_observerWindows.count() > 0);
     
     delete window;
 }

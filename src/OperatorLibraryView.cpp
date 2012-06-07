@@ -1,4 +1,4 @@
-#include "OperatorLibraryList.h"
+#include "OperatorLibraryView.h"
 
 #include <QApplication>
 #include <QHeaderView>
@@ -7,13 +7,13 @@
 #include "OperatorLibraryModel.h"
 #include "OperatorData.h"
 
-OperatorLibraryList::OperatorLibraryList(QWidget* parent)
+OperatorLibraryView::OperatorLibraryView(QWidget* parent)
   : QTreeView(parent),
     m_model(0)
 {
 }
 
-void OperatorLibraryList::setOperatorLibraryModel(OperatorLibraryModel* model)
+void OperatorLibraryView::setOperatorLibraryModel(OperatorLibraryModel* model)
 {
     m_model = model;
     setModel(model);
@@ -23,7 +23,7 @@ void OperatorLibraryList::setOperatorLibraryModel(OperatorLibraryModel* model)
 }
 
 
-void OperatorLibraryList::mouseMoveEvent(QMouseEvent* event)
+void OperatorLibraryView::mouseMoveEvent(QMouseEvent* event)
 {
     if(event->buttons() & Qt::LeftButton)
     {
@@ -36,7 +36,7 @@ void OperatorLibraryList::mouseMoveEvent(QMouseEvent* event)
     QTreeView::mouseMoveEvent(event);
 }
 
-void OperatorLibraryList::mousePressEvent(QMouseEvent* event)
+void OperatorLibraryView::mousePressEvent(QMouseEvent* event)
 {
     if(event->button() == Qt::LeftButton)
         m_startPos = event->pos();
@@ -44,7 +44,7 @@ void OperatorLibraryList::mousePressEvent(QMouseEvent* event)
     QTreeView::mousePressEvent(event);
 }
 
-void OperatorLibraryList::startDrag()
+void OperatorLibraryView::startDrag()
 {
     QModelIndex index = currentIndex();
     
