@@ -1,5 +1,7 @@
 #include "ExceptionObserver.h"
 
+#include "ErrorEvent.h"
+
 ExceptionObserver::ExceptionObserver(ErrorListModel* model)
   : m_model(model)
 {

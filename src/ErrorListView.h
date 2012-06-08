@@ -17,25 +17,17 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ERROREVENT_H
-#define ERROREVENT_H
+#ifndef ERRORLISTVIEW_H
+#define ERRORLISTVIEW_H
 
-#include <QEvent>
+#include <QTableView>
 
-#include "Common.h"
-#include "ErrorData.h"
-
-class ErrorEvent : public QEvent
+class ErrorListView : public QTableView
 {
+    Q_OBJECT
+
 public:
-    static const unsigned int TYPE = QEvent::User + Error;
-    
-    ErrorEvent(const ErrorData & data);
-    
-    const ErrorData & errorData() const { return m_data; }
-    
-private:
-    ErrorData m_data;
+    explicit ErrorListView(QWidget *parent = 0);
 };
 
-#endif // ERROREVENT_H
+#endif // ERRORLISTVIEW_H

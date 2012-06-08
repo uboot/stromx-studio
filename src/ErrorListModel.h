@@ -17,25 +17,36 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef ERROREVENT_H
-#define ERROREVENT_H
+#ifndef ERRORLISTMODEL_H
+#define ERRORLISTMODEL_H
 
-#include <QEvent>
+#include <QAbstractTableModel>
+#include <QList>
 
-#include "Common.h"
 #include "ErrorData.h"
 
-class ErrorEvent : public QEvent
+class ErrorListModel : public QAbstractTableModel
 {
+    Q_OBJECT
+    
 public:
-    static const unsigned int TYPE = QEvent::User + Error;
+    enum Column
+    {
+        TITLE,
+        DESCRIPTION
+    };
     
-    ErrorEvent(const ErrorData & data);
+    /** Constructs a thread list model. */
+    explicit ErrorListModel(QObject *parent = 0);
     
-    const ErrorData & errorData() const { return m_data; }
+    virtual int rowCount(const QModelIndex & parent) const;
+    virtual int columnCount(const QModelIndex & parent) const;
+    virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    virtual Qt::ItemFlags flags(const QModelIndex & index) const;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
 private:
-    ErrorData m_data;
+    QList<ErrorData> m_errorList;
 };
-
-#endif // ERROREVENT_H
+    
+#endif // ERRORLISTMODEL_H

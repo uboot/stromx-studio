@@ -22,7 +22,8 @@ set(stromxstudio_SOURCES
     DataManager.cpp
     DataVisualizer.cpp
     DeinitializeOperatorCmd.cpp
-    ErrorData.cpp
+    ErrorListModel.cpp
+    ErrorListView.cpp
     ExceptionObserver.cpp
     GraphicsView.cpp
     Image.cpp
@@ -79,6 +80,8 @@ set(stromxstudio_HEADERS
     ConnectionItem.h
     ConnectionModel.h
     DataManager.h
+    ErrorListModel.h
+    ErrorListView.h
     GraphicsView.h
     InputData.h
     InputModel.h
