@@ -17,28 +17,26 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONNECTOROCCUPYEVENT_H
-#define CONNECTOROCCUPYEVENT_H
+#ifndef EXCEPTIONOBSERVER_H
+#define EXCEPTIONOBSERVER_H
 
-#include <QEvent>
-#include "Common.h"
-#include "OperatorModel.h"
+#include <QMutex>
+#include <stromx/core/ExceptionObserver.h>
 
-class ConnectorOccupyEvent : public QEvent
+class ErrorListModel;
+
+class ExceptionObserver : public stromx::core::ExceptionObserver
 {
 public:
-    static const unsigned int TYPE = QEvent::User + ConnectorOccupy;
+    ExceptionObserver(ErrorListModel* model);
     
-    ConnectorOccupyEvent(OperatorModel::ConnectorType type, unsigned int id, bool isOccupied);
-    
-    OperatorModel::ConnectorType type() const { return m_type; }
-    unsigned int id() const { return m_id; }
-    bool occupied() const { return m_occupied; }
-    
+    virtual void observe(const stromx::core::ExceptionObserver::Phase phase,
+                         const stromx::core::OperatorError & ex,
+                         const stromx::core::Thread* const thread) const;
+                         
 private:
-    OperatorModel::ConnectorType m_type;
-    unsigned int m_id;
-    bool m_occupied;
+    mutable QMutex m_mutex;
+    ErrorListModel* m_model;
 };
 
-#endif // CONNECTOROCCUPYEVENT_H
+#endif // EXCEPTIONOBSERVER_H

@@ -22,6 +22,8 @@ set(stromxstudio_SOURCES
     DataManager.cpp
     DataVisualizer.cpp
     DeinitializeOperatorCmd.cpp
+    ErrorData.cpp
+    ExceptionObserver.cpp
     GraphicsView.cpp
     Image.cpp
     InitializeOperatorCmd.cpp

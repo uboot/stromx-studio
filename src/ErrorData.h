@@ -17,28 +17,33 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CONNECTOROCCUPYEVENT_H
-#define CONNECTOROCCUPYEVENT_H
+#ifndef ERRORDATA_H
+#define ERRORDATA_H
 
-#include <QEvent>
-#include "Common.h"
-#include "OperatorModel.h"
+#include <QDateTime>
+#include <QString>
 
-class ConnectorOccupyEvent : public QEvent
+namespace stromx
+{
+    namespace core
+    {
+        class Exception;
+    }
+}
+
+class ErrorData
 {
 public:
-    static const unsigned int TYPE = QEvent::User + ConnectorOccupy;
+    ErrorData(const stromx::core::Exception & exception);
     
-    ConnectorOccupyEvent(OperatorModel::ConnectorType type, unsigned int id, bool isOccupied);
-    
-    OperatorModel::ConnectorType type() const { return m_type; }
-    unsigned int id() const { return m_id; }
-    bool occupied() const { return m_occupied; }
-    
+    const QString & title() const { return m_title; }
+    const QString & description() const { return m_description; }
+    const QDateTime & time() const { return m_time; }
+                         
 private:
-    OperatorModel::ConnectorType m_type;
-    unsigned int m_id;
-    bool m_occupied;
+    QString m_title;
+    QString m_description;
+    QDateTime m_time;
 };
 
-#endif // CONNECTOROCCUPYEVENT_H
+#endif // ERRORDATA_H

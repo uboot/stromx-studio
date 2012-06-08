@@ -23,13 +23,13 @@
 #include <QEvent>
 #include <stromx/core/DataContainer.h>
 
+#include "Common.h"
 #include "OperatorModel.h"
-
 
 class ConnectorDataEvent : public QEvent
 {
 public:
-    static const unsigned int TYPE = QEvent::User + 1;
+    static const unsigned int TYPE = QEvent::User + ConnectorData;
     
     ConnectorDataEvent(OperatorModel::ConnectorType type, unsigned int id, const stromx::core::DataContainer & data);
     

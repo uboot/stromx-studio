@@ -56,6 +56,19 @@ enum Roles
     ImageRole
 };
 
+/** Custom event types of stromx-studio. */
+enum EventTypes
+{
+    /** Type offset of the class ConnectorOccupyEvent. */
+    ConnectorOccupy,
+    
+    /** Type offset of the class ConnectorDataEvent. */
+    ConnectorData,
+    
+    /** Type offset of the class ErrorDataEvent. */
+    Error
+};
+
 const QMap<QString, QColor> & colorTable();
 
 #endif // COMMON_H
