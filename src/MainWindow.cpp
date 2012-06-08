@@ -230,15 +230,18 @@ void MainWindow::createActions()
 
     m_startAct = new QAction(QIcon(":/images/start.png"), tr("Start"), this);
     m_startAct->setStatusTip(tr("Start the stream"));
+    m_startAct->setShortcut(tr("F2"));
     connect(m_startAct, SIGNAL(triggered()), this, SLOT(start()));
     
     m_pauseAct = new QAction(QIcon(":/images/pause.png"), tr("Pause"), this);
     m_pauseAct->setStatusTip(tr("Pause the stream"));
+    m_pauseAct->setShortcut(tr("F3"));
     m_pauseAct->setEnabled(false);
     connect(m_pauseAct, SIGNAL(triggered()), this, SLOT(pause()));
 
     m_stopAct = new QAction(QIcon(":/images/stop.png"), tr("Stop"), this);
     m_stopAct->setStatusTip(tr("Stop the stream"));
+    m_stopAct->setShortcut(tr("F4"));
     m_stopAct->setEnabled(false);
     connect(m_stopAct, SIGNAL(triggered()), this, SLOT(stop()));
 
@@ -261,19 +264,31 @@ void MainWindow::createActions()
     
     m_showOperatorLibraryAct = new QAction(tr("Operator library"), this);
     m_showOperatorLibraryAct->setStatusTip(tr("Show operator library window"));
-    connect(m_showOperatorLibraryAct, SIGNAL(triggered(bool)), m_operatorLibraryDockWidget, SLOT(show()));
+    m_showOperatorLibraryAct->setCheckable(true);
+    m_showOperatorLibraryAct->setShortcut(tr("F5"));
+    connect(m_operatorLibraryDockWidget, SIGNAL(visibilityChanged(bool)), m_showOperatorLibraryAct, SLOT(setChecked(bool)));
+    connect(m_showOperatorLibraryAct, SIGNAL(toggled(bool)), m_operatorLibraryDockWidget, SLOT(setVisible(bool)));
     
     m_showPropertyViewAct = new QAction(tr("Properties"), this);
     m_showPropertyViewAct->setStatusTip(tr("Show properties window"));
-    connect(m_showPropertyViewAct, SIGNAL(triggered(bool)), m_propertyDockWidget, SLOT(show()));
+    m_showPropertyViewAct->setCheckable(true);
+    m_showPropertyViewAct->setShortcut(tr("F6"));
+    connect(m_propertyDockWidget, SIGNAL(visibilityChanged(bool)), m_showPropertyViewAct, SLOT(setChecked(bool)));
+    connect(m_showPropertyViewAct, SIGNAL(toggled(bool)), m_propertyDockWidget, SLOT(setVisible(bool)));
     
     m_showObserverTreeViewAct = new QAction(tr("Observers"), this);
     m_showObserverTreeViewAct->setStatusTip(tr("Show observers window"));
-    connect(m_showObserverTreeViewAct, SIGNAL(triggered(bool)), m_observerDockWidget, SLOT(show()));
+    m_showObserverTreeViewAct->setCheckable(true);
+    m_showObserverTreeViewAct->setShortcut(tr("F7"));
+    connect(m_observerDockWidget, SIGNAL(visibilityChanged(bool)), m_showObserverTreeViewAct, SLOT(setChecked(bool)));
+    connect(m_showObserverTreeViewAct, SIGNAL(toggled(bool)), m_observerDockWidget, SLOT(setVisible(bool)));
     
     m_showErrorListViewAct = new QAction(tr("Error log"), this);
     m_showErrorListViewAct->setStatusTip(tr("Show error log window"));
-    connect(m_showErrorListViewAct, SIGNAL(triggered(bool)), m_errorDockWidget, SLOT(show()));
+    m_showErrorListViewAct->setCheckable(true);
+    m_showErrorListViewAct->setShortcut(tr("F8"));
+    connect(m_errorDockWidget, SIGNAL(visibilityChanged(bool)), m_showErrorListViewAct, SLOT(setChecked(bool)));
+    connect(m_showErrorListViewAct, SIGNAL(toggled(bool)), m_errorDockWidget, SLOT(setVisible(bool)));
 }
 
 void MainWindow::createMenus()
@@ -338,6 +353,7 @@ void MainWindow::createToolBars()
      m_streamToolBar->addAction(m_pauseAct);
      m_streamToolBar->addAction(m_stopAct);
      m_streamToolBar->addAction(m_slowAction);
+     m_streamToolBar->setMovable(false);
 }
 
 void MainWindow::about()
