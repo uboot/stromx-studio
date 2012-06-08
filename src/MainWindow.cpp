@@ -314,6 +314,10 @@ void MainWindow::createMenus()
     m_editMenu->addAction(m_redoAct);
 
     m_streamMenu = menuBar()->addMenu(tr("&Stream"));
+    m_streamMenu->addAction(m_startAct);
+    m_streamMenu->addAction(m_pauseAct);
+    m_streamMenu->addAction(m_stopAct);
+    m_streamMenu->addSeparator();
     m_streamMenu->addAction(m_removeSelectedItemsAct);
     m_streamMenu->addAction(m_initializeAct);
     m_streamMenu->addAction(m_deinitializeAct);
