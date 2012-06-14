@@ -10,18 +10,14 @@
 OperatorLibraryView::OperatorLibraryView(QWidget* parent)
   : QTreeView(parent),
     m_model(0)
-{
-}
-
-void OperatorLibraryView::setOperatorLibraryModel(OperatorLibraryModel* model)
-{
-    m_model = model;
-    setModel(model);
+{    
+    m_model = new OperatorLibraryModel(this);
+    
+    setModel(m_model);
     setItemDelegate(new ItemDelegate(this));
     header()->setResizeMode(QHeaderView::Stretch);
     setAlternatingRowColors(true);
 }
-
 
 void OperatorLibraryView::mouseMoveEvent(QMouseEvent* event)
 {

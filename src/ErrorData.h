@@ -27,14 +27,14 @@ namespace stromx
 {
     namespace core
     {
-        class Exception;
+        class OperatorError;
     }
 }
 
 class ErrorData
 {
 public:
-    ErrorData(const stromx::core::Exception & exception);
+    ErrorData(const stromx::core::OperatorError & exception);
     
     const QString & title() const { return m_title; }
     const QString & description() const { return m_description; }

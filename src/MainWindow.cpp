@@ -90,9 +90,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), this, SLOT(updateWindowTitle(bool)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), m_saveAct, SLOT(setDisabled(bool)));
     
-    OperatorLibraryModel* operatorLibraryModel = new OperatorLibraryModel(this);
-    m_operatorLibraryView->setOperatorLibraryModel(operatorLibraryModel);
-    
     StreamModel* streamModel = new StreamModel(m_undoStack,
                                                m_operatorLibraryView->operatorLibraryModel(),
                                                this);

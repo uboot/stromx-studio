@@ -31,8 +31,6 @@ class OperatorLibraryView : public QTreeView
 public:
     explicit OperatorLibraryView(QWidget *parent = 0);
     
-    virtual void setOperatorLibraryModel(OperatorLibraryModel* model);
-    
     OperatorLibraryModel* operatorLibraryModel() const { return m_model; }
     
 protected:
