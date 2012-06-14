@@ -6,8 +6,8 @@
 #include "ConnectorDataEvent.h"
 #include "ConnectorOccupyEvent.h"
 
-ConnectorObserver::ConnectorObserver(OperatorModel* opModel)
-  : m_opModel(opModel),
+ConnectorObserver::ConnectorObserver(QObject* receiver)
+  : m_receiver(receiver),
     m_application(QCoreApplication::instance()),
     m_observeData(false)
 {
@@ -18,14 +18,14 @@ void ConnectorObserver::observe(const stromx::core::Connector& connector, const 
     OperatorModel::ConnectorType type = connector.type() == stromx::core::Connector::INPUT ? 
                                         OperatorModel::INPUT : OperatorModel::OUTPUT;
     ConnectorOccupyEvent* occupyEvent = new ConnectorOccupyEvent(type, connector.id(), data.empty() ? false : true);                                   
-    m_application->postEvent(m_opModel, occupyEvent);
+    m_application->postEvent(m_receiver, occupyEvent);
     
     // send data event only if receivers are connected to the respective signal of OperatorModel
     QMutexLocker lock(&m_mutex);
     if(m_observeData && type == OperatorModel::INPUT)
     {
         ConnectorDataEvent* dataEvent = new ConnectorDataEvent(type, connector.id(), data);
-        m_application->postEvent(m_opModel, dataEvent);
+        m_application->postEvent(m_receiver, dataEvent);
     }
 }
 

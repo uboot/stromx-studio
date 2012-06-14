@@ -33,12 +33,12 @@ namespace stromx
 }
 
 class QCoreApplication;
-class OperatorModel;
+class QObject;
 
 class ConnectorObserver : public stromx::core::ConnectorObserver
 {
 public:
-    ConnectorObserver(OperatorModel* opModel);
+    ConnectorObserver(QObject* receiver);
         
     virtual void observe(const stromx::core::Connector &connector,
                          const stromx::core::DataContainer &data) const;
@@ -46,7 +46,7 @@ public:
     void setObserveData(bool observe);
                          
 private:
-    OperatorModel* m_opModel;
+    QObject* m_receiver;
     QCoreApplication* m_application;
     bool m_observeData;
     mutable QMutex m_mutex;
