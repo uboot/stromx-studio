@@ -164,14 +164,14 @@ public:
     void setExceptionObserver(ExceptionObserver* observer);
 
 public slots:
-    /** Starts the stromx stream. */
-    void start();
+    /** Starts the stromx stream. Returns true if successful. */
+    bool start();
     
-    /** Pauses the stromx stream. */
-    void pause();
+    /** Pauses the stromx stream. Returns true if successful. */
+    bool pause();
     
-    /** Stops the stromx stream. */
-    void stop();
+    /** Stops the stromx stream. Returns true if successful. */
+    bool stop();
     
     /** 
      * Activates or deactivates the operator delay. If the delay is activated
@@ -291,7 +291,7 @@ private:
     QList<OperatorModel*> m_uninitializedOperators;
     QList<ConnectionModel*> m_connections;
     JoinStreamTask* m_joinStreamTask;
-    ExceptionObserver* m_currentObserver;
+    ExceptionObserver* m_exceptionObserver;
 };
 
 #endif // STREAMMODEL_H

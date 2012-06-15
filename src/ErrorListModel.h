@@ -46,7 +46,7 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
     /** Returns an exception observer which sends events to this model. */
-    ExceptionObserver* observer() const { return const_cast<ExceptionObserver*>(&m_observer); }
+    ExceptionObserver* exceptionObserver() const { return const_cast<ExceptionObserver*>(&m_observer); }
  
 public slots:
     /** Clears all errors in the list. */

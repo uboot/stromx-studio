@@ -36,9 +36,11 @@ class ErrorData
 public:
     enum Type
     {
+        INITIALIZATION,
         ACTIVATION,
         EXECUTION,
-        DEACTIVATION
+        DEACTIVATION,
+        DEINITIALIZATION
     };
     
     ErrorData(const stromx::core::OperatorError & exception, Type type);

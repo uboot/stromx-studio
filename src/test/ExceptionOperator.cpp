@@ -76,6 +76,8 @@ void ExceptionOperator::execute(DataProvider& provider)
     
     provider.receiveInputData(input);
     
+    provider.sleep(100);
+    
     if(m_throwExecute)
         throw OperatorError(*this, "Failed to execute operator.");
 }

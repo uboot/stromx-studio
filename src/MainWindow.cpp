@@ -160,7 +160,7 @@ void MainWindow::setModel(StreamModel* model)
     m_streamEditor->streamEditorScene()->setModel(model);
     m_threadListView->setStreamModel(model);
     m_observerTreeView->setModel(model->observerModel());
-    model->setExceptionObserver(m_errorListView->errorListModel()->observer());
+    model->setExceptionObserver(m_errorListView->errorListModel()->exceptionObserver());
     
     // delete the old model
     if(m_model)
@@ -382,32 +382,38 @@ bool MainWindow::save()
 
 void MainWindow::start()
 {
-    m_model->start();
-    m_startAct->setEnabled(false);
-    m_pauseAct->setEnabled(true);
-    m_stopAct->setEnabled(true);
-    m_redoAct->setEnabled(false);
-    m_undoAct->setEnabled(false);
-    m_undoStack->activateLimit();
-    m_saveAct->setEnabled(false);
-    m_saveAsAct->setEnabled(false);
-    m_openAct->setEnabled(false);
+    if(m_model->start())
+    {
+        m_startAct->setEnabled(false);
+        m_pauseAct->setEnabled(true);
+        m_stopAct->setEnabled(true);
+        m_redoAct->setEnabled(false);
+        m_undoAct->setEnabled(false);
+        m_undoStack->activateLimit();
+        m_saveAct->setEnabled(false);
+        m_saveAsAct->setEnabled(false);
+        m_openAct->setEnabled(false);
+    }
 }
 
 void MainWindow::stop()
 {
-    m_model->stop();
-    m_startAct->setEnabled(false);
-    m_pauseAct->setEnabled(false);
-    m_stopAct->setEnabled(true);
+    if(m_model->stop())
+    {
+        m_startAct->setEnabled(false);
+        m_pauseAct->setEnabled(false);
+        m_stopAct->setEnabled(true);
+    }
 }
 
 void MainWindow::pause()
 {
-    m_model->pause();
-    m_startAct->setEnabled(true);
-    m_pauseAct->setEnabled(false);
-    m_stopAct->setEnabled(true);
+    if(m_model->pause())
+    {
+        m_startAct->setEnabled(true);
+        m_pauseAct->setEnabled(false);
+        m_stopAct->setEnabled(true);
+    }
 }
 
 void MainWindow::join()

@@ -3,6 +3,8 @@
 #include <QDebug>
 #include "ErrorEvent.h"
 
+const qint32 ErrorListModel::MAX_ERRORS = 100;
+
 ErrorListModel::ErrorListModel(QObject* parent)
   : QAbstractTableModel(parent),
     m_observer(this)
@@ -47,9 +49,19 @@ void ErrorListModel::customEvent(QEvent* event)
 {
     if(ErrorEvent* errorEvent = dynamic_cast<ErrorEvent*>(event))
     {
+        // add the error to the list
         beginInsertRows(QModelIndex(), 0, 0);
         m_errorList.push_front(errorEvent->errorData());
         endInsertRows();
+        
+        // if necessary remove errors at the end of the list
+        if(m_errorList.count() > MAX_ERRORS)
+        {
+            beginRemoveRows(QModelIndex(), MAX_ERRORS, m_errorList.count());
+            while(m_errorList.count() > MAX_ERRORS)
+                m_errorList.removeLast();
+            endRemoveRows();
+        }
     }
 }
 

@@ -14,6 +14,9 @@ ErrorData::ErrorData(const stromx::core::OperatorError& exception, Type type)
     QString errorType;
     switch(type)
     {
+    case INITIALIZATION:
+        errorType = QApplication::tr("Initialization error");
+        break;
     case ACTIVATION:
         errorType = QApplication::tr("Activation error");
         break;
@@ -23,15 +26,18 @@ ErrorData::ErrorData(const stromx::core::OperatorError& exception, Type type)
     case DEACTIVATION:
         errorType = QApplication::tr("Deactivation error");
         break;
+    case DEINITIALIZATION:
+        errorType = QApplication::tr("Deinitialization error");
+        break;
     default:
         errorType = QApplication::tr("Unknown error");
         break;
     }
     
     QString opName = exception.name().empty() ? QString("") :
-                     QApplication::tr("%1").arg(QString::fromStdString(exception.name()));
+                     QApplication::tr("\"%1\" ").arg(QString::fromStdString(exception.name()));
     
-    m_title = QApplication::tr("%1 in operator \"%2\" of type %3").arg(errorType).arg(opName).arg(opType);
+    m_title = QApplication::tr("%1 in operator %2of type %3").arg(errorType).arg(opName).arg(opType);
     
     m_description = QString::fromStdString(exception.message());
 }

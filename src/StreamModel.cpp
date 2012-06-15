@@ -44,7 +44,7 @@ StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLi
     m_operatorLibrary(operatorLibrary),
     m_undoStack(undoStack),
     m_joinStreamTask(0),
-    m_currentObserver(0)
+    m_exceptionObserver(0)
 {
     initializeSubModels();
 }
@@ -57,7 +57,7 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     m_operatorLibrary(operatorLibrary),
     m_undoStack(undoStack),
     m_joinStreamTask(0),
-    m_currentObserver(0)
+    m_exceptionObserver(0)
 {
     initializeSubModels();
     
@@ -229,6 +229,7 @@ void StreamModel::initializeSubModels()
 
 StreamModel::~StreamModel()
 {   
+    stop();
     m_joinStreamTask->wait();
     deleteAllData();
 }
@@ -368,10 +369,18 @@ void StreamModel::doInitializeOperator(OperatorModel* op)
     if(op->isInitialized())
         return;
     
-    op->setInitialized(true);
-    m_uninitializedOperators.removeAll(op);
-    m_initializedOperators.append(op);
-    m_stream->addOperator(op->op());
+    try
+    {
+        op->setInitialized(true);
+        
+        m_uninitializedOperators.removeAll(op);
+        m_initializedOperators.append(op);
+        m_stream->addOperator(op->op());
+    }
+    catch(stromx::core::OperatorError& e)
+    {
+        m_exceptionObserver->observe(stromx::core::ExceptionObserver::INITIALIZATION, e, 0);
+    }
 }
 
 void StreamModel::doDeinitializeOperator(OperatorModel* op)
@@ -694,7 +703,7 @@ void StreamModel::deserializeModel(const QByteArray& data)
     dataStream >> m_observerModel;
 }
 
-void StreamModel::start()
+bool StreamModel::start()
 {
     switch(m_stream->status())
     {
@@ -704,7 +713,20 @@ void StreamModel::start()
             stromx::core::SortInputsAlgorithm sort;
             sort.apply(*m_stream);
         }
-        m_stream->start();
+        try
+        {
+            m_stream->start();
+        }
+        catch(stromx::core::OperatorError& e)
+        {
+            // report any errors to the error observer
+            if(m_observerModel)
+                m_exceptionObserver->observe(stromx::core::ExceptionObserver::ACTIVATION, e, 0);
+            
+            // return with error
+            return false;
+        }
+        
         break;
     case stromx::core::Stream::PAUSED:
         m_stream->resume();
@@ -714,19 +736,23 @@ void StreamModel::start()
     }
     
     emit streamStarted();
+    
+    return true;
 }
 
-void StreamModel::pause()
+bool StreamModel::pause()
 {
     m_stream->pause();
     emit streamPaused();
+    
+    return true;
 }
 
-void StreamModel::stop()
+bool StreamModel::stop()
 {
     // do nothing if the stream is inactive
     if(m_stream->status() == stromx::core::Stream::INACTIVE)
-        return;
+        return true;
     
     // stop the stream
     m_stream->stop();
@@ -735,6 +761,8 @@ void StreamModel::stop()
     // start the thread which waits for the stream to finish
     m_joinStreamTask->setStream(m_stream);
     m_joinStreamTask->start();
+    
+    return true;
 }
 
 void StreamModel::join()
@@ -760,11 +788,11 @@ void StreamModel::setExceptionObserver(ExceptionObserver* observer)
 {
     Q_ASSERT(observer);
     
-    if(m_currentObserver)
-        m_stream->removeObserver(m_currentObserver);
+    if(m_exceptionObserver)
+        m_stream->removeObserver(m_exceptionObserver);
     
     m_stream->addObserver(observer);
-    m_currentObserver = observer;
+    m_exceptionObserver = observer;
 }
 
 
