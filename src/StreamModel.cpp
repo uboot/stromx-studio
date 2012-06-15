@@ -6,6 +6,7 @@
 #include "Config.h"
 #include "DeinitializeOperatorCmd.h"
 #include "Exception.h"
+#include "ExceptionObserver.h"
 #include "InitializeOperatorCmd.h"
 #include "JoinStreamTask.h"
 #include "OperatorLibraryModel.h"
@@ -42,7 +43,8 @@ StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLi
     m_observerModel(0),
     m_operatorLibrary(operatorLibrary),
     m_undoStack(undoStack),
-    m_joinStreamTask(0)
+    m_joinStreamTask(0),
+    m_currentObserver(0)
 {
     initializeSubModels();
 }
@@ -54,7 +56,8 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     m_observerModel(0),
     m_operatorLibrary(operatorLibrary),
     m_undoStack(undoStack),
-    m_joinStreamTask(0)
+    m_joinStreamTask(0),
+    m_currentObserver(0)
 {
     initializeSubModels();
     
@@ -751,6 +754,17 @@ void StreamModel::setDelay(bool active)
         m_stream->setDelay(DELAY);
     else
         m_stream->setDelay(0);
+}
+
+void StreamModel::setExceptionObserver(ExceptionObserver* observer)
+{
+    Q_ASSERT(observer);
+    
+    if(m_currentObserver)
+        m_stream->removeObserver(m_currentObserver);
+    
+    m_stream->addObserver(observer);
+    m_currentObserver = observer;
 }
 
 

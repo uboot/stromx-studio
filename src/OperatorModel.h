@@ -23,6 +23,7 @@
 #include <QPointF>
 #include <QSet>
 #include <stromx/core/DataContainer.h>
+#include "ConnectorObserver.h"
 #include "PropertyModel.h"
 
 namespace stromx
@@ -37,7 +38,6 @@ namespace stromx
 
 class QUndoStack;
 class ConnectionModel;
-class ConnectorObserver;
 class StreamModel;
 
 /** \brief Model of a stromx operator. */
@@ -122,7 +122,6 @@ public:
     virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
     virtual QModelIndex parent(const QModelIndex& child) const;
     
-    virtual void customEvent(QEvent* event);
     
 signals:
     /** The position of the operator on the stream scene has changed. */
@@ -147,6 +146,7 @@ signals:
     void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data);
     
 protected:
+    virtual void customEvent(QEvent* event);
     virtual void connectNotify(const char * signal);
     virtual void disconnectNotify(const char * signal);
 
@@ -235,7 +235,7 @@ private:
     QString m_type;
     QString m_name;
     unsigned int m_offsetPosParam;
-    ConnectorObserver* m_observer;
+    ConnectorObserver m_observer;
 };
 
 QDataStream & operator<< (QDataStream & stream, const OperatorModel * op);

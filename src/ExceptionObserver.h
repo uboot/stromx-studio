@@ -23,12 +23,12 @@
 #include <QMutex>
 #include <stromx/core/ExceptionObserver.h>
 
-class ErrorListModel;
+class QObject;
 
 class ExceptionObserver : public stromx::core::ExceptionObserver
 {
 public:
-    ExceptionObserver(ErrorListModel* model);
+    ExceptionObserver(QObject* receiver);
     
     virtual void observe(const stromx::core::ExceptionObserver::Phase phase,
                          const stromx::core::OperatorError & ex,
@@ -36,7 +36,7 @@ public:
                          
 private:
     mutable QMutex m_mutex;
-    ErrorListModel* m_model;
+    QObject* m_receiver;
 };
 
 #endif // EXCEPTIONOBSERVER_H

@@ -22,12 +22,19 @@
 
 #include <QTableView>
 
+class ErrorListModel;
+
 class ErrorListView : public QTableView
 {
     Q_OBJECT
 
 public:
     explicit ErrorListView(QWidget *parent = 0);
+    
+    ErrorListModel* errorListModel() const { return m_model; }
+    
+private:
+    ErrorListModel* m_model;
 };
 
 #endif // ERRORLISTVIEW_H

@@ -40,6 +40,8 @@
 #include <stromx/core/Exception.h>
 #include <stromx/core/ZipFileInput.h>
 #include <stromx/core/ZipFileOutput.h>
+#include "ErrorListModel.h"
+#include "ErrorListView.h"
 #include "Exception.h"
 #include "LimitUndoStack.h"
 #include "MainWindow.h"
@@ -123,9 +125,11 @@ void MainWindow::createDockWidgets()
     m_propertyDockWidget->setWidget(m_propertyView);
     m_propertyDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     
+    m_errorListView = new ErrorListView(this);
     m_errorDockWidget = new QDockWidget(this);
     m_errorDockWidget->setWindowTitle(tr("Error log"));
     m_errorDockWidget->setObjectName("ErrorLog");
+    m_errorDockWidget->setWidget(m_errorListView);
     m_errorDockWidget->setAllowedAreas(Qt::BottomDockWidgetArea);
     
     addDockWidget(Qt::LeftDockWidgetArea, m_propertyDockWidget);
@@ -156,6 +160,7 @@ void MainWindow::setModel(StreamModel* model)
     m_streamEditor->streamEditorScene()->setModel(model);
     m_threadListView->setStreamModel(model);
     m_observerTreeView->setModel(model->observerModel());
+    model->setExceptionObserver(m_errorListView->errorListModel()->observer());
     
     // delete the old model
     if(m_model)

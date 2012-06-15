@@ -22,6 +22,7 @@ set(stromxstudio_SOURCES
     DataManager.cpp
     DataVisualizer.cpp
     DeinitializeOperatorCmd.cpp
+    ErrorData.cpp
     ErrorListModel.cpp
     ErrorListView.cpp
     ExceptionObserver.cpp

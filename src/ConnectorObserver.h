@@ -47,7 +47,6 @@ public:
                          
 private:
     QObject* m_receiver;
-    QCoreApplication* m_application;
     bool m_observeData;
     mutable QMutex m_mutex;
 };

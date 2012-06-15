@@ -24,19 +24,18 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
     m_package(QString::fromStdString(m_op->info().package())),
     m_type(QString::fromStdString(m_op->info().type())),
     m_name(QString::fromStdString(m_op->name())),
-    m_observer(new ConnectorObserver(this))
+    m_observer(this)
 {
     Q_ASSERT(m_op);
     
-    m_op->addObserver(m_observer);
+    m_op->addObserver(&m_observer);
     connect(m_stream, SIGNAL(streamStarted()), this, SLOT(setActiveTrue()));
     connect(m_stream, SIGNAL(streamStopped()), this, SLOT(setActiveFalse()));
 }
 
 OperatorModel::~OperatorModel()
 {
-    m_op->removeObserver(m_observer);
-    delete m_observer;
+    m_op->removeObserver(&m_observer);
 }
 
 int OperatorModel::rowCount(const QModelIndex& index) const
@@ -584,14 +583,14 @@ void OperatorModel::connectNotify(const char* signal)
 {
     // if there are receivers for data change signals the according events must be sent
     if(receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer))))
-        m_observer->setObserveData(true);  
+        m_observer.setObserveData(true);  
 }
 
 void OperatorModel::disconnectNotify(const char* signal)
 {
     // if there are no receivers for data change signals do not send the events
     if(! receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer))))
-        m_observer->setObserveData(false); 
+        m_observer.setObserveData(false); 
 }
 
 QString OperatorModel::statusToString(int status)

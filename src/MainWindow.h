@@ -41,6 +41,7 @@ namespace stromx
 
 class QAction;
 class QMenu;
+class ErrorListView;
 class LimitUndoStack;
 class ObserverTreeView;
 class ObserverModel;
@@ -193,6 +194,7 @@ private:
     ObserverTreeView* m_observerTreeView;
     OperatorLibraryView* m_operatorLibraryView;
     PropertyView* m_propertyView;
+    ErrorListView* m_errorListView;
     
     StreamModel* m_model;
      

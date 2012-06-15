@@ -40,6 +40,7 @@ namespace stromx
 class QAbstractItemModel;
 class QUndoStack;
 class ConnectionModel;
+class ExceptionObserver;
 class JoinStreamTask;
 class ObserverTreeModel;
 class OperatorData;
@@ -158,6 +159,9 @@ public:
     
     /** Returns true if the underlying stromx stream is active. */
     bool isActive() const;
+    
+    /** Sets the current exception observer. */
+    void setExceptionObserver(ExceptionObserver* observer);
 
 public slots:
     /** Starts the stromx stream. */
@@ -287,6 +291,7 @@ private:
     QList<OperatorModel*> m_uninitializedOperators;
     QList<ConnectionModel*> m_connections;
     JoinStreamTask* m_joinStreamTask;
+    ExceptionObserver* m_currentObserver;
 };
 
 #endif // STREAMMODEL_H

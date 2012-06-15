@@ -24,6 +24,7 @@
 #include <QList>
 
 #include "ErrorData.h"
+#include "ExceptionObserver.h"
 
 class ErrorListModel : public QAbstractTableModel
 {
@@ -44,8 +45,15 @@ public:
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
+    /** Returns an exception observer which sends events to this model. */
+    ExceptionObserver* observer() const { return const_cast<ExceptionObserver*>(&m_observer); }
+    
+protected:
+    virtual void customEvent(QEvent* event);
+    
 private:
     QList<ErrorData> m_errorList;
+    ExceptionObserver m_observer;
 };
     
 #endif // ERRORLISTMODEL_H

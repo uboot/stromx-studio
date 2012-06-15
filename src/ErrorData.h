@@ -34,16 +34,25 @@ namespace stromx
 class ErrorData
 {
 public:
-    ErrorData(const stromx::core::OperatorError & exception);
+    enum Type
+    {
+        ACTIVATION,
+        EXECUTION,
+        DEACTIVATION
+    };
+    
+    ErrorData(const stromx::core::OperatorError & exception, Type type);
     
     const QString & title() const { return m_title; }
     const QString & description() const { return m_description; }
     const QDateTime & time() const { return m_time; }
+    Type type() const { return m_type; }
                          
 private:
     QString m_title;
     QString m_description;
     QDateTime m_time;
+    Type m_type;
 };
 
 #endif // ERRORDATA_H
