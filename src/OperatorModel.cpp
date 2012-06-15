@@ -3,6 +3,7 @@
 #include <QEvent>
 #include <QUndoStack>
 #include <stromx/core/Operator.h>
+#include <stromx/core/OperatorException.h>
 #include <stromx/core/Parameter.h>
 #include <stromx/core/Trigger.h>
 #include "Common.h"
@@ -531,16 +532,22 @@ void OperatorModel::setInitialized(bool status)
 {
     if(isInitialized() == status)
         return;
-   
+
     beginResetModel();
+    try
+    {
+        if(status == true)
+            m_op->initialize();
+        else
+            m_op->deinitialize();
+    }
+    catch(stromx::core::OperatorError &)
+    {
+        endResetModel();
+        throw;
+    }  
     
-    if(status == true)
-        m_op->initialize();
-    else
-        m_op->deinitialize();
-        
     endResetModel();
-    
     emit initializedChanged(isInitialized());
 }
 

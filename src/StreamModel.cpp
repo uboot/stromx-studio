@@ -389,9 +389,18 @@ void StreamModel::doDeinitializeOperator(OperatorModel* op)
         return;
     
     m_stream->removeOperator(op->op());
-    m_initializedOperators.removeAll(op);
-    m_uninitializedOperators.append(op);
-    op->setInitialized(false);
+    
+    try
+    {
+        op->setInitialized(false);
+        m_initializedOperators.removeAll(op);
+        m_uninitializedOperators.append(op);
+    }
+    catch(stromx::core::OperatorError& e)
+    {
+        m_stream->addOperator(op->op());
+        m_exceptionObserver->observe(stromx::core::ExceptionObserver::DEINITIALIZATION, e, 0);
+    }
 }
 
 void StreamModel::doAddConnection(ConnectionModel* connection)

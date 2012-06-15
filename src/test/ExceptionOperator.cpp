@@ -33,6 +33,12 @@ void ExceptionOperator::setParameter(unsigned int id, const Data& value)
         case THROW_EXECUTE:
             m_throwExecute = data_cast<const Bool &>(value);
             break;
+        case THROW_DEACTIVATE:
+            m_throwDeactivate = data_cast<const Bool &>(value);
+            break;
+        case THROW_DEINITIALIZE:
+            m_throwDeinitialize = data_cast<const Bool &>(value);
+            break;
         default:
             throw WrongParameterId(id, *this);
         }
@@ -53,6 +59,10 @@ const Data& ExceptionOperator::getParameter(const unsigned int id) const
         return m_throwActivate;
     case THROW_EXECUTE:
         return m_throwExecute;
+    case THROW_DEACTIVATE:
+        return m_throwDeactivate;
+    case THROW_DEINITIALIZE:
+        return m_throwDeinitialize;
     default:
         throw WrongParameterId(id, *this);
     }
@@ -68,6 +78,18 @@ void ExceptionOperator::activate()
 {
     if(m_throwActivate)
         throw OperatorError(*this, "Failed to activate operator.");
+}  
+
+void ExceptionOperator::deactivate()
+{
+    if(m_throwDeactivate)
+        throw OperatorError(*this, "Failed to deactivate operator.");
+}
+
+void ExceptionOperator::deinitialize()
+{
+    if(m_throwDeinitialize)
+        throw OperatorError(*this, "Failed to deinitialize operator.");
 }
 
 void ExceptionOperator::execute(DataProvider& provider)
@@ -118,6 +140,16 @@ const std::vector<const Parameter*> ExceptionOperator::setupParameters()
     param = new Parameter(THROW_EXECUTE, DataVariant::BOOL);
     param->setDoc("Exception on execute");
     param->setAccessMode(Parameter::ACTIVATED_WRITE);
+    parameters.push_back(param);
+    
+    param = new Parameter(THROW_DEACTIVATE, DataVariant::BOOL);
+    param->setDoc("Exception on deactivate");
+    param->setAccessMode(Parameter::INITIALIZED_WRITE);
+    parameters.push_back(param);
+    
+    param = new Parameter(THROW_DEINITIALIZE, DataVariant::BOOL);
+    param->setDoc("Exception on deinitialize");
+    param->setAccessMode(Parameter::INITIALIZED_WRITE);
     parameters.push_back(param);
     
     return parameters;

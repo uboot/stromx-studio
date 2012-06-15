@@ -34,7 +34,9 @@ class ExceptionOperator : public stromx::core::OperatorKernel
     { 
         THROW_INITIALIZE,
         THROW_ACTIVATE,
-        THROW_EXECUTE
+        THROW_EXECUTE,
+        THROW_DEACTIVATE,
+        THROW_DEINITIALIZE
     };
     
 public:
@@ -46,6 +48,8 @@ public:
     virtual void execute(stromx::core::DataProvider& provider);
     virtual void activate();
     virtual void initialize();
+    virtual void deactivate();
+    virtual void deinitialize();
     
 private:
     static const std::vector<const stromx::core::Description*> setupInputs();
@@ -59,6 +63,8 @@ private:
     stromx::core::Bool m_throwInitialize;
     stromx::core::Bool m_throwActivate;
     stromx::core::Bool m_throwExecute;
+    stromx::core::Bool m_throwDeactivate;
+    stromx::core::Bool m_throwDeinitialize;
 };
 
 #endif // PARAMETEROPERATOR_H
