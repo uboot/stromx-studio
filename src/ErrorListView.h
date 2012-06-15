@@ -24,13 +24,16 @@
 
 class ErrorListModel;
 
+/** \brief View which displays a list of errors. */
 class ErrorListView : public QTableView
 {
     Q_OBJECT
 
 public:
+    /** Constructs an error list view. */
     explicit ErrorListView(QWidget *parent = 0);
     
+    /** Returns the model of the view. */
     ErrorListModel* errorListModel() const { return m_model; }
     
 private:

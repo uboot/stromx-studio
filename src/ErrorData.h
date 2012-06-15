@@ -31,23 +31,47 @@ namespace stromx
     }
 }
 
+/**
+ * \brief A description of an operator error.
+ * 
+ * This class holds information about an stromx operator exception. In addition
+ * to the data contained in the exception it stores its \em type and the time
+ * when the exception was caught.
+ */
 class ErrorData
 {
 public:
+    /** The type of error, i.e. the state the error happened in. */
     enum Type
     {
+        /** Initialization of the operator. */
         INITIALIZATION,
+        /** Activation of the operator. */
         ACTIVATION,
+        /** Execution of the operator. */
         EXECUTION,
+        /** Deactivation of the operator. */
         DEACTIVATION,
+        /** Deinitialization of the operator. */
         DEINITIALIZATION
     };
     
+    /** Constructs an error data from a stromx exception and the type of the exception. */
     ErrorData(const stromx::core::OperatorError & exception, Type type);
     
+    /** Returns the title of the error. */
     const QString & title() const { return m_title; }
+    
+    /**
+     * Returns a more detailed description of the error such as the message text of the
+     * original exception.
+     */
     const QString & description() const { return m_description; }
+    
+    /** Returns the time when the exception was caught. */
     const QDateTime & time() const { return m_time; }
+    
+    /**  Returns the type of the exception. */
     Type type() const { return m_type; }
                          
 private:

@@ -25,13 +25,16 @@
 #include "Common.h"
 #include "ErrorData.h"
 
+/** \brief Event which contains error data. */
 class ErrorEvent : public QEvent
 {
 public:
     static const unsigned int TYPE = QEvent::User + Error;
     
+    /** Construct an error event from error data. */
     ErrorEvent(const ErrorData & data) : QEvent(Type(TYPE)), m_data(data) {}
     
+    /** Returns the error data. */
     const ErrorData & errorData() const { return m_data; }
     
 private:

@@ -26,14 +26,24 @@
 #include "ErrorData.h"
 #include "ExceptionObserver.h"
 
+/** \brief Model of a list of errors.
+ * 
+ * This class models a list of errors. It contains a stromx <em>exception observer</em>
+ * which asynchronously receives stromx exceptions, converts them to error data objects
+ * and sends these as events to the model. Call the member observer() of this observer
+ * to add an error to the error list model. 
+ */
 class ErrorListModel : public QAbstractTableModel
 {
     Q_OBJECT
     
 public:
+    /** The columns of the list. */
     enum Column
     {
+        /** The time when the exception causing the error was caught. */
         TIME,
+        /** A description of the error. */
         DESCRIPTION
     };
     
@@ -53,9 +63,11 @@ public slots:
     void clear();
     
 protected:
+    /** Receives the error data events which are sent by the exception observer. */
     virtual void customEvent(QEvent* event);
     
 private:
+    /** The maximal amount of errors which which are remembered and displayed. */
     static const qint32 MAX_ERRORS;
     
     QList<ErrorData> m_errorList;
