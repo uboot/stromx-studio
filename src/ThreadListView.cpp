@@ -18,7 +18,6 @@ ThreadListView::ThreadListView(QWidget* parent)
     m_editColorAct(0)
 {    
     setItemDelegate(new ItemDelegate(this));
-    verticalHeader()->setDefaultSectionSize(ItemDelegate::ROW_HEIGHT);
     setShowGrid(false);
     setAlternatingRowColors(true);
     setSelectionBehavior(QAbstractItemView::SelectRows);

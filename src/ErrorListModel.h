@@ -33,7 +33,7 @@ class ErrorListModel : public QAbstractTableModel
 public:
     enum Column
     {
-        TITLE,
+        TIME,
         DESCRIPTION
     };
     
@@ -50,7 +50,7 @@ public:
  
 public slots:
     /** Clears all errors in the list. */
-    void clearList();
+    void clear();
     
 protected:
     virtual void customEvent(QEvent* event);

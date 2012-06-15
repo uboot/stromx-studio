@@ -27,6 +27,7 @@
 #include <stromx/core/Parameter.h>
 #include <stromx/core/String.h>
 #include <stromx/core/Trigger.h>
+#include <qapplication.h>
 
 namespace
 {
@@ -68,10 +69,24 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::BOOL))
         {
-            if(role == Qt::DisplayRole || role == Qt::EditRole)
+            const stromx::core::Bool & boolData = stromx::core::data_cast<const stromx::core::Bool&>(data);
+                
+            if(role == Qt::DisplayRole)
             {
-                const stromx::core::Bool & boolData = stromx::core::data_cast<const stromx::core::Bool&>(data);
-                return bool(boolData);
+                return bool(boolData) ? QApplication::tr("True") : QApplication::tr("False");
+            }
+            else if(role == Qt::EditRole)
+            {
+                return int(boolData);
+            } 
+            else if(role == ChoicesRole)
+            {
+                QStringList choices;
+                
+                choices.append(QApplication::tr("False"));
+                choices.append(QApplication::tr("True"));
+                
+                return choices;
             }
         }
         
@@ -201,14 +216,6 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             }
         }
         
-        if (data.isVariant(stromx::core::DataVariant::DATA))
-        {
-            if(role == Qt::DisplayRole)
-            {
-                return QString("Data");
-            }
-        }
-        
         return QVariant();
     }
     catch(stromx::core::BadCast&)
@@ -227,8 +234,8 @@ std::auto_ptr<stromx::core::Data> DataConverter::toStromxData(const QVariant& va
     
     if(param.variant().isVariant(stromx::core::DataVariant::BOOL))
     {
-        if(variant.type() == QVariant::Bool)
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::Bool(variant.toBool()));
+        if(variant.type() == QVariant::Int)
+            return std::auto_ptr<stromx::core::Data>(new stromx::core::Bool(variant.toInt()));
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::INT_8))

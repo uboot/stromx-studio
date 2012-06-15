@@ -13,7 +13,7 @@ ErrorListModel::ErrorListModel(QObject* parent)
 
 int ErrorListModel::columnCount(const QModelIndex& parent) const
 {
-    return 1;
+    return 2;
 }
 
 int ErrorListModel::rowCount(const QModelIndex& parent) const
@@ -23,7 +23,21 @@ int ErrorListModel::rowCount(const QModelIndex& parent) const
 
 QVariant ErrorListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    return tr("Error");
+    if(orientation == Qt::Vertical)
+        return QVariant();
+    
+    if(role != Qt::DisplayRole)
+        return QVariant();
+    
+    switch(section)
+    {
+    case TIME:
+        return tr("Time");
+    case DESCRIPTION:
+        return tr("Description");
+    default:
+        return QVariant();
+    }
 }
 
 QVariant ErrorListModel::data(const QModelIndex& index, int role) const
@@ -33,14 +47,22 @@ QVariant ErrorListModel::data(const QModelIndex& index, int role) const
     
     if(index.row() >= m_errorList.count())
         return QVariant();
-        
+     
     QString value;
     const ErrorData & data = m_errorList[index.row()];
     
-    if(data.description().isEmpty())
-        return data.title();
-    else
-        return tr("%1: %2").arg(data.title()).arg(data.description());
+    switch(index.column())
+    {
+    case TIME:
+        return data.time().time().toString();
+    case DESCRIPTION:
+        if(data.description().isEmpty())
+            return data.title();
+        else
+            return tr("%1: %2").arg(data.title()).arg(data.description());
+    default:
+        return QVariant();
+    }
         
         
 }
@@ -65,7 +87,7 @@ void ErrorListModel::customEvent(QEvent* event)
     }
 }
 
-void ErrorListModel::clearList()
+void ErrorListModel::clear()
 {
     m_errorList.clear();
     reset();

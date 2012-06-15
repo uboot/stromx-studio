@@ -11,10 +11,12 @@ ErrorListView::ErrorListView(QWidget* parent)
 {
     m_model = new ErrorListModel(this);
     
-    setModel(m_model);
     setItemDelegate(new ItemDelegate(this));
-    horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    setSelectionBehavior(QAbstractItemView::SelectRows);
     setAlternatingRowColors(true);
     setShowGrid(false);
     verticalHeader()->hide();
+    
+    setModel(m_model);
+    horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 }

@@ -146,6 +146,9 @@ void MainWindow::setModel(StreamModel* model)
     // clear the undo stack
     m_undoStack->clear();
     
+    // clear the error list
+    m_errorListView->errorListModel()->clear();
+    
     // the model is zero when this function is called for the first time
     if(m_model)
     {
