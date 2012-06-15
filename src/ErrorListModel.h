@@ -47,11 +47,17 @@ public:
     
     /** Returns an exception observer which sends events to this model. */
     ExceptionObserver* observer() const { return const_cast<ExceptionObserver*>(&m_observer); }
+ 
+public slots:
+    /** Clears all errors in the list. */
+    void clearList();
     
 protected:
     virtual void customEvent(QEvent* event);
     
 private:
+    static const qint32 MAX_ERRORS;
+    
     QList<ErrorData> m_errorList;
     ExceptionObserver m_observer;
 };

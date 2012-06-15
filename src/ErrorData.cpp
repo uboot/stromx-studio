@@ -28,7 +28,10 @@ ErrorData::ErrorData(const stromx::core::OperatorError& exception, Type type)
         break;
     }
     
-    m_title = QApplication::tr("%1 in operator of type %2").arg(errorType).arg(opType);
+    QString opName = exception.name().empty() ? QString("") :
+                     QApplication::tr("%1").arg(QString::fromStdString(exception.name()));
+    
+    m_title = QApplication::tr("%1 in operator \"%2\" of type %3").arg(errorType).arg(opName).arg(opType);
     
     m_description = QString::fromStdString(exception.message());
 }
