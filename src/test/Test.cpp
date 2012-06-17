@@ -19,6 +19,7 @@
 
 #include <stromx/core/Registry.h>
 
+#include "DeadlockOperator.h"
 #include "ExceptionOperator.h"
 #include "ParameterOperator.h"
 
@@ -34,6 +35,7 @@ extern "C"
     {
         using namespace stromx::core;
         
+        registry.registerOperator(new DeadlockOperator);
         registry.registerOperator(new ExceptionOperator);
         registry.registerOperator(new ParameterOperator);
     }

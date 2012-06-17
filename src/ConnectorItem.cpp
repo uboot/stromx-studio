@@ -171,9 +171,9 @@ QString ConnectorItem::connectorToolTip() const
     std::string text;
     const stromx::core::OperatorInfo & info = m_op->op()->info();
     if(connectorType() == INPUT)
-        text = info.inputs()[m_id]->doc().title();
+        text = info.input(m_id).doc().title();
     else
-        text = info.outputs()[m_id]->doc().title();
+        text = info.output(m_id).doc().title();
     
     return QString::fromStdString(text);
 }
