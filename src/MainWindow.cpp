@@ -80,7 +80,6 @@ MainWindow::MainWindow(QWidget *parent)
     createActions();
     createMenus();
     createToolBars();
-    createStatusBar();
     
     updateCurrentFile("");
     readSettings();
@@ -348,10 +347,6 @@ void MainWindow::createMenus()
     m_helpMenu->addAction(m_aboutQtAct);
      
     updateRecentFileActions();
-}
-
-void MainWindow::createStatusBar()
-{
 }
 
 void MainWindow::createToolBars()

@@ -52,6 +52,7 @@ class StreamEditor;
 class StreamModel;
 class ThreadListView;
 
+/** \brief Application main window. */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -68,20 +69,65 @@ protected:
     virtual void closeEvent(QCloseEvent* event);
 
 private slots:
+    /** Attempts to close the current stream and displays an open file dialog. */
     bool open();
+    
+    /** Displays a save file dialog to save the current stream in a new file. */
     bool saveAs();
+    
+    /** Closes the current stream and loads an empty one. */
     bool closeStream();
+    
+    /** 
+     * Saves the current stream. If no file is associated with the stream a
+     * save file dialog is displayed.
+     */
     bool save();
+    
+    /** 
+     * Opens one of the recently opened files. The file to open is determined from the sender
+     * of the signal which triggers this slot.
+     */
     bool openRecentFile();
+    
+    /** Displays an open file dialog and loads the selected operator libraries. */
     void loadLibraries();
+    
+    /** Unloads all dynamically loaded operator libraries. */
     void resetLibraries();
+    
+    /** Displays a window containing information about this application. */
     void about();
+    
+    /** Starts the current stream and sets the corresponding actions to active and/or inactive. */
     void start();
+    
+    /** Pauses the current stream and sets the corresponding actions to active and/or inactive. */
     void pause();
+    
+    /** 
+     * Tells the current stream to stop and sets the corresponding actions to active and/or inactive.
+     * Note that the stream is only stopped after join() is called by the thread which waits
+     * for the stream to join.
+     */
     void stop();
+    
+    /** Sets all actions to active and/or inactive to reflect the fact that the stream has stopped */
     void join();
+    
+    /** 
+     * Update the window title such that it shows the current file name and reflects the current
+     * state of the undo stack.
+     */
     void updateWindowTitle(bool undoStackIsClean);
+    
+    /** 
+     * Activates or deactivates slow processing. If slow processing is active each stream waits
+     * a predefined amount of time after setting data to an input.
+     */ 
     void setSlowProcessing(bool isSlow);
+    
+    /** Clears the list of recently opened files. */
     void emptyRecentFiles();
     
     /** Creates a window for \c observer. */
@@ -97,17 +143,39 @@ private slots:
     void resetObserverWindows(StreamModel* model);
 
 private:
-    enum { MAX_RECENT_FILES = 10 };
+    enum
+    { 
+        /** The maximal number of recently opened files remembered. */
+        MAX_RECENT_FILES = 10
+    };
+    
+    /** Strips the path from the input file path. */
     static QString strippedName(const QString &fullFileName);
     
+    /** Creates the actions of the main window. */
     void createActions();
+    
+    /** Creates and populates the menus of the main window. */
     void createMenus();
+    
+    /** Creates and populates the tool bars of the main window. */
     void createToolBars();
-    void createStatusBar();
+    
+    /** Creates and populates the dock widgets of the main window. */
     void createDockWidgets();
     
+    /** 
+     * Sets the current stream model. All views are updated accordingly.
+     * The parameter \c model must be non-zero but can be a default constructed
+     * stream model.
+     */
     void setModel(StreamModel* model);
+    
+    /**
+     * Reads and applies the window geometry settings. */
     void readSettings();
+    
+    /** Writes the window geometry settings. */
     void writeSettings();
     
     /** 
