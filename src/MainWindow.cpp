@@ -170,6 +170,7 @@ void MainWindow::setModel(StreamModel* model)
     
     // remember the new model
     m_model = model;
+    connect(m_model, SIGNAL(accessTimedOut()), this, SLOT(handleAccessTimeout()));
     connect(m_model, SIGNAL(streamJoined()), this, SLOT(join()));
     connect(m_model->observerModel(), SIGNAL(observerAdded(ObserverModel*)), this, SLOT(createObserverWindow(ObserverModel*)));
     connect(m_model->observerModel(), SIGNAL(observerRemoved(ObserverModel*)), this, SLOT(destroyObserverWindow(ObserverModel*)));
@@ -646,7 +647,7 @@ bool MainWindow::saveBeforeClosing()
     { 
         QMessageBox msgBox;
         msgBox.setText(tr("The stream has been modified."));
-        msgBox.setInformativeText("Do you want to save your changes?");
+        msgBox.setInformativeText(tr("Do you want to save your changes?"));
         msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Save);
         int ret = msgBox.exec();
@@ -969,6 +970,26 @@ void MainWindow::writeObserverWindowStates(stromx::core::FileOutput& output, con
     }
 }
 
+void MainWindow::handleAccessTimeout()
+{
+    QMessageBox msgBox;
+    msgBox.setText(tr("An operation accessing the current stream timed out. The stream might be deadlocked."));
+    msgBox.setInformativeText(tr("Do you want to stop the stream?"));
+    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+    msgBox.setDefaultButton(QMessageBox::Cancel);
+    int ret = msgBox.exec();
+    
+    switch (ret)
+    {
+    case QMessageBox::Ok:
+        stop();
+        break;
+    case QMessageBox::Cancel:
+        break;
+    default:
+        Q_ASSERT(false);
+    }
+}
 
 
 

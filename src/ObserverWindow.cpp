@@ -5,6 +5,7 @@
 #include "DataManager.h"
 #include "DataVisualizer.h"
 #include "ObserverModel.h"
+#include "ObserverTreeModel.h"
 #include "ObserverView.h"
 #include <QUndoStack>
 
@@ -33,7 +34,8 @@ ObserverWindow::ObserverWindow(ObserverModel* observer, QWidget* parent)
     setWindowTitle(observer->name());
     
     // allocate the data manager
-    new DataManager(observer, m_visualizer, this);
+    DataManager* dataManager = new DataManager(observer, m_visualizer, this);
+    connect(dataManager, SIGNAL(dataAccessTimedOut()), observer->parentModel()->streamModel(), SIGNAL(accessTimedOut()));
 }
 
 void ObserverWindow::updateWindowTitle(const QString& name)

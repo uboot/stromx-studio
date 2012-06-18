@@ -7,6 +7,8 @@
 #include "ObserverModel.h"
 #include "OperatorModel.h"
 
+const unsigned int DataManager::TIMEOUT = 100;
+
 DataManager::DataManager(ObserverModel* observer, AbstractDataVisualizer* visualizer, QObject* parent)
   : QObject(parent),
     m_observer(observer),
@@ -100,16 +102,23 @@ void DataManager::updateLayerData(OperatorModel::ConnectorType type, unsigned in
     QObject* source = sender();
     if(OperatorModel* op = qobject_cast<OperatorModel*>(source))
     {
-        stromx::core::ReadAccess<> access(data);
-        
-        for(int layer = 0; layer < m_inputs.count(); ++layer)
+        try
         {
-            InputModel* input = m_inputs[layer];
-            if(input->op() == op && input->id() == id)
+            stromx::core::ReadAccess<> access(data, TIMEOUT);
+            
+            for(int layer = 0; layer < m_inputs.count(); ++layer)
             {
-                m_visualizer->setData(layer, access());
-                m_visualizer->setColor(layer, input->color());
+                InputModel* input = m_inputs[layer];
+                if(input->op() == op && input->id() == id)
+                {
+                    m_visualizer->setData(layer, access());
+                    m_visualizer->setColor(layer, input->color());
+                }
             }
+        }
+        catch(stromx::core::Timeout&)
+        {
+            emit dataAccessTimedOut();
         }
     }
 }

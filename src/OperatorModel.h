@@ -144,6 +144,9 @@ signals:
     
     /** The connector specified by \c type and \c id was set to \c data. */
     void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data);
+      
+    /** An operation accessing a parameter of the operator timed out. */
+    void parameterAccessTimedOut() const;
     
 protected:
     virtual void customEvent(QEvent* event);
@@ -165,6 +168,8 @@ private:
         NAME,
         PARAMETER_OFFSET
     };
+    
+    static const unsigned int TIMEOUT;
     
     static QString statusToString(int status);
     

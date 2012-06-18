@@ -44,6 +44,7 @@ public:
     virtual OperatorKernel* const clone() const { return new DeadlockOperator; }
     virtual void setParameter(const unsigned int id, const stromx::core::Data& value);
     const stromx::core::Data& getParameter(const unsigned int id) const;
+    virtual void activate();
     virtual void execute(stromx::core::DataProvider& provider);
     
 private:

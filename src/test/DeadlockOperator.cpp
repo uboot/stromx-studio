@@ -56,6 +56,11 @@ const Data& DeadlockOperator::getParameter(const unsigned int id) const
     }
 }  
 
+void DeadlockOperator::activate()
+{
+    m_dataHasBeenLocked = false;
+}
+
 void DeadlockOperator::execute(DataProvider& provider)
 {
     Id2DataPair input(INPUT);

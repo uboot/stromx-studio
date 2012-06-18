@@ -141,6 +141,12 @@ private slots:
      * for each observer in the stream \c model. 
      */
     void resetObserverWindows(StreamModel* model);
+    
+    /** 
+     * Opens a dialog which informs the user about a timeout and asks
+     * whether the stream should be stopped.
+     */
+    void handleAccessTimeout();
 
 private:
     enum

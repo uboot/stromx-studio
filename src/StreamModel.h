@@ -214,6 +214,9 @@ signals:
     /** The stromx stream was joined. */
     void streamJoined();
     
+    /** An operation accessing data or parameters of the stream timed out. */
+    void accessTimedOut();
+    
 private:
     /** The operator delay in milliseconds. */
     static const unsigned int DELAY;

@@ -63,6 +63,9 @@ public:
     
     /** Returns the current observers. */
     const QList<ObserverModel*> observers() const { return m_observers; }
+    
+    /** Returns the stream model this observer tree belongs to. */
+    StreamModel* streamModel() const { return m_stream; }
 
     virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
     virtual QModelIndex parent(const QModelIndex & child) const;

@@ -17,6 +17,7 @@
 #include "SetParameterCmd.h"
 #include "Image.h"
 
+const unsigned int OperatorModel::TIMEOUT = 100;
 
 OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
   : PropertyModel(stream),
@@ -222,11 +223,16 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
             unsigned int paramId = param->id();
             try
             {
-                return DataConverter::toQVariant(m_op->getParameter(paramId), *param, role);
+                return DataConverter::toQVariant(m_op->getParameter(paramId, TIMEOUT), *param, role);
+            }
+            catch(stromx::core::Timeout&)
+            {
+                emit parameterAccessTimedOut();
+                return QVariant();
             }
             catch(stromx::core::Exception&)
             {
-                QVariant();
+                return QVariant();
             }
         }
         else
@@ -357,8 +363,12 @@ void OperatorModel::doSetParameter(unsigned int paramId, const stromx::core::Dat
 {
     try
     {
-        m_op->setParameter(paramId, newValue);   
+        m_op->setParameter(paramId, newValue, TIMEOUT);   
     } 
+    catch(stromx::core::Timeout&)
+    {
+        emit parameterAccessTimedOut();
+    }
     catch(stromx::core::Exception&)
     {
     }
