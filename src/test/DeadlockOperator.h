@@ -22,6 +22,7 @@
 
 #include <stromx/core/OperatorKernel.h>
 #include <stromx/core/Primitive.h>
+#include <stromx/core/WriteAccess.h>
 
 class DeadlockOperator : public stromx::core::OperatorKernel
 {
@@ -56,6 +57,8 @@ private:
     
     stromx::core::Bool m_lockParameters;
     stromx::core::Bool m_lockData;
+    bool m_dataHasBeenLocked;
+    stromx::core::WriteAccess<stromx::core::UInt32> m_writeAccess;
 };
 
 #endif // DEADLOCKOPERATOR_H
