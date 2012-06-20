@@ -43,17 +43,17 @@ public:
      * Returns the scene coordinates of the scene point in the upper left
      * corner of the view.
      */
-    QPointF pos() const { return QPointF(); }
+    QPointF viewPos() const { return QPointF(); }
     
 public slots:
     /** Sets the current zoom. */
-    void setZoom();
+    void setZoom(qreal value);
     
     /**
      * Scrolls the view such that the upper left corner of the view corresponds
      * to the scene point \c p.
      */
-    void setPos(const QPointF &p);
+    void setViewPos(const QPointF &p);
 };
 
 #endif // GRAPHICSVIEW_H

@@ -40,6 +40,7 @@
 #include <stromx/core/Exception.h>
 #include <stromx/core/ZipFileInput.h>
 #include <stromx/core/ZipFileOutput.h>
+#include "DataVisualizer.h"
 #include "ErrorListModel.h"
 #include "ErrorListView.h"
 #include "Exception.h"
@@ -569,11 +570,11 @@ bool MainWindow::readFile(const QString& filepath)
     {
         if(extension == "xml")
         {
-            readObserverWindowStates(*input, basename);
+            readWindowStates(*input, basename);
         }
         else if(extension == "zip" || extension == "stromx")
         {
-            readObserverWindowStates(*input, "stream");
+            readWindowStates(*input, "stream");
         }
         
     }
@@ -726,14 +727,14 @@ bool MainWindow::writeFile(const QString& filepath)
             location = QFileInfo(filepath).absoluteDir().absolutePath();
             stromx::core::DirectoryFileOutput output(location.toStdString());
             m_streamEditor->streamEditorScene()->model()->write(output, basename);
-            writeObserverWindowStates(output, basename);
+            writeWindowStates(output, basename);
         }
         else if(extension == "zip" || extension == "stromx")
         {
             location = filepath;
             stromx::core::ZipFileOutput output(location.toStdString());
             m_streamEditor->streamEditorScene()->model()->write(output, "stream");
-            writeObserverWindowStates(output, "stream");
+            writeWindowStates(output, "stream");
         }
     
         updateCurrentFile(filepath);
@@ -895,7 +896,7 @@ void MainWindow::resetObserverWindows(StreamModel* model)
         createObserverWindow(observer);
 }
 
-void MainWindow::readObserverWindowStates(stromx::core::FileInput& input, const QString& basename)
+void MainWindow::readWindowStates(stromx::core::FileInput& input, const QString& basename)
 {
     QByteArray data;
     
@@ -925,6 +926,14 @@ void MainWindow::readObserverWindowStates(stromx::core::FileInput& input, const 
     // construct a input stream from the data
     QDataStream dataStream(data);
     
+    // read the state of the stream view
+    QPointF viewPos;
+    dataStream >> viewPos;
+    m_streamEditor->setViewPos(viewPos);
+    qreal zoom;
+    dataStream >> zoom;
+    m_streamEditor->setZoom(zoom);
+        
     // read the state and geometry of each observer window
     foreach(ObserverWindow* window, m_observerWindows)
     {
@@ -936,21 +945,32 @@ void MainWindow::readObserverWindowStates(stromx::core::FileInput& input, const 
         bool visible;
         dataStream >> visible;
         window->setVisible(visible);
+        
+        dataStream >> viewPos;
+        window->visualizer()->setViewPos(viewPos);
+        dataStream >> zoom;
+        window->visualizer()->setZoom(zoom);
     }
 }
 
-void MainWindow::writeObserverWindowStates(stromx::core::FileOutput& output, const QString& basename) const
+void MainWindow::writeWindowStates(stromx::core::FileOutput& output, const QString& basename) const
 {
     // construct an output stream
     QByteArray data;
     QDataStream dataStream(&data, QIODevice::WriteOnly | QIODevice::Truncate);
-      
+    
+    // write the state of the stream view
+    dataStream << m_streamEditor->viewPos();
+    dataStream << m_streamEditor->zoom();
+    
     // write the state and geometry of each observer window
     foreach(ObserverWindow* window, m_observerWindows)
     {
         dataStream << window->saveGeometry();
         dataStream << window->saveState();
         dataStream << window->isVisible();
+        dataStream << window->visualizer()->viewPos();
+        dataStream << window->visualizer()->zoom();
     }
     
     try

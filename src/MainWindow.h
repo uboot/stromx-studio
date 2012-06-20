@@ -209,11 +209,11 @@ private:
     /** Saves the stream before it is going to be closed. */
     bool saveBeforeClosing();
     
-    /** Saves the geometry of the observer windows. */
-    void writeObserverWindowStates(stromx::core::FileOutput & output, const QString & basename) const;
+    /** Saves the geometry and view properties of the stream scene and the observer windows. */
+    void writeWindowStates(stromx::core::FileOutput & output, const QString & basename) const;
     
-    /** Reads and restores the geometry of the observer windows. */
-    void readObserverWindowStates(stromx::core::FileInput & input, const QString & basename);
+    /** Reads and geometry and view properties of the stream scene and the observer windows. */
+    void readWindowStates(stromx::core::FileInput & input, const QString & basename);
     
     QAction* m_openAct;
     QAction* m_saveAct;

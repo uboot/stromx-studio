@@ -6,12 +6,12 @@ GraphicsView::GraphicsView(QWidget* parent)
 
 }
 
-void GraphicsView::setPos(const QPointF& p)
+void GraphicsView::setViewPos(const QPointF& p)
 {
 
 }
 
-void GraphicsView::setZoom()
+void GraphicsView::setZoom(qreal value)
 {
 
 }
