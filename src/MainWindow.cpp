@@ -735,6 +735,9 @@ bool MainWindow::writeFile(const QString& filepath)
             stromx::core::ZipFileOutput output(location.toStdString());
             m_streamEditor->streamEditorScene()->model()->write(output, "stream");
             writeWindowStates(output, "stream");
+            
+            // manually close the file to catch exceptions on writing
+            output.close();
         }
     
         updateCurrentFile(filepath);
