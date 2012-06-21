@@ -4,7 +4,10 @@
 #include <stromx/core/Id2DataPair.h>
 #include <stromx/core/OperatorException.h>
 #include <stromx/core/Primitive.h>
-#include <boost/thread.hpp>
+
+#ifdef WIN32
+#include "Windows.h"
+#endif // WIN32
 
 using namespace stromx::core;
 
@@ -67,7 +70,12 @@ void DeadlockOperator::execute(DataProvider& provider)
     provider.receiveInputData(input);
     
     if(m_lockParameters)
-        boost::this_thread::sleep(boost::posix_time::seconds(5));
+#ifdef WIN32
+        Sleep(1000); // sleep 1 second
+#endif // WIN32
+#ifdef UNIX
+        sleep(1); // sleep 1 second
+#endif // UNIX  
     
     if(! m_dataHasBeenLocked && m_lockData)
     {

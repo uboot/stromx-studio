@@ -464,7 +464,7 @@ QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)
             int opId = model->m_stream->operatorId(input->op());
             Q_ASSERT(opId >=  0);
             
-            stream << model->m_stream->operatorId(input->op());
+            stream << opId;
             stream << input->id();
             stream << input->color();
         }
