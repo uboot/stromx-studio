@@ -67,6 +67,7 @@ public:
     
 protected:
     virtual void closeEvent(QCloseEvent* event);
+    virtual void customEvent(QEvent* event);
 
 private slots:
     /** Attempts to close the current stream and displays an open file dialog. */
@@ -273,6 +274,7 @@ private:
     StreamModel* m_model;
      
     QString m_currentFile;
+    bool m_timeoutMessageIsActive;
     QList<ObserverWindow*> m_observerWindows;
 };
 

@@ -40,6 +40,7 @@
 #include <stromx/core/Exception.h>
 #include <stromx/core/ZipFileInput.h>
 #include <stromx/core/ZipFileOutput.h>
+#include "Common.h"
 #include "DataVisualizer.h"
 #include "ErrorListModel.h"
 #include "ErrorListView.h"
@@ -60,7 +61,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent),
-    m_model(0)
+    m_model(0),
+    m_timeoutMessageIsActive(false)
 {
     m_undoStack = new LimitUndoStack(this);
     
@@ -995,24 +997,36 @@ void MainWindow::writeWindowStates(stromx::core::FileOutput& output, const QStri
 
 void MainWindow::handleAccessTimeout()
 {
-    QMessageBox msgBox;
-    msgBox.setText(tr("An operation accessing the current stream timed out. The stream might be deadlocked."));
-    msgBox.setInformativeText(tr("Do you want to stop the stream?"));
-    msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-    msgBox.setDefaultButton(QMessageBox::Cancel);
-    int ret = msgBox.exec();
-    
-    switch (ret)
-    {
-    case QMessageBox::Ok:
-        stop();
-        break;
-    case QMessageBox::Cancel:
-        break;
-    default:
-        Q_ASSERT(false);
-    }
+    QEvent* event = new QEvent(QEvent::Type(QEvent::User + Timeout));
+    QCoreApplication::instance()->postEvent(this, event);
 }
 
-
+void MainWindow::customEvent(QEvent* event)
+{
+    if(event->type() == QEvent::Type(QEvent::User + Timeout) && ! m_timeoutMessageIsActive)
+    {
+        m_timeoutMessageIsActive = true;
+        
+        QMessageBox msgBox;
+        msgBox.setText(tr("An operation accessing the current stream timed out. The stream might be deadlocked."));
+        msgBox.setInformativeText(tr("Do you want to stop the stream?"));
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Cancel);
+        int ret = msgBox.exec();
+        
+        switch (ret)
+        {
+        case QMessageBox::Ok:
+            if(m_model->isActive())
+                stop();
+            break;
+        case QMessageBox::Cancel:
+            break;
+        default:
+            Q_ASSERT(false);
+        }
+        
+        m_timeoutMessageIsActive = false;
+    }
+}
 

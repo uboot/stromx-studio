@@ -66,7 +66,10 @@ enum EventTypes
     ConnectorData,
     
     /** Type offset of the class ErrorDataEvent. */
-    Error
+    Error,
+    
+    /** Type offset for time out events. */
+    Timeout
 };
 
 const QMap<QString, QColor> & colorTable();
