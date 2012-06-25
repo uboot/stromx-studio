@@ -18,5 +18,6 @@ ErrorListView::ErrorListView(QWidget* parent)
     verticalHeader()->hide();
     
     setModel(m_model);
-    horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    horizontalHeader()->setResizeMode(ErrorListModel::TIME, QHeaderView::Interactive);
+    horizontalHeader()->setResizeMode(ErrorListModel::DESCRIPTION, QHeaderView::Stretch);
 }
