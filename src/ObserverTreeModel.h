@@ -49,12 +49,18 @@ class ObserverTreeModel : public QAbstractItemModel
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * op);
     
 public:
+    /** The columns of the observer tree. */
     enum Column
     {
+        /** The name of the operator. */
         OPERATOR = 0,
+        /** The name of the observer. */
         OBSERVER = 0,
+        /** The ID of the observed input. */
         ID,
+        /** The color of the input. */
         COLOR,
+        /** The total number of columns. */
         NUM_COLUMNS
     };
     

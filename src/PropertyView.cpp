@@ -2,13 +2,15 @@
 
 #include <QHeaderView>
 #include "ItemDelegate.h"
+#include "PropertyModel.h"
 
 PropertyView::PropertyView(QWidget* parent)
   : QTreeView(parent)
 {
     setEditTriggers(QAbstractItemView::AllEditTriggers);
     setAlternatingRowColors(true);
-    header()->setResizeMode(QHeaderView::Stretch);
+    header()->setResizeMode(PropertyModel::PROPERTY, QHeaderView::Interactive);
+    header()->setResizeMode(PropertyModel::VALUE, QHeaderView::Stretch);
     
     setItemDelegate(new ItemDelegate(this));
 }

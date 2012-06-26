@@ -21,6 +21,9 @@ ObserverView::ObserverView(ObserverModel* observer, QWidget* parent)
     setDragDropMode(QAbstractItemView::DragDrop);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
+    horizontalHeader()->setResizeMode(ObserverTreeModel::OPERATOR, QHeaderView::Interactive);
+    horizontalHeader()->setResizeMode(ObserverTreeModel::ID, QHeaderView::Interactive);
+    horizontalHeader()->setResizeMode(ObserverTreeModel::COLOR, QHeaderView::Stretch);
     horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     verticalHeader()->setDefaultSectionSize(ItemDelegate::ROW_HEIGHT);
     verticalHeader()->hide();

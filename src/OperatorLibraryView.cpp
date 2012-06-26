@@ -15,7 +15,8 @@ OperatorLibraryView::OperatorLibraryView(QWidget* parent)
     
     setModel(m_model);
     setItemDelegate(new ItemDelegate(this));
-    header()->setResizeMode(QHeaderView::Stretch);
+    header()->setResizeMode(OperatorLibraryModel::OPERATOR, QHeaderView::Interactive);
+    header()->setResizeMode(OperatorLibraryModel::VERSION, QHeaderView::Stretch);
     setAlternatingRowColors(true);
 }
 

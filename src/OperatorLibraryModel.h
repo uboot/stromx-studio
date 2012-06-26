@@ -58,6 +58,17 @@ class OperatorLibraryModel : public QAbstractItemModel
     Q_OBJECT
     
 public:
+    /** The columns of the operator library. */
+    enum Column
+    {
+        /** The name of the operator or the package. */
+        OPERATOR,
+        /** The version of the operator. */
+        VERSION,
+        /** The total number of columns. */
+        NUM_COLUMNS
+    };
+    
     /** 
      * Constructs an operator library model which contains all operators
      * of the packages \em core and \em base.

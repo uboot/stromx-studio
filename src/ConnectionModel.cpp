@@ -55,7 +55,7 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
                     if(m_thread)
                         return m_thread->name();
                     else
-                        return tr("no thread");
+                        return tr("No thread");
                 case Qt::EditRole:
                 {
                     if(! m_thread)

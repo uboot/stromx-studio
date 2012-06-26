@@ -7,14 +7,14 @@ PropertyModel::PropertyModel(QObject* parent)
 
 int PropertyModel::columnCount(const QModelIndex& index) const
 {
-    return 2;
+    return NUM_COLUMNS;
 }
 
 QVariant PropertyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
     {
-        if(section == 0)
+        if(section == PROPERTY)
             return tr("Property");
         else
             return tr("Value");

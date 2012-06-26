@@ -104,7 +104,7 @@ QVariant OperatorLibraryModel::data(const QModelIndex& index, int role) const
 
 int OperatorLibraryModel::columnCount(const QModelIndex& parent) const
 {
-    return 2;
+    return NUM_COLUMNS;
 }
 
 int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
@@ -236,7 +236,7 @@ QVariant OperatorLibraryModel::headerData(int section, Qt::Orientation orientati
 {
     if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
     {
-        if(section == 0)
+        if(section == OPERATOR)
             return tr("Operator");
         else
             return tr("Version");

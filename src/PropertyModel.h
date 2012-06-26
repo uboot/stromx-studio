@@ -34,6 +34,17 @@ class PropertyModel : public QAbstractItemModel
     Q_OBJECT
     
 public:
+    /** The columns of the property model. */
+    enum Column
+    {
+        /** The name of the property. */
+        PROPERTY,
+        /** The value of the property. */
+        VALUE,
+        /** The total number of columns. */
+        NUM_COLUMNS
+    };
+    
     explicit PropertyModel(QObject* parent = 0);
     
     virtual int columnCount(const QModelIndex & index) const;
