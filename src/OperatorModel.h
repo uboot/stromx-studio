@@ -33,6 +33,7 @@ namespace stromx
         class Data;
         class Operator;
         class Parameter;
+        class ParameterError;
     }
 }
 
@@ -147,6 +148,9 @@ signals:
       
     /** An operation accessing a parameter of the operator timed out. */
     void parameterAccessTimedOut() const;
+    
+    /** A parameter occurred while setting a parameter. */
+    void parameterErrorOccurred(const stromx::core::ParameterError &) const;
     
 protected:
     virtual void customEvent(QEvent* event);

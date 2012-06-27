@@ -53,7 +53,9 @@ public:
         /** Deactivation of the operator. */
         DEACTIVATION,
         /** Deinitialization of the operator. */
-        DEINITIALIZATION
+        DEINITIALIZATION,
+        /** Accessing a parameter. */
+        PARAMETER_ACCESS
     };
     
     /** Constructs an error data from a stromx exception and the type of the exception. */

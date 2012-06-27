@@ -352,6 +352,8 @@ void StreamModel::doAddOperator(OperatorModel* op)
     
     m_operators.append(op);
     m_uninitializedOperators.append(op);
+    connect(op, SIGNAL(parameterErrorOccurred(stromx::core::ParameterError)), this, SLOT(handleParameterError(stromx::core::ParameterError)));
+    
     emit operatorAdded(op);
 }
 
@@ -359,6 +361,7 @@ void StreamModel::doRemoveOperator(OperatorModel* op)
 {
     Q_ASSERT(! op->isInitialized());
     
+    disconnect(op, SIGNAL(parameterErrorOccurred()));
     m_operators.removeAll(op);
     m_uninitializedOperators.removeAll(op);
     emit operatorRemoved(op);
@@ -380,7 +383,8 @@ void StreamModel::doInitializeOperator(OperatorModel* op)
     }
     catch(stromx::core::OperatorError& e)
     {
-        m_exceptionObserver->observe(stromx::core::ExceptionObserver::INITIALIZATION, e, 0);
+        if(m_exceptionObserver)
+            m_exceptionObserver->observe(stromx::core::ExceptionObserver::INITIALIZATION, e, 0);
     }
 }
 
@@ -401,7 +405,8 @@ void StreamModel::doDeinitializeOperator(OperatorModel* op)
     catch(stromx::core::OperatorError& e)
     {
         m_stream->addOperator(op->op());
-        m_exceptionObserver->observe(stromx::core::ExceptionObserver::DEINITIALIZATION, e, 0);
+        if(m_exceptionObserver)
+            m_exceptionObserver->observe(stromx::core::ExceptionObserver::DEINITIALIZATION, e, 0);
     }
 }
 
@@ -529,6 +534,7 @@ void StreamModel::allocateObjects(stromx::core::Stream* stream)
         m_operators.append(op);
         m_initializedOperators.append(op);
         connect(op, SIGNAL(parameterAccessTimedOut()), this, SIGNAL(accessTimedOut()));
+        connect(op, SIGNAL(parameterErrorOccurred(stromx::core::ParameterError)), this, SLOT(handleParameterError(stromx::core::ParameterError)));
     }
     
     foreach(OperatorModel* opModel, m_initializedOperators)
@@ -732,7 +738,7 @@ bool StreamModel::start()
         catch(stromx::core::OperatorError& e)
         {
             // report any errors to the error observer
-            if(m_observerModel)
+            if(m_exceptionObserver)
                 m_exceptionObserver->observe(stromx::core::ExceptionObserver::ACTIVATION, e, 0);
             
             // return with error
@@ -807,8 +813,14 @@ void StreamModel::setExceptionObserver(ExceptionObserver* observer)
     m_exceptionObserver = observer;
 }
 
-
-
+void StreamModel::handleParameterError(const stromx::core::ParameterError& e)
+{
+    if(m_exceptionObserver)
+    {
+        m_exceptionObserver->observe(
+            stromx::core::ExceptionObserver::PARAMETER_ACCESS, e, 0);
+    }
+}
 
 
 

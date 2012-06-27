@@ -32,6 +32,7 @@ namespace stromx
         class FileOutput;
         class Input;
         class Operator;
+        class ParameterError;
         class Stream;
         class Thread;
     }
@@ -182,6 +183,9 @@ public slots:
 private slots:
     /** Joins the stromx stream. */
     void join();
+    
+    /** Sends the parameter error to the error observer. */
+    void handleParameterError(const stromx::core::ParameterError &);
     
 signals:
     /** An operator was added. */

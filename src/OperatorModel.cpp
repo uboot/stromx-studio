@@ -369,6 +369,10 @@ void OperatorModel::doSetParameter(unsigned int paramId, const stromx::core::Dat
     {
         emit parameterAccessTimedOut();
     }
+    catch(stromx::core::ParameterError& e)
+    {
+        emit parameterErrorOccurred(e);
+    }
     catch(stromx::core::Exception&)
     {
     }

@@ -29,6 +29,9 @@ ErrorData::ErrorData(const stromx::core::OperatorError& exception, Type type)
     case DEINITIALIZATION:
         errorType = QApplication::tr("Deinitialization error");
         break;
+    case PARAMETER_ACCESS:
+        errorType = QApplication::tr("Parameter access error");
+        break;
     default:
         errorType = QApplication::tr("Unknown error");
         break;
