@@ -24,6 +24,7 @@ OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
     QPen pen = m_opRect->pen();
     pen.setWidthF(WIDTH);
     m_opRect->setPen(pen);
+    m_opRect->setBrush(Qt::white);
     setPos(m_model->pos());
     
     m_label = new QGraphicsTextItem(this);
