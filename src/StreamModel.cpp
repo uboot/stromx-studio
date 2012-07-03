@@ -361,7 +361,7 @@ void StreamModel::doRemoveOperator(OperatorModel* op)
 {
     Q_ASSERT(! op->isInitialized());
     
-    disconnect(op, SIGNAL(parameterErrorOccurred()));
+    disconnect(op, SIGNAL(parameterErrorOccurred(stromx::core::ParameterError)));
     m_operators.removeAll(op);
     m_uninitializedOperators.removeAll(op);
     emit operatorRemoved(op);
