@@ -26,7 +26,7 @@
 #include <stromx/core/Image.h>
 #include <stromx/core/Parameter.h>
 #include <stromx/core/String.h>
-#include <stromx/core/Trigger.h>
+#include <stromx/core/TriggerData.h>
 #include <qapplication.h>
 
 namespace
@@ -229,7 +229,7 @@ std::auto_ptr<stromx::core::Data> DataConverter::toStromxData(const QVariant& va
     if(param.variant().isVariant(stromx::core::DataVariant::TRIGGER))
     {
         if(variant.type() == QVariant::Bool && variant.toBool())
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::Trigger());
+            return std::auto_ptr<stromx::core::Data>(new stromx::core::TriggerData());
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::BOOL))
