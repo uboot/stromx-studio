@@ -75,14 +75,40 @@ protected:
     void keyPressEvent(QKeyEvent* keyEvent);
     
 private slots:
+    /** 
+     * Removes all items from the view and re-populates it with new
+     * items for the current stream model.
+     */
     void reset();
+    
+    /**
+     * Updates the property view and all actions to the currently selected items.
+     * Issues signals to announce any changes due to a new selection.
+     */
     void updateSelection();
+    
+    /** Adds an operator item for the model \c op to the scene. */
     void addOperator(OperatorModel* op);
+    
+    /** Removes the operator item representing the model \c op from the scene. */
     void removeOperator(OperatorModel* op);
+    
+    /** Adds a connection item for the model \c connection to the scene. */
     void addConnection(ConnectionModel* connection);
+    
+    /** Removes the connection item representing the model \c connection from the scene. */
     void removeConnection(ConnectionModel* connection);
+    
+    /** Initializes the currently selected operators. */
     void initialize();
+    
+    /** Deinitializes the currently selected operators. */
     void deinitialize();
+    
+    /** 
+     * Removes the currently selected items. This removes the items from the scene
+     * and the models the represent from the stream model.
+     */
     void removeSelectedItems();
     
 private:
