@@ -92,6 +92,7 @@ private:
     
     StreamModel* m_model;
     SelectionModel* m_selectionModel;
+    unsigned int m_numOperators;
 };
 
 #endif // STREAMEDITORSCENE_H

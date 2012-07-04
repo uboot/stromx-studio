@@ -4,6 +4,7 @@
 #include <QPen>
 #include <QUndoStack>
 #include <stromx/core/Operator.h>
+#include "ConnectionItem.h"
 #include "ConnectorItem.h"
 #include "StreamEditorScene.h"
 
@@ -13,6 +14,7 @@ const qreal OperatorItem::RADIUS = 3;
 const qreal OperatorItem::WIDTH = 1.5;
 const qreal OperatorItem::CONNECTOR_OFFSET = 5;
 const qreal OperatorItem::LABEL_OFFSET = 5;
+const qreal OperatorItem::CONNECTION_Z_OFFSET = 1.0/100.0;
     
 OperatorItem::OperatorItem(OperatorModel* model, QGraphicsItem * parent)
   : QGraphicsObject(parent),
@@ -149,6 +151,9 @@ void OperatorItem::addInputConnection(unsigned int id, ConnectionItem* connectio
 void OperatorItem::addOutputConnection(unsigned int id, ConnectionItem* connection)
 {
     m_outputs[id]->addConnection(connection);
+    
+    // move the output connection slightly in front of the operator
+    connection->setZValue(zValue() + m_outputs.count() * CONNECTION_Z_OFFSET);
 }
 
 void OperatorItem::removeConnection(ConnectionItem* connection)

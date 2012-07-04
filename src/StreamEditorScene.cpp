@@ -16,7 +16,8 @@
 StreamEditorScene::StreamEditorScene(QObject* parent)
   : QGraphicsScene(parent),
     m_model(0),
-    m_selectionModel(0)
+    m_selectionModel(0),
+    m_numOperators(0)
 {
     m_selectionModel = new SelectionModel(this);
     
@@ -140,6 +141,12 @@ void StreamEditorScene::reset()
 void StreamEditorScene::addOperator(OperatorModel* op)
 {
     OperatorItem* opItem = new OperatorItem(op);
+    
+    // the new operator is the front-most
+    opItem->setZValue(m_numOperators);
+    m_numOperators++;
+    
+    // add it to the scene
     addItem(opItem);
 }
 

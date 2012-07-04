@@ -66,11 +66,27 @@ private slots:
     void resetAllConnectors();
     
 private:
+    /** The length of a side of the operator square. */
     static const qreal SIZE;
+    
+    /** The radius of the rounded corners. */
     static const qreal RADIUS;
+    
+    /** The line width of the outline. */
     static const qreal WIDTH;
+    
+    /** The vertical distance between two connectors. */
     static const qreal CONNECTOR_OFFSET;
+    
+    /** The vertical distance between the operator and its name label. */
     static const qreal LABEL_OFFSET;
+    
+    /** 
+     * The depth offset between two subsequent connections. This it is a constant
+     * value, i.e. the maximum amount of connections which are displayed correctly
+     * is 1/CONNECTION_Z_OFFSET.
+     */
+    static const qreal CONNECTION_Z_OFFSET;
     
     static qreal computeFirstYPos(int numConnectors);
     void initialize();
