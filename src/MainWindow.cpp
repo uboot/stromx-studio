@@ -134,7 +134,7 @@ void MainWindow::createDockWidgets()
     m_errorDockWidget->setWidget(m_errorListView);
     m_errorDockWidget->setAllowedAreas(Qt::BottomDockWidgetArea);
     
-    addDockWidget(Qt::LeftDockWidgetArea, m_propertyDockWidget);
+    addDockWidget(Qt::LeftDockWidgetArea, m_operatorLibraryDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, m_propertyDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, m_observerDockWidget);
     addDockWidget(Qt::BottomDockWidgetArea, m_errorDockWidget);
