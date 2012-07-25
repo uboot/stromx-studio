@@ -438,6 +438,22 @@ void StreamModel::doRemoveConnection(ConnectionModel* connection)
 {
     m_stream->disconnect(connection->targetOp()->op(), connection->inputId());
     
+    // remove the target input from all threads
+    for(std::vector<stromx::core::Thread*>::const_iterator iter = m_stream->threads().begin();
+        iter != m_stream->threads().end();
+        ++iter)
+    {
+        try
+        {
+            (*iter)->removeInput(connection->targetOp()->op(), connection->inputId());
+        }
+        catch(stromx::core::WrongArgument&)
+        {
+            // an exception is thrown if the input to removed is not part of the
+            // thread; this can safely be ignored
+        }
+    }       
+    
     connection->disconnectFromOperators();
     m_connections.removeAll(connection);
     
