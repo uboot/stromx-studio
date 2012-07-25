@@ -251,9 +251,9 @@ QAbstractItemModel* StreamModel::threadListModel() const
 
 int StreamModel::operatorId(const OperatorModel* op) const
 {
-    for(int i = 0; i < m_initializedOperators.count(); ++i)
+    for(int i = 0; i < m_operators.count(); ++i)
     {
-        if(op == m_initializedOperators[i])
+        if(op == m_operators[i])
             return i;
     }
     
@@ -376,8 +376,15 @@ void StreamModel::doInitializeOperator(OperatorModel* op)
     {
         op->setInitialized(true);
         
+        // Move the operator from the uninitialized operators to the
+        // initialized ones. It must also moved within m_operators to
+        // make sure that the order of m_operators is in sync with the
+        // order of m_initializedOperators and m_uninitializedOperators.
+        m_operators.removeAll(op);
         m_uninitializedOperators.removeAll(op);
+        m_operators.insert(m_initializedOperators.count(), op);
         m_initializedOperators.append(op);
+        
         m_stream->addOperator(op->op());
         connect(op, SIGNAL(parameterAccessTimedOut()), this, SIGNAL(accessTimedOut()));
     }
@@ -399,7 +406,14 @@ void StreamModel::doDeinitializeOperator(OperatorModel* op)
     {
         disconnect(op, SIGNAL(parameterAccessTimedOut()));
         op->setInitialized(false);
+        
+        // Move the operator from the initialized operators to the
+        // uninitialized ones. It must also moved within m_operators to
+        // make sure that the order of m_operators is in sync with the
+        // order of m_initializedOperators and m_uninitializedOperators.
+        m_operators.removeAll(op);
         m_initializedOperators.removeAll(op);
+        m_operators.append(op);
         m_uninitializedOperators.append(op);
     }
     catch(stromx::core::OperatorError& e)

@@ -96,13 +96,19 @@ public:
      */
     void readStudioData(stromx::core::FileInput & input, const QString & basename);
     
-    /** Returns the operators of the stream model. */
+    /** 
+     * Returns the operators of the stream model. The position of each operator
+     * in the list corresponds to its ID.
+     * 
+     * \sa operatorId()
+     */
     const QList<OperatorModel*> operators() const { return m_operators; }
      
     /**
-     * Returns the current position of the operator in the operator list of the
-     * stromx stream. If the operator is not initialized and thus not part of
-     * the stromx stream -1 is returned.
+     * Returns the current position of the operator in the stream operator list. 
+     * If the operator is not part of the stromx stream -1 is returned.
+     * 
+     * \sa operators()
      */
     int operatorId(const OperatorModel* op) const;
     
@@ -293,12 +299,19 @@ private:
     ObserverTreeModel* m_observerModel;
     OperatorLibraryModel* m_operatorLibrary;
     QUndoStack* m_undoStack;
-    QList<OperatorModel*> m_operators;
-    QList<OperatorModel*> m_initializedOperators;
-    QList<OperatorModel*> m_uninitializedOperators;
     QList<ConnectionModel*> m_connections;
     JoinStreamTask* m_joinStreamTask;
     ExceptionObserver* m_exceptionObserver;
+    
+    // The list of all operators in the stream model. This is always the same
+    // as m_initializedOperators + m_uninitializedOperators.
+    QList<OperatorModel*> m_operators;
+    
+    // The list of initialized operators.
+    QList<OperatorModel*> m_initializedOperators;
+    
+    // The list of uninitialized operators.
+    QList<OperatorModel*> m_uninitializedOperators;
 };
 
 #endif // STREAMMODEL_H
