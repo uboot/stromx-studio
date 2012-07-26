@@ -54,7 +54,10 @@
                 <File Id="stromx_core" Source="stromx_core.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="camera" Guid="">
-                <File Id="camera" Source="camera.zip" KeyPath="yes" Checksum="yes"/>
+                <File Id="camera" Source="camera.stromx" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="parallel" Guid="">
+                <File Id="parallel" Source="parallel.stromx" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="stromx_studio" Guid="">
                 <File Id="stromx_studio" Source="stromx-studio.exe" KeyPath="yes" Checksum="yes"/>
@@ -101,6 +104,7 @@
             <ComponentRef Id="stromx_core" />
             <ComponentRef Id="stromx_studio" />
             <ComponentRef Id="camera" />
+            <ComponentRef Id="parallel" />
             <ComponentRef Id="xerces_c" />
             <ComponentRef Id="zip" />
             <ComponentRef Id="zlib" />
