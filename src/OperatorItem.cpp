@@ -1,6 +1,9 @@
 #include "OperatorItem.h"
 
 #include <QGraphicsScene>
+#include <QGraphicsSceneContextMenuEvent>
+#include <QMenu>
+#include <QMouseEvent>
 #include <QPen>
 #include <QUndoStack>
 #include <stromx/core/Operator.h>
@@ -78,6 +81,23 @@ QVariant OperatorItem::itemChange(GraphicsItemChange change, const QVariant &val
     }
 
     return QGraphicsItem::itemChange(change, value);
+}
+
+void OperatorItem::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+{
+    if(isSelected())
+    {
+        QGraphicsScene* graphicsScene = scene();
+        
+        if(StreamEditorScene* streamScene = dynamic_cast<StreamEditorScene*>(graphicsScene))
+        {
+            QMenu menu;
+            menu.addAction(streamScene->createInitializeAction(&menu));
+            menu.addAction(streamScene->createDeinitializeAction(&menu));
+            
+            menu.exec(event->screenPos());
+        }    
+    }
 }
 
 void OperatorItem::setInitialized(bool value)

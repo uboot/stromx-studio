@@ -89,7 +89,7 @@ QAction* StreamEditorScene::createInitializeAction(QObject* parent)
     QAction* action = new QAction(tr("Initialize"), parent);
     action->setStatusTip(tr("Initialize the selected operators"));
     action->setShortcut(tr("Ctrl+I"));
-    action->setEnabled(false);
+    action->setEnabled(isOperatorSelection());
     connect(action, SIGNAL(triggered()), this, SLOT(initialize()));
     connect(this, SIGNAL(initializeEnabledChanged(bool)), action, SLOT(setEnabled(bool)));
     
@@ -101,7 +101,7 @@ QAction* StreamEditorScene::createDeinitializeAction(QObject* parent)
     QAction* action = new QAction(tr("Deinitialize"), parent);
     action->setStatusTip(tr("Deinitialize the selected operators"));
     action->setShortcut(tr("Ctrl+Shift+I"));
-    action->setEnabled(false);
+    action->setEnabled(isOperatorSelection());
     connect(action, SIGNAL(triggered()), this, SLOT(deinitialize()));
     connect(this, SIGNAL(deinitializeEnabledChanged(bool)), action, SLOT(setEnabled(bool)));
     

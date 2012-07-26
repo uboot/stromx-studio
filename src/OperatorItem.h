@@ -57,6 +57,8 @@ public slots:
 protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value);
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent * event);
+    
     
 private slots:
     /** Visualizes the connector as occupied. */
