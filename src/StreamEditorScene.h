@@ -62,6 +62,9 @@ public:
     /** Sets the current stream model to \c model. The previous model is \em not deleted. */
     void setModel(StreamModel* model);
     
+    /** Returns the current selection model. */
+    SelectionModel* selectionModel() const { return m_selectionModel; }
+    
 signals:
     void initializeEnabledChanged(bool enabled);
     void deinitializeEnabledChanged(bool enabled);

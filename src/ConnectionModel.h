@@ -69,6 +69,9 @@ public:
     /** Removes itself from the source and target operators. */
     void disconnectFromOperators();
     
+    /** Returns the stream model this connection belongs to. */
+    StreamModel* streamModel() const { return m_stream; }
+    
 signals:
     /** The connections was assigned to a new thread (or no thread). */
     void threadChanged(ThreadModel* thread);

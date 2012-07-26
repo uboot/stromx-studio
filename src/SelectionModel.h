@@ -22,6 +22,7 @@
 
 #include "PropertyModel.h"
 
+class QAction;
 class ConnectionModel;
 
 /** 
@@ -55,6 +56,13 @@ public:
      */
     bool isValid() const;
     
+    /** 
+     * Returns a list of actions to set the thread of the current selection.
+     * Each action corresponds to one of threads which are currently part of the
+     * stromx stream. The actions are added as children of \c parent.
+     */ 
+    QList<QAction*> createThreadActions(QObject* parent) const;
+    
     // implementation of QAbstractItemModel
     virtual int rowCount(const QModelIndex & index) const;
     virtual QVariant data(const QModelIndex & index, int role) const;
@@ -63,12 +71,18 @@ public:
     virtual QModelIndex parent(const QModelIndex& child) const;
     virtual Qt::ItemFlags flags(const QModelIndex & index) const;
     
+private slots:
+    /** 
+     * Sets the thread of the current selection to the thread of the action
+     * which triggered this slot.
+     */
+    void setThread();
+    
 private:
     /** Returns the first model of the current selection. */
     QAbstractItemModel* model() const;
     
     QList<ConnectionModel*> m_connections;
-    
 };
 
 #endif // SELECTIONMODEL_H

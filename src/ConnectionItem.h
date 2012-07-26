@@ -66,6 +66,8 @@ protected:
     
     virtual QPainterPath shape() const;
     
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent * event);
+    
 private slots:
     /** Sets the color of the connection. */
     void setColor(const QColor & color);

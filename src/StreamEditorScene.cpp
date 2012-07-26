@@ -204,6 +204,20 @@ void StreamEditorScene::updateSelection()
         emit removeEnabledChanged(true);
     else
         emit removeEnabledChanged(false);
+      
+    // collect all models
+    QList<QAbstractItemModel*> models;
+    foreach(QGraphicsItem* item, selectedItems())
+    {
+        if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
+            models.append(opItem->model());
+        
+        if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
+            models.append(connectionItem->model());
+    }
+    
+    // update the selection model
+    m_selectionModel->setSelection(models);
        
     // show selected model in the property editor
     if(selectedItems().size() == 1)
@@ -225,20 +239,7 @@ void StreamEditorScene::updateSelection()
     }
     else if(selectedItems().size() > 1)
     {
-        // collect all models
-        QList<QAbstractItemModel*> models;
-        foreach(QGraphicsItem* item, selectedItems())
-        {
-            if(OperatorItem* opItem = qgraphicsitem_cast<OperatorItem*>(item))
-                models.append(opItem->model());
-            
-            if(ConnectionItem* connectionItem = qgraphicsitem_cast<ConnectionItem*>(item))
-                models.append(connectionItem->model());
-        }
-        
-        // update the selection model
-        m_selectionModel->setSelection(models);
-        
+        // use the selection model
         if(m_selectionModel->isValid())
             emit selectedModelChanged(m_selectionModel);
         else

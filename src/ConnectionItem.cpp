@@ -1,11 +1,15 @@
 #include "ConnectionItem.h"
 
+#include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsView>
+#include <QMenu>
 #include <QPen>
 #include <QVector2D>
 #include <math.h>
 #include "ConnectionModel.h"
 #include "ConnectorItem.h"
+#include "SelectionModel.h"
+#include "StreamEditorScene.h"
 
 const qreal ConnectionItem::EXTRA_HEIGHT = 20;
 const qreal ConnectionItem::PI = 3.141592;
@@ -416,6 +420,24 @@ qreal ConnectionItem::computeWidth(qreal height, qreal angle)
         return fabs(height) / tan(angle / 2 / 180 * PI);
 }
 
+void ConnectionItem::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+{
+    if(isSelected())
+    {
+        QGraphicsScene* graphicsScene = scene();
+        
+        if(StreamEditorScene* streamScene = dynamic_cast<StreamEditorScene*>(graphicsScene))
+        {
+            QMenu menu;
+            QList<QAction*> actions = streamScene->selectionModel()->createThreadActions(&menu);
+            
+            foreach(QAction* action, actions)
+                menu.addAction(action);
+            
+            menu.exec(event->screenPos());
+        }    
+    }
+}
 
 
 

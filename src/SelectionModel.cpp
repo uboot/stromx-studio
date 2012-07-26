@@ -1,6 +1,9 @@
 #include "SelectionModel.h"
 
 #include "ConnectionModel.h"
+#include "ThreadModel.h"
+#include "StreamModel.h"
+#include <QAction>
 
 SelectionModel::SelectionModel(QObject* parent)
   : PropertyModel(parent)
@@ -113,3 +116,35 @@ bool SelectionModel::setData(const QModelIndex& index, const QVariant& value, in
     
     return success;
 }
+
+QList<QAction*> SelectionModel::createThreadActions(QObject* parent) const
+{
+    QList<QAction*> actions;
+    
+    if(isValid())
+    {
+        Q_ASSERT(m_connections.count());
+        
+        StreamModel* stream = m_connections[0]->streamModel();
+        
+        int i = 0;
+        foreach(ThreadModel* thread, stream->threads())
+        {
+            QAction* action = new QAction(thread->name(), parent);
+            action->setData(i);
+            connect(action, SIGNAL(triggered(bool)), this, SLOT(setThread()));
+            actions.append(action);
+            
+            ++i;
+        }
+    }
+    
+    return actions;
+}
+
+void SelectionModel::setThread()
+{
+
+}
+
+
