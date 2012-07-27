@@ -4,6 +4,7 @@
 #include "ThreadModel.h"
 #include "StreamModel.h"
 #include <QAction>
+#include <QUndoStack>
 
 SelectionModel::SelectionModel(QObject* parent)
   : PropertyModel(parent)
@@ -13,6 +14,14 @@ SelectionModel::SelectionModel(QObject* parent)
 bool SelectionModel::isValid() const
 {
     return 0 != m_connections.count();
+}
+
+StreamModel* SelectionModel::streamModel() const
+{
+    if(isValid())
+        return m_connections[0]->streamModel();
+    else
+        return 0;
 }
 
 void SelectionModel::setSelection(QList< QAbstractItemModel* > selection)
@@ -107,35 +116,38 @@ Qt::ItemFlags SelectionModel::flags(const QModelIndex& index) const
 
 bool SelectionModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    bool success = true;
-    foreach(ConnectionModel* model, m_connections)
+    if(StreamModel* stream = streamModel())
     {
-        if(! model->setData(index, value, role))
-            success = false;
+        stream->undoStack()->beginMacro(tr("set threads"));
+        bool success = true;
+        foreach(ConnectionModel* model, m_connections)
+        {
+            if(! model->setData(index, value, role))
+                success = false;
+        }
+        stream->undoStack()->endMacro();
+        
+        return success;
     }
     
-    return success;
+    return false;
 }
 
 QList<QAction*> SelectionModel::createThreadActions(QObject* parent) const
 {
     QList<QAction*> actions;
     
-    if(isValid())
+    if(StreamModel* stream = streamModel())
     {
-        Q_ASSERT(m_connections.count());
-        
-        StreamModel* stream = m_connections[0]->streamModel();
-        
-        int i = 0;
+        int threadId = 0;
         foreach(ThreadModel* thread, stream->threads())
         {
             QAction* action = new QAction(thread->name(), parent);
-            action->setData(i);
+            action->setData(threadId);
             connect(action, SIGNAL(triggered(bool)), this, SLOT(setThread()));
             actions.append(action);
             
-            ++i;
+            ++threadId;
         }
     }
     
@@ -144,7 +156,18 @@ QList<QAction*> SelectionModel::createThreadActions(QObject* parent) const
 
 void SelectionModel::setThread()
 {
-
+    if(StreamModel* stream = streamModel())
+    {
+        stream->undoStack()->beginMacro(tr("set threads"));
+        if(QAction* action = qobject_cast<QAction*>(sender()))
+        {
+            int threadId = action->data().toInt();
+            
+            foreach(ConnectionModel* connection, m_connections)
+                connection->setThread(stream->threads()[threadId]);
+        }
+        stream->undoStack()->endMacro();
+    }
 }
 
 

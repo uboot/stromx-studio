@@ -58,6 +58,7 @@ protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant & value);
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent * event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event);
     
     
 private slots:

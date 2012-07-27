@@ -262,14 +262,14 @@ bool StreamEditorScene::isOperatorSelection() const
     if(selectedItems().size() == 0)
         return false;
     
-    bool foundOperator = false;
+    bool isOperatorSelection = true;
     foreach(QGraphicsItem* item, selectedItems())
     {
-        if(qgraphicsitem_cast<OperatorItem*>(item))
-            foundOperator = true;
+        if(! qgraphicsitem_cast<OperatorItem*>(item))
+            isOperatorSelection = false;
     }
     
-    return foundOperator;
+    return isOperatorSelection;
 }
 
 OperatorItem* StreamEditorScene::findOperatorItem(OperatorModel* opModel) const

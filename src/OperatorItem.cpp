@@ -92,10 +92,17 @@ void OperatorItem::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         if(StreamEditorScene* streamScene = dynamic_cast<StreamEditorScene*>(graphicsScene))
         {
             QMenu menu;
-            menu.addAction(streamScene->createInitializeAction(&menu));
-            menu.addAction(streamScene->createDeinitializeAction(&menu));
+            QAction* initializeAction = streamScene->createInitializeAction(&menu);
+            QAction* deinitializeAction = streamScene->createDeinitializeAction(&menu);
             
-            menu.exec(event->screenPos());
+            // show the menu only if at least one of the actions is enabled
+            if(initializeAction->isEnabled() || deinitializeAction->isEnabled())
+            {
+                menu.addAction(initializeAction);
+                menu.addAction(deinitializeAction);
+                
+                menu.exec(event->screenPos());
+            }
         }    
     }
 }
@@ -280,6 +287,11 @@ qreal OperatorItem::computeFirstYPos(int numConnectors)
     return -totalHeight / 2;
 }
 
+void OperatorItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    event->setButton(Qt::LeftButton);
+    QGraphicsObject::mousePressEvent(event);
+}
 
 
 

@@ -68,6 +68,8 @@ protected:
     
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent * event);
     
+    void mousePressEvent ( QGraphicsSceneMouseEvent * event );
+    
 private slots:
     /** Sets the color of the connection. */
     void setColor(const QColor & color);

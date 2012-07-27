@@ -24,6 +24,7 @@
 
 class QAction;
 class ConnectionModel;
+class StreamModel;
 
 /** 
  * \brief Model of a selection of connection and operator models.
@@ -55,6 +56,12 @@ public:
      * to display the model because it will not provide any values to an item view.
      */
     bool isValid() const;
+    
+    /** 
+     * Returns the stream model of the objects in the selection if at least one 
+     * object is selected. Returns 0 otherwise.
+     */
+    StreamModel* streamModel() const;
     
     /** 
      * Returns a list of actions to set the thread of the current selection.

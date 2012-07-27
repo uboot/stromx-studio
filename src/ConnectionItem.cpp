@@ -439,6 +439,13 @@ void ConnectionItem::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     }
 }
 
+void ConnectionItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    event->setButton(Qt::LeftButton);
+    QGraphicsObject::mousePressEvent(event);
+}
+
+
 
 
 
