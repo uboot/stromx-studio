@@ -22,7 +22,8 @@ ConnectionItem::ConnectionItem(ConnectionModel* model, QGraphicsItem* parent)
     m_endArrow(0),
     m_centerArrow(0),
     m_model(model),
-    m_occupied(false)
+    m_inputOccupied(false),
+    m_outputOccupied(false)
 {
     Q_ASSERT(model);
     
@@ -99,15 +100,23 @@ void ConnectionItem::update()
     
     updateArrowPositions(start, end);
     
-    QBrush brush;
-    if(m_occupied)
-        brush = QBrush(m_pen.color().darker(130));
+    QBrush lightBrush = QBrush(m_pen.color().lighter(130));
+    QBrush darkBrush =  QBrush(m_pen.color().darker(130));
+    
+    if(m_outputOccupied)
+        m_startArrow->setBrush(darkBrush);
     else
-        brush = QBrush(m_pen.color().lighter(130));
-       
-    m_startArrow->setBrush(brush);
-    m_endArrow->setBrush(brush);
-    m_centerArrow->setBrush(brush);
+        m_startArrow->setBrush(lightBrush);
+    
+    if(m_inputOccupied && m_outputOccupied)
+        m_centerArrow->setBrush(darkBrush);
+    else
+        m_centerArrow->setBrush(lightBrush);
+    
+    if(m_inputOccupied)
+        m_endArrow->setBrush(darkBrush);
+    else
+        m_endArrow->setBrush(lightBrush);
 }
 
 QPainterPath ConnectionItem::drawPath(const QPointF& start, const QPointF& end)
@@ -399,9 +408,15 @@ QGraphicsPathItem* ConnectionItem::createDoubleArrow(QGraphicsItem* parent)
     return item;
 }
 
-void ConnectionItem::setOccupied(bool occupied)
+void ConnectionItem::setInputOccupied(bool occupied)
 {
-    m_occupied = occupied;
+    m_inputOccupied = occupied;
+    update();
+}
+
+void ConnectionItem::setOutputOccupied(bool occupied)
+{
+    m_outputOccupied = occupied;
     update();
 }
 

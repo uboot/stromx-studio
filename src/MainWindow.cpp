@@ -439,6 +439,8 @@ bool MainWindow::openRecentFile()
         if(! saveBeforeClosing())
             return false;
         
+        m_slowAction->setChecked(false);
+        
         QString filepath = action->data().toString();
         
         if(! readFile(filepath))
@@ -462,6 +464,8 @@ bool MainWindow::open()
 {
     if(! saveBeforeClosing())
         return false;
+    
+    m_slowAction->setChecked(false);
     
     QSettings settings("stromx", "stromx-studio");
     QString lastDir = settings.value("lastStreamOpened", QDir::home().absolutePath()).toString();

@@ -51,14 +51,22 @@ public:
     
 public slots:  
     /**
-     * Marks this connection as either occupied or unoccupied.
-     * An connection is occupied if data is present at either the input
-     * at the start of the connection or at the output at the end of 
-     * the connection.
-     * The visual representation of an occupied connection is different
+     * Marks the input connector at this connection as either occupied or
+     * unoccupied. An an input connector is occupied if data is present
+     * and can be consumed by the operator.
+     * The visual representation of an connection with occupied inputs is different
      * from that of an unoccupied.
      */
-    void setOccupied(bool occupied);
+    void setInputOccupied(bool occupied);
+    
+    /**
+     * Marks the output connector at this connection as either occupied or
+     * unoccupied. An an output connector is occupied if data is present
+     * and can be transported to the next operator.
+     * The visual representation of an connection with occupied outputs is different
+     * from that of an unoccupied.
+     */
+    void setOutputOccupied(bool occupied);
     
 protected:
     /** Updates the appearance of the connection when it is de-/selected. */
@@ -123,7 +131,8 @@ private:
     QPen m_pen;
     QPointF m_start;
     QPointF m_end;
-    bool m_occupied;
+    bool m_inputOccupied;
+    bool m_outputOccupied;
 };
 
 #endif // CONNECTIONITEM_H
