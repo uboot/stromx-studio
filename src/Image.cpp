@@ -68,6 +68,6 @@ void Image::initializeParent()
     
     setBuffer(reinterpret_cast<uint8_t*>(m_image.bits()), m_image.byteCount());
     
-    initialize(m_image.width(), m_image.height(), m_image.bytesPerLine(),
-               m_image.bits(), pixelType);
+    initializeImage(m_image.width(), m_image.height(), m_image.bytesPerLine(),
+                    m_image.bits(), pixelType);
 }
