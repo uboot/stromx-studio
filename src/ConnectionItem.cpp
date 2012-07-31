@@ -446,10 +446,13 @@ void ConnectionItem::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             QMenu menu;
             QList<QAction*> actions = streamScene->selectionModel()->createThreadActions(&menu);
             
-            foreach(QAction* action, actions)
-                menu.addAction(action);
-            
-            menu.exec(event->screenPos());
+            if(actions.count())
+            {
+                foreach(QAction* action, actions)
+                    menu.addAction(action);
+                
+                menu.exec(event->screenPos());
+            }
         }    
     }
 }
