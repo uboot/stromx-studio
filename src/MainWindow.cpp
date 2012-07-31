@@ -392,9 +392,6 @@ void MainWindow::start()
         m_redoAct->setEnabled(false);
         m_undoAct->setEnabled(false);
         m_undoStack->activateLimit();
-        m_saveAct->setEnabled(false);
-        m_saveAsAct->setEnabled(false);
-        m_openAct->setEnabled(false);
     }
 }
 
@@ -420,9 +417,6 @@ void MainWindow::pause()
 
 void MainWindow::join()
 {
-    m_saveAct->setEnabled(true);
-    m_saveAsAct->setEnabled(true);
-    m_openAct->setEnabled(true);
     m_startAct->setEnabled(true);
     m_pauseAct->setEnabled(false);
     m_stopAct->setEnabled(false);
