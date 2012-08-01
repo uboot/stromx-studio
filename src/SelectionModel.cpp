@@ -138,46 +138,46 @@ QList<QAction*> SelectionModel::createThreadActions(QObject* parent) const
     QList<QAction*> actions;
     
     if(StreamModel* stream = streamModel())
-    {
-        if(! stream->isActive())
-        {             
-            Q_ASSERT(m_connections.count());
-            
-            ThreadModel* testThread = m_connections[0]->thread();
-            bool selectedConnectionsHaveSameThread = true;
-            foreach(ConnectionModel* model, m_connections)
+    {  
+        Q_ASSERT(m_connections.count());
+        bool actionsAreEnabled = !stream->isActive();        
+        
+        ThreadModel* testThread = m_connections[0]->thread();
+        bool selectedConnectionsHaveSameThread = true;
+        foreach(ConnectionModel* model, m_connections)
+        {
+            // if one model has a different thread break
+            if(model->thread() != testThread)
             {
-                // if one model has a different thread break
-                if(model->thread() != testThread)
-                {
-                    selectedConnectionsHaveSameThread = false;
-                    break;
-                }
+                selectedConnectionsHaveSameThread = false;
+                break;
             }
+        }
+        
+        QAction* action = new QAction(tr("None"), parent);
+        action->setData(0);
+        action->setCheckable(true);
+        action->setEnabled(actionsAreEnabled);
+        if(selectedConnectionsHaveSameThread && testThread == 0)
+            action->setChecked(true);
+        connect(action, SIGNAL(triggered(bool)), this, SLOT(setThread()));
+        actions.append(action);
             
-            QAction* action = new QAction(tr("None"), parent);
-            action->setData(0);
+        // 0 means no thread; values > 0 must decremented to get
+        // the thread index
+        int threadId = 0;
+        foreach(ThreadModel* thread, stream->threads())
+        {
+            QAction* action = new QAction(thread->name(), parent);
+            action->setData(threadId + 1);
+            action->setEnabled(actionsAreEnabled);
             action->setCheckable(true);
-            if(selectedConnectionsHaveSameThread && testThread == 0)
+            if(selectedConnectionsHaveSameThread && testThread == thread)
                 action->setChecked(true);
             connect(action, SIGNAL(triggered(bool)), this, SLOT(setThread()));
             actions.append(action);
-                
-            // 0 means no thread; values > 0 must decremented to get
-            // the thread index
-            int threadId = 0;
-            foreach(ThreadModel* thread, stream->threads())
-            {
-                QAction* action = new QAction(thread->name(), parent);
-                action->setData(threadId + 1);
-                action->setCheckable(true);
-                if(selectedConnectionsHaveSameThread && testThread == thread)
-                    action->setChecked(true);
-                connect(action, SIGNAL(triggered(bool)), this, SLOT(setThread()));
-                actions.append(action);
-                
-                ++threadId;
-            }
+            
+            ++threadId;
         }
     }
     

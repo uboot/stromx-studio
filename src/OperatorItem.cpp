@@ -95,14 +95,9 @@ void OperatorItem::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
             QAction* initializeAction = streamScene->createInitializeAction(&menu);
             QAction* deinitializeAction = streamScene->createDeinitializeAction(&menu);
             
-            // show the menu only if at least one of the actions is enabled
-            if(initializeAction->isEnabled() || deinitializeAction->isEnabled())
-            {
-                menu.addAction(initializeAction);
-                menu.addAction(deinitializeAction);
-                
-                menu.exec(event->screenPos());
-            }
+            menu.addAction(initializeAction);
+            menu.addAction(deinitializeAction);
+            menu.exec(event->screenPos());
         }    
     }
 }
