@@ -59,7 +59,6 @@ void Image::initializeParent()
         pixelType = stromx::core::Image::MONO_8;
         break;
     case QImage::Format_RGB888:
-    case QImage::Format_ARGB32:
         pixelType = stromx::core::Image::RGB_24;
         break;
     default:
