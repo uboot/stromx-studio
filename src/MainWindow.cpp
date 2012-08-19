@@ -555,7 +555,7 @@ bool MainWindow::readFile(const QString& filepath)
         }
         
     }
-    catch(ReadStreamFailed& e)
+    catch(ReadStudioDataFailed& e)
     {
         QMessageBox::warning(this, tr("Loaded only part of file"), e.what(),
                              QMessageBox::Ok, QMessageBox::Ok);

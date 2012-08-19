@@ -99,14 +99,14 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     catch(stromx::core::OperatorAllocationFailed& e)
     {
         qWarning() << e.what();
-        QString error = tr("Failed to allocate the operator of type %1 of package %2.")
+        QString error = tr("Failed to allocate operator of type %1 of package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::core::DataAllocationFailed& e)
     {
         qWarning() << e.what();
-        QString error = tr("Failed to allocate the data of type %1 of package %2.")
+        QString error = tr("Failed to allocate data of type %1 of package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
@@ -181,7 +181,7 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
                         ? tr("The file %1 could not be opened for reading.").arg(QString::fromStdString(e.filename()))
                         : tr("The file %1 in %2 could not be opened for reading.").arg(QString::fromStdString(e.filename()),
                                                                                       QString::fromStdString(e.container()));
-        throw ReadStreamFailed(error);
+        throw ReadStudioDataFailed(error);
     }
     catch(stromx::core::InconsistentFileContent& e)
     {
@@ -190,7 +190,7 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
                         ? tr("The content of file %1 is inconsistent.").arg(QString::fromStdString(e.filename()))
                         : tr("The content of file %1 in %2 is inconsistent.").arg(QString::fromStdString(e.filename()),
                                                                                QString::fromStdString(e.container()));
-        throw ReadStreamFailed(error);
+        throw ReadStudioDataFailed(error);
     }
     catch(stromx::core::InvalidFileFormat& e)
     {
@@ -199,21 +199,28 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
                         ? tr("The format of file %1 is invalid.").arg(QString::fromStdString(e.filename()))
                         : tr("The format of file %1 in %2 is invalid.").arg(QString::fromStdString(e.filename()),
                                                                            QString::fromStdString(e.container()));
-        throw ReadStreamFailed(error);
+        throw ReadStudioDataFailed(error);
+    }
+    catch(stromx::core::OperatorAllocationFailed& e)
+    {
+        qWarning() << e.what();
+        QString error = tr("Failed to allocate operator of type %1 of package %2.")
+                        .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
+        throw ReadStudioDataFailed(error);
     }
     catch(stromx::core::DataAllocationFailed& e)
     {
         qWarning() << e.what();
-        QString error = tr("Failed to allocate the data of type %1 of package %2.")
+        QString error = tr("Failed to allocate data of type %1 of package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
-        throw ReadStreamFailed(error);
+        throw ReadStudioDataFailed(error);
     }
     catch(stromx::core::DeserializationError& e)
     {
         qWarning() << e.what();
         QString error = tr("Failed to deserialize data of type %1 in package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
-        throw ReadStreamFailed(error);
+        throw ReadStudioDataFailed(error);
     }
 }
 
@@ -717,17 +724,10 @@ void StreamModel::deserializeModel(const QByteArray& data)
         dataStream >> version;
         
         OperatorModel* opModel = 0;
-        try
-        {
-            stromx::core::Operator* op = factory.newOperator(package.toStdString(), type.toStdString());
-            opModel = new OperatorModel(op, this);
-            m_uninitializedOperators.append(opModel);
-            m_operators.append(opModel);
-        }
-        catch(stromx::core::OperatorAllocationFailed&)
-        {
-            throw ReadStudioDataFailed(tr("Failed to allocate the operator of type %1 of package %2.").arg(type).arg(package));
-        }
+        stromx::core::Operator* op = factory.newOperator(package.toStdString(), type.toStdString());
+        opModel = new OperatorModel(op, this);
+        m_uninitializedOperators.append(opModel);
+        m_operators.append(opModel);
     }
     
     dataStream >> count;
