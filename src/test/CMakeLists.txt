@@ -7,6 +7,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lenna_bw.jpg DESTINATION ${CMAKE_CURRENT_B
 
 set(stromxstudiotest_HEADERS
     DataConverterTest.h
+    StreamModelTest.h
     ImageTest.h
 )
 
@@ -14,6 +15,7 @@ set(stromxstudiotest_SOURCES
     main.cpp
     DataConverterTest.cpp
     ImageTest.cpp
+    StreamModelTest.cpp
     ../DataConverter.cpp
     ../Image.cpp
 )
