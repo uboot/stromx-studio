@@ -22,13 +22,23 @@
 
 #include <QObject>
 
+class QUndoStack;
+class OperatorLibraryModel;
+
 class StreamModelTest : public QObject
 {
     Q_OBJECT
     
+public:
+    explicit StreamModelTest();
+    
 private slots:
     void testDefaultConstructor();
     void testFileConstructorCamera();
+    
+private:
+    QUndoStack* m_undoStack;
+    OperatorLibraryModel* m_operatorLibraryModel;
 };
 
 #endif // STREAMMODELTEST_H

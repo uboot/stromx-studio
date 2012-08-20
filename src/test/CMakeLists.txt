@@ -4,11 +4,24 @@ add_test(NAME stromx_studio_test COMMAND stromx_studio_test)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lenna.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lenna_bw.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/camera.stromx DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 set(stromxstudiotest_HEADERS
     DataConverterTest.h
     StreamModelTest.h
     ImageTest.h
+    ../ConnectionModel.h
+    ../InputData.h
+    ../InputModel.h
+    ../ObserverModel.h
+    ../ObserverTreeModel.h
+    ../OperatorData.h
+    ../OperatorLibraryModel.h
+    ../OperatorModel.h
+    ../PropertyModel.h
+    ../ThreadListModel.h
+    ../ThreadModel.h
+    ../StreamModel.h
 )
 
 set(stromxstudiotest_SOURCES
@@ -16,8 +29,46 @@ set(stromxstudiotest_SOURCES
     DataConverterTest.cpp
     ImageTest.cpp
     StreamModelTest.cpp
+    ../AddConnectionCmd.cpp
+    ../AddOperatorCmd.cpp
+    ../AddThreadCmd.cpp
+    ../Common.cpp
+    ../ConnectionModel.cpp
+    ../ConnectorObserver.cpp
+    ../ConnectorDataEvent.cpp
+    ../ConnectorOccupyEvent.cpp
     ../DataConverter.cpp
+    ../DeinitializeOperatorCmd.cpp
     ../Image.cpp
+    ../InitializeOperatorCmd.cpp
+    ../InputData.cpp
+    ../InputModel.cpp
+    ../InsertInputCmd.cpp
+    ../InsertObserverCmd.cpp
+    ../JoinStreamTask.cpp
+    ../MoveInputCmd.cpp
+    ../MoveOperatorCmd.cpp
+    ../OperatorData.cpp
+    ../OperatorLibraryModel.cpp
+    ../ObserverModel.cpp
+    ../ObserverTreeModel.cpp
+    ../OperatorModel.cpp
+    ../PropertyModel.cpp
+    ../RemoveInputCmd.cpp
+    ../RemoveConnectionCmd.cpp
+    ../RemoveOperatorCmd.cpp
+    ../RemoveObserverCmd.cpp
+    ../RemoveThreadCmd.cpp
+    ../RenameObserverCmd.cpp
+    ../RenameOperatorCmd.cpp
+    ../RenameThreadCmd.cpp
+    ../SetInputColorCmd.cpp
+    ../SetParameterCmd.cpp
+    ../SetThreadCmd.cpp
+    ../SetThreadColorCmd.cpp
+    ../StreamModel.cpp
+    ../ThreadListModel.cpp
+    ../ThreadModel.cpp
 )
 
 set(QT_USE_QTTEST TRUE) 
@@ -34,6 +85,7 @@ add_executable(stromx_studio_test
 target_link_libraries(stromx_studio_test
     ${QT_LIBRARIES}
     ${stromx_CORE_LIB}
+    ${stromx_BASE_LIB}
 )
 
 add_library(stromx_test SHARED 
