@@ -44,13 +44,13 @@ This package contains the %{name} application for editing and running stromx str
 %build
 %{__mkdir} build
 cd build
-cmake -DCMAKE_SKIP_RPATH=ON \
-      -DCMAKE_INSTALL_PREFIX='%{_prefix}' \
+cmake -DCMAKE_INSTALL_PREFIX='%{_prefix}' \
       -DCMAKE_BUILD_TYPE=Release \
       -DDOC_INSTALL_DIR=%{_docdir} \
       ..
 
 make %{?_smp_mflags}
+make test ARGS="-V"
 
 
 %install
