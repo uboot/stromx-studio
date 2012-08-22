@@ -613,7 +613,8 @@ void StreamModel::allocateObjects(stromx::core::Stream* stream)
         for(std::vector<stromx::core::Input>::const_iterator inputIter = start; inputIter != end; ++inputIter)
         {
             ConnectionModel* connectionModel = findConnectionModel(*inputIter);
-            connectionModel->setThread(threadModel);
+            if(connectionModel)
+                connectionModel->setThread(threadModel);
         }
     }
 }

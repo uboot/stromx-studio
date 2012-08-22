@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-16" standalone="no" ?>
+<!DOCTYPE Stromx SYSTEM "stromx.dtd">
+<Stromx version="0.1.0">
+
+  <Stream name="">
+    <Operator id="0" name="Dump" package="Core" type="Dump" version="0.1.0"/>
+    <Thread name="Thread">
+        <InputConnector operator="0" input="0"/>
+    </Thread>
+  </Stream>
+
+</Stromx>
+<!--XML generated automatically by XmlWriter of the open source library Stromx-->
