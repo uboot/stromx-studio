@@ -43,6 +43,18 @@ class InputModel : public QObject
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * model);
     
 public:
+    /** Different ways to visualize data which is observed at this input. */
+    enum Visualization
+    {
+        /** 
+         * The visualization is automatically determined from the data. 
+         * This will work only for specific data types such as images. */
+        AUTOMATIC,
+        
+        /** If possible the observed data is visualized as a set of line segments.*/
+        LINE_SEGMENT
+    };
+    
     /** Constructs an input model for the input \c id of the operator \c op. */
     InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject * parent);
     
@@ -51,6 +63,12 @@ public:
     
     /** Returns the current color. */
     const QColor & color() const { return m_color; }
+    
+    /** Returns the current visualization type. */
+    Visualization visualization() const { return m_visualization; }
+    
+    /** Pushes a set visualization command on the undo stack. */
+    void setVisualization(Visualization visualization);
     
     /** Returns the operator model. */
     OperatorModel* op() const { return m_op; }
@@ -69,6 +87,9 @@ signals:
     /** The color of the input changed. */
     void colorChanged(const QColor & color);
     
+    /** The visualization type of the input changed. */
+    void visualizationChanged(Visualization visualization);
+    
 private:
     /** Sets the color of the input. */
     void doSetColor(const QColor & color);
@@ -76,6 +97,7 @@ private:
     OperatorModel* m_op;
     unsigned int m_id;
     QColor m_color;
+    Visualization m_visualization;
     QUndoStack* m_undoStack;
 };
 
