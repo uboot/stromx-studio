@@ -41,7 +41,6 @@ public:
     virtual void moveLayer(int src, int dest);
     virtual void removeLayer(int layer);
     virtual void setColor(int layer, const QColor & color);
-    virtual void setAlpha(int layer, int alpha);
     virtual void setData(int layer, const stromx::core::Data& data, Visualization visualization);
     virtual void setActive(int layer, bool active);
     

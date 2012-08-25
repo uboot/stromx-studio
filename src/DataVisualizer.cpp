@@ -46,12 +46,16 @@ void DataVisualizer::removeLayer(int pos)
 
 void DataVisualizer::setActive(int pos, bool active)
 {
+    if(! m_items.contains(pos))
+        return;  
 
-}
-
-void DataVisualizer::setAlpha(int pos, int alpha)
-{
-
+    // get the item of this layer
+    QGraphicsItem* item = m_items[pos];
+    
+    if(! item)
+        return;
+    
+    item->setVisible(active);
 }
 
 void DataVisualizer::setColor(int pos, const QColor& color)

@@ -112,6 +112,7 @@ void DataManager::updateLayerData(OperatorModel::ConnectorType type, unsigned in
                 if(input->op() == op && input->id() == id)
                 {
                     m_visualizer->setData(layer, access(), input->visualization());
+                    m_visualizer->setActive(layer, input->active());
                     m_visualizer->setColor(layer, input->color());
                 }
             }
@@ -128,7 +129,10 @@ void DataManager::updateInputProperties(InputModel* input)
     for(int layer = 0; layer < m_inputs.count(); ++layer)
     {
         if(input == m_inputs[layer])
+        {
+            m_visualizer->setActive(layer, input->active());
             m_visualizer->setColor(layer, input->color());
+        }
     }
 }
 

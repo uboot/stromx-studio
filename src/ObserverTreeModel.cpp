@@ -218,7 +218,7 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
                 return name;
         }
         case VISUALIZATION:
-            return m_visualizationLabels[input->visualization()];
+            return visualizationLabel(input->visualization());
         default:
             return QVariant();
         }
@@ -512,6 +512,14 @@ void ObserverTreeModel::updateInput(InputModel* input)
         if(pos >= 0)
             emit dataChanged(createIndex(pos, 0, observer), createIndex(pos, NUM_COLUMNS - 1, observer));
     }
+}
+
+QString ObserverTreeModel::visualizationLabel(AbstractDataVisualizer::Visualization visualization)
+{
+    if(int(visualization) < 0 || int(visualization) >= m_visualizationLabels.count())
+        return QString("%1").arg(visualization);
+    else
+        return m_visualizationLabels[visualization];
 }
 
 QStringList ObserverTreeModel::setupVisualizationLabels()

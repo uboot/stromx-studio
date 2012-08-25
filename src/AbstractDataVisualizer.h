@@ -81,12 +81,6 @@ public:
     virtual void setColor(int pos, const QColor & color) = 0;
     
     /** 
-     * Sets the alpha value of the data in the layer \c pos to \c alpha.
-     * If no layer exists at \c src the function does not do anything.
-     */
-    virtual void setAlpha(int pos, int alpha) = 0;
-    
-    /** 
      * Sets the data in the layer at \c pos to \c data. Any other data is
      * automatically removed from the layer. The data is visualized as 
      * defined by the parameter \c visualization.
