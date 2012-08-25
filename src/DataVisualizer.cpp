@@ -77,6 +77,7 @@ void DataVisualizer::setColor(int pos, const QColor& color)
     case QGraphicsLineItem::Type:
         if(QGraphicsLineItem* lineItem = qgraphicsitem_cast<QGraphicsLineItem*>(item))
             lineItem->setPen(color);
+        break;
     default:
         ;
     }
@@ -162,9 +163,28 @@ QList<QGraphicsItem*> DataVisualizer::createImageItems(const stromx::core::Data&
 
 QList< QGraphicsItem* > DataVisualizer::createLineSegmentItems(const stromx::core::Data& data)
 {
+    using namespace stromx::core;
+    
     QList<QGraphicsItem*> items;
     
-    items.append(new QGraphicsLineItem(100, 50, 200, 100));
+    try
+    {
+        const Matrix & matrix = data_cast<const Matrix &>(data);
+        
+        if(matrix.valueType() == Matrix::DOUBLE && matrix.cols() == 4)
+        {
+            const uint8_t* rowPtr = matrix.data();
+            for(unsigned int i = 0; i < matrix.rows(); ++i)
+            {
+                double* rowData = (double*)(rowPtr);
+                items.append(new QGraphicsLineItem(rowData[0], rowData[1], rowData[2], rowData[3]));
+                rowPtr += matrix.stride();
+            }
+        }
+    }
+    catch(BadCast&)
+    {
+    }
     
     return items;
 }
