@@ -27,6 +27,8 @@ class QUndoStack;
 class ObserverTreeModel;
 class OperatorModel;
 
+#include "AbstractDataVisualizer.h"
+
 /** 
  * \brief Model of an input observer
  * 
@@ -45,18 +47,6 @@ class InputModel : public QObject
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * model);
     
 public:
-    /** Different ways to visualize data which is observed at this input. */
-    enum Visualization
-    {
-        /** 
-         * The visualization is automatically determined from the data. 
-         * This will work only for specific data types such as images. */
-        AUTOMATIC,
-        
-        /** If possible the observed data is visualized as a set of line segments.*/
-        LINE_SEGMENT
-    };
-    
     /** Constructs an input model for the input \c id of the operator \c op. */
     InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject * parent);
     
@@ -73,10 +63,10 @@ public:
     bool active() const { return m_active; }
     
     /** Returns the current visualization type. */
-    Visualization visualization() const { return m_visualization; }
+    AbstractDataVisualizer::Visualization visualization() const { return m_visualization; }
     
     /** Pushes a set visualization command on the undo stack. */
-    void setVisualization(Visualization visualization);
+    void setVisualization(AbstractDataVisualizer::Visualization visualization);
     
     /** Returns the operator model. */
     OperatorModel* op() const { return m_op; }
@@ -99,7 +89,7 @@ signals:
     void colorChanged(const QColor & color);
     
     /** The visualization type of the input changed. */
-    void visualizationChanged(Visualization visualization);
+    void visualizationChanged(AbstractDataVisualizer::Visualization visualization);
     
 private:
     /** Sets the activation status of the input. */
@@ -109,13 +99,13 @@ private:
     void doSetColor(const QColor & color);
     
     /** Sets the visualization type of the input. */
-    void doSetVisualization(const Visualization & visualization);
+    void doSetVisualization(const AbstractDataVisualizer::Visualization & visualization);
     
     OperatorModel* m_op;
     unsigned int m_id;
     bool m_active;
     QColor m_color;
-    Visualization m_visualization;
+    AbstractDataVisualizer::Visualization m_visualization;
     QUndoStack* m_undoStack;
 };
 

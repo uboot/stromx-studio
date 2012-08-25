@@ -4,6 +4,7 @@
 #include <stromx/core/Image.h>
 #include <stromx/core/Primitive.h>
 #include <QGraphicsObject>
+#include "InputModel.h"
 
 DataVisualizer::DataVisualizer(QWidget* parent)
   : GraphicsView(parent)
@@ -74,7 +75,7 @@ void DataVisualizer::setColor(int pos, const QColor& color)
     }
 }
 
-void DataVisualizer::setData(int pos, const stromx::core::Data& data)
+void DataVisualizer::setData(int pos, const stromx::core::Data& data, Visualization visualization)
 {
     using namespace stromx::core;
     

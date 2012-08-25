@@ -1,6 +1,8 @@
 #include "SetInputVisualizationCmd.h"
 
-SetInputVisualizationCmd::SetInputVisualizationCmd(InputModel* model, const InputModel::Visualization & newVisualization, QUndoCommand* parent)
+#include "InputModel.h"
+
+SetInputVisualizationCmd::SetInputVisualizationCmd(InputModel* model, const AbstractDataVisualizer::Visualization & newVisualization, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("set input visualization"), parent),
     m_model(model),
     m_oldVisualization(model->visualization()),

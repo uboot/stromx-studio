@@ -325,7 +325,7 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         
         // set the color
         int visualization(value.toInt());
-        input->setVisualization(InputModel::Visualization(visualization));
+        input->setVisualization(AbstractDataVisualizer::Visualization(visualization));
         emit dataChanged(index, index);
         return true;
     }
@@ -579,7 +579,7 @@ QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
             InputModel* input = new InputModel(op, inputId, model->m_undoStack, model);
             input->doSetActive(active);
             input->doSetColor(color);
-            input->doSetVisualization(InputModel::Visualization(visualization));
+            input->doSetVisualization(AbstractDataVisualizer::Visualization(visualization));
             observer->insertInput(observer->numInputs(), input);
             model->connect(input, SIGNAL(changed(InputModel*)), model, SLOT(updateInput(InputModel*)));
         }

@@ -12,7 +12,7 @@ InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack
     m_op(op),
     m_id(id),
     m_color(*(colorTable().begin())),
-    m_visualization(AUTOMATIC),
+    m_visualization(AbstractDataVisualizer::AUTOMATIC),
     m_undoStack(undoStack) 
 {
     connect(op, SIGNAL(nameChanged(QString)), this, SLOT(updateOperatorName(QString)));
@@ -41,7 +41,7 @@ void InputModel::setColor(const QColor& color)
     }
 }
 
-void InputModel::setVisualization(Visualization visualization)
+void InputModel::setVisualization(AbstractDataVisualizer::Visualization visualization)
 {
     if(visualization != m_visualization)
     {
@@ -64,7 +64,7 @@ void InputModel::doSetColor(const QColor& color)
     emit changed(this);
 }
 
-void InputModel::doSetVisualization(const InputModel::Visualization& visualization)
+void InputModel::doSetVisualization(const AbstractDataVisualizer::Visualization& visualization)
 {
     m_visualization = visualization;
     emit visualizationChanged(m_visualization);

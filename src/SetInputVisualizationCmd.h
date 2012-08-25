@@ -23,21 +23,23 @@
 #include <QColor>
 #include <QUndoCommand>
 
-#include "InputModel.h"
+#include "AbstractDataVisualizer.h"
+
+class InputModel;
 
 /** \brief Sets the color of an input model. */
 class SetInputVisualizationCmd : public QUndoCommand
 {
 public:
-    SetInputVisualizationCmd(InputModel* model, const InputModel::Visualization & newVisualization, QUndoCommand* parent = 0);
+    SetInputVisualizationCmd(InputModel* model, const AbstractDataVisualizer::Visualization & newVisualization, QUndoCommand* parent = 0);
     
     virtual void undo();
     virtual void redo();
     
 private:
     InputModel* m_model;
-    InputModel::Visualization m_oldVisualization;
-    InputModel::Visualization m_newVisualization;
+    AbstractDataVisualizer::Visualization m_oldVisualization;
+    AbstractDataVisualizer::Visualization m_newVisualization;
 };
 
 #endif // SETINPUTVISUALIZATIONCMD_H
