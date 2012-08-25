@@ -13,6 +13,8 @@
 #include "RemoveInputCmd.h"
 #include "RemoveObserverCmd.h"
 
+QStringList ObserverTreeModel::m_visualizationLabels(ObserverTreeModel::setupVisualizationLabels());
+
 ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent)
   : QAbstractItemModel(parent),
     m_undoStack(undoStack),
@@ -213,6 +215,16 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
             else
                 return name;
         }
+        case VISUALIZATION:
+            return m_visualizationLabels[input->visualization()];
+        default:
+            return QVariant();
+        }
+    case Qt::EditRole:
+        switch(index.column())
+        {
+        case VISUALIZATION:
+            return input->visualization();
         default:
             return QVariant();
         }
@@ -232,6 +244,15 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
         default:
             return QVariant();
         }
+    case ChoicesRole:
+        switch(index.column())
+        {
+        case VISUALIZATION:
+            return m_visualizationLabels;
+        default:
+            return QVariant();
+        }
+            
     default:
         return QVariant();
     }
@@ -264,6 +285,20 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         // set the color
         QColor color(value.toString());
         input->setColor(color);
+        emit dataChanged(index, index);
+        return true;
+    }
+    
+    // the index points to an input color
+    if(index.isValid() && index.internalPointer() && index.column() == VISUALIZATION)
+    {
+        // get the input
+        ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
+        InputModel* input = observer->input(index.row());
+        
+        // set the color
+        int visualization(value.toInt());
+        input->setVisualization(InputModel::Visualization(visualization));
         emit dataChanged(index, index);
         return true;
     }
@@ -452,6 +487,15 @@ void ObserverTreeModel::updateInput(InputModel* input)
     }
 }
 
+QStringList ObserverTreeModel::setupVisualizationLabels()
+{
+    QStringList labels;
+    labels << "Automatic";
+    labels << "Line segment";
+    
+    return labels;
+}
+
 QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)
 {
     stream << qint32(model->m_observers.count());
@@ -467,6 +511,7 @@ QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)
             stream << opId;
             stream << input->id();
             stream << input->color();
+            stream << qint32(input->visualization());
         }
     }
     
@@ -493,14 +538,17 @@ QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
             qint32 opId;
             qint32 inputId;
             QColor color;
+            qint32 visualization;
             
             stream >> opId;
             stream >> inputId;
             stream >> color;
+            stream >> visualization;
             
             OperatorModel* op = model->m_stream->operators()[opId];
             InputModel* input = new InputModel(op, inputId, model->m_undoStack, model);
             input->doSetColor(color);
+            input->doSetVisualization(InputModel::Visualization(visualization));
             observer->insertInput(observer->numInputs(), input);
             model->connect(input, SIGNAL(changed(InputModel*)), model, SLOT(updateInput(InputModel*)));
         }

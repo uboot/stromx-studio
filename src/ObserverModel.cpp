@@ -215,6 +215,7 @@ Qt::ItemFlags ObserverModel::flags(const QModelIndex& index) const
     switch(index.column())
     {
     case ObserverTreeModel::COLOR:
+    case ObserverTreeModel::VISUALIZATION:
         flags |= Qt::ItemIsEditable;
     default:
         flags |= (Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);

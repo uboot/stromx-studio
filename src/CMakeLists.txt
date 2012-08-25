@@ -63,6 +63,7 @@ set(stromxstudio_SOURCES
     SelectionModel.cpp
     SetParameterCmd.cpp
     SetInputColorCmd.cpp
+    SetInputVisualizationCmd.cpp
     SetThreadCmd.cpp
     SetThreadColorCmd.cpp
     StreamEditor.cpp

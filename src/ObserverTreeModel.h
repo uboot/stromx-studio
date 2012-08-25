@@ -22,6 +22,7 @@
 
 #include <QAbstractItemModel>
 #include "StreamModel.h"
+#include "InputModel.h"
 
 class QUndoStack;
 class InputModel;
@@ -60,6 +61,8 @@ public:
         ID,
         /** The color of the input. */
         COLOR,
+        /** The visualization type of the input. */
+        VISUALIZATION,
         /** The total number of columns. */
         NUM_COLUMNS
     };
@@ -154,6 +157,9 @@ private:
      * class ObserverModel which is not displayed by the tree view.
      */
     const static int NUM_VISIBLE_COLUMNS = 2;
+    static QStringList m_visualizationLabels;
+    
+    static QStringList setupVisualizationLabels();
     
     void doInsertObserver(int pos, ObserverModel* observer);
     void doRemoveObserver(int pos);

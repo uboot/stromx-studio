@@ -40,6 +40,7 @@ class InputModel : public QObject
     Q_OBJECT
     
     friend class SetInputColorCmd;
+    friend class SetInputVisualizationCmd;
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * model);
     
 public:
@@ -93,6 +94,9 @@ signals:
 private:
     /** Sets the color of the input. */
     void doSetColor(const QColor & color);
+    
+    /** Sets the visualization type of the input. */
+    void doSetVisualization(const Visualization & visualization);
     
     OperatorModel* m_op;
     unsigned int m_id;
