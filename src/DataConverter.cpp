@@ -77,7 +77,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             }
             else if(role == Qt::EditRole)
             {
-                return int(boolData);
+                return boolData ? 1 : 0;
             } 
             else if(role == ChoicesRole)
             {

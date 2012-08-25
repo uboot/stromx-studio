@@ -207,7 +207,7 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
         case ID:
             return input->id();
         case ACTIVE:
-            return input->active();
+            return input->active() ? tr("True") : tr("False");
         case COLOR:
         {
             QColor color = input->color();
@@ -226,7 +226,7 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
         switch(index.column())
         {
         case ACTIVE:
-            return input->active();
+            return input->active() ? 1 : 0;
         case VISUALIZATION:
             return input->visualization();
         default:
@@ -251,6 +251,15 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     case ChoicesRole:
         switch(index.column())
         {
+        case ACTIVE:
+        {
+            QStringList choices;
+            
+            choices.append(tr("False"));
+            choices.append(tr("True"));
+            
+            return choices;
+        }
         case VISUALIZATION:
             return m_visualizationLabels;
         default:
