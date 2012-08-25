@@ -95,6 +95,7 @@ add_library(stromx_test SHARED
     DeadlockOperator.cpp
     ExceptionOperator.cpp
     ParameterOperator.cpp
+    RandomDataOperator.cpp
     Test.cpp
 )
 

@@ -47,23 +47,35 @@ public:
     virtual void setActive(int layer, bool active);
     
 private:
-    static QGraphicsItem* createImageItem(const stromx::core::Data & data);
+    /** Casts \c data to an stromx image and returns an image item. */
+    static QList<QGraphicsItem*> createImageItems(const stromx::core::Data & data);
     
+    /** 
+     * Casts \c data to an stromx matrix and returns the line segments defined
+     * by the matrix rows.
+     */
+    static QList<QGraphicsItem*> createLineSegmentItems(const stromx::core::Data & data);
+    
+    /** 
+     * Casts \c data to an stromx primitive and returns its text representation as a
+     * text item. 
+     */
     template <class data_t>
-    static QGraphicsItem* createPrimitiveItem(const stromx::core::Data & data)
+    static QList<QGraphicsItem*> createPrimitiveItems(const stromx::core::Data & data)
     {
-        QGraphicsItem* item = 0;
+        QList<QGraphicsItem*> items;
         
         try
         {
             const data_t & number = stromx::core::data_cast<const data_t &>(data);
-            item = new QGraphicsSimpleTextItem(QString("%1").arg(number));
+            QGraphicsItem* item = new QGraphicsSimpleTextItem(QString("%1").arg(number));
+            items.append(item);
         }
         catch(stromx::core::BadCast&)
         {
         }
         
-        return item;
+        return items;
     }
     
     QMap<int, QGraphicsItem*> m_items;

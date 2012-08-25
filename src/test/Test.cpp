@@ -22,6 +22,7 @@
 #include "DeadlockOperator.h"
 #include "ExceptionOperator.h"
 #include "ParameterOperator.h"
+#include "RandomDataOperator.h"
 
 #ifdef WIN32
     #define TEST_API __declspec(dllexport)
@@ -38,5 +39,6 @@ extern "C"
         registry.registerOperator(new DeadlockOperator);
         registry.registerOperator(new ExceptionOperator);
         registry.registerOperator(new ParameterOperator);
+        registry.registerOperator(new RandomDataOperator);
     }
 }

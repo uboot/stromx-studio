@@ -73,6 +73,10 @@ void DataVisualizer::setColor(int pos, const QColor& color)
     case QGraphicsSimpleTextItem::Type:
         if(QGraphicsSimpleTextItem* textItem = qgraphicsitem_cast<QGraphicsSimpleTextItem*>(item))
             textItem->setBrush(color);
+        break;
+    case QGraphicsLineItem::Type:
+        if(QGraphicsLineItem* lineItem = qgraphicsitem_cast<QGraphicsLineItem*>(item))
+            lineItem->setPen(color);
     default:
         ;
     }
@@ -88,17 +92,22 @@ void DataVisualizer::setData(int pos, const stromx::core::Data& data, Visualizat
     delete m_items[pos];
     m_items[pos] = 0;
     
-    QGraphicsItem* item = 0;
+    QList<QGraphicsItem*> items;
     if(data.isVariant(DataVariant::IMAGE))
     {
-        item = createImageItem(data);
+        items = createImageItems(data);
     }
     else if(data.isVariant(DataVariant::UINT_32))
     {
-        item = createPrimitiveItem<UInt32>(data);
+        items = createPrimitiveItems<UInt32>(data);
+    }
+    else if(data.isVariant(DataVariant::MATRIX))
+    {
+        if(visualization == LINE_SEGMENT)
+            items = createLineSegmentItems(data);
     }
     
-    if(item)
+    foreach(QGraphicsItem* item, items)
     {
         scene()->addItem(item);
         item->setZValue(-pos);
@@ -106,11 +115,11 @@ void DataVisualizer::setData(int pos, const stromx::core::Data& data, Visualizat
     }
 }
 
-QGraphicsItem* DataVisualizer::createImageItem(const stromx::core::Data& data)
+QList<QGraphicsItem*> DataVisualizer::createImageItems(const stromx::core::Data& data)
 {
     using namespace stromx::core;
     
-    QGraphicsItem* item = 0;
+    QList<QGraphicsItem*> items;
     try
     {
         const Image & image = data_cast<const Image &>(data);
@@ -141,14 +150,23 @@ QGraphicsItem* DataVisualizer::createImageItem(const stromx::core::Data& data)
                 colorTable[i] = qRgb(i, i, i);
             qtImage.setColorTable(colorTable);
             QPixmap pixmap(QPixmap::fromImage(qtImage));
-            item = new QGraphicsPixmapItem(pixmap);
+            items.append(new QGraphicsPixmapItem(pixmap));
         }
     }
     catch(BadCast&)
     {
     }
     
-    return item;
+    return items;
+}
+
+QList< QGraphicsItem* > DataVisualizer::createLineSegmentItems(const stromx::core::Data& data)
+{
+    QList<QGraphicsItem*> items;
+    
+    items.append(new QGraphicsLineItem(100, 50, 200, 100));
+    
+    return items;
 }
 
 
