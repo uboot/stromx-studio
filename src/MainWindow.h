@@ -276,6 +276,7 @@ private:
     QString m_currentFile;
     bool m_timeoutMessageIsActive;
     QList<ObserverWindow*> m_observerWindows;
+    QMainWindow* m_docWindow;
 };
 
 #endif // MAINWINDOW_H

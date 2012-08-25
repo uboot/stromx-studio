@@ -65,10 +65,10 @@ MainWindow::MainWindow(QWidget *parent)
     m_timeoutMessageIsActive(false)
 {
     m_undoStack = new LimitUndoStack(this);
-    
     m_streamEditor = new StreamEditor;
-    
     m_threadListView = new ThreadListView(this);
+    m_docWindow = new QMainWindow(this);
+    
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(m_threadListView);
     QWidget* threadListWidget = new QWidget(this);
@@ -936,16 +936,23 @@ void MainWindow::readWindowStates(stromx::core::FileInput& input, const QString&
     qreal zoom;
     dataStream >> zoom;
     m_streamEditor->setZoom(zoom);
+    
+    // read the state and geometry of the documentation window
+    bool visible;
+    dataStream >> data;
+    m_docWindow->restoreGeometry(data);
+    dataStream >> data;
+    m_docWindow->restoreState(data);
+    dataStream >> visible;
+    m_docWindow->setVisible(visible);
         
     // read the state and geometry of each observer window
     foreach(ObserverWindow* window, m_observerWindows)
     {
-        QByteArray data;
         dataStream >> data;
         window->restoreGeometry(data);
         dataStream >> data;
         window->restoreState(data);
-        bool visible;
         dataStream >> visible;
         window->setVisible(visible);
         
@@ -965,6 +972,11 @@ void MainWindow::writeWindowStates(stromx::core::FileOutput& output, const QStri
     // write the state of the stream view
     dataStream << m_streamEditor->viewPos();
     dataStream << m_streamEditor->zoom();
+    
+    // write the state and geometry of the documentation window
+    dataStream << m_docWindow->saveGeometry();
+    dataStream << m_docWindow->saveState();
+    dataStream << m_docWindow->isVisible();
     
     // write the state and geometry of each observer window
     foreach(ObserverWindow* window, m_observerWindows)
@@ -988,7 +1000,7 @@ void MainWindow::writeWindowStates(stromx::core::FileOutput& output, const QStri
         QString error = e.container().empty() 
                         ? tr("The file %1 could not be opened for writing.").arg(QString::fromStdString(e.filename()))
                         : tr("The file %1 in %2 could not be opened for writing.").arg(QString::fromStdString(e.filename()),
-                                                                                      QString::fromStdString(e.container()));
+                                                                                       QString::fromStdString(e.container()));
         throw WriteStreamFailed(error);
     }
 }
