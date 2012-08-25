@@ -39,6 +39,7 @@ class InputModel : public QObject
 {
     Q_OBJECT
     
+    friend class SetInputActiveCmd;
     friend class SetInputColorCmd;
     friend class SetInputVisualizationCmd;
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * model);
@@ -65,6 +66,12 @@ public:
     /** Returns the current color. */
     const QColor & color() const { return m_color; }
     
+    /** Pushes a set active command on the undo stack. */
+    void setActive(bool active);
+    
+    /** Returns the current color. */
+    bool active() const { return m_active; }
+    
     /** Returns the current visualization type. */
     Visualization visualization() const { return m_visualization; }
     
@@ -85,6 +92,9 @@ signals:
     /** A property of the input model changed. */
     void changed(InputModel* model);
     
+    /** The activation statu8s of the input changed. */
+    void activeChanged(bool active);
+    
     /** The color of the input changed. */
     void colorChanged(const QColor & color);
     
@@ -92,6 +102,9 @@ signals:
     void visualizationChanged(Visualization visualization);
     
 private:
+    /** Sets the activation status of the input. */
+    void doSetActive(bool active);
+    
     /** Sets the color of the input. */
     void doSetColor(const QColor & color);
     
@@ -100,6 +113,7 @@ private:
     
     OperatorModel* m_op;
     unsigned int m_id;
+    bool m_active;
     QColor m_color;
     Visualization m_visualization;
     QUndoStack* m_undoStack;

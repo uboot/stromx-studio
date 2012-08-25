@@ -59,6 +59,8 @@ public:
         OBSERVER = 0,
         /** The ID of the observed input. */
         ID,
+        /** The activation status of the input. */
+        ACTIVE,
         /** The color of the input. */
         COLOR,
         /** The visualization type of the input. */

@@ -2,6 +2,7 @@
 
 #include "Common.h"
 #include "OperatorModel.h"
+#include "SetInputActiveCmd.h"
 #include "SetInputColorCmd.h"
 #include "SetInputVisualizationCmd.h"
 #include "StreamModel.h"
@@ -22,6 +23,15 @@ void InputModel::updateOperatorName(const QString& name)
     emit changed(this);
 }
 
+void InputModel::setActive(bool active)
+{
+    if(active != m_active)
+    {
+        QUndoCommand* cmd = new SetInputActiveCmd(this, active);
+        m_undoStack->push(cmd);
+    }
+}
+
 void InputModel::setColor(const QColor& color)
 {
     if(color != m_color)
@@ -38,6 +48,13 @@ void InputModel::setVisualization(Visualization visualization)
         QUndoCommand* cmd = new SetInputVisualizationCmd(this, visualization);
         m_undoStack->push(cmd);
     }
+}
+
+void InputModel::doSetActive(bool active)
+{
+    m_active = active;
+    emit activeChanged(m_active);
+    emit changed(this);
 }
 
 void InputModel::doSetColor(const QColor& color)

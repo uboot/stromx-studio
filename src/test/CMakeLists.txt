@@ -63,6 +63,7 @@ set(stromxstudiotest_SOURCES
     ../RenameObserverCmd.cpp
     ../RenameOperatorCmd.cpp
     ../RenameThreadCmd.cpp
+    ../SetInputActiveCmd.cpp
     ../SetInputColorCmd.cpp
     ../SetInputVisualizationCmd.cpp
     ../SetParameterCmd.cpp

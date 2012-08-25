@@ -92,8 +92,12 @@ QVariant ObserverModel::headerData(int section, Qt::Orientation orientation, int
             return tr("Operator");
         case ObserverTreeModel::ID:
             return tr("ID");
+        case ObserverTreeModel::ACTIVE:
+            return tr("Active");
         case ObserverTreeModel::COLOR:
             return tr("Color");
+        case ObserverTreeModel::VISUALIZATION:
+            return tr("Visualization");
         }
     }
     
@@ -214,6 +218,7 @@ Qt::ItemFlags ObserverModel::flags(const QModelIndex& index) const
     
     switch(index.column())
     {
+    case ObserverTreeModel::ACTIVE:
     case ObserverTreeModel::COLOR:
     case ObserverTreeModel::VISUALIZATION:
         flags |= Qt::ItemIsEditable;

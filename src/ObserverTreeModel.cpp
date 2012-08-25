@@ -206,6 +206,8 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
             return input->op()->name();
         case ID:
             return input->id();
+        case ACTIVE:
+            return input->active();
         case COLOR:
         {
             QColor color = input->color();
@@ -223,6 +225,8 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     case Qt::EditRole:
         switch(index.column())
         {
+        case ACTIVE:
+            return input->active();
         case VISUALIZATION:
             return input->visualization();
         default:
@@ -275,6 +279,20 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         emit dataChanged(index, index);
     }
     
+    // the index points to an input activation status
+    if(index.isValid() && index.internalPointer() && index.column() == ACTIVE)
+    {
+        // get the input
+        ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
+        InputModel* input = observer->input(index.row());
+        
+        // set the color
+        bool active(value.toBool());
+        input->setActive(active);
+        emit dataChanged(index, index);
+        return true;
+    }
+    
     // the index points to an input color
     if(index.isValid() && index.internalPointer() && index.column() == COLOR)
     {
@@ -289,7 +307,7 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         return true;
     }
     
-    // the index points to an input color
+    // the index points to an input visualization
     if(index.isValid() && index.internalPointer() && index.column() == VISUALIZATION)
     {
         // get the input
@@ -510,6 +528,7 @@ QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)
             
             stream << opId;
             stream << input->id();
+            stream << input->active();
             stream << input->color();
             stream << qint32(input->visualization());
         }
@@ -537,16 +556,19 @@ QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
         {
             qint32 opId;
             qint32 inputId;
+            bool active;
             QColor color;
             qint32 visualization;
             
             stream >> opId;
             stream >> inputId;
+            stream >> active;
             stream >> color;
             stream >> visualization;
             
             OperatorModel* op = model->m_stream->operators()[opId];
             InputModel* input = new InputModel(op, inputId, model->m_undoStack, model);
+            input->doSetActive(active);
             input->doSetColor(color);
             input->doSetVisualization(InputModel::Visualization(visualization));
             observer->insertInput(observer->numInputs(), input);

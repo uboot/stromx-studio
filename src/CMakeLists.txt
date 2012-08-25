@@ -62,6 +62,7 @@ set(stromxstudio_SOURCES
     RenameThreadCmd.cpp
     SelectionModel.cpp
     SetParameterCmd.cpp
+    SetInputActiveCmd.cpp
     SetInputColorCmd.cpp
     SetInputVisualizationCmd.cpp
     SetThreadCmd.cpp
