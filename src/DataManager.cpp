@@ -36,6 +36,7 @@ void DataManager::addInputLayer(InputModel* input, int pos)
     
     // add a new layer in the front
     m_visualizer->addLayer(pos);
+    m_visualizer->setActive(pos, input->active());
     m_visualizer->setColor(pos, input->color());
     
     // remember the input and connect to it

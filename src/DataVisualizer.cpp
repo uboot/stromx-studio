@@ -1,6 +1,5 @@
 #include "DataVisualizer.h"
 
-#include <stromx/core/Data.h>
 #include <stromx/core/Image.h>
 #include <stromx/core/Primitive.h>
 #include <QGraphicsObject>
@@ -92,57 +91,66 @@ void DataVisualizer::setData(int pos, const stromx::core::Data& data, Visualizat
     QGraphicsItem* item = 0;
     if(data.isVariant(DataVariant::IMAGE))
     {
-        try
+        item = createImageItem(data);
+    }
+    else if(data.isVariant(DataVariant::UINT_32))
+    {
+        item = createPrimitiveItem<UInt32>(data);
+    }
+    
+    if(item)
+    {
+        scene()->addItem(item);
+        item->setZValue(-pos);
+        m_items[pos] = item;
+    }
+}
+
+QGraphicsItem* DataVisualizer::createImageItem(const stromx::core::Data& data)
+{
+    using namespace stromx::core;
+    
+    QGraphicsItem* item = 0;
+    try
+    {
+        const Image & image = data_cast<const Image &>(data);
+        QImage::Format format;
+        
+        bool validPixelType = true;
+        
+        switch(image.pixelType())
         {
-            const Image & image = data_cast<const Image &>(data);
-            QImage::Format format;
-            
-            switch(image.pixelType())
-            {
-            case Image::MONO_8:
-            case Image::BAYERBG_8:
-            case Image::BAYERGB_8:
-                format = QImage::Format_Indexed8;
-                break;
-            case Image::RGB_24:
-            case Image::BGR_24:
-                format = QImage::Format_RGB888;
-                break;
-            default:
-                return;
-            }
-            
+        case Image::MONO_8:
+        case Image::BAYERBG_8:
+        case Image::BAYERGB_8:
+            format = QImage::Format_Indexed8;
+            break;
+        case Image::RGB_24:
+        case Image::BGR_24:
+            format = QImage::Format_RGB888;
+            break;
+        default:
+            validPixelType = false;
+        }
+        
+        if(validPixelType)
+        {
             QImage qtImage(image.data(), image.width(), image.height(), image.stride(), format);
             QVector<QRgb> colorTable(256);
             for(unsigned int i = 0; i < 256; ++i)
                 colorTable[i] = qRgb(i, i, i);
             qtImage.setColorTable(colorTable);
             QPixmap pixmap(QPixmap::fromImage(qtImage));
-            item = scene()->addPixmap(pixmap);
-        }
-        catch(BadCast&)
-        {
+            item = new QGraphicsPixmapItem(pixmap);
         }
     }
-    else if(data.isVariant(DataVariant::UINT_32))
+    catch(BadCast&)
     {
-        try
-        {
-            const UInt32 & uint = data_cast<const UInt32 &>(data);
-            QGraphicsSimpleTextItem* textItem = scene()->addSimpleText(QString("%1").arg(uint));
-            item = textItem;
-        }
-        catch(BadCast&)
-        {
-        }
     }
     
-    if(item)
-    {
-        item->setZValue(-pos);
-        m_items[pos] = item;
-    }
+    return item;
 }
+
 
 
 

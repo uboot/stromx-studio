@@ -22,6 +22,8 @@
 
 #include <QMap>
 
+#include <stromx/core/Data.h>
+
 #include "AbstractDataVisualizer.h"
 #include "GraphicsView.h"
 
@@ -45,6 +47,25 @@ public:
     virtual void setActive(int layer, bool active);
     
 private:
+    static QGraphicsItem* createImageItem(const stromx::core::Data & data);
+    
+    template <class data_t>
+    static QGraphicsItem* createPrimitiveItem(const stromx::core::Data & data)
+    {
+        QGraphicsItem* item = 0;
+        
+        try
+        {
+            const data_t & number = stromx::core::data_cast<const data_t &>(data);
+            item = new QGraphicsSimpleTextItem(QString("%1").arg(number));
+        }
+        catch(stromx::core::BadCast&)
+        {
+        }
+        
+        return item;
+    }
+    
     QMap<int, QGraphicsItem*> m_items;
 };
 
