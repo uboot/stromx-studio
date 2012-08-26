@@ -47,6 +47,8 @@ public:
     virtual void setActive(int pos, bool active);
     
 private:
+    typedef QList<QGraphicsItem*> ItemList;
+    
     /** Casts \c data to an stromx image and returns an image item. */
     static QList<QGraphicsItem*> createImageItems(const stromx::core::Data & data);
     
@@ -78,7 +80,8 @@ private:
         return items;
     }
     
-    QMap<int, QGraphicsItem*> m_items;
+    /** Maps each existing layer to a list of graphic items the layer contains. */
+    QMap<int, ItemList> m_items;
 };
 
 #endif // DATAVISUALIZER_H

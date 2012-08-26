@@ -11,6 +11,7 @@ InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack
   : QObject(parent),
     m_op(op),
     m_id(id),
+    m_active(true),
     m_color(*(colorTable().begin())),
     m_visualization(AbstractDataVisualizer::AUTOMATIC),
     m_undoStack(undoStack) 

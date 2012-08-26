@@ -14,23 +14,37 @@ DataVisualizer::DataVisualizer(QWidget* parent)
 void DataVisualizer::addLayer(int pos)
 {
     if(! m_items.contains(pos))
-        m_items[pos] = 0;
+        m_items[pos] = ItemList();
 }
 
 void DataVisualizer::moveLayer(int src, int dest)
 {
+    // return if the source layer does not exist
     if(! m_items.contains(src))
         return;
     
-    QGraphicsItem* item = m_items[src];
+    // nothing to do if source and destination are the same
+    if(src == dest)
+        return;
     
+    // if the destination layer exists delete all items there
     if(m_items.contains(dest))
-        delete m_items[dest];
-    m_items[dest] = item;
+    {
+        foreach(QGraphicsItem* item, m_items[dest])
+            delete item;
+    }
     
-    if(item)
-        item->setZValue(-dest);
+    // copy the source items to the destination layer
+    m_items[dest] = m_items[src];
     
+    // adapt the z-value
+    foreach(QGraphicsItem* item, m_items[dest])
+    {
+        if(item)
+            item->setZValue(-dest);
+    }
+    
+    // remove the source layer
     m_items.remove(src);
 }
 
@@ -38,48 +52,55 @@ void DataVisualizer::removeLayer(int pos)
 {
     if(m_items.contains(pos))
     {
-        delete m_items[pos];
+        // if the layer exists delete all its items
+        foreach(QGraphicsItem* item, m_items[pos])
+            delete item;
+        
+        // remove the layer
         m_items.remove(pos);
     }
 }
 
 void DataVisualizer::setActive(int pos, bool active)
 {
+    // return  if the layer does not exist
     if(! m_items.contains(pos))
         return;  
 
-    // get the item of this layer
-    QGraphicsItem* item = m_items[pos];
     
-    if(! item)
-        return;
-    
-    item->setVisible(active);
+    foreach(QGraphicsItem* item, m_items[pos])
+    {
+        // set the activation status of each valid item
+        if(item)
+            item->setVisible(active);
+    }
 }
 
 void DataVisualizer::setColor(int pos, const QColor& color)
 {
+    // return  if the layer does not exist
     if(! m_items.contains(pos))
         return;  
 
-    // get the item of this layer
-    QGraphicsItem* item = m_items[pos];
-    
-    if(! item)
-        return;
-    
-    switch(item->type())
+    // set the color of each valid item
+    foreach(QGraphicsItem* item, m_items[pos])
     {
-    case QGraphicsSimpleTextItem::Type:
-        if(QGraphicsSimpleTextItem* textItem = qgraphicsitem_cast<QGraphicsSimpleTextItem*>(item))
-            textItem->setBrush(color);
-        break;
-    case QGraphicsLineItem::Type:
-        if(QGraphicsLineItem* lineItem = qgraphicsitem_cast<QGraphicsLineItem*>(item))
-            lineItem->setPen(color);
-        break;
-    default:
-        ;
+        if(item)
+        {  
+            switch(item->type())
+            {
+            case QGraphicsSimpleTextItem::Type:
+                if(QGraphicsSimpleTextItem* textItem = qgraphicsitem_cast<QGraphicsSimpleTextItem*>(item))
+                    textItem->setBrush(color);
+                break;
+            case QGraphicsLineItem::Type:
+                if(QGraphicsLineItem* lineItem = qgraphicsitem_cast<QGraphicsLineItem*>(item))
+                    lineItem->setPen(color);
+                break;
+            default:
+                ;
+            }
+        }
     }
 }
 
@@ -87,32 +108,38 @@ void DataVisualizer::setData(int pos, const stromx::core::Data& data, Visualizat
 {
     using namespace stromx::core;
     
+    // return  if the layer does not exist
     if(! m_items.contains(pos))
         return;
     
-    delete m_items[pos];
-    m_items[pos] = 0;
+    // if the layer exists delete all items there and empty the layer
+    if(m_items.contains(pos))
+    {
+        foreach(QGraphicsItem* item, m_items[pos])
+            delete item;
+    }
+    m_items[pos].clear();
     
-    QList<QGraphicsItem*> items;
+    // create the graphic items representing the stromx data
     if(data.isVariant(DataVariant::IMAGE))
     {
-        items = createImageItems(data);
+        m_items[pos] = createImageItems(data);
     }
     else if(data.isVariant(DataVariant::UINT_32))
     {
-        items = createPrimitiveItems<UInt32>(data);
+        m_items[pos] = createPrimitiveItems<UInt32>(data);
     }
     else if(data.isVariant(DataVariant::MATRIX))
     {
         if(visualization == LINE_SEGMENT)
-            items = createLineSegmentItems(data);
+            m_items[pos] = createLineSegmentItems(data);
     }
     
-    foreach(QGraphicsItem* item, items)
+    // add the items and set their z-value
+    foreach(QGraphicsItem* item, m_items[pos])
     {
         scene()->addItem(item);
         item->setZValue(-pos);
-        m_items[pos] = item;
     }
 }
 
