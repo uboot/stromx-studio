@@ -52,6 +52,9 @@ private:
     /** Casts \c data to an stromx image and returns an image item. */
     static QList<QGraphicsItem*> createImageItems(const stromx::core::Data & data);
     
+    /** Casts \c data to a string and returns it as an text item. */
+    static QList<QGraphicsItem*> createStringItems(const stromx::core::Data & data);
+    
     /** 
      * Casts \c data to an stromx matrix and returns the line segments defined
      * by the matrix rows.

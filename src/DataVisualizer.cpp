@@ -2,6 +2,7 @@
 
 #include <stromx/core/Image.h>
 #include <stromx/core/Primitive.h>
+#include <stromx/core/String.h>
 #include <QGraphicsObject>
 #include "InputModel.h"
 
@@ -128,6 +129,10 @@ void DataVisualizer::setData(int pos, const stromx::core::Data& data, Visualizat
     else if(data.isVariant(DataVariant::UINT_32))
     {
         m_items[pos] = createPrimitiveItems<UInt32>(data);
+    } 
+    if(data.isVariant(DataVariant::STRING))
+    {
+        m_items[pos] = createStringItems(data);
     }
     else if(data.isVariant(DataVariant::MATRIX))
     {
@@ -187,13 +192,31 @@ QList<QGraphicsItem*> DataVisualizer::createImageItems(const stromx::core::Data&
     
     return items;
 }
+   
+QList<QGraphicsItem*> DataVisualizer::createStringItems(const stromx::core::Data & data)
+{
+    using namespace stromx::core;
+    
+    QList<QGraphicsItem*> items;
+    try
+    {
+        const String & string = stromx::core::data_cast<const String &>(data);
+        QGraphicsItem* item = new QGraphicsSimpleTextItem(QString::fromStdString(string));
+        items.append(item);
+    }
+    catch(stromx::core::BadCast&)
+    {
+    }
+    
+    return items;
+}
+
 
 QList< QGraphicsItem* > DataVisualizer::createLineSegmentItems(const stromx::core::Data& data)
 {
     using namespace stromx::core;
     
     QList<QGraphicsItem*> items;
-    
     try
     {
         const Matrix & matrix = data_cast<const Matrix &>(data);

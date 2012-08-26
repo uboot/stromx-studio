@@ -5,6 +5,7 @@
 #include <stromx/core/EnumParameter.h>
 #include <stromx/core/Id2DataPair.h>
 #include <stromx/core/OperatorException.h>
+#include <stromx/core/String.h>
 
 #include <cstdlib>
 
@@ -53,21 +54,38 @@ const Data& RandomDataOperator::getParameter(const unsigned int id) const
 
 void RandomDataOperator::execute(DataProvider& provider)
 {
-    Matrix* segments = new stromx::base::Matrix(2, 4, Matrix::DOUBLE);
+    Data* data = 0;
+    switch(m_dataType)
+    {
+    case LINE_SEGMENTS:
+    {
+        Matrix* segments = new stromx::base::Matrix(2, 4, Matrix::DOUBLE);
+        double* doubleData = reinterpret_cast<double*>(segments->data());
+        doubleData[0] = 50 + uniform(20);
+        doubleData[1] = 100 + uniform(20);
+        doubleData[2] = 200 + uniform(20);
+        doubleData[3] = 150 + uniform(20);
+        
+        doubleData[4] = 400 + uniform(20);
+        doubleData[5] = 30 + uniform(20);
+        doubleData[6] = 50 + uniform(20);
+        doubleData[7] = 300 + uniform(20);
+        
+        data = segments;
+        break;
+    }
+    case STRING:
+        data = new stromx::core::String("Random string");
+        break;
+    default:
+        ;
+    }
     
-    double* doubleData = reinterpret_cast<double*>(segments->data());
-    doubleData[0] = 50 + uniform(20);
-    doubleData[1] = 100 + uniform(20);
-    doubleData[2] = 200 + uniform(20);
-    doubleData[3] = 150 + uniform(20);
-    
-    doubleData[4] = 400 + uniform(20);
-    doubleData[5] = 30 + uniform(20);
-    doubleData[6] = 50 + uniform(20);
-    doubleData[7] = 300 + uniform(20);
-    
-    Id2DataPair output(OUTPUT, DataContainer(segments));
-    provider.sendOutputData(output);
+    if(data)
+    {
+        Id2DataPair output(OUTPUT, DataContainer(data));
+        provider.sendOutputData(output);
+    }
 }
         
 const std::vector<const Description*> RandomDataOperator::setupInputs()
@@ -92,8 +110,9 @@ const std::vector<const Parameter*> RandomDataOperator::setupParameters()
     
     EnumParameter* param = new EnumParameter(DATA_TYPE);
     param->setDoc("Data type");
-    param->setAccessMode(Parameter::NONE_WRITE);
+    param->setAccessMode(Parameter::ACTIVATED_WRITE);
     param->add(EnumDescription(LINE_SEGMENTS, "Line segments"));
+    param->add(EnumDescription(STRING, "String"));
     parameters.push_back(param);
     
     return parameters;

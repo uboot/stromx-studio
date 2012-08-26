@@ -37,7 +37,8 @@ class RandomDataOperator : public stromx::core::OperatorKernel
     
     enum DataType
     {
-        LINE_SEGMENTS
+        LINE_SEGMENTS,
+        STRING
     };
     
 public:
