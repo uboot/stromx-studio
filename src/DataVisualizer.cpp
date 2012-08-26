@@ -1,10 +1,9 @@
 #include "DataVisualizer.h"
 
-#include <stromx/core/Image.h>
-#include <stromx/core/Primitive.h>
-#include <stromx/core/String.h>
-#include <QGraphicsObject>
+#include "DataVisualizerUtilities.h"
 #include "InputModel.h"
+#include <QGraphicsItem>
+#include <stromx/core/Primitive.h>
 
 DataVisualizer::DataVisualizer(QWidget* parent)
   : GraphicsView(parent)
@@ -15,7 +14,7 @@ DataVisualizer::DataVisualizer(QWidget* parent)
 void DataVisualizer::addLayer(int pos)
 {
     if(! m_items.contains(pos))
-        m_items[pos] = ItemList();
+        m_items[pos] = QList<QGraphicsItem*>();
 }
 
 void DataVisualizer::moveLayer(int src, int dest)
@@ -124,20 +123,20 @@ void DataVisualizer::setData(int pos, const stromx::core::Data& data, Visualizat
     // create the graphic items representing the stromx data
     if(data.isVariant(DataVariant::IMAGE))
     {
-        m_items[pos] = createImageItems(data);
+        m_items[pos] = DataVisualizerUtilities::createImageItems(data);
     }
-    else if(data.isVariant(DataVariant::UINT_32))
+    else if(data.isVariant(DataVariant::PRIMITIVE))
     {
-        m_items[pos] = createPrimitiveItems<UInt32>(data);
+        m_items[pos] = DataVisualizerUtilities::createPrimitiveItems(data);
     } 
     if(data.isVariant(DataVariant::STRING))
     {
-        m_items[pos] = createStringItems(data);
+        m_items[pos] = DataVisualizerUtilities::createStringItems(data);
     }
     else if(data.isVariant(DataVariant::MATRIX))
     {
         if(visualization == LINE_SEGMENT)
-            m_items[pos] = createLineSegmentItems(data);
+            m_items[pos] = DataVisualizerUtilities::createLineSegmentItems(data);
     }
     
     // add the items and set their z-value
@@ -148,96 +147,6 @@ void DataVisualizer::setData(int pos, const stromx::core::Data& data, Visualizat
     }
 }
 
-QList<QGraphicsItem*> DataVisualizer::createImageItems(const stromx::core::Data& data)
-{
-    using namespace stromx::core;
-    
-    QList<QGraphicsItem*> items;
-    try
-    {
-        const Image & image = data_cast<const Image &>(data);
-        QImage::Format format;
-        
-        bool validPixelType = true;
-        
-        switch(image.pixelType())
-        {
-        case Image::MONO_8:
-        case Image::BAYERBG_8:
-        case Image::BAYERGB_8:
-            format = QImage::Format_Indexed8;
-            break;
-        case Image::RGB_24:
-        case Image::BGR_24:
-            format = QImage::Format_RGB888;
-            break;
-        default:
-            validPixelType = false;
-        }
-        
-        if(validPixelType)
-        {
-            QImage qtImage(image.data(), image.width(), image.height(), image.stride(), format);
-            QVector<QRgb> colorTable(256);
-            for(unsigned int i = 0; i < 256; ++i)
-                colorTable[i] = qRgb(i, i, i);
-            qtImage.setColorTable(colorTable);
-            QPixmap pixmap(QPixmap::fromImage(qtImage));
-            items.append(new QGraphicsPixmapItem(pixmap));
-        }
-    }
-    catch(BadCast&)
-    {
-    }
-    
-    return items;
-}
-   
-QList<QGraphicsItem*> DataVisualizer::createStringItems(const stromx::core::Data & data)
-{
-    using namespace stromx::core;
-    
-    QList<QGraphicsItem*> items;
-    try
-    {
-        const String & string = stromx::core::data_cast<const String &>(data);
-        QGraphicsItem* item = new QGraphicsSimpleTextItem(QString::fromStdString(string));
-        items.append(item);
-    }
-    catch(stromx::core::BadCast&)
-    {
-    }
-    
-    return items;
-}
-
-
-QList< QGraphicsItem* > DataVisualizer::createLineSegmentItems(const stromx::core::Data& data)
-{
-    using namespace stromx::core;
-    
-    QList<QGraphicsItem*> items;
-    try
-    {
-        const Matrix & matrix = data_cast<const Matrix &>(data);
-        
-        if(matrix.valueType() == Matrix::DOUBLE && matrix.cols() == 4)
-        {
-            const uint8_t* rowPtr = matrix.data();
-            for(unsigned int i = 0; i < matrix.rows(); ++i)
-            {
-                double* rowData = (double*)(rowPtr);
-                items.append(new QGraphicsLineItem(rowData[0], rowData[1], rowData[2], rowData[3]));
-                rowPtr += matrix.stride();
-            }
-        }
-    }
-    catch(BadCast&)
-    {
-    }
-    
-    return items;
-}
 
 
 

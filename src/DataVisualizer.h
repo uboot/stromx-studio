@@ -47,44 +47,8 @@ public:
     virtual void setActive(int pos, bool active);
     
 private:
-    typedef QList<QGraphicsItem*> ItemList;
-    
-    /** Casts \c data to an stromx image and returns an image item. */
-    static QList<QGraphicsItem*> createImageItems(const stromx::core::Data & data);
-    
-    /** Casts \c data to a string and returns it as an text item. */
-    static QList<QGraphicsItem*> createStringItems(const stromx::core::Data & data);
-    
-    /** 
-     * Casts \c data to an stromx matrix and returns the line segments defined
-     * by the matrix rows.
-     */
-    static QList<QGraphicsItem*> createLineSegmentItems(const stromx::core::Data & data);
-    
-    /** 
-     * Casts \c data to an stromx primitive and returns its text representation as a
-     * text item. 
-     */
-    template <class data_t>
-    static QList<QGraphicsItem*> createPrimitiveItems(const stromx::core::Data & data)
-    {
-        QList<QGraphicsItem*> items;
-        
-        try
-        {
-            const data_t & number = stromx::core::data_cast<const data_t &>(data);
-            QGraphicsItem* item = new QGraphicsSimpleTextItem(QString("%1").arg(number));
-            items.append(item);
-        }
-        catch(stromx::core::BadCast&)
-        {
-        }
-        
-        return items;
-    }
-    
     /** Maps each existing layer to a list of graphic items the layer contains. */
-    QMap<int, ItemList> m_items;
+    QMap<int, QList<QGraphicsItem*> > m_items;
 };
 
 #endif // DATAVISUALIZER_H

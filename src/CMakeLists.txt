@@ -21,6 +21,7 @@ set(stromxstudio_SOURCES
     DataConverter.cpp
     DataManager.cpp
     DataVisualizer.cpp
+    DataVisualizerUtilities.cpp
     DeinitializeOperatorCmd.cpp
     DocumentationWindow.cpp
     ErrorData.cpp
