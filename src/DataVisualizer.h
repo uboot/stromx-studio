@@ -39,12 +39,12 @@ class DataVisualizer : public GraphicsView, public AbstractDataVisualizer
 public:
     DataVisualizer(QWidget* parent = 0);
     
-    virtual void addLayer(int layer);
+    virtual void addLayer(int pos);
     virtual void moveLayer(int src, int dest);
-    virtual void removeLayer(int layer);
-    virtual void setColor(int layer, const QColor & color);
-    virtual void setData(int layer, const stromx::core::Data& data, Visualization visualization);
-    virtual void setActive(int layer, bool active);
+    virtual void removeLayer(int pos);
+    virtual void setColor(int pos, const QColor & color);
+    virtual void setData(int pos, const stromx::core::Data& data, Visualization visualization);
+    virtual void setActive(int pos, bool active);
     
 private:
     /** Casts \c data to an stromx image and returns an image item. */
