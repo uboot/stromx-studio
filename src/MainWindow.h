@@ -41,6 +41,7 @@ namespace stromx
 
 class QAction;
 class QMenu;
+class DocumentationWindow;
 class ErrorListView;
 class LimitUndoStack;
 class ObserverTreeView;
@@ -276,7 +277,7 @@ private:
     QString m_currentFile;
     bool m_timeoutMessageIsActive;
     QList<ObserverWindow*> m_observerWindows;
-    QMainWindow* m_docWindow;
+    DocumentationWindow* m_docWindow;
 };
 
 #endif // MAINWINDOW_H

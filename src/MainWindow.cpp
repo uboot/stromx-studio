@@ -42,6 +42,7 @@
 #include <stromx/core/ZipFileOutput.h>
 #include "Common.h"
 #include "DataVisualizer.h"
+#include "DocumentationWindow.h"
 #include "ErrorListModel.h"
 #include "ErrorListView.h"
 #include "Exception.h"
@@ -67,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_undoStack = new LimitUndoStack(this);
     m_streamEditor = new StreamEditor;
     m_threadListView = new ThreadListView(this);
-    m_docWindow = new QMainWindow(this);
+    m_docWindow = new DocumentationWindow(this);
     
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(m_threadListView);

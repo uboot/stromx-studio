@@ -53,6 +53,9 @@ private:
     static const std::vector<const stromx::core::Description*> setupOutputs();
     static const std::vector<const stromx::core::Parameter*> setupParameters();
     
+    /** Returns a random sample from a uniform distribution on the interval [-\c limit, \c limit]. */
+    static double uniform(double limit);
+    
     static const std::string TYPE;
     static const std::string PACKAGE;
     static const stromx::core::Version VERSION;

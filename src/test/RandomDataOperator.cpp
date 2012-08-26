@@ -6,6 +6,8 @@
 #include <stromx/core/Id2DataPair.h>
 #include <stromx/core/OperatorException.h>
 
+#include <cstdlib>
+
 using namespace stromx::core;
 
 const std::string RandomDataOperator::TYPE("RandomDataOperator");
@@ -54,15 +56,15 @@ void RandomDataOperator::execute(DataProvider& provider)
     Matrix* segments = new stromx::base::Matrix(2, 4, Matrix::DOUBLE);
     
     double* doubleData = reinterpret_cast<double*>(segments->data());
-    doubleData[0] = 50;
-    doubleData[1] = 100;
-    doubleData[2] = 200;
-    doubleData[3] = 150;
+    doubleData[0] = 50 + uniform(20);
+    doubleData[1] = 100 + uniform(20);
+    doubleData[2] = 200 + uniform(20);
+    doubleData[3] = 150 + uniform(20);
     
-    doubleData[4] = 400;
-    doubleData[5] = 30;
-    doubleData[6] = 50;
-    doubleData[7] = 300;
+    doubleData[4] = 400 + uniform(20);
+    doubleData[5] = 30 + uniform(20);
+    doubleData[6] = 50 + uniform(20);
+    doubleData[7] = 300 + uniform(20);
     
     Id2DataPair output(OUTPUT, DataContainer(segments));
     provider.sendOutputData(output);
@@ -96,4 +98,10 @@ const std::vector<const Parameter*> RandomDataOperator::setupParameters()
     
     return parameters;
 }
+
+double RandomDataOperator::uniform(double limit)
+{
+    return (double(rand()) / RAND_MAX - 0.5) * 2.0 * limit;
+}
+
 
