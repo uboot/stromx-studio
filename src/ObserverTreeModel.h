@@ -57,8 +57,8 @@ public:
         OPERATOR = 0,
         /** The name of the observer. */
         OBSERVER = 0,
-        /** The ID of the observed input. */
-        ID,
+        /** The documentation title of the input. */
+        INPUT,
         /** The activation status of the input. */
         ACTIVE,
         /** The color of the input. */

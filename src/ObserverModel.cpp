@@ -90,8 +90,8 @@ QVariant ObserverModel::headerData(int section, Qt::Orientation orientation, int
         {
         case ObserverTreeModel::OPERATOR:
             return tr("Operator");
-        case ObserverTreeModel::ID:
-            return tr("ID");
+        case ObserverTreeModel::INPUT:
+            return tr("Input");
         case ObserverTreeModel::ACTIVE:
             return tr("Active");
         case ObserverTreeModel::COLOR:

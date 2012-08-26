@@ -74,6 +74,9 @@ public:
     /** Returns the ID of the operator input associated with this model. */
     unsigned int id() const { return m_id; }
     
+    /** Returns the documentation title of the operator input associated with this model. */
+    QString docTitle() const;
+    
 public slots:
     /** Triggers an update of the operator name in all connected views. */
     void updateOperatorName(const QString & name);

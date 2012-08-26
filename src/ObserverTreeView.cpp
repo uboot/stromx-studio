@@ -35,7 +35,7 @@ void ObserverTreeView::setModel(QAbstractItemModel* model)
     QTreeView::setModel(model);
     
     header()->setResizeMode(ObserverTreeModel::OPERATOR, QHeaderView::Interactive);
-    header()->setResizeMode(ObserverTreeModel::ID, QHeaderView::Stretch);
+    header()->setResizeMode(ObserverTreeModel::INPUT, QHeaderView::Stretch);
     
     connect(selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), 
             this, SLOT(updateObserverSelected(QModelIndex,QModelIndex)));

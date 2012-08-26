@@ -57,8 +57,8 @@ QVariant ObserverTreeModel::headerData(int section, Qt::Orientation orientation,
     {
     case OPERATOR:
         return tr("Operator");
-    case ID:
-        return tr("ID");
+    case INPUT:
+        return tr("Input");
     default:
         return QVariant();
     }
@@ -204,8 +204,9 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
         {
         case OPERATOR:
             return input->op()->name();
-        case ID:
-            return input->id();
+        case INPUT:
+            return input->docTitle().isEmpty() 
+                ? QVariant(input->id()) : QVariant(input->docTitle());
         case ACTIVE:
             return input->active() ? tr("True") : tr("False");
         case COLOR:

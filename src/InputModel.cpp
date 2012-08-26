@@ -6,6 +6,7 @@
 #include "SetInputColorCmd.h"
 #include "SetInputVisualizationCmd.h"
 #include "StreamModel.h"
+#include <stromx/core/Operator.h>
 
 InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject* parent)
   : QObject(parent),
@@ -22,6 +23,11 @@ InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack
 void InputModel::updateOperatorName(const QString& name)
 {
     emit changed(this);
+}
+
+QString InputModel::docTitle() const
+{
+    return QString::fromStdString(m_op->op()->info().input(m_id).doc().title());
 }
 
 void InputModel::setActive(bool active)
