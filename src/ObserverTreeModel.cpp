@@ -527,7 +527,7 @@ QStringList ObserverTreeModel::setupVisualizationLabels()
 {
     QStringList labels;
     labels << "Automatic";
-    labels << "Line segment";
+    labels << "Lines";
     
     return labels;
 }

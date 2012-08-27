@@ -54,8 +54,8 @@ public:
          * This will work only for specific data types such as images. */
         AUTOMATIC,
         
-        /** If possible the data is visualized as a set of line segments.*/
-        LINE_SEGMENT
+        /** If possible the data is visualized as a set of lines or line segments.*/
+        LINES
     };
     
     /** 

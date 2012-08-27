@@ -135,7 +135,7 @@ void DataVisualizer::setData(int pos, const stromx::core::Data& data, Visualizat
     }
     else if(data.isVariant(DataVariant::MATRIX))
     {
-        if(visualization == LINE_SEGMENT)
+        if(visualization == LINES)
             m_items[pos] = DataVisualizerUtilities::createLineSegmentItems(data);
     }
     
