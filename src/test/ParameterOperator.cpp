@@ -128,7 +128,7 @@ const std::vector<const Parameter*> ParameterOperator::setupParameters()
     group2->setDoc("Group 2");
     parameters.push_back(group2);
     
-    NumericParameter<Int32>* intParam = new NumericParameter<Int32>(INT_PARAM, DataVariant::INT_32, group1);
+    NumericParameter<Int32>* intParam = new NumericParameter<Int32>(INT_PARAM, group1);
     intParam->setDoc("Integer parameter");
     intParam->setMax(Int32(1000));
     intParam->setMin(Int32(-1000));
