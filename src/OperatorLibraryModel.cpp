@@ -97,7 +97,7 @@ QVariant OperatorLibraryModel::data(const QModelIndex& index, int role) const
         QString version = QString("%1.%2.%3")
                           .arg(op->version().major())
                           .arg(op->version().minor())
-                          .arg(op->version().patch());
+                          .arg(op->version().revision());
         return version;
     }
 }

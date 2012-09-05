@@ -674,7 +674,7 @@ void StreamModel::serializeModel(QByteArray& data) const
         dataStream << QString::fromStdString(info.type());
         dataStream << quint32(info.version().major());
         dataStream << quint32(info.version().minor());
-        dataStream << quint32(info.version().patch());
+        dataStream << quint32(info.version().revision());
     }
     
     dataStream << qint32(m_initializedOperators.count());
