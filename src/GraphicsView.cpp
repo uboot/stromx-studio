@@ -7,11 +7,7 @@
 GraphicsView::GraphicsView(QWidget* parent)
   : QGraphicsView(parent)
 {
-    connect(horizontalScrollBar(), SIGNAL(sliderMoved(int)),
-                            this, SLOT(sliderMove(int)));
- 
-    connect(verticalScrollBar(), SIGNAL(sliderMoved(int)),
-                            this,   SLOT(sliderMove(int))); 
+
 }
 
 void GraphicsView::mouseMoveEvent(QMouseEvent* event)
@@ -66,12 +62,6 @@ void GraphicsView::wheelEvent(QWheelEvent* event)
     scale(factor,factor);
     
     setCenter(m_currentCenter);
-}
-
-void GraphicsView::sliderMove(int value)
-{
-    QPointF center = mapToScene(sceneRect().center().toPoint());
-    setCenter(center);
 }
 
 void GraphicsView::setCenter(const QPointF center)

@@ -64,7 +64,6 @@ public slots:
      * to the scene point \c p.
      */
     void setViewPos(const QPointF &p);
-    void sliderMove(int value);
     
 private:
     QPoint m_lastPanPos;
