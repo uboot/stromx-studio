@@ -1,5 +1,5 @@
 /* 
-*  Copyright 2012 Matthias Fuchs
+*  Copyright 2012 Thomas Fidler
 *
 *  This file is part of stromx-studio.
 *
