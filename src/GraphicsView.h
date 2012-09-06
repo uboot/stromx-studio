@@ -44,7 +44,17 @@ public:
      * corner of the view.
      */
     QPointF viewPos() const { return QPointF(); }
-    
+
+protected:
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
+    virtual void mouseReleaseEvent(QMouseEvent *event);
+    virtual void wheelEvent(QWheelEvent *event);
+    /** Sets the current center point of the view in scene coordinates. */
+    void setCenter(const QPointF center);
+    /** Returns the current center point of the view in scene coordinates. */
+    QPointF getCenter() const {return m_currentCenter;}
+
 public slots:
     /** Sets the current zoom. */
     void setZoom(qreal value);
@@ -54,6 +64,11 @@ public slots:
      * to the scene point \c p.
      */
     void setViewPos(const QPointF &p);
+    void sliderMove(int value);
+    
+private:
+    QPoint m_lastPanPos;
+    QPointF m_currentCenter;
 };
 
 #endif // GRAPHICSVIEW_H

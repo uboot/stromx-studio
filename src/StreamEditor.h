@@ -42,19 +42,20 @@ public:
     
     /** Returns the scene of the stream editor. */
     StreamEditorScene* streamEditorScene() const { return m_scene; }
-    /** Sets the current center point of the view in scene coordinates. */
-    void setCenter(const QPointF center);
-    /** Returns the current center point of the view in scene coordinates. */
-    QPointF getCenter() const {return m_currentCenter;}
+
     
 protected:
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *event);
-    virtual void mouseReleaseEvent(QMouseEvent *event);
-    virtual void wheelEvent(QWheelEvent *event);
+//     virtual void mouseReleaseEvent(QMouseEvent *event);
+//     virtual void wheelEvent(QWheelEvent *event);
     
 private:
     void startDrag();
+    /** Sets the current center point of the view in scene coordinates. */
+    void setCenter(const QPointF center);
+    /** Returns the current center point of the view in scene coordinates. */
+    QPointF getCenter() const {return m_currentCenter;}
     
     QPoint m_startPos;
     QPoint m_lastPanPos;
