@@ -29,7 +29,7 @@ void StreamModelTest::testFileConstructorCamera()
 void StreamModelTest::testFileConstructorConnector()
 {
     stromx::core::DirectoryFileInput input(".");
-    StreamModel* model = new StreamModel(input, "connector", m_undoStack, m_operatorLibraryModel, this);
+    new StreamModel(input, "connector", m_undoStack, m_operatorLibraryModel, this);
 }
 
 

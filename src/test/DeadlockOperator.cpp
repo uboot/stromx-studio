@@ -6,8 +6,12 @@
 #include <stromx/core/Primitive.h>
 
 #ifdef WIN32
-#include "Windows.h"
+#include <Windows.h>
 #endif // WIN32
+#ifdef UNIX
+#include <unistd.h>
+#endif // UNIX
+
 
 using namespace stromx::core;
 
