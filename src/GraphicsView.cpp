@@ -65,7 +65,7 @@ void GraphicsView::wheelEvent(QWheelEvent* event)
     double factor = pow(1.125,numSteps);
     scale(factor,factor);
     
-    centerOn(m_currentCenter);
+    setCenter(m_currentCenter);
 }
 
 void GraphicsView::sliderMove(int value)
