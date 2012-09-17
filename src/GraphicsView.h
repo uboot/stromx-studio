@@ -68,7 +68,7 @@ public slots:
     
 private slots:
     /** Resets the current view to the original view when document was opened */
-    void resetView();
+    void resetZoomSize();
     
 private:
     QPoint m_lastPanPos;

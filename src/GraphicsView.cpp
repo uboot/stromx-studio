@@ -69,15 +69,13 @@ void GraphicsView::wheelEvent(QWheelEvent* event)
 
 void GraphicsView::contextMenuEvent(QContextMenuEvent* event)
 {
-    QMenu *contextMenu = new QMenu();
-    QAction *resetViewAction = new QAction("Reset to original view", contextMenu);
-    resetViewAction->setStatusTip(tr("Reset the current view to the original view (scale and position)"));
-    resetViewAction->setShortcut(tr("Ctrl + Shift + Esc"));
+    QMenu contextMenu;
+    QAction *resetViewAction = new QAction("Reset to original view", &contextMenu);
     resetViewAction->setEnabled(!matrix().isIdentity());
-    connect(resetViewAction,SIGNAL(triggered(bool)),this,SLOT(resetView()));
+    connect(resetViewAction,SIGNAL(triggered(bool)),this,SLOT(resetZoomSize()));
     
-    contextMenu->addAction(resetViewAction);
-    contextMenu->exec(event->globalPos());
+    contextMenu.addAction(resetViewAction);
+    contextMenu.exec(event->globalPos());
     
     QGraphicsView::contextMenuEvent(event);
 }
@@ -164,7 +162,7 @@ void GraphicsView::setZoom(qreal value)
 
 }
 
-void GraphicsView::resetView()
+void GraphicsView::resetZoomSize()
 {
     resetMatrix();
 }
