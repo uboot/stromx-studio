@@ -50,6 +50,7 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *event);
     virtual void mouseReleaseEvent(QMouseEvent *event);
     virtual void wheelEvent(QWheelEvent *event);
+    virtual void contextMenuEvent(QContextMenuEvent *event);
     /** Sets the current center point of the view in scene coordinates. */
     void setCenter(const QPointF center);
     /** Returns the current center point of the view in scene coordinates. */
@@ -64,6 +65,10 @@ public slots:
      * to the scene point \c p.
      */
     void setViewPos(const QPointF &p);
+    
+private slots:
+    /** Resets the current view to the original view when document was opened */
+    void resetView();
     
 private:
     QPoint m_lastPanPos;

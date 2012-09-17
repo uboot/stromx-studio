@@ -1,5 +1,6 @@
 #include <QMouseEvent>
 #include <QScrollBar>
+#include <QMenu>
 #include "GraphicsView.h"
 #include <cmath>
 #include <QObject>
@@ -32,6 +33,7 @@ void GraphicsView::mousePressEvent(QMouseEvent* event)
     {
         setCursor(Qt::ClosedHandCursor);
         m_lastPanPos = event->pos();
+        m_currentCenter = mapToScene(viewport()->contentsRect().center());
         
         QRectF visibleArea = mapToScene(rect()).boundingRect();
         QRectF sceneArea = sceneRect();
@@ -61,8 +63,25 @@ void GraphicsView::wheelEvent(QWheelEvent* event)
     double factor = pow(1.125,numSteps);
     scale(factor,factor);
     
+    m_currentCenter = mapToScene(viewport()->contentsRect().center());
     setCenter(m_currentCenter);
 }
+
+void GraphicsView::contextMenuEvent(QContextMenuEvent* event)
+{
+    QMenu *contextMenu = new QMenu();
+    QAction *resetViewAction = new QAction("Reset to original view", contextMenu);
+    resetViewAction->setStatusTip(tr("Reset the current view to the original view (scale and position)"));
+    resetViewAction->setShortcut(tr("Ctrl + Shift + Esc"));
+    resetViewAction->setEnabled(!matrix().isIdentity());
+    connect(resetViewAction,SIGNAL(triggered(bool)),this,SLOT(resetView()));
+    
+    contextMenu->addAction(resetViewAction);
+    contextMenu->exec(event->globalPos());
+    
+    QGraphicsView::contextMenuEvent(event);
+}
+
 
 void GraphicsView::setCenter(const QPointF center)
 {
@@ -144,3 +163,9 @@ void GraphicsView::setZoom(qreal value)
 {
 
 }
+
+void GraphicsView::resetView()
+{
+    resetMatrix();
+}
+
