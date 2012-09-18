@@ -22,6 +22,7 @@
 
 #include <QMainWindow>
 
+class LimitUndoStack;
 class DataVisualizer;
 class ObserverModel;
 class ObserverView;
@@ -39,7 +40,7 @@ class ObserverWindow : public QMainWindow
     
 public:
     /** Constructs an observer windows from an observer model. */
-    explicit ObserverWindow(ObserverModel* observer, QWidget* parent);
+    explicit ObserverWindow(ObserverModel* observer, LimitUndoStack* undoStack, QWidget* parent);
     
     /** Returns the observer view of the window. */
     ObserverView* observerView() const { return m_observerView; }
@@ -57,10 +58,20 @@ private slots:
      */
     void updateWindowTitle(const QString & name);
     
+    /** Creates the actions of the observer window. */
+    void createActions();
+    
+    /** Creates and populates the menus of the observer window. */
+    void createMenus();
+    
 private:
     ObserverView* m_observerView;
     QAction* m_showAct;
     DataVisualizer* m_visualizer;
+    QAction* m_undoAct;
+    QAction* m_redoAct;
+    QAction* m_resetZoomAct;
+    LimitUndoStack* m_undoStack;
 };
 
 #endif // OBSERVERWINDOW_H

@@ -69,17 +69,28 @@ void GraphicsView::wheelEvent(QWheelEvent* event)
 
 void GraphicsView::contextMenuEvent(QContextMenuEvent* event)
 {
-    QMenu contextMenu;
-    QAction *resetViewAction = new QAction("Zoom to original size", &contextMenu);
-    resetViewAction->setEnabled(!matrix().isIdentity());
-    connect(resetViewAction,SIGNAL(triggered(bool)),this,SLOT(resetZoomSize()));
-    
-    contextMenu.addAction(resetViewAction);
-    contextMenu.exec(event->globalPos());
-    
-    QGraphicsView::contextMenuEvent(event);
+    if(! itemAt(event->pos()))
+    {
+        QMenu contextMenu;
+        QAction *resetZoomAction = createResetZoomAction(&contextMenu);
+        resetZoomAction->setEnabled(!matrix().isIdentity());
+        
+        contextMenu.addAction(resetZoomAction);
+        contextMenu.exec(event->globalPos());
+    }
+    else
+    {
+        QGraphicsView::contextMenuEvent(event);
+    }
 }
 
+QAction* GraphicsView::createResetZoomAction(QObject* parent)
+{
+    QAction *resetZoomAction = new QAction(tr("Zoom to original size"), parent);
+    connect(resetZoomAction,SIGNAL(triggered(bool)),this,SLOT(resetZoomSize()));
+    
+    return resetZoomAction;
+}
 
 void GraphicsView::setCenter(const QPointF center)
 {

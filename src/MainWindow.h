@@ -249,6 +249,7 @@ private:
     QAction* m_showPropertyViewAct;
     QAction* m_showObserverTreeViewAct;
     QAction* m_showErrorListViewAct;
+    QAction* m_resetZoomAct;
     
     LimitUndoStack* m_undoStack;
     

@@ -194,6 +194,7 @@ void MainWindow::createActions()
     m_addObserverAct = m_observerTreeView->createAddObserverAction(this);
     m_removeObserverAct = m_observerTreeView->createRemoveObserverAction(this);
     m_removeInputAct = m_observerTreeView->createRemoveInputAction(this);
+    m_resetZoomAct = m_streamEditor->createResetZoomAction(this);
     
     m_saveAct = new QAction(tr("&Save"), this);
     m_saveAct->setShortcuts(QKeySequence::Save);
@@ -339,6 +340,8 @@ void MainWindow::createMenus()
     m_streamMenu->addAction(m_removeInputAct);
 
     m_viewMenu = menuBar()->addMenu(tr("&View"));
+    m_viewMenu->addAction(m_resetZoomAct);
+    m_viewMenu->addSeparator();
     m_viewMenu->addAction(m_showOperatorLibraryAct);
     m_viewMenu->addAction(m_showPropertyViewAct);
     m_viewMenu->addAction(m_showObserverTreeViewAct);
@@ -862,7 +865,7 @@ void MainWindow::emptyRecentFiles()
 
 void MainWindow::createObserverWindow(ObserverModel* observer)
 {
-    ObserverWindow* observerWindow = new ObserverWindow(observer, this);
+    ObserverWindow* observerWindow = new ObserverWindow(observer, m_undoStack, this);
     m_observerWindows.append(observerWindow);
     m_viewMenu->addAction(observerWindow->showAction());
     m_viewMenuSeparatorAct->setVisible(m_observerWindows.count() > 0);

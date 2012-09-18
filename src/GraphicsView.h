@@ -35,6 +35,12 @@ class GraphicsView : public QGraphicsView
 public:
     /** Constructs a graphics view. */
     explicit GraphicsView(QWidget* parent = 0);
+    
+    /** 
+     * Creates an action which sets the zoom of the view to 100%. If \c parent is 
+     * not null the action is created as a child of \c parent.
+     */
+    QAction* createResetZoomAction(QObject* parent = 0);
 
 protected:
     virtual void mousePressEvent(QMouseEvent *event);
