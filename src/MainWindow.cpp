@@ -931,12 +931,9 @@ void MainWindow::readWindowStates(stromx::core::FileInput& input, const QString&
     QDataStream dataStream(data);
     
     // read the state of the stream view
-    QPointF viewPos;
-    dataStream >> viewPos;
-    m_streamEditor->setViewPos(viewPos);
-    qreal zoom;
-    dataStream >> zoom;
-    m_streamEditor->setZoom(zoom);
+    QTransform viewTransform;
+    dataStream >> viewTransform;
+    m_streamEditor->setTransform(viewTransform);
     
     // read the state and geometry of the documentation window
     bool visible;
@@ -957,10 +954,8 @@ void MainWindow::readWindowStates(stromx::core::FileInput& input, const QString&
         dataStream >> visible;
         window->setVisible(visible);
         
-        dataStream >> viewPos;
-        window->visualizer()->setViewPos(viewPos);
-        dataStream >> zoom;
-        window->visualizer()->setZoom(zoom);
+        dataStream >> viewTransform;
+        window->visualizer()->setTransform(viewTransform);
     }
 }
 
@@ -970,9 +965,8 @@ void MainWindow::writeWindowStates(stromx::core::FileOutput& output, const QStri
     QByteArray data;
     QDataStream dataStream(&data, QIODevice::WriteOnly | QIODevice::Truncate);
     
-    // write the state of the stream view
-    dataStream << m_streamEditor->viewPos();
-    dataStream << m_streamEditor->zoom();
+    // write the view transform of the stream view
+    dataStream << m_streamEditor->transform();
     
     // write the state and geometry of the documentation window
     dataStream << m_docWindow->saveGeometry();
@@ -985,8 +979,7 @@ void MainWindow::writeWindowStates(stromx::core::FileOutput& output, const QStri
         dataStream << window->saveGeometry();
         dataStream << window->saveState();
         dataStream << window->isVisible();
-        dataStream << window->visualizer()->viewPos();
-        dataStream << window->visualizer()->zoom();
+        dataStream << window->visualizer()->transform();
     }
     
     try

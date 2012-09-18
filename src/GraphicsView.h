@@ -35,15 +35,6 @@ class GraphicsView : public QGraphicsView
 public:
     /** Constructs a graphics view. */
     explicit GraphicsView(QWidget* parent = 0);
-    
-    /** Returns the current zoom value. */
-    qreal zoom() const { return 1.0; }
-    
-    /** 
-     * Returns the scene coordinates of the scene point in the upper left
-     * corner of the view.
-     */
-    QPointF viewPos() const { return QPointF(); }
 
 protected:
     virtual void mousePressEvent(QMouseEvent *event);
@@ -55,16 +46,6 @@ protected:
     void setCenter(const QPointF center);
     /** Returns the current center point of the view in scene coordinates. */
     QPointF getCenter() const {return m_currentCenter;}
-
-public slots:
-    /** Sets the current zoom. */
-    void setZoom(qreal value);
-    
-    /**
-     * Scrolls the view such that the upper left corner of the view corresponds
-     * to the scene point \c p.
-     */
-    void setViewPos(const QPointF &p);
     
 private slots:
     /** Resets the current view to the original view when document was opened */
