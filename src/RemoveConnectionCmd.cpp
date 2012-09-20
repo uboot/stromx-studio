@@ -3,7 +3,7 @@
 #include "StreamModel.h"
 
 RemoveConnectionCmd::RemoveConnectionCmd(StreamModel* stream, ConnectionModel* model, QUndoCommand* parent)
-  : QUndoCommand(QObject::tr("remove operator"), parent),
+  : QUndoCommand(QObject::tr("remove connection"), parent),
     m_stream(stream),
     m_model(model)
 {

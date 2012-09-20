@@ -306,8 +306,17 @@ void StreamModel::addConnection(OperatorModel* sourceOp, unsigned int outputId,
 
 void StreamModel::removeConnection(ConnectionModel* connection)
 {
+    m_undoStack->beginMacro(tr("remove connection"));
+    
+    // before removing the connection set its thread to 0, i.e. remove it 
+    // from its current stromx thread
+    connection->setThread(0);
+    
+    // push the remove connection command on the undo stack
     RemoveConnectionCmd* cmd = new RemoveConnectionCmd(this, connection);
     m_undoStack->push(cmd);
+    
+    m_undoStack->endMacro();
 }
 
 void StreamModel::addThread()
@@ -443,23 +452,10 @@ void StreamModel::doAddConnection(ConnectionModel* connection)
 
 void StreamModel::doRemoveConnection(ConnectionModel* connection)
 {
-    m_stream->disconnect(connection->targetOp()->op(), connection->inputId());
+    // connections must be removed from all threads before removed
+    Q_ASSERT(! connection->thread()); 
     
-    // remove the target input from all threads
-    for(std::vector<stromx::core::Thread*>::const_iterator iter = m_stream->threads().begin();
-        iter != m_stream->threads().end();
-        ++iter)
-    {
-        try
-        {
-            (*iter)->removeInput(connection->targetOp()->op(), connection->inputId());
-        }
-        catch(stromx::core::WrongArgument&)
-        {
-            // an exception is thrown if the input to removed is not part of the
-            // thread; this can safely be ignored
-        }
-    }       
+    m_stream->disconnect(connection->targetOp()->op(), connection->inputId());
     
     connection->disconnectFromOperators();
     m_connections.removeAll(connection);
