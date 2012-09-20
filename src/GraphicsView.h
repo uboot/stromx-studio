@@ -57,6 +57,13 @@ private slots:
     /** Resets the current view to the original view when document was opened */
     void resetZoomSize();
     
+signals:
+    /** 
+     * This signal is emitted if the zoom of the view changes from 100%
+     * to some other zoom level and vice versa.
+     */
+    void isZoomedChanged(bool isZoomed);
+    
 private:
     QPoint m_lastPanPos;
     QPointF m_currentCenter;

@@ -61,7 +61,9 @@ void GraphicsView::wheelEvent(QWheelEvent* event)
     double numDegrees = -event->delta()/8.0;
     double numSteps = numDegrees/15.0;
     double factor = pow(1.125,numSteps);
-    scale(factor,factor);
+    scale(factor, factor);
+    if(! matrix().isIdentity())
+        emit isZoomedChanged(true);
     
     m_currentCenter = mapToScene(viewport()->contentsRect().center());
     setCenter(m_currentCenter);
@@ -73,7 +75,6 @@ void GraphicsView::contextMenuEvent(QContextMenuEvent* event)
     {
         QMenu contextMenu;
         QAction *resetZoomAction = createResetZoomAction(&contextMenu);
-        resetZoomAction->setEnabled(!matrix().isIdentity());
         
         contextMenu.addAction(resetZoomAction);
         contextMenu.exec(event->globalPos());
@@ -87,7 +88,9 @@ void GraphicsView::contextMenuEvent(QContextMenuEvent* event)
 QAction* GraphicsView::createResetZoomAction(QObject* parent)
 {
     QAction *resetZoomAction = new QAction(tr("Zoom to original size"), parent);
-    connect(resetZoomAction,SIGNAL(triggered(bool)),this,SLOT(resetZoomSize()));
+    resetZoomAction->setEnabled(!matrix().isIdentity());
+    connect(resetZoomAction, SIGNAL(triggered(bool)), this, SLOT(resetZoomSize()));
+    connect(this, SIGNAL(isZoomedChanged(bool)), resetZoomAction, SLOT(setEnabled(bool)));
     
     return resetZoomAction;
 }
@@ -165,5 +168,6 @@ void GraphicsView::setCenter(const QPointF center)
 void GraphicsView::resetZoomSize()
 {
     resetMatrix();
+    emit isZoomedChanged(false);
 }
 
