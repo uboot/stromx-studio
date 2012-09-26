@@ -39,6 +39,7 @@ namespace stromx
 }
 
 class QAbstractItemModel;
+template<class T> class QFutureWatcher;
 class QUndoStack;
 class ConnectionModel;
 class ExceptionObserver;
@@ -300,7 +301,7 @@ private:
     OperatorLibraryModel* m_operatorLibrary;
     QUndoStack* m_undoStack;
     QList<ConnectionModel*> m_connections;
-    JoinStreamTask* m_joinStreamTask;
+    QFutureWatcher<void>* m_joinStreamWatcher;
     ExceptionObserver* m_exceptionObserver;
     
     // The list of all operators in the stream model. This is always the same

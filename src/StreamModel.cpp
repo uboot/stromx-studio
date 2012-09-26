@@ -19,8 +19,11 @@
 #include "RemoveThreadCmd.h"
 #include "ThreadListModel.h"
 #include "ThreadModel.h"
+#include <boost/bind.hpp>
 #include <QDir>
 #include <QFileInfo>
+#include <QFutureWatcher>
+#include <QtConcurrentRun>
 #include <QtDebug>
 #include <stromx/core/Description.h>
 #include <stromx/core/DirectoryFileInput.h>
@@ -43,7 +46,7 @@ StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLi
     m_observerModel(0),
     m_operatorLibrary(operatorLibrary),
     m_undoStack(undoStack),
-    m_joinStreamTask(0),
+    m_joinStreamWatcher(0),
     m_exceptionObserver(0)
 {
     initializeSubModels();
@@ -56,7 +59,7 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     m_observerModel(0),
     m_operatorLibrary(operatorLibrary),
     m_undoStack(undoStack),
-    m_joinStreamTask(0),
+    m_joinStreamWatcher(0),
     m_exceptionObserver(0)
 {
     initializeSubModels();
@@ -132,8 +135,9 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     {
         qWarning() << e.what();
         const stromx::core::OperatorInfo& op = e.op();
-        QString error = tr("Unknown error related to operator of type %1 in package %2.")
-                        .arg(QString::fromStdString(op.type()), QString::fromStdString(op.package()));
+        QString error = tr("Unknown error related to operator of type %1 in package %2: %3")
+                        .arg(QString::fromStdString(op.type()), QString::fromStdString(op.package()),
+                             QString::fromStdString(e.what()));
         throw ReadStreamFailed(error);
     }
     
@@ -227,17 +231,17 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
 void StreamModel::initializeSubModels()
 {
     m_stream = new stromx::core::Stream;
-    m_joinStreamTask = new JoinStreamTask(this);
+    m_joinStreamWatcher = new QFutureWatcher<void>(this);
     m_threadListModel = new ThreadListModel(this);
     m_observerModel = new ObserverTreeModel(m_undoStack, this);
     
-    connect(m_joinStreamTask, SIGNAL(finished()), this, SLOT(join()));
+    connect(m_joinStreamWatcher, SIGNAL(finished()), this, SLOT(join()));
 }
 
 StreamModel::~StreamModel()
 {   
     stop();
-    m_joinStreamTask->wait();
+    m_joinStreamWatcher->waitForFinished();
     deleteAllData();
 }
 
@@ -533,7 +537,6 @@ void StreamModel::deleteAllData()
     m_uninitializedOperators.clear();
     m_initializedOperators.clear();
     m_threadListModel->removeAllThreads();
-    m_joinStreamTask->setStream(0);
     
     // delete the models
     foreach(ConnectionModel* connection, connections)
@@ -804,8 +807,8 @@ bool StreamModel::stop()
     emit streamStopped();
     
     // start the thread which waits for the stream to finish
-    m_joinStreamTask->setStream(m_stream);
-    m_joinStreamTask->start();
+    QFuture<void> future = QtConcurrent::run(boost::bind(&stromx::core::Stream::join, m_stream));
+    m_joinStreamWatcher->setFuture(future);
     
     return true;
 }
