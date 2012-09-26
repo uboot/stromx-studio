@@ -46,7 +46,6 @@ set(stromxstudiotest_SOURCES
     ../InputModel.cpp
     ../InsertInputCmd.cpp
     ../InsertObserverCmd.cpp
-    ../JoinStreamTask.cpp
     ../MoveInputCmd.cpp
     ../MoveOperatorCmd.cpp
     ../OperatorData.cpp

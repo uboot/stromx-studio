@@ -36,7 +36,6 @@ set(stromxstudio_SOURCES
     InsertInputCmd.cpp
     InsertObserverCmd.cpp
     ItemDelegate.cpp
-    JoinStreamTask.cpp
     LimitUndoStack.cpp
     main.cpp
     MainWindow.cpp

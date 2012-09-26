@@ -8,7 +8,6 @@
 #include "Exception.h"
 #include "ExceptionObserver.h"
 #include "InitializeOperatorCmd.h"
-#include "JoinStreamTask.h"
 #include "OperatorLibraryModel.h"
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
