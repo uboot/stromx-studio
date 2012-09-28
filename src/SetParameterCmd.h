@@ -22,7 +22,7 @@
 
 #include <QUndoCommand>
 
-class OperatorModel;
+class ParameterServer;
 
 namespace stromx
 {
@@ -36,13 +36,14 @@ namespace stromx
 class SetParameterCmd : public QUndoCommand
 {
 public:
-    SetParameterCmd(OperatorModel* model, unsigned int parameter, const stromx::core::Data& newValue, QUndoCommand* parent = 0);
+    SetParameterCmd(ParameterServer* server, unsigned int parameter,
+                    const stromx::core::Data& newValue, QUndoCommand* parent = 0);
     virtual ~SetParameterCmd();
     virtual void undo();
     virtual void redo();
     
 private:
-    OperatorModel* m_model;
+    ParameterServer* m_server;
     unsigned int m_parameter;
     stromx::core::Data* m_oldValue;
     stromx::core::Data* m_newValue;

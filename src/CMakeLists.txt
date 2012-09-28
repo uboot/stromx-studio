@@ -52,6 +52,7 @@ set(stromxstudio_SOURCES
     OperatorLibraryView.cpp
     OperatorLibraryModel.cpp
     OperatorModel.cpp
+    ParameterServer.cpp
     PropertyModel.cpp
     PropertyView.cpp
     RemoveConnectionCmd.cpp
@@ -105,6 +106,7 @@ set(stromxstudio_HEADERS
     OperatorLibraryView.h
     OperatorLibraryModel.h
     OperatorModel.h
+    ParameterServer.h
     PropertyModel.h
     PropertyView.h
     SelectionModel.h

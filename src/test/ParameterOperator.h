@@ -25,6 +25,7 @@
 
 class ParameterOperator : public stromx::core::OperatorKernel
 {
+public:
     enum Inputs 
     { 
         INPUT_1, 
@@ -47,7 +48,6 @@ class ParameterOperator : public stromx::core::OperatorKernel
         BOOL_PARAM
     };
     
-public:
     ParameterOperator();
     
     virtual OperatorKernel* const clone() const { return new ParameterOperator; }

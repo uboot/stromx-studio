@@ -304,8 +304,8 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
                         // construct a set parameter command 
                         if(! DataConverter::stromxDataEqualsTarget(*stromxData, currentValue))
                         {
-                            SetParameterCmd* cmd = new SetParameterCmd(this, paramId, *stromxData);
-                            m_stream->undoStack()->push(cmd);
+//                             SetParameterCmd* cmd = new SetParameterCmd(this, paramId, *stromxData);
+//                             m_stream->undoStack()->push(cmd);
                         }
                     }
                     return true;

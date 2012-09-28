@@ -30,7 +30,10 @@ namespace stromx
 {
     namespace core
     {
+        class Data;
         class Operator;
+        class Parameter;
+        class ParameterError;
     }
 }
 
@@ -38,17 +41,28 @@ class ParameterServer : public QObject
 {
     Q_OBJECT
     
+    friend class SetParameterCmd;
+    
 public:
     ParameterServer(stromx::core::Operator* op, QUndoStack* undoStack, QObject* parent = 0);
     
     const QVariant getParameter(unsigned int id, int role);
-    void setParameter (unsigned int id, const QVariant& value);
+    bool setParameter (unsigned int id, const QVariant& value);
     void refresh();
+    stromx::core::Operator* op() const { return m_op; }
     
 signals:
     void parameterChanged(unsigned int id);
+    void parameterAccessTimedOut();
+    void parameterErrorOccurred(const stromx::core::ParameterError &) const;
     
 private:
+    bool parameterIsReadAccessible(const stromx::core::Parameter& par) const;
+    bool parameterIsWriteAccessible(const stromx::core::Parameter& par) const;
+    void doSetParameter(unsigned int paramId, const stromx::core::Data& newValue);
+    
+    static const unsigned int TIMEOUT;
+    
     stromx::core::Operator* m_op;
     QUndoStack* m_undoStack;
 };
