@@ -12,10 +12,10 @@
 #include "ConnectorOccupyEvent.h"
 #include "DataConverter.h"
 #include "MoveOperatorCmd.h"
+#include "ObtainReadAccessTask.h"
 #include "RenameOperatorCmd.h"
 #include "StreamModel.h"
 #include "SetParameterCmd.h"
-#include "Image.h"
 
 const unsigned int OperatorModel::TIMEOUT = 100;
 
@@ -583,10 +583,33 @@ QUndoStack* OperatorModel::undoStack() const
 void OperatorModel::customEvent(QEvent* event)
 {
     if(ConnectorOccupyEvent* occupyEvent = dynamic_cast<ConnectorOccupyEvent*>(event))
+    {
         emit connectorOccupiedChanged(occupyEvent->type(), occupyEvent->id(), occupyEvent->occupied());
+    }
     else if(ConnectorDataEvent* dataEvent = dynamic_cast<ConnectorDataEvent*>(event))
-        emit connectorDataChanged(dataEvent->type(), dataEvent->id(), dataEvent->data());
+    {
+        if(! dataEvent->data().empty())
+        {
+            ObtainReadAccessTask* task = new ObtainReadAccessTask(dataEvent->type(), dataEvent->id(),
+                                                                dataEvent->data());
+            connect(task, SIGNAL(finished()), this, SLOT(handleObtainReadAccessTaskFinished()));
+        }
+    }
 }
+
+void OperatorModel::handleObtainReadAccessTaskFinished()
+{
+    ObtainReadAccessTask* task = qobject_cast<ObtainReadAccessTask*>(sender());
+
+    if(task)
+    {
+        if(task->readAccess().empty())
+            emit parameterAccessTimedOut();
+        else
+            emit connectorDataChanged(task->type(), task->id(), task->readAccess());
+    }
+}
+
 
 void OperatorModel::setActiveFalse()
 {
@@ -603,14 +626,14 @@ void OperatorModel::setActiveTrue()
 void OperatorModel::connectNotify(const char* signal)
 {
     // if there are receivers for data change signals the according events must be sent
-    if(receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer))))
+    if(receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::ReadAccess<>))))
         m_observer.setObserveData(true);  
 }
 
 void OperatorModel::disconnectNotify(const char* signal)
 {
     // if there are no receivers for data change signals do not send the events
-    if(! receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer))))
+    if(! receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::ReadAccess<>))))
         m_observer.setObserveData(false); 
 }
 

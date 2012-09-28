@@ -22,19 +22,13 @@
 
 #include <QObject>
 
+#include <stromx/core/ReadAccess.h>
 #include "OperatorModel.h"
 
 class AbstractDataVisualizer;
 class InputModel;
 class ObserverModel;
 
-namespace stromx
-{
-    namespace core
-    {
-        class DataContainer;
-    }
-}
 
 /** 
  * \brief Manager of the communication between an observer model and a data visualizer
@@ -87,7 +81,8 @@ private slots:
      * Updates the data of all layers which correspond to this input.
      * The input is specified by its type, ID and operator (the sender of the signal).
      */
-    void updateLayerData(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data);
+    void updateLayerData(OperatorModel::ConnectorType type, unsigned int id,
+                         stromx::core::ReadAccess<> access);
 
     /**
      * Updates the properties (color, alpha, etc.) of all layers which correspond to this input.

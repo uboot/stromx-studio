@@ -23,6 +23,7 @@
 #include <QPointF>
 #include <QSet>
 #include <stromx/core/DataContainer.h>
+#include <stromx/core/ReadAccess.h>
 #include "ConnectorObserver.h"
 #include "PropertyModel.h"
 
@@ -144,7 +145,8 @@ signals:
     void connectorOccupiedChanged(OperatorModel::ConnectorType type, unsigned int id, bool occupied);
     
     /** The connector specified by \c type and \c id was set to \c data. */
-    void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data);
+    void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id,
+                              stromx::core::ReadAccess<> access);
       
     /** An operation accessing a parameter of the operator timed out. */
     void parameterAccessTimedOut() const;
@@ -163,6 +165,12 @@ private slots:
     
     /** Resets the model and emits <tt>activeChanged(false)</tt>. */
     void setActiveFalse();
+    
+    /** 
+     * Gets the read access from the finished task and emits either an connector
+     * data or an time out signal.
+     */
+    void handleObtainReadAccessTaskFinished();
     
 private:
     enum Row

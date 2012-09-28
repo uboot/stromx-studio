@@ -95,32 +95,24 @@ void DataManager::removeInputLayer(InputModel* input, int pos)
     m_visualizer->removeLayer(m_inputs.count());
 }
 
-void DataManager::updateLayerData(OperatorModel::ConnectorType type, unsigned int id, stromx::core::DataContainer data)
+void DataManager::updateLayerData(OperatorModel::ConnectorType type, unsigned int id,
+                                  stromx::core::ReadAccess<> access)
 {
-    if(data.empty())
+    if(access.empty())
         return;
     
     QObject* source = sender();
     if(OperatorModel* op = qobject_cast<OperatorModel*>(source))
     {
-        try
+        for(int layer = 0; layer < m_inputs.count(); ++layer)
         {
-            stromx::core::ReadAccess<> access(data, TIMEOUT);
-            
-            for(int layer = 0; layer < m_inputs.count(); ++layer)
+            InputModel* input = m_inputs[layer];
+            if(input->op() == op && input->id() == id)
             {
-                InputModel* input = m_inputs[layer];
-                if(input->op() == op && input->id() == id)
-                {
-                    m_visualizer->setData(layer, access(), input->visualization());
-                    m_visualizer->setActive(layer, input->active());
-                    m_visualizer->setColor(layer, input->color());
-                }
+                m_visualizer->setData(layer, access(), input->visualization());
+                m_visualizer->setActive(layer, input->active());
+                m_visualizer->setColor(layer, input->color());
             }
-        }
-        catch(stromx::core::Timeout&)
-        {
-            emit dataAccessTimedOut();
         }
     }
 }
@@ -140,8 +132,8 @@ void DataManager::updateInputProperties(InputModel* input)
 void DataManager::connectInput(InputModel* input)
 {
     // connect only if no connection to this operator exists
-    connect(input->op(), SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::DataContainer)),
-            this, SLOT(updateLayerData(OperatorModel::ConnectorType,uint,stromx::core::DataContainer)), Qt::UniqueConnection);
+    connect(input->op(), SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::ReadAccess<>)),
+            this, SLOT(updateLayerData(OperatorModel::ConnectorType,uint,stromx::core::ReadAccess<>)), Qt::UniqueConnection);
     connect(input, SIGNAL(changed(InputModel*)), this,
             SLOT(updateInputProperties(InputModel*)), Qt::UniqueConnection);
 }

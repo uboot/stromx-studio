@@ -46,6 +46,7 @@ set(stromxstudio_SOURCES
     ObserverTreeView.cpp
     ObserverView.cpp
     ObserverWindow.cpp
+    ObtainReadAccessTask.cpp
     OperatorItem.cpp
     OperatorData.cpp
     OperatorLibraryView.cpp
@@ -98,6 +99,7 @@ set(stromxstudio_HEADERS
     ObserverTreeView.h
     ObserverView.h
     ObserverWindow.h
+    ObtainReadAccessTask.h
     OperatorItem.h
     OperatorData.h
     OperatorLibraryView.h

@@ -16,6 +16,7 @@ set(stromxstudiotest_HEADERS
     ../InputModel.h
     ../ObserverModel.h
     ../ObserverTreeModel.h
+    ../ObtainReadAccessTask.h
     ../OperatorData.h
     ../OperatorLibraryModel.h
     ../OperatorModel.h
@@ -52,6 +53,7 @@ set(stromxstudiotest_SOURCES
     ../OperatorLibraryModel.cpp
     ../ObserverModel.cpp
     ../ObserverTreeModel.cpp
+    ../ObtainReadAccessTask.cpp
     ../OperatorModel.cpp
     ../PropertyModel.cpp
     ../RemoveInputCmd.cpp

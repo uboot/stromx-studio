@@ -74,12 +74,14 @@ void DeadlockOperator::execute(DataProvider& provider)
     provider.receiveInputData(input);
     
     if(m_lockParameters)
+    {
 #ifdef WIN32
         Sleep(1000); // sleep 1 second
 #endif // WIN32
 #ifdef UNIX
         sleep(1); // sleep 1 second
 #endif // UNIX  
+    }
     
     if(! m_dataHasBeenLocked && m_lockData)
     {
