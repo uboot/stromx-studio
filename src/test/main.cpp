@@ -2,6 +2,7 @@
 
 #include "DataConverterTest.h"
 #include "ImageTest.h"
+#include "ParameterServerTest.h"
 #include "StreamModelTest.h"
 
 int main(int argc, char *argv[])
@@ -11,6 +12,9 @@ int main(int argc, char *argv[])
     
     ImageTest image;
     QTest::qExec(&image, argc, argv);
+    
+    ParameterServerTest parameterServer;
+    QTest::qExec(&parameterServer, argc, argv);
     
     StreamModelTest streamModel;
     QTest::qExec(&streamModel, argc, argv);

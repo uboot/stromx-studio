@@ -9,8 +9,9 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lenna_bw.jpg DESTINATION ${CMAKE_CURRENT_B
 
 set(stromxstudiotest_HEADERS
     DataConverterTest.h
-    StreamModelTest.h
     ImageTest.h
+    ParameterServerTest.h
+    StreamModelTest.h
     ../ConnectionModel.h
     ../InputData.h
     ../InputModel.h
@@ -20,6 +21,7 @@ set(stromxstudiotest_HEADERS
     ../OperatorData.h
     ../OperatorLibraryModel.h
     ../OperatorModel.h
+    ../ParameterServer.h
     ../PropertyModel.h
     ../ThreadListModel.h
     ../ThreadModel.h
@@ -30,6 +32,8 @@ set(stromxstudiotest_SOURCES
     main.cpp
     DataConverterTest.cpp
     ImageTest.cpp
+    ParameterOperator.cpp
+    ParameterServerTest.cpp
     StreamModelTest.cpp
     ../AddConnectionCmd.cpp
     ../AddOperatorCmd.cpp
@@ -55,6 +59,7 @@ set(stromxstudiotest_SOURCES
     ../ObserverTreeModel.cpp
     ../ObtainReadAccessTask.cpp
     ../OperatorModel.cpp
+    ../ParameterServer.cpp
     ../PropertyModel.cpp
     ../RemoveInputCmd.cpp
     ../RemoveConnectionCmd.cpp
