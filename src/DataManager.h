@@ -89,10 +89,7 @@ private slots:
      */
     void updateInputProperties(InputModel* input);
     
-private:    
-    /** Maximal time to wait for a read access in milliseconds. */
-    static const unsigned int TIMEOUT;
-    
+private:
     /** 
      * Connects to the operator of the input if the connections has not yet been established
      * because of another input of the same operator.

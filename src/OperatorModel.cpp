@@ -227,7 +227,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
             }
             catch(stromx::core::Timeout&)
             {
-                emit parameterAccessTimedOut();
+                emit streamAccessTimedOut();
                 return QVariant();
             }
             catch(stromx::core::Exception&)
@@ -367,7 +367,7 @@ void OperatorModel::doSetParameter(unsigned int paramId, const stromx::core::Dat
     } 
     catch(stromx::core::Timeout&)
     {
-        emit parameterAccessTimedOut();
+        emit streamAccessTimedOut();
     }
     catch(stromx::core::ParameterError& e)
     {
@@ -604,7 +604,7 @@ void OperatorModel::handleObtainReadAccessTaskFinished()
     if(task)
     {
         if(task->readAccess().empty())
-            emit parameterAccessTimedOut();
+            emit streamAccessTimedOut();
         else
             emit connectorDataChanged(task->type(), task->id(), task->readAccess());
     }

@@ -405,7 +405,7 @@ void StreamModel::doInitializeOperator(OperatorModel* op)
         m_initializedOperators.append(op);
         
         m_stream->addOperator(op->op());
-        connect(op, SIGNAL(parameterAccessTimedOut()), this, SIGNAL(accessTimedOut()));
+        connect(op, SIGNAL(streamAccessTimedOut()), this, SIGNAL(accessTimedOut()));
     }
     catch(stromx::core::OperatorError& e)
     {
@@ -423,7 +423,7 @@ void StreamModel::doDeinitializeOperator(OperatorModel* op)
     
     try
     {
-        disconnect(op, SIGNAL(parameterAccessTimedOut()));
+        disconnect(op, SIGNAL(streamAccessTimedOut()));
         op->setInitialized(false);
         
         // Move the operator from the initialized operators to the
@@ -568,7 +568,7 @@ void StreamModel::allocateObjects(stromx::core::Stream* stream)
         OperatorModel* op = new OperatorModel(*iter, this);
         m_operators.append(op);
         m_initializedOperators.append(op);
-        connect(op, SIGNAL(parameterAccessTimedOut()), this, SIGNAL(accessTimedOut()));
+        connect(op, SIGNAL(streamAccessTimedOut()), this, SIGNAL(accessTimedOut()));
         connect(op, SIGNAL(parameterErrorOccurred(stromx::core::ParameterError)), this, SLOT(handleParameterError(stromx::core::ParameterError)));
     }
     

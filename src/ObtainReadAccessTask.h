@@ -28,28 +28,64 @@
 template <class T> class QFuture;
 template <class T> class QFutureWatcher;
 
+/** 
+ * \brief Task which asynchronously obtain a read access to a data container.
+ *
+ * Upon construction this class asynchronously tries to obtain read access to the input data container
+ * within a certain timeout. After it was either successful or reached the timeout a finish
+ * signal is emitted and the task destroys itself. If the object is deleted while waiting for
+ * a read access the destructor will stop until the task is finished.
+ */
 class ObtainReadAccessTask : public QObject
 {
     Q_OBJECT
     
 public:
+    /** 
+     * Constructs a task object for the given parameters. The task stars right after
+     * its construction.
+     */
     explicit ObtainReadAccessTask(OperatorModel::ConnectorType type, unsigned int id,
                                   const stromx::core::DataContainer & dataContainer, QObject* parent = 0);
+    
+    /** Waits for the task to finish. */
     virtual ~ObtainReadAccessTask();
     
+    /** Returns the input ID specified in the constructor. */
     unsigned int id() const { return m_id; }
+    
+    /** Returns the input type specified in the constructor. */
     OperatorModel::ConnectorType type() const { return m_type; }
+    
+    /** 
+     * Returns read access. The read access is empty if no access could be obtained within
+     * the timeout.*/
     const stromx::core::ReadAccess<stromx::core::Data> & readAccess() const { return m_access; }
   
 signals:
+    /** 
+     * Emitted when the function either a read access has been obtained or the 
+     * task timed out. 
+     */
     void finished();
     
 private slots:
+    /**
+     * Obtains the result of getReadAccess() and emits the finished signal. After
+     * this signal is emitted the this object is deleted.
+     */
     void handleFutureFinished();
     
 private:
-    static stromx::core::ReadAccess<stromx::core::Data> getReadAccess(const stromx::core::DataContainer & container);
+    /** 
+     * Tries to get a read access to \c container. If successful a non-empty read access
+     * is returned. If a timeout occurs while obtaining the read access an empty
+     * read access is returned.
+     */
+    static stromx::core::ReadAccess<stromx::core::Data> getReadAccess(
+        const stromx::core::DataContainer & container);
     
+    /** Maximal time to wait for a read access in milliseconds. */
     static const unsigned int TIMEOUT;
     
     OperatorModel::ConnectorType m_type;

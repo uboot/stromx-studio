@@ -68,7 +68,7 @@ enum EventTypes
     /** Type offset of the class ErrorDataEvent. */
     Error,
     
-    /** Type offset for time out events. */
+    /** Type offset for timeout events. */
     Timeout
 };
 

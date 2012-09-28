@@ -149,7 +149,7 @@ signals:
                               stromx::core::ReadAccess<> access);
       
     /** An operation accessing a parameter of the operator timed out. */
-    void parameterAccessTimedOut() const;
+    void streamAccessTimedOut() const;
     
     /** A parameter occurred while setting a parameter. */
     void parameterErrorOccurred(const stromx::core::ParameterError &) const;
@@ -168,7 +168,7 @@ private slots:
     
     /** 
      * Gets the read access from the finished task and emits either an connector
-     * data or an time out signal.
+     * data or an timeout signal.
      */
     void handleObtainReadAccessTaskFinished();
     
