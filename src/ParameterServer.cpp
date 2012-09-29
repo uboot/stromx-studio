@@ -114,6 +114,18 @@ void ParameterServer::doSetParameter(unsigned int paramId, const stromx::core::D
     catch(stromx::core::Exception&)
     {
     }
+    
+    emit parameterChanged(paramId);
+}
+
+Qt::ItemFlags ParameterServer::parameterFlags(unsigned int id) const
+{
+    const stromx::core::Parameter & param = m_op->info().parameter(id);
+    
+    if(parameterIsWriteAccessible(param))
+        return Qt::ItemIsEditable;
+    else
+        return Qt::ItemFlags(0);
 }
 
 bool ParameterServer::parameterIsReadAccessible(const stromx::core::Parameter& par) const
@@ -132,6 +144,13 @@ bool ParameterServer::parameterIsReadAccessible(const stromx::core::Parameter& p
         else
             return false;
     }
+}
+
+bool ParameterServer::parameterIsDisplayed(unsigned int id) const
+{
+    const stromx::core::Parameter & param = m_op->info().parameter(id);
+    
+    return parameterIsReadAccessible(param) || param.members().size();
 }
 
 bool ParameterServer::parameterIsWriteAccessible(const stromx::core::Parameter& par) const

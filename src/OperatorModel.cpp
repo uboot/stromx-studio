@@ -13,9 +13,9 @@
 #include "DataConverter.h"
 #include "MoveOperatorCmd.h"
 #include "ObtainReadAccessTask.h"
+#include "ParameterServer.h"
 #include "RenameOperatorCmd.h"
 #include "StreamModel.h"
-#include "SetParameterCmd.h"
 
 const unsigned int OperatorModel::TIMEOUT = 100;
 
@@ -26,13 +26,22 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
     m_package(QString::fromStdString(m_op->info().package())),
     m_type(QString::fromStdString(m_op->info().type())),
     m_name(QString::fromStdString(m_op->name())),
-    m_observer(this)
+    m_observer(this),
+    m_server(new ParameterServer(op, stream->undoStack(), this))
 {
     Q_ASSERT(m_op);
     
     m_op->addObserver(&m_observer);
     connect(m_stream, SIGNAL(streamStarted()), this, SLOT(setActiveTrue()));
     connect(m_stream, SIGNAL(streamStopped()), this, SLOT(setActiveFalse()));
+    
+    // forward the parameter server signals
+    connect(m_server, SIGNAL(parameterAccessTimedOut()), this, SIGNAL(streamAccessTimedOut()));
+    connect(m_server, SIGNAL(parameterErrorOccurred(stromx::core::ParameterError)),
+            this, SIGNAL(parameterErrorOccurred(stromx::core::ParameterError)));
+    
+    // handle parameter changes by the server
+    connect(m_server, SIGNAL(parameterChanged(uint)), this, SLOT(handleParameterChanged(uint)));
 }
 
 OperatorModel::~OperatorModel()
@@ -82,8 +91,7 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
             return flags | Qt::ItemIsEditable;
             
         default:
-            if(parameterIsWriteAccessible(param))
-                return flags | Qt::ItemIsEditable;
+            return flags | m_server->parameterFlags(param->id());
     }    
     return flags;
 }
@@ -218,27 +226,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
         return QVariant(QString::fromStdString(param->doc().title()));
     }
     case PARAMETER_VALUE:
-        if(parameterIsReadAccessible(param))
-        {
-            unsigned int paramId = param->id();
-            try
-            {
-                return DataConverter::toQVariant(m_op->getParameter(paramId, TIMEOUT), *param, role);
-            }
-            catch(stromx::core::Timeout&)
-            {
-                emit streamAccessTimedOut();
-                return QVariant();
-            }
-            catch(stromx::core::Exception&)
-            {
-                return QVariant();
-            }
-        }
-        else
-        {
-            return QVariant();
-        }
+        return m_server->getParameter(param->id(), role);
     case NOTHING:
     default:
         return QVariant();
@@ -267,59 +255,11 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
             setName(newName);
             return true;
         }
-
         case TYPE:
         case STATUS:
             return false;
-            
         default:
-        {
-            if(parameterIsWriteAccessible(param))
-            {
-                unsigned int paramId = param->id();
-                try
-                {
-                    std::auto_ptr<stromx::core::Data> stromxData;
-                    stromxData = DataConverter::toStromxData(value, *param);
-                    
-                    if(stromxData.get() == 0)
-                        return false;
-                    
-                    // test if this data is trigger data
-                    stromx::core::Trigger* trigger =
-                        stromx::core::data_cast<stromx::core::Trigger*>(stromxData.get());
-                        
-                    if(trigger)
-                    {
-                        // triggers are set without informing the undo stack (they can not 
-                        // be undone)
-                        doSetParameter(paramId, *stromxData);
-                    }
-                    else // any other parameters are set via an undo stack command
-                    {
-                        // obtain the current parameter value
-                        const stromx::core::Data & currentValue = m_op->getParameter(paramId);
-                        
-                        // if the new value is different from the old one
-                        // construct a set parameter command 
-                        if(! DataConverter::stromxDataEqualsTarget(*stromxData, currentValue))
-                        {
-//                             SetParameterCmd* cmd = new SetParameterCmd(this, paramId, *stromxData);
-//                             m_stream->undoStack()->push(cmd);
-                        }
-                    }
-                    return true;
-                }
-                catch(stromx::core::Exception&)
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
+            return m_server->setParameter(param->id(), value);
     }
 }
 
@@ -359,39 +299,6 @@ void OperatorModel::doSetName(const QString& name)
     emit dataChanged(createIndex(NAME, 1), createIndex(NAME, 1));
 }
 
-void OperatorModel::doSetParameter(unsigned int paramId, const stromx::core::Data& newValue)
-{
-    try
-    {
-        m_op->setParameter(paramId, newValue, TIMEOUT);   
-    } 
-    catch(stromx::core::Timeout&)
-    {
-        emit streamAccessTimedOut();
-    }
-    catch(stromx::core::ParameterError& e)
-    {
-        emit parameterErrorOccurred(e);
-    }
-    catch(stromx::core::Exception&)
-    {
-    }
-    
-    //Translate paramId to index of the row in table which is assigned to the parameter
-    for(std::vector<const stromx::core::Parameter*>::const_iterator iter_param = m_op->info().parameters().begin();
-        iter_param != m_op->info().parameters().end();
-        ++iter_param)
-    {   
-        if((*iter_param)->id() == paramId)
-        {
-            int row = rowOfDisplayedParameter(*iter_param);
-            QModelIndex index = createIndex(row, 1, (void*)(*iter_param));
-            emit dataChanged(index, index);
-            break;
-        }   
-    }     
-}
-
 void OperatorModel::doSetPos(const QPointF& pos)
 {
     m_pos = pos;
@@ -409,7 +316,7 @@ int OperatorModel::rowOfDisplayedParameter(const stromx::core::Parameter* param)
     
     foreach(const stromx::core::Parameter* p, parameters)
     {
-        if(parameterIsDisplayed(param))
+        if(m_server->parameterIsDisplayed(param->id()))
         {
             if(param == p)
                 return row;
@@ -428,7 +335,7 @@ const stromx::core::Parameter* OperatorModel::parameterAtRow(const stromx::core:
     
     foreach(const stromx::core::Parameter* param, parameters)
     {
-        if(parameterIsDisplayed(param))
+        if(m_server->parameterIsDisplayed(param->id()))
         {
             if(currentRow == row)
                 return param;
@@ -478,59 +385,11 @@ int OperatorModel::numDisplayedParameters(const stromx::core::Parameter* group) 
     
     foreach(const stromx::core::Parameter* param, parameters)
     {
-        if(parameterIsDisplayed(param))
+        if(m_server->parameterIsDisplayed(param->id()))
             count++;
     }
     return count;    
 }
-
-bool OperatorModel::parameterIsDisplayed(const stromx::core::Parameter* par) const
-{
-    return parameterIsReadAccessible(par) || (par)->members().size();
-}
-
-bool OperatorModel::parameterIsReadAccessible(const stromx::core::Parameter* par) const
-{
-    if(m_op->status() != stromx::core::Operator::NONE)
-    {
-        if (par->accessMode() == stromx::core::Parameter::NO_ACCESS)
-            return false;
-        else
-            return true;
-    }
-    else
-    {
-        if(par->accessMode() == stromx::core::Parameter::NONE_READ || par->accessMode() == stromx::core::Parameter::NONE_WRITE)
-            return true;
-        else
-            return false;
-    }
-}
-
-bool OperatorModel::parameterIsWriteAccessible(const stromx::core::Parameter* par) const
-{
-    switch(m_op->status())
-    {
-        case stromx::core::Operator::NONE:
-            if(par->accessMode() == stromx::core::Parameter::NONE_WRITE)
-                return true;
-            else
-                return false;
-            
-        case stromx::core::Operator::INITIALIZED:
-            if(par->accessMode() == stromx::core::Parameter::INITIALIZED_WRITE || par->accessMode() == stromx::core::Parameter::ACTIVATED_WRITE)
-                return true;
-            else
-                return false;
-            
-        default:
-            if(par->accessMode() == stromx::core::Parameter::ACTIVATED_WRITE)
-                return true;
-            else
-                return false;
-    }
-}
-
 
 bool OperatorModel::isInitialized() const
 {
@@ -610,6 +469,16 @@ void OperatorModel::handleObtainReadAccessTaskFinished()
     }
 }
 
+void OperatorModel::handleParameterChanged(unsigned int id)
+{
+    // get the row of the parameter
+    const stromx::core::Parameter & param = m_op->info().parameter(id);
+    int row = rowOfDisplayedParameter(&param);
+    Q_ASSERT(row >= 0);
+    
+    // emit the signal
+    emit dataChanged(createIndex(row, 1), createIndex(row, 1));
+}
 
 void OperatorModel::setActiveFalse()
 {

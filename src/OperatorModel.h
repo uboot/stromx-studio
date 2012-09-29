@@ -40,6 +40,7 @@ namespace stromx
 
 class QUndoStack;
 class ConnectionModel;
+class ParameterServer;
 class StreamModel;
 
 /** \brief Model of a stromx operator. */
@@ -54,7 +55,6 @@ class OperatorModel : public PropertyModel
     
     friend class MoveOperatorCmd;
     friend class RenameOperatorCmd;
-    friend class SetParameterCmd;
     friend class StreamModel;
     friend QDataStream & operator<< (QDataStream & stream, const OperatorModel * op);
     friend QDataStream & operator>> (QDataStream & stream, OperatorModel * op);
@@ -148,7 +148,10 @@ signals:
     void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id,
                               stromx::core::ReadAccess<> access);
       
-    /** An operation accessing a parameter of the operator timed out. */
+    /** 
+     * An operation accessing a parameter of the operator or data at an operator
+     * connector timed out. 
+     */
     void streamAccessTimedOut() const;
     
     /** A parameter occurred while setting a parameter. */
@@ -172,6 +175,9 @@ private slots:
      */
     void handleObtainReadAccessTaskFinished();
     
+    /** Emits a data changed event for the cell of the parameter \c id. */
+    void handleParameterChanged(unsigned int id);
+    
 private:
     enum Row
     {
@@ -187,9 +193,6 @@ private:
     
     /** Sets the name of the operator. */
     void doSetName(const QString & name);
-    
-    /** Sets the parameter \c paramId to \c newValue. */
-    void doSetParameter(unsigned int paramId, const stromx::core::Data& newValue);
     
     /** Sets the position of the operator in the stream scene. */
     void doSetPos(const QPointF & pos);
@@ -221,23 +224,10 @@ private:
     int rowOfDisplayedParameter(const stromx::core::Parameter* param) const;
     
     /** 
-     * Returns true if the parameter \c par is read-accessible or it is a non-empty parameter
-     * group, i.e. it has at least one member. 
-     */
-    bool parameterIsDisplayed(const stromx::core::Parameter* par) const;
-    
-    /** Returns whether the parameter \c par can currently be read. */
-    bool parameterIsReadAccessible(const stromx::core::Parameter* par) const;
-    
-    /** Returns whether the parameter \c par can currently be written. */
-    bool parameterIsWriteAccessible(const stromx::core::Parameter* par) const;
-    
-    /** 
      * Returns all parameters which are members of the parameter \c group. Returns all top-level
      * parameters if \c group is 0.
      */
     QList<const stromx::core::Parameter*> members(const stromx::core::Parameter* group) const;
-    
     
     /** 
      * Returns the row type of the row \c index refers to.
@@ -253,6 +243,7 @@ private:
     QString m_name;
     unsigned int m_offsetPosParam;
     ConnectorObserver m_observer;
+    ParameterServer* m_server;
 };
 
 QDataStream & operator<< (QDataStream & stream, const OperatorModel * op);

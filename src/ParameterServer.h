@@ -51,14 +51,31 @@ public:
     void refresh();
     stromx::core::Operator* op() const { return m_op; }
     
+    Qt::ItemFlags parameterFlags(unsigned int id) const;
+    
+    /** 
+     * Returns true if the parameter \c par is read-accessible or it is a non-empty parameter
+     * group, i.e. it has at least one member. 
+     */
+    bool parameterIsDisplayed(unsigned int id) const;
+    
 signals:
     void parameterChanged(unsigned int id);
+    
+    /** An operation accessing a parameter of the operator timed out. */
     void parameterAccessTimedOut();
+    
+    /** A parameter occurred while setting a parameter. */
     void parameterErrorOccurred(const stromx::core::ParameterError &) const;
     
 private:
+    /** Returns whether the parameter \c par can currently be read. */
     bool parameterIsReadAccessible(const stromx::core::Parameter& par) const;
+    
+    /** Returns whether the parameter \c par can currently be written. */
     bool parameterIsWriteAccessible(const stromx::core::Parameter& par) const;
+    
+    /** Sets the parameter \c paramId to \c newValue. */
     void doSetParameter(unsigned int paramId, const stromx::core::Data& newValue);
     
     static const unsigned int TIMEOUT;
