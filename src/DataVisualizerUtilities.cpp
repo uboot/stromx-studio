@@ -38,7 +38,7 @@ namespace
         try
         {
             // cast the data to a matrix
-            const Matrix & matrix = data_cast<const Matrix &>(data);
+            const Matrix & matrix = data_cast<Matrix>(data);
             
             // check if the value size of the matrix matches the size of the template
             // parameter and make sure the matrix has 4 columns
@@ -69,7 +69,7 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::co
     QList<QGraphicsItem*> items;
     try
     {
-        const Image & image = data_cast<const Image &>(data);
+        const Image & image = data_cast<Image>(data);
         QImage::Format format;
         
         bool validPixelType = true;
@@ -114,7 +114,7 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createStringItems(const stromx::c
     QList<QGraphicsItem*> items;
     try
     {
-        const String & string = stromx::core::data_cast<const String &>(data);
+        const String & string = stromx::core::data_cast<String>(data);
         QGraphicsItem* item = new QGraphicsSimpleTextItem(QString::fromStdString(string));
         items.append(item);
     }

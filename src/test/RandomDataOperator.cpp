@@ -29,7 +29,7 @@ void RandomDataOperator::setParameter(unsigned int id, const Data& value)
         switch(id)
         {
         case DATA_TYPE:
-            m_dataType = data_cast<const Enum &>(value);
+            m_dataType = data_cast<Enum>(value);
             break;
         default:
             throw WrongParameterId(id, *this);

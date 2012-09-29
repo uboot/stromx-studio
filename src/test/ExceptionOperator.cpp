@@ -25,19 +25,19 @@ void ExceptionOperator::setParameter(unsigned int id, const Data& value)
         switch(id)
         {
         case THROW_INITIALIZE:
-            m_throwInitialize = data_cast<const Bool &>(value);
+            m_throwInitialize = data_cast<Bool>(value);
             break;
         case THROW_ACTIVATE:
-            m_throwActivate = data_cast<const Bool &>(value);
+            m_throwActivate = data_cast<Bool>(value);
             break;
         case THROW_EXECUTE:
-            m_throwExecute = data_cast<const Bool &>(value);
+            m_throwExecute = data_cast<Bool>(value);
             break;
         case THROW_DEACTIVATE:
-            m_throwDeactivate = data_cast<const Bool &>(value);
+            m_throwDeactivate = data_cast<Bool>(value);
             break;
         case THROW_DEINITIALIZE:
-            m_throwDeinitialize = data_cast<const Bool &>(value);
+            m_throwDeinitialize = data_cast<Bool>(value);
             break;
         default:
             throw WrongParameterId(id, *this);

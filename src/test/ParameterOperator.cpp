@@ -32,16 +32,16 @@ void ParameterOperator::setParameter(unsigned int id, const Data& value)
         switch(id)
         {
         case INT_PARAM:
-            m_intParam = data_cast<const Int32 &>(value);
+            m_intParam = data_cast<Int32>(value);
             break;
         case INITIALIZE_PARAM:
-            m_initializeParam = data_cast<const UInt32 &>(value);
+            m_initializeParam = data_cast<UInt32>(value);
             break;
         case ENUM_PARAM:
-            m_enumParam = data_cast<const Enum &>(value);
+            m_enumParam = data_cast<Enum>(value);
             break;
         case BOOL_PARAM:
-            m_boolParam = data_cast<const Bool &>(value);
+            m_boolParam = data_cast<Bool>(value);
             break;
         default:
             throw WrongParameterId(id, *this);

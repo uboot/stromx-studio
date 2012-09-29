@@ -36,7 +36,7 @@ namespace
     {
         try
         {
-            return stromx::core::data_cast<const T &>(lhs) == stromx::core::data_cast<const T &>(rhs);
+            return stromx::core::data_cast<T>(lhs) == stromx::core::data_cast<T>(rhs);
         }
         catch(stromx::core::BadCast&)
         {
@@ -69,7 +69,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::BOOL))
         {
-            const stromx::core::Bool & boolData = stromx::core::data_cast<const stromx::core::Bool&>(data);
+            const stromx::core::Bool & boolData = stromx::core::data_cast<stromx::core::Bool>(data);
                 
             if(role == Qt::DisplayRole)
             {
@@ -92,7 +92,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         
         if (data.isVariant(stromx::core::DataVariant::ENUM))
         {
-            const stromx::core::Enum& value = stromx::core::data_cast<const stromx::core::Enum &>(data);
+            const stromx::core::Enum& value = stromx::core::data_cast<stromx::core::Enum>(data);
             unsigned int intValue = (unsigned int)(value);
             const std::vector<stromx::core::EnumDescription> & vectorEnumDesc = param.descriptions();
             
@@ -137,7 +137,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::Int8 & int8Data = stromx::core::data_cast<const stromx::core::Int8&>(data);
+                const stromx::core::Int8 & int8Data = stromx::core::data_cast<stromx::core::Int8>(data);
                 return int(int8Data);
             }
         }
@@ -146,7 +146,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::UInt8 & uint8Data = stromx::core::data_cast<const stromx::core::UInt8&>(data);
+                const stromx::core::UInt8 & uint8Data = stromx::core::data_cast<stromx::core::UInt8>(data);
                 return int(uint8Data);
             }
         }
@@ -155,7 +155,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::Int16 & int16Data = stromx::core::data_cast<const stromx::core::Int16&>(data);
+                const stromx::core::Int16 & int16Data = stromx::core::data_cast<stromx::core::Int16>(data);
                 return int(int16Data);
             }
         }
@@ -164,7 +164,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::UInt16 & uint16Data = stromx::core::data_cast<const stromx::core::UInt16&>(data);
+                const stromx::core::UInt16 & uint16Data = stromx::core::data_cast<stromx::core::UInt16>(data);
                 return int(uint16Data);
             }
         }
@@ -173,7 +173,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::Int32 & int32Data = stromx::core::data_cast<const stromx::core::Int32&>(data);
+                const stromx::core::Int32 & int32Data = stromx::core::data_cast<stromx::core::Int32>(data);
                 return int(int32Data);
             }
         }
@@ -182,7 +182,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::UInt32 & uint32Data = stromx::core::data_cast<const stromx::core::UInt32&>(data);
+                const stromx::core::UInt32 & uint32Data = stromx::core::data_cast<stromx::core::UInt32>(data);
                 return int(uint32Data);
             }
         }
@@ -191,7 +191,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::Float & floatData = stromx::core::data_cast<const stromx::core::Float&>(data);
+                const stromx::core::Float & floatData = stromx::core::data_cast<stromx::core::Float>(data);
                 return double(floatData);
             }
         }
@@ -200,7 +200,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::Double & doubleData = stromx::core::data_cast<const stromx::core::Double&>(data);
+                const stromx::core::Double & doubleData = stromx::core::data_cast<stromx::core::Double>(data);
                 return double(doubleData);
             }
         }
@@ -211,7 +211,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             {
                 QString label1;
                 QString label2;
-                const stromx::core::Image & imageData = stromx::core::data_cast<const stromx::core::Image&>(data);
+                const stromx::core::Image & imageData = stromx::core::data_cast<stromx::core::Image>(data);
                 return QString(QObject::tr("Height: %1 | Width: %2")).arg(label1.setNum(imageData.height()),label2.setNum(imageData.height()));
             }
         }

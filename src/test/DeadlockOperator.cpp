@@ -35,10 +35,10 @@ void DeadlockOperator::setParameter(unsigned int id, const Data& value)
         switch(id)
         {
         case LOCK_PARAMETERS:
-            m_lockParameters = data_cast<const Bool &>(value);
+            m_lockParameters = data_cast<Bool>(value);
             break;
         case LOCK_DATA:
-            m_lockData = data_cast<const Bool &>(value);
+            m_lockData = data_cast<Bool>(value);
             break;
         default:
             throw WrongParameterId(id, *this);

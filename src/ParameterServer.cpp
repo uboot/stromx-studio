@@ -58,7 +58,7 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
             
             // test if this data is trigger data
             stromx::core::Trigger* trigger =
-                stromx::core::data_cast<stromx::core::Trigger*>(stromxData.get());
+                stromx::core::data_cast<stromx::core::Trigger>(stromxData.get());
                 
             if(trigger)
             {
