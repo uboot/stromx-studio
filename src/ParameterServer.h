@@ -49,7 +49,6 @@ public:
     const QVariant getParameter(unsigned int id, int role);
     bool setParameter (unsigned int id, const QVariant& value);
     void refresh();
-    stromx::core::Operator* op() const { return m_op; }
     
     Qt::ItemFlags parameterFlags(unsigned int id) const;
     
@@ -69,6 +68,9 @@ signals:
     void parameterErrorOccurred(const stromx::core::ParameterError &) const;
     
 private:
+    /** Returns the stromx operator whose parameters are served. */
+    stromx::core::Operator* op() const { return m_op; }
+    
     /** Returns whether the parameter \c par can currently be read. */
     bool parameterIsReadAccessible(const stromx::core::Parameter& par) const;
     
