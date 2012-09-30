@@ -69,7 +69,7 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
             else // any other parameters are set via an undo stack command
             {
                 // obtain the current parameter value
-                const stromx::core::Data & currentValue = m_op->getParameter(id);
+                stromx::core::DataRef currentValue = m_op->getParameter(id);
                 
                 // if the new value is different from the old one
                 // construct a set parameter command 
