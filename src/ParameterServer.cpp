@@ -20,26 +20,10 @@ const QVariant ParameterServer::getParameter(unsigned int id, int role)
 {
     const stromx::core::Parameter & param = m_op->info().parameter(id);
     
-    if(parameterIsReadAccessible(param))
-    {
-        try
-        {
-            return DataConverter::toQVariant(m_op->getParameter(id, TIMEOUT), param, role);
-        }
-        catch(stromx::core::Timeout&)
-        {
-            emit parameterAccessTimedOut();
-            return QVariant();
-        }
-        catch(stromx::core::Exception&)
-        {
-            return QVariant();
-        }
-    }
-    else
-    {
+    if(m_cache.find(id) == m_cache.end())
         return QVariant();
-    }
+    
+    return DataConverter::toQVariant(m_cache[id], param, role);
 }
 
 bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
@@ -105,19 +89,24 @@ void ParameterServer::refresh()
     {
         const Parameter* param = *iter;
         
-        if(parameterIsReadAccessible(*param))
+        refreshParameter(*param);
+    }
+}
+
+void ParameterServer::refreshParameter(const stromx::core::Parameter & param)
+{
+    if(parameterIsReadAccessible(param))
+    {
+        try
         {
-            try
-            {
-                m_cache[param->id()] = m_op->getParameter(param->id(), TIMEOUT);
-            }
-            catch(stromx::core::Timeout&)
-            {
-                emit parameterAccessTimedOut();
-            }
-            catch(stromx::core::Exception&)
-            {
-            }
+            m_cache[param.id()] = m_op->getParameter(param.id(), TIMEOUT);
+        }
+        catch(stromx::core::Timeout&)
+        {
+            emit parameterAccessTimedOut();
+        }
+        catch(stromx::core::Exception&)
+        {
         }
     }
 }
@@ -126,7 +115,12 @@ void ParameterServer::doSetParameter(unsigned int paramId, const stromx::core::D
 {
     try
     {
-        m_op->setParameter(paramId, newValue, TIMEOUT);   
+        // set the parameter
+        m_op->setParameter(paramId, newValue, TIMEOUT);
+        
+        // update the cache for this parameter
+        const stromx::core::Parameter & param = m_op->info().parameter(paramId);
+        refreshParameter(param);
     } 
     catch(stromx::core::Timeout&)
     {

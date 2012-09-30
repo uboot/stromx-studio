@@ -44,6 +44,10 @@ class ParameterServer : public QObject
     friend class SetParameterCmd;
     
 public:
+    /** 
+     * Constructs a parameter server for \c op. Note that the cache of the server has to be updated
+     * by calling refresh() before the server can be used.
+     */
     ParameterServer(stromx::core::Operator* op, QUndoStack* undoStack, QObject* parent = 0);
     
     const QVariant getParameter(unsigned int id, int role);
@@ -59,6 +63,7 @@ public:
     bool parameterIsDisplayed(unsigned int id) const;
     
 signals:
+    /** The value of the parameter \c id has changed. */
     void parameterChanged(unsigned int id);
     
     /** An operation accessing a parameter of the operator timed out. */
@@ -79,6 +84,9 @@ private:
     
     /** Sets the parameter \c paramId to \c newValue. */
     void doSetParameter(unsigned int paramId, const stromx::core::Data& newValue);
+    
+    /** Refreshes the cached value for the parameter \c param. */
+    void refreshParameter(const stromx::core::Parameter & param);
     
     static const unsigned int TIMEOUT;
     

@@ -12,6 +12,7 @@ ParameterServerTest::ParameterServerTest()
 {
     m_op->initialize();
     m_op->setParameter(ParameterOperator::INT_PARAM, stromx::core::Int32(10));
+    m_server->refresh();
 }
 
 ParameterServerTest::~ParameterServerTest()
