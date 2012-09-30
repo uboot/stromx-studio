@@ -41,7 +41,7 @@ void RandomDataOperator::setParameter(unsigned int id, const Data& value)
     }
 }
 
-const Data& RandomDataOperator::getParameter(const unsigned int id) const
+const DataRef RandomDataOperator::getParameter(const unsigned int id) const
 {
     switch(id)
     {

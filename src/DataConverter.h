@@ -29,6 +29,7 @@ namespace stromx
     namespace core
     { 
         class Data;
+        class DataRef;
         class Parameter;
     }
 }
@@ -47,7 +48,7 @@ public:
      * Converts the input \c variant to the type defined by the parameter \c param and writes the
      * result to a new object of the correct stromx data type.
      */
-    static std::auto_ptr<stromx::core::Data> toStromxData(const QVariant & variant, const stromx::core::Parameter & param);
+    static stromx::core::DataRef toStromxData(const QVariant & variant, const stromx::core::Parameter & param);
     
     /**
      * Returns true if the data if \c newValue is of a type derived from \c targetValue and

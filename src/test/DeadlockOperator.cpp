@@ -50,7 +50,7 @@ void DeadlockOperator::setParameter(unsigned int id, const Data& value)
     }
 }
 
-const Data& DeadlockOperator::getParameter(const unsigned int id) const
+const DataRef DeadlockOperator::getParameter(const unsigned int id) const
 {
     switch(id)
     {

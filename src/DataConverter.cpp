@@ -23,6 +23,7 @@
 #include <QVariant>
 #include <QString>
 #include <QStringList>
+#include <stromx/core/DataRef.h>
 #include <stromx/core/Image.h>
 #include <stromx/core/Parameter.h>
 #include <stromx/core/String.h>
@@ -224,54 +225,54 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
     }  
 }
 
-std::auto_ptr<stromx::core::Data> DataConverter::toStromxData(const QVariant& variant, const stromx::core::Parameter& param)
+stromx::core::DataRef DataConverter::toStromxData(const QVariant& variant, const stromx::core::Parameter& param)
 {
     if(param.variant().isVariant(stromx::core::DataVariant::TRIGGER))
     {
         if(variant.type() == QVariant::Bool && variant.toBool())
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::TriggerData());
+            return new stromx::core::TriggerData();
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::BOOL))
     {
         if(variant.type() == QVariant::Int)
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::Bool(variant.toInt()));
+            return new stromx::core::Bool(variant.toInt());
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::INT_8))
     {
         if(variant.type() == QVariant::Int)
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::Int8(variant.toInt()));
+            return new stromx::core::Int8(variant.toInt());
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::UINT_8))
     {
         if(variant.type() == QVariant::Int)
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::UInt8(variant.toInt()));
+            return new stromx::core::UInt8(variant.toInt());
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::INT_16))
     {
         if(variant.type() == QVariant::Int)
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::Int16(variant.toInt()));
+            return new stromx::core::Int16(variant.toInt());
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::UINT_16))
     {
         if(variant.type() == QVariant::Int)
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::UInt16(variant.toInt()));
+            return new stromx::core::UInt16(variant.toInt());
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::INT_32))
     {
         if(variant.type() == QVariant::Int)
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::Int32(variant.toInt()));
+            return new stromx::core::Int32(variant.toInt());
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::UINT_32))
     {
         if(variant.type() == QVariant::Int)
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::UInt32(variant.toInt()));
+            return new stromx::core::UInt32(variant.toInt());
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::ENUM))
@@ -283,7 +284,7 @@ std::auto_ptr<stromx::core::Data> DataConverter::toStromxData(const QVariant& va
             if((unsigned int)(index) < param.descriptions().size())
             {    
                 unsigned int value = param.descriptions()[index].value();
-                return std::auto_ptr<stromx::core::Data>(new stromx::core::Enum(value));
+                return new stromx::core::Enum(value);
             }
         }
     }
@@ -291,22 +292,22 @@ std::auto_ptr<stromx::core::Data> DataConverter::toStromxData(const QVariant& va
     if(param.variant().isVariant(stromx::core::DataVariant::FLOAT))
     {
         if(variant.type() == QVariant::Double)
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::Float(variant.toDouble()));
+            return new stromx::core::Float(variant.toDouble());
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::DOUBLE))
     {
         if(variant.type() == QVariant::Double)
-            return std::auto_ptr<stromx::core::Data>(new stromx::core::Double(variant.toDouble()));
+            return new stromx::core::Double(variant.toDouble());
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::IMAGE))
     {
         if(variant.type() == QVariant::Image)
-            return std::auto_ptr<stromx::core::Data>(new Image(variant.value<QImage>()));
+            return new Image(variant.value<QImage>());
     }
     
-    return std::auto_ptr<stromx::core::Data>();
+    return stromx::core::DataRef();
 }
 
 bool DataConverter::stromxDataEqualsTarget(const stromx::core::Data& newValue, const stromx::core::Data& targetValue)

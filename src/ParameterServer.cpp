@@ -48,43 +48,44 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
     
     if(parameterIsWriteAccessible(param))
     {
+        stromx::core::DataRef stromxData = DataConverter::toStromxData(value, param);
+        
+        if(stromxData.isNull())
+            return false;
+        
+        // test if this data is trigger data
         try
         {
-            std::auto_ptr<stromx::core::Data> stromxData;
-            stromxData = DataConverter::toStromxData(value, param);
+            stromx::core::data_cast<stromx::core::Trigger>(stromxData);
             
-            if(stromxData.get() == 0)
-                return false;
+            // triggers are set without informing the undo stack (they can not 
+            // be undone)
+            doSetParameter(id, stromxData);
             
-            // test if this data is trigger data
-            stromx::core::Trigger* trigger =
-                stromx::core::data_cast<stromx::core::Trigger>(stromxData.get());
-                
-            if(trigger)
-            {
-                // triggers are set without informing the undo stack (they can not 
-                // be undone)
-                doSetParameter(id, *stromxData);
-            }
-            else // any other parameters are set via an undo stack command
-            {
-                // obtain the current parameter value
-                stromx::core::DataRef currentValue = m_op->getParameter(id);
-                
-                // if the new value is different from the old one
-                // construct a set parameter command 
-                if(! DataConverter::stromxDataEqualsTarget(*stromxData, currentValue))
-                {
-                    SetParameterCmd* cmd = new SetParameterCmd(this, id, *stromxData);
-                    m_undoStack->push(cmd);
-                }
-            }
             return true;
+        }
+        catch(stromx::core::BadCast&)
+        {
+            // this is no trigger data so continue the exception and continue below
         }
         catch(stromx::core::Exception&)
         {
+            // triggering failed
             return false;
         }
+            
+        // any other parameters are set via an undo stack command
+        // obtain the current parameter value
+        stromx::core::DataRef currentValue = m_op->getParameter(id);
+        
+        // if the new value is different from the old one
+        // construct a set parameter command 
+        if(! DataConverter::stromxDataEqualsTarget(stromxData, currentValue))
+        {
+            SetParameterCmd* cmd = new SetParameterCmd(this, id, stromxData);
+            m_undoStack->push(cmd);
+        }
+        return true;
     }
     else
     {

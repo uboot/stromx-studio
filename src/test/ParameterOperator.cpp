@@ -53,7 +53,7 @@ void ParameterOperator::setParameter(unsigned int id, const Data& value)
     }
 }
 
-const Data& ParameterOperator::getParameter(const unsigned int id) const
+const DataRef ParameterOperator::getParameter(const unsigned int id) const
 {
     switch(id)
     {

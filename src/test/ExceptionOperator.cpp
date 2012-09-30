@@ -49,7 +49,7 @@ void ExceptionOperator::setParameter(unsigned int id, const Data& value)
     }
 }
 
-const Data& ExceptionOperator::getParameter(const unsigned int id) const
+const DataRef ExceptionOperator::getParameter(const unsigned int id) const
 {
     switch(id)
     {

@@ -21,23 +21,16 @@
 #define SETPARAMETERCMD_H
 
 #include <QUndoCommand>
+#include <stromx/core/DataRef.h>
 
 class ParameterServer;
-
-namespace stromx
-{
-    namespace core
-    {
-        class Data;
-    }
-}
 
 /** \brief Sets the parameter of an operator. */
 class SetParameterCmd : public QUndoCommand
 {
 public:
     SetParameterCmd(ParameterServer* server, unsigned int parameter,
-                    const stromx::core::Data& newValue, QUndoCommand* parent = 0);
+                    const stromx::core::DataRef& newValue, QUndoCommand* parent = 0);
     virtual ~SetParameterCmd();
     virtual void undo();
     virtual void redo();
@@ -45,8 +38,8 @@ public:
 private:
     ParameterServer* m_server;
     unsigned int m_parameter;
-    stromx::core::Data* m_oldValue;
-    stromx::core::Data* m_newValue;
+    stromx::core::DataRef m_oldValue;
+    stromx::core::DataRef m_newValue;
 };
 
 #endif // SETPARAMETERCMD_H
