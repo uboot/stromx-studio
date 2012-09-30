@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QVariant>
+#include <stromx/core/DataRef.h>
 
 class QUndoStack;
 class QVariant;
@@ -30,7 +31,6 @@ namespace stromx
 {
     namespace core
     {
-        class Data;
         class Operator;
         class Parameter;
         class ParameterError;
@@ -84,6 +84,7 @@ private:
     
     stromx::core::Operator* m_op;
     QUndoStack* m_undoStack;
+    QMap<unsigned int, stromx::core::DataRef> m_cache;
 };
 
 #endif // PARAMETERSERVER_H

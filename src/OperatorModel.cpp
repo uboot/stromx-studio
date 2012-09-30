@@ -31,7 +31,13 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
 {
     Q_ASSERT(m_op);
     
+    // install the observer
     m_op->addObserver(&m_observer);
+    
+    // refresh the cache of the parameter server
+    m_server->refresh();
+    
+    // Activate and deactivate when the stream stream starts/stop
     connect(m_stream, SIGNAL(streamStarted()), this, SLOT(setActiveTrue()));
     connect(m_stream, SIGNAL(streamStopped()), this, SLOT(setActiveFalse()));
     
@@ -413,6 +419,9 @@ void OperatorModel::setInitialized(bool status)
             m_op->initialize();
         else
             m_op->deinitialize();
+        
+        // update the cache of the parameter server
+        m_server->refresh();
     }
     catch(stromx::core::OperatorError &)
     {

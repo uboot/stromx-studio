@@ -95,7 +95,31 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
 
 void ParameterServer::refresh()
 {
-
+    using namespace stromx::core;
+    
+    m_cache.clear();
+    
+    for(std::vector<const Parameter*>::const_iterator iter = m_op->info().parameters().begin();
+        iter != m_op->info().parameters().end();
+        ++iter)
+    {
+        const Parameter* param = *iter;
+        
+        if(parameterIsReadAccessible(*param))
+        {
+            try
+            {
+                m_cache[param->id()] = m_op->getParameter(param->id(), TIMEOUT);
+            }
+            catch(stromx::core::Timeout&)
+            {
+                emit parameterAccessTimedOut();
+            }
+            catch(stromx::core::Exception&)
+            {
+            }
+        }
+    }
 }
 
 void ParameterServer::doSetParameter(unsigned int paramId, const stromx::core::Data& newValue)

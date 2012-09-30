@@ -35,7 +35,7 @@ void ParameterServerTest::testSetParameter()
 
 void ParameterServerTest::testRefresh()
 {
-
+    m_server->refresh();
 }
 
 
