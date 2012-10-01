@@ -230,49 +230,49 @@ stromx::core::DataRef DataConverter::toStromxData(const QVariant& variant, const
     if(param.variant().isVariant(stromx::core::DataVariant::TRIGGER))
     {
         if(variant.type() == QVariant::Bool && variant.toBool())
-            return new stromx::core::TriggerData();
+            return stromx::core::DataRef(new stromx::core::TriggerData());
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::BOOL))
     {
         if(variant.type() == QVariant::Int)
-            return new stromx::core::Bool(variant.toInt());
+            return stromx::core::DataRef(new stromx::core::Bool(variant.toInt()));
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::INT_8))
     {
         if(variant.type() == QVariant::Int)
-            return new stromx::core::Int8(variant.toInt());
+            return stromx::core::DataRef(new stromx::core::Int8(variant.toInt()));
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::UINT_8))
     {
         if(variant.type() == QVariant::Int)
-            return new stromx::core::UInt8(variant.toInt());
+            return stromx::core::DataRef(new stromx::core::UInt8(variant.toInt()));
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::INT_16))
     {
         if(variant.type() == QVariant::Int)
-            return new stromx::core::Int16(variant.toInt());
+            return stromx::core::DataRef(new stromx::core::Int16(variant.toInt()));
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::UINT_16))
     {
         if(variant.type() == QVariant::Int)
-            return new stromx::core::UInt16(variant.toInt());
+            return stromx::core::DataRef(new stromx::core::UInt16(variant.toInt()));
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::INT_32))
     {
         if(variant.type() == QVariant::Int)
-            return new stromx::core::Int32(variant.toInt());
+            return stromx::core::DataRef(new stromx::core::Int32(variant.toInt()));
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::UINT_32))
     {
         if(variant.type() == QVariant::Int)
-            return new stromx::core::UInt32(variant.toInt());
+            return stromx::core::DataRef(new stromx::core::UInt32(variant.toInt()));
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::ENUM))
@@ -284,7 +284,7 @@ stromx::core::DataRef DataConverter::toStromxData(const QVariant& variant, const
             if((unsigned int)(index) < param.descriptions().size())
             {    
                 unsigned int value = param.descriptions()[index].value();
-                return new stromx::core::Enum(value);
+                return stromx::core::DataRef(new stromx::core::Enum(value));
             }
         }
     }
@@ -292,19 +292,19 @@ stromx::core::DataRef DataConverter::toStromxData(const QVariant& variant, const
     if(param.variant().isVariant(stromx::core::DataVariant::FLOAT))
     {
         if(variant.type() == QVariant::Double)
-            return new stromx::core::Float(variant.toDouble());
+            return stromx::core::DataRef(new stromx::core::Float(variant.toDouble()));
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::DOUBLE))
     {
         if(variant.type() == QVariant::Double)
-            return new stromx::core::Double(variant.toDouble());
+            return stromx::core::DataRef(new stromx::core::Double(variant.toDouble()));
     }
     
     if(param.variant().isVariant(stromx::core::DataVariant::IMAGE))
     {
         if(variant.type() == QVariant::Image)
-            return new Image(variant.value<QImage>());
+            return stromx::core::DataRef(new Image(variant.value<QImage>()));
     }
     
     return stromx::core::DataRef();
