@@ -13,6 +13,7 @@ set(stromxstudiotest_HEADERS
     ParameterServerTest.h
     StreamModelTest.h
     ../ConnectionModel.h
+    ../GetParameterTask.h
     ../InputData.h
     ../InputModel.h
     ../ObserverModel.h
@@ -45,6 +46,7 @@ set(stromxstudiotest_SOURCES
     ../ConnectorOccupyEvent.cpp
     ../DataConverter.cpp
     ../DeinitializeOperatorCmd.cpp
+    ../GetParameterTask.cpp
     ../Image.cpp
     ../InitializeOperatorCmd.cpp
     ../InputData.cpp

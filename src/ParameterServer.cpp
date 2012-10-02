@@ -2,6 +2,7 @@
 
 #include "DataConverter.h"
 #include "SetParameterCmd.h"
+#include "GetParameterTask.h"
 #include <stromx/core/Operator.h>
 #include <stromx/core/Trigger.h>
 #include <stromx/core/OperatorException.h>
@@ -195,4 +196,26 @@ bool ParameterServer::parameterIsWriteAccessible(const stromx::core::Parameter& 
                 return false;
     }
 }
+
+void ParameterServer::handleGetParameterTaskFinished()
+{
+    GetParameterTask* task = qobject_cast<GetParameterTask*>(sender());
+
+    if(task)
+    {
+        switch(task->error())
+        {
+        case GetParameterTask::NO_ERROR:
+            m_cache[task->id()] = task->value();
+            break;
+        case GetParameterTask::TIMED_OUT:
+            emit parameterAccessTimedOut();
+            break;
+        case GetParameterTask::EXCEPTION:
+//             emit parameterErrorOccurred(e);
+            break;
+        }
+    }
+}
+
 

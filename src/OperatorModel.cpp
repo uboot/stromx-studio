@@ -17,7 +17,7 @@
 #include "RenameOperatorCmd.h"
 #include "StreamModel.h"
 
-const unsigned int OperatorModel::TIMEOUT = 100;
+const unsigned int OperatorModel::TIMEOUT = 1000;
 
 OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
   : PropertyModel(stream),
