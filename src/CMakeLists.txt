@@ -28,6 +28,7 @@ set(stromxstudio_SOURCES
     ErrorListModel.cpp
     ErrorListView.cpp
     ExceptionObserver.cpp
+    GetParameterTask.cpp
     GraphicsView.cpp
     Image.cpp
     InitializeOperatorCmd.cpp
@@ -89,6 +90,7 @@ set(stromxstudio_HEADERS
     DocumentationWindow.h
     ErrorListModel.h
     ErrorListView.h
+    GetParameterTask.h
     GraphicsView.h
     InputData.h
     InputModel.h

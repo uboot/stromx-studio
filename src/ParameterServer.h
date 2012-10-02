@@ -72,6 +72,13 @@ signals:
     /** A parameter occurred while setting a parameter. */
     void parameterErrorOccurred(const stromx::core::ParameterError &) const;
     
+private slots:
+    /**
+     * If the task was successful this functions updates the value cache for the parameter.
+     * Otherwise it emits time out or error signals. 
+     */
+    void handleGetParameterTaskFinished();
+    
 private:
     /** Returns the stromx operator whose parameters are served. */
     stromx::core::Operator* op() const { return m_op; }
