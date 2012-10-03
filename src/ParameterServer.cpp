@@ -98,17 +98,9 @@ void ParameterServer::refreshParameter(const stromx::core::Parameter & param)
 {
     if(parameterIsReadAccessible(param))
     {
-        try
-        {
-            m_cache[param.id()] = m_op->getParameter(param.id(), TIMEOUT);
-        }
-        catch(stromx::core::Timeout&)
-        {
-            emit parameterAccessTimedOut();
-        }
-        catch(stromx::core::Exception&)
-        {
-        }
+        GetParameterTask* task = new GetParameterTask(m_op, param.id(), this);
+        connect(task, SIGNAL(finished()), this, SLOT(handleGetParameterTaskFinished()));
+        task->start();
     }
 }
 
@@ -129,7 +121,7 @@ void ParameterServer::doSetParameter(unsigned int paramId, const stromx::core::D
     }
     catch(stromx::core::ParameterError& e)
     {
-        emit parameterErrorOccurred(ErrorData());
+        emit parameterErrorOccurred(ErrorData(e, ErrorData::PARAMETER_ACCESS));
     }
     catch(stromx::core::Exception&)
     {

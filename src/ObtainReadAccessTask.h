@@ -41,10 +41,7 @@ class ObtainReadAccessTask : public QObject
     Q_OBJECT
     
 public:
-    /** 
-     * Constructs a task object for the given parameters. The task stars right after
-     * its construction.
-     */
+    /** Constructs a task object for the given parameters. Call run() to actually start the task. */
     explicit ObtainReadAccessTask(OperatorModel::ConnectorType type, unsigned int id,
                                   const stromx::core::DataContainer & dataContainer, QObject* parent = 0);
     
@@ -56,6 +53,9 @@ public:
     
     /** Returns the input type specified in the constructor. */
     OperatorModel::ConnectorType type() const { return m_type; }
+    
+    /** Starts the task. */
+    void start();
     
     /** 
      * Returns read access. The read access is empty if no access could be obtained within
@@ -90,6 +90,7 @@ private:
     
     OperatorModel::ConnectorType m_type;
     unsigned int m_id;
+    stromx::core::DataContainer m_data;
     stromx::core::ReadAccess<stromx::core::Data> m_access;
     QFutureWatcher< stromx::core::ReadAccess<stromx::core::Data> >* m_watcher;
 };

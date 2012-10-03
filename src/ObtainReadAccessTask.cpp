@@ -9,7 +9,7 @@
     #include <functional>
 #endif
 
-const unsigned int ObtainReadAccessTask::TIMEOUT = 100;
+const unsigned int ObtainReadAccessTask::TIMEOUT = 1000;
 
 using namespace stromx::core;
 
@@ -18,15 +18,20 @@ ObtainReadAccessTask::ObtainReadAccessTask(OperatorModel::ConnectorType type, un
   : QObject(parent),
     m_type(type),
     m_id(id),
+    m_data(dataContainer),
     m_watcher(new QFutureWatcher< ReadAccess<> >(this))
 {
     connect(m_watcher, SIGNAL(finished()), this, SLOT(handleFutureFinished()));
-    m_watcher->setFuture(QtConcurrent::run(std::tr1::bind(&getReadAccess, dataContainer)));
 }
 
 ObtainReadAccessTask::~ObtainReadAccessTask()
 {
     m_watcher->waitForFinished();
+}
+
+void ObtainReadAccessTask::start()
+{
+    m_watcher->setFuture(QtConcurrent::run(std::tr1::bind(&getReadAccess, m_data)));
 }
 
 void ObtainReadAccessTask::handleFutureFinished()

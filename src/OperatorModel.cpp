@@ -461,6 +461,7 @@ void OperatorModel::customEvent(QEvent* event)
             ObtainReadAccessTask* task = new ObtainReadAccessTask(dataEvent->type(), dataEvent->id(),
                                                                 dataEvent->data(), this);
             connect(task, SIGNAL(finished()), this, SLOT(handleObtainReadAccessTaskFinished()));
+            task->start();
         }
     }
 }

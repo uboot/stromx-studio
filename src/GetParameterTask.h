@@ -47,10 +47,7 @@ public:
         EXCEPTION
     };
     
-    /** 
-     * Constructs a task object for the given parameters. The task stars right after
-     * its construction.
-     */
+    /** Constructs a task object for the given parameters. Call run() to actually start the task. */
     explicit GetParameterTask(const stromx::core::Operator* op, unsigned int id, QObject* parent = 0);
     
     /** Waits for the task to finish. */
@@ -67,6 +64,9 @@ public:
     
     /** Returns a message explaining any errors which happened while reading the parameter. */
     const ErrorData & errorData() const { return m_errorData; }
+    
+    /** Starts the task. */
+    void start();
     
 signals:
     /** 

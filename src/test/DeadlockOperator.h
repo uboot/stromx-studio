@@ -35,7 +35,8 @@ class DeadlockOperator : public stromx::core::OperatorKernel
     enum Parameters
     { 
         LOCK_PARAMETERS,
-        LOCK_DATA
+        LOCK_DATA,
+        DUMMY
     };
     
 public:
@@ -60,6 +61,7 @@ private:
     stromx::core::Bool m_lockData;
     bool m_dataHasBeenLocked;
     stromx::core::WriteAccess<stromx::core::UInt32> m_writeAccess;
+    stromx::core::UInt8 m_dummy;
 };
 
 #endif // DEADLOCKOPERATOR_H

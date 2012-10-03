@@ -11,7 +11,7 @@
     #include <functional>
 #endif
 
-const unsigned int GetParameterTask::TIMEOUT = 100;
+const unsigned int GetParameterTask::TIMEOUT = 1000;
 
 using namespace stromx::core;
 
@@ -20,9 +20,13 @@ GetParameterTask::GetParameterTask(const stromx::core::Operator* op, unsigned in
     m_op(op),
     m_id(id),
     m_errorCode(NO_ERROR),
-    m_watcher(0)
+    m_watcher(new QFutureWatcher<void>(this))
 {
     connect(m_watcher, SIGNAL(finished()), this, SLOT(handleFutureFinished()));
+}
+
+void GetParameterTask::start()
+{
     m_watcher->setFuture(QtConcurrent::run(std::tr1::bind(&runTask, this)));
 }
 

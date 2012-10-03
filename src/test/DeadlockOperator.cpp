@@ -40,6 +40,9 @@ void DeadlockOperator::setParameter(unsigned int id, const Data& value)
         case LOCK_DATA:
             m_lockData = data_cast<Bool>(value);
             break;
+        case DUMMY:
+            m_dummy = data_cast<UInt8>(value);
+            break;
         default:
             throw WrongParameterId(id, *this);
         }
@@ -58,6 +61,8 @@ const DataRef DeadlockOperator::getParameter(const unsigned int id) const
         return m_lockParameters;
     case LOCK_DATA:
         return m_lockData;
+    case DUMMY:
+        return m_dummy;
     default:
         throw WrongParameterId(id, *this);
     }
@@ -76,10 +81,10 @@ void DeadlockOperator::execute(DataProvider& provider)
     if(m_lockParameters)
     {
 #ifdef WIN32
-        Sleep(1000); // sleep 1 second
+        Sleep(2000); // sleep 1 second
 #endif // WIN32
 #ifdef UNIX
-        sleep(1); // sleep 1 second
+        sleep(2); // sleep 1 second
 #endif // UNIX  
     }
     
@@ -134,6 +139,11 @@ const std::vector<const Parameter*> DeadlockOperator::setupParameters()
     param = new Parameter(LOCK_DATA, DataVariant::BOOL);
     param->setDoc("Deadlock data access");
     param->setAccessMode(Parameter::INITIALIZED_WRITE);
+    parameters.push_back(param);
+    
+    param = new Parameter(DUMMY, DataVariant::UINT_8);
+    param->setDoc("Dummy parameter");
+    param->setAccessMode(Parameter::ACTIVATED_WRITE);
     parameters.push_back(param);
     
     return parameters;
