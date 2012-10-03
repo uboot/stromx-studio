@@ -88,6 +88,21 @@ private slots:
     void handleSetParameterTaskFinished();
     
 private:
+    enum ParameterState
+    {
+        CURRENT,
+        SETTING,
+        GETTING,
+        TIMED_OUT,
+        ERROR
+    };
+    
+    struct ParameterValue
+    {
+        ParameterState state;
+        stromx::core::DataRef value;
+    };
+    
     /** Returns the stromx operator whose parameters are served. */
     stromx::core::Operator* op() const { return m_op; }
     
@@ -105,7 +120,7 @@ private:
     
     stromx::core::Operator* m_op;
     QUndoStack* m_undoStack;
-    QMap<unsigned int, stromx::core::DataRef> m_cache;
+    QMap<unsigned int, ParameterValue> m_cache;
 };
 
 #endif // PARAMETERSERVER_H

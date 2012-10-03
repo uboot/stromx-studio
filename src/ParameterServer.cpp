@@ -23,7 +23,31 @@ const QVariant ParameterServer::getParameter(unsigned int id, int role)
     if(m_cache.find(id) == m_cache.end())
         return QVariant();
     
-    return DataConverter::toQVariant(m_cache[id], param, role);
+    ParameterValue & value = m_cache[id];
+    
+    if(value.state == CURRENT)
+    {
+        return DataConverter::toQVariant(m_cache[id].value, param, role);
+    }
+    else
+    {
+        if(role == Qt::DisplayRole)
+        {
+            switch(value.state)
+            {
+                case GETTING:
+                    return tr("Getting");
+                case SETTING:
+                    return tr("Setting");
+                case TIMED_OUT:
+                    return tr("Time out");
+                default:
+                    Q_ASSERT(false);
+            }
+        }
+    }
+    
+    return QVariant();
 }
 
 bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
@@ -60,7 +84,7 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
             
         // any other parameters are set via an undo stack command
         // obtain the current parameter value
-        stromx::core::DataRef currentValue = m_cache[id];
+        stromx::core::DataRef currentValue = m_cache[id].value;
         
         // if the new value is different from the old one
         // construct a set parameter command 
@@ -100,6 +124,8 @@ void ParameterServer::refreshParameter(const stromx::core::Parameter & param)
         GetParameterTask* task = new GetParameterTask(m_op, param.id(), this);
         connect(task, SIGNAL(finished()), this, SLOT(handleGetParameterTaskFinished()));
         task->start();
+        m_cache[param.id()].state = GETTING;
+        emit parameterChanged(param.id());
     }
 }
 
@@ -108,6 +134,8 @@ void ParameterServer::doSetParameter(unsigned int paramId, const stromx::core::D
     SetParameterTask* task = new SetParameterTask(m_op, paramId, newValue);
     connect(task, SIGNAL(finished()), this, SLOT(handleSetParameterTaskFinished()));
     task->start();
+    m_cache[paramId].state = SETTING;
+    emit parameterChanged(paramId);
 }
 
 void ParameterServer::handleSetParameterTaskFinished()
@@ -118,6 +146,18 @@ void ParameterServer::handleSetParameterTaskFinished()
     {
         const stromx::core::Parameter & param = m_op->info().parameter(task->id());
         refreshParameter(param);
+        
+        switch(task->error())
+        {
+        case GetParameterTask::TIMED_OUT:
+            emit parameterAccessTimedOut();
+            break;
+        case GetParameterTask::EXCEPTION:
+            emit parameterErrorOccurred(task->errorData());
+            break;
+        default:
+            ;
+        }
     }
 }
 
@@ -158,6 +198,12 @@ bool ParameterServer::parameterIsDisplayed(unsigned int id) const
 
 bool ParameterServer::parameterIsWriteAccessible(const stromx::core::Parameter& par) const
 {
+    const ParameterValue & value = m_cache[par.id()];
+    
+    // parameter whose values are currently being updated can not be written
+    if(value.state == GETTING || value.state == SETTING)
+        return false;
+    
     switch(m_op->status())
     {
         case stromx::core::Operator::NONE:
@@ -186,18 +232,26 @@ void ParameterServer::handleGetParameterTaskFinished()
 
     if(task)
     {
+        ParameterValue & value = m_cache[task->id()];
         switch(task->error())
         {
         case GetParameterTask::NO_ERROR:
-            m_cache[task->id()] = task->value();
+            value.value = task->value();
+            value.state = CURRENT;
             emit parameterChanged(task->id());
             break;
         case GetParameterTask::TIMED_OUT:
+            value.value = stromx::core::DataRef();
+            value.state = TIMED_OUT;
             emit parameterAccessTimedOut();
             break;
         case GetParameterTask::EXCEPTION:
+            value.value = stromx::core::DataRef();
+            value.state = ERROR;
             emit parameterErrorOccurred(task->errorData());
             break;
+        default:
+            Q_ASSERT(false);
         }
     }
 }
