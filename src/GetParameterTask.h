@@ -22,10 +22,9 @@
 
 #include <stromx/core/DataRef.h>
 #include <QObject>
+#include "ErrorData.h"
 #include "OperatorModel.h"
-#include <qfuture.h>
 
-template <class T> class QFuture;
 template <class T> class QFutureWatcher;
 
 /** 
@@ -64,10 +63,10 @@ public:
     const stromx::core::DataRef & value() const { return m_result; }
     
     /** Returns whether the an error occured when the attempt was made to read the parameter. */
-    ErrorCode error() const { return m_error; }
+    ErrorCode error() const { return m_errorCode; }
     
     /** Returns a message explaining any errors which happened while reading the parameter. */
-    const QString & errorMessage() const { return m_errorMessage; }
+    const ErrorData & errorData() const { return m_errorData; }
     
 signals:
     /** 
@@ -93,8 +92,8 @@ private:
     const stromx::core::Operator* m_op;
     unsigned int m_id;
     stromx::core::DataRef m_result;
-    ErrorCode m_error;
-    QString m_errorMessage;
+    ErrorCode m_errorCode;
+    ErrorData m_errorData;
     QFutureWatcher<void>* m_watcher;
 };
 

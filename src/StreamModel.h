@@ -42,6 +42,7 @@ class QAbstractItemModel;
 template<class T> class QFutureWatcher;
 class QUndoStack;
 class ConnectionModel;
+class ErrorData;
 class ExceptionObserver;
 class JoinStreamTask;
 class ObserverTreeModel;
@@ -192,7 +193,7 @@ private slots:
     void join();
     
     /** Sends the parameter error to the error observer. */
-    void handleParameterError(const stromx::core::ParameterError &);
+    void handleParameterError(const ErrorData & data);
     
 signals:
     /** An operator was added. */

@@ -129,7 +129,7 @@ void ParameterServer::doSetParameter(unsigned int paramId, const stromx::core::D
     }
     catch(stromx::core::ParameterError& e)
     {
-        emit parameterErrorOccurred(e);
+        emit parameterErrorOccurred(ErrorData());
     }
     catch(stromx::core::Exception&)
     {
@@ -212,7 +212,7 @@ void ParameterServer::handleGetParameterTaskFinished()
             emit parameterAccessTimedOut();
             break;
         case GetParameterTask::EXCEPTION:
-//             emit parameterErrorOccurred(e);
+            emit parameterErrorOccurred(task->errorData());
             break;
         }
     }

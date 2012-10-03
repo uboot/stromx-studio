@@ -24,6 +24,7 @@
 #include <stromx/core/ExceptionObserver.h>
 
 class QObject;
+class ErrorData;
 
 class ExceptionObserver : public stromx::core::ExceptionObserver
 {
@@ -33,6 +34,8 @@ public:
     virtual void observe(const stromx::core::ExceptionObserver::Phase phase,
                          const stromx::core::OperatorError & ex,
                          const stromx::core::Thread* const thread) const;
+                         
+    void sendErrorData(const ErrorData &data) const;
                          
 private:
     mutable QMutex m_mutex;

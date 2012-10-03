@@ -4,6 +4,13 @@
 #include <stromx/core/OperatorException.h>
 #include <stromx/core/OperatorInfo.h>
 
+ErrorData::ErrorData()
+  : m_time(QDateTime::currentDateTime()),
+    m_type(UNDEFINED)
+{
+
+}
+
 ErrorData::ErrorData(const stromx::core::OperatorError& exception, Type type)
   : m_time(QDateTime::currentDateTime()),
     m_type(type)

@@ -3,6 +3,7 @@
 #include <QFutureWatcher>
 #include <QtConcurrentRun>
 #include <stromx/core/Operator.h>
+#include <stromx/core/OperatorException.h>
 
 #ifdef __GNUG__
     #include <tr1/functional>
@@ -18,7 +19,7 @@ GetParameterTask::GetParameterTask(const stromx::core::Operator* op, unsigned in
   : QObject(parent),
     m_op(op),
     m_id(id),
-    m_error(NO_ERROR),
+    m_errorCode(NO_ERROR),
     m_watcher(0)
 {
     connect(m_watcher, SIGNAL(finished()), this, SLOT(handleFutureFinished()));
@@ -44,11 +45,15 @@ void GetParameterTask::runTask(GetParameterTask* task)
     }
     catch(stromx::core::Timeout &)
     {
-        task->m_error = TIMED_OUT;
+        task->m_errorCode = TIMED_OUT;
+    }
+    catch(stromx::core::OperatorError& e)
+    {
+        task->m_errorCode = EXCEPTION;
+        task->m_errorData = ErrorData(e, ErrorData::PARAMETER_ACCESS);
     }
     catch(stromx::core::Exception& e)
     {
-        task->m_error = EXCEPTION;
-        task->m_errorMessage = QString::fromStdString(e.message());
+        Q_ASSERT(false);
     }
 }

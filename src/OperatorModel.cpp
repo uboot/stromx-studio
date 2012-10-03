@@ -43,8 +43,8 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
     
     // forward the parameter server signals
     connect(m_server, SIGNAL(parameterAccessTimedOut()), this, SIGNAL(streamAccessTimedOut()));
-    connect(m_server, SIGNAL(parameterErrorOccurred(stromx::core::ParameterError)),
-            this, SIGNAL(parameterErrorOccurred(stromx::core::ParameterError)));
+    connect(m_server, SIGNAL(parameterErrorOccurred(ErrorData)),
+            this, SIGNAL(parameterErrorOccurred(ErrorData)));
     
     // handle parameter changes by the server
     connect(m_server, SIGNAL(parameterChanged(uint)), this, SLOT(handleParameterChanged(uint)));

@@ -376,7 +376,7 @@ void StreamModel::doAddOperator(OperatorModel* op)
     
     m_operators.append(op);
     m_uninitializedOperators.append(op);
-    connect(op, SIGNAL(parameterErrorOccurred(stromx::core::ParameterError)), this, SLOT(handleParameterError(stromx::core::ParameterError)));
+    connect(op, SIGNAL(parameterErrorOccurred(ErrorData)), this, SLOT(handleParameterError(ErrorData)));
     
     emit operatorAdded(op);
 }
@@ -385,7 +385,7 @@ void StreamModel::doRemoveOperator(OperatorModel* op)
 {
     Q_ASSERT(! op->isInitialized());
     
-    disconnect(op, SIGNAL(parameterErrorOccurred(stromx::core::ParameterError)));
+    disconnect(op, SIGNAL(parameterErrorOccurred(ErrorData)));
     m_operators.removeAll(op);
     m_uninitializedOperators.removeAll(op);
     emit operatorRemoved(op);
@@ -574,7 +574,7 @@ void StreamModel::allocateObjects(stromx::core::Stream* stream)
         m_operators.append(op);
         m_initializedOperators.append(op);
         connect(op, SIGNAL(streamAccessTimedOut()), this, SIGNAL(accessTimedOut()));
-        connect(op, SIGNAL(parameterErrorOccurred(stromx::core::ParameterError)), this, SLOT(handleParameterError(stromx::core::ParameterError)));
+        connect(op, SIGNAL(parameterErrorOccurred(ErrorData)), this, SLOT(handleParameterError(ErrorData)));
     }
     
     foreach(OperatorModel* opModel, m_initializedOperators)
@@ -811,7 +811,7 @@ bool StreamModel::stop()
     emit streamStopped();
     
     // start the thread which waits for the stream to finish
-    QFuture<void> future = QtConcurrent::run(std::bind(&stromx::core::Stream::join, m_stream));
+    QFuture<void> future = QtConcurrent::run(std::tr1::bind(&stromx::core::Stream::join, m_stream));
     m_joinStreamWatcher->setFuture(future);
     
     return true;
@@ -847,12 +847,11 @@ void StreamModel::setExceptionObserver(ExceptionObserver* observer)
     m_exceptionObserver = observer;
 }
 
-void StreamModel::handleParameterError(const stromx::core::ParameterError& e)
+void StreamModel::handleParameterError(const ErrorData& data)
 {
     if(m_exceptionObserver)
     {
-        m_exceptionObserver->observe(
-            stromx::core::ExceptionObserver::PARAMETER_ACCESS, e, 0);
+        m_exceptionObserver->sendErrorData(data);
     }
 }
 

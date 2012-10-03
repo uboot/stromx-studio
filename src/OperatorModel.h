@@ -40,6 +40,7 @@ namespace stromx
 
 class QUndoStack;
 class ConnectionModel;
+class ErrorData;
 class ParameterServer;
 class StreamModel;
 
@@ -155,7 +156,7 @@ signals:
     void streamAccessTimedOut() const;
     
     /** A parameter occurred while setting a parameter. */
-    void parameterErrorOccurred(const stromx::core::ParameterError &) const;
+    void parameterErrorOccurred(const ErrorData &) const;
     
 protected:
     virtual void customEvent(QEvent* event);

@@ -15,7 +15,11 @@ void ExceptionObserver::observe(const stromx::core::ExceptionObserver::Phase pha
                                 const stromx::core::Thread*const thread) const
 {
     ErrorData data(ex, ErrorData::Type(phase));
-    
+    sendErrorData(data);
+}
+
+void ExceptionObserver::sendErrorData(const ErrorData& data) const
+{
     QEvent* event = new ErrorEvent(data);
     QCoreApplication::instance()->postEvent(m_receiver, event);
 }

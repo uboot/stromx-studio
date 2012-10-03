@@ -37,6 +37,8 @@ namespace stromx
     }
 }
 
+class ErrorData;
+
 class ParameterServer : public QObject
 {
     Q_OBJECT
@@ -70,7 +72,7 @@ signals:
     void parameterAccessTimedOut();
     
     /** A parameter occurred while setting a parameter. */
-    void parameterErrorOccurred(const stromx::core::ParameterError &) const;
+    void parameterErrorOccurred(const ErrorData & errorData) const;
     
 private slots:
     /**

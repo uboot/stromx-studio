@@ -44,6 +44,8 @@ public:
     /** The type of error, i.e. the state the error happened in. */
     enum Type
     {
+        /** Undefined error. */
+        UNDEFINED,
         /** Initialization of the operator. */
         INITIALIZATION,
         /** Activation of the operator. */
@@ -57,6 +59,9 @@ public:
         /** Accessing a parameter. */
         PARAMETER_ACCESS
     };
+    
+    /** Constructs an error data of an undefined error. */
+    ErrorData();
     
     /** Constructs an error data from a stromx exception and the type of the exception. */
     ErrorData(const stromx::core::OperatorError & exception, Type type);

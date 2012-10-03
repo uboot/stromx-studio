@@ -46,6 +46,8 @@ set(stromxstudiotest_SOURCES
     ../ConnectorOccupyEvent.cpp
     ../DataConverter.cpp
     ../DeinitializeOperatorCmd.cpp
+    ../ErrorData.cpp
+    ../ExceptionObserver.cpp
     ../GetParameterTask.cpp
     ../Image.cpp
     ../InitializeOperatorCmd.cpp
