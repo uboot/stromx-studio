@@ -24,6 +24,7 @@ set(stromxstudiotest_HEADERS
     ../OperatorModel.h
     ../ParameterServer.h
     ../PropertyModel.h
+    ../Task.h
     ../ThreadListModel.h
     ../ThreadModel.h
     ../StreamModel.h
@@ -80,6 +81,7 @@ set(stromxstudiotest_SOURCES
     ../SetThreadCmd.cpp
     ../SetThreadColorCmd.cpp
     ../StreamModel.cpp
+    ../Task.cpp
     ../ThreadListModel.cpp
     ../ThreadModel.cpp
 )

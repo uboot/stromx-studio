@@ -74,6 +74,7 @@ set(stromxstudio_SOURCES
     StreamEditor.cpp
     StreamEditorScene.cpp
     StreamModel.cpp
+    Task.cpp
     ThreadListModel.cpp
     ThreadListView.cpp
     ThreadModel.cpp
@@ -115,6 +116,7 @@ set(stromxstudio_HEADERS
     StreamEditor.h 
     StreamEditorScene.h
     StreamModel.h
+    Task.h
     ThreadListModel.h
     ThreadListView.h
     ThreadModel.h

@@ -21,21 +21,19 @@
 #define GETPARAMETERTASK_H
 
 #include <stromx/core/DataRef.h>
-#include <QObject>
 #include "ErrorData.h"
 #include "OperatorModel.h"
-
-template <class T> class QFutureWatcher;
+#include "Task.h"
 
 /** 
  * \brief Task which asynchronously obtain a read access to a data container.
  *
- * Upon construction this class asynchronously tries to read the value of an operator parameter
+ * This class asynchronously tries to read the value of an operator parameter
  * within a certain timeout. After it was either successful or reached the timeout a finish
  * signal is emitted and the task destroys itself. If the object is deleted while waiting for
  * task to finish the destructor will stop until the task is finished.
  */
-class GetParameterTask : public QObject
+class GetParameterTask : public Task
 {
     Q_OBJECT
     
@@ -50,9 +48,6 @@ public:
     /** Constructs a task object for the given parameters. Call run() to actually start the task. */
     explicit GetParameterTask(const stromx::core::Operator* op, unsigned int id, QObject* parent = 0);
     
-    /** Waits for the task to finish. */
-    virtual ~GetParameterTask();
-    
     /** Returns the parameter ID specified in the constructor. */
     unsigned int id() const { return m_id; }
     
@@ -65,26 +60,14 @@ public:
     /** Returns a message explaining any errors which happened while reading the parameter. */
     const ErrorData & errorData() const { return m_errorData; }
     
-    /** Starts the task. */
-    void start();
-    
-signals:
+protected:
     /** 
-     * Emitted when the function either a read access has been obtained or the 
-     * task timed out. 
+     * Tries to get the parameter and stores the results of the attempt in the class
+     * members.
      */
-    void finished();
-    
-private slots:
-    /**
-     * Obtains the result of the future and emits the finished signal. After
-     * this signal is emitted the this object is deleted.
-     */
-    void handleFutureFinished();
+    void run();
     
 private:
-    /** Tries to read the parameter specified in task and sets the member of task to the result of the attempt. */
-    static void runTask(GetParameterTask* task);
     
     /** Maximal time to wait for a read access in milliseconds. */
     static const unsigned int TIMEOUT;
@@ -94,7 +77,6 @@ private:
     stromx::core::DataRef m_result;
     ErrorCode m_errorCode;
     ErrorData m_errorData;
-    QFutureWatcher<void>* m_watcher;
 };
 
 #endif // GETPARAMETERTASK_H

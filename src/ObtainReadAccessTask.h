@@ -31,7 +31,7 @@ template <class T> class QFutureWatcher;
 /** 
  * \brief Task which asynchronously obtain a read access to a data container.
  *
- * Upon construction this class asynchronously tries to obtain read access to the input data container
+ * This class asynchronously tries to obtain read access to the input data container
  * within a certain timeout. After it was either successful or reached the timeout a finish
  * signal is emitted and the task destroys itself. If the object is deleted while waiting for
  * a read access the destructor will stop until the task is finished.

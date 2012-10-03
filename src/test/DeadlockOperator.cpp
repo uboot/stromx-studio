@@ -81,10 +81,10 @@ void DeadlockOperator::execute(DataProvider& provider)
     if(m_lockParameters)
     {
 #ifdef WIN32
-        Sleep(2000); // sleep 1 second
+        Sleep(1000); // sleep 1 second
 #endif // WIN32
 #ifdef UNIX
-        sleep(2); // sleep 1 second
+        sleep(1); // sleep 1 second
 #endif // UNIX  
     }
     
