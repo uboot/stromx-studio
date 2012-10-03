@@ -60,14 +60,9 @@ public:
     /** Returns a message explaining any errors which happened while reading the parameter. */
     const ErrorData & errorData() const { return m_errorData; }
     
-protected:
-    /** 
-     * Tries to get the parameter and stores the results of the attempt in the class
-     * members.
-     */
-    void run();
-    
 private:
+    /** Tries to get the parameter and stores the results of the attempt in the class members. */
+    void run();
     
     /** Maximal time to wait for a read access in milliseconds. */
     static const unsigned int TIMEOUT;

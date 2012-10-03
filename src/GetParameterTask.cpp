@@ -3,12 +3,6 @@
 #include <stromx/core/Operator.h>
 #include <stromx/core/OperatorException.h>
 
-#ifdef __GNUG__
-    #include <tr1/functional>
-#else
-    #include <functional>
-#endif
-
 const unsigned int GetParameterTask::TIMEOUT = 1000;
 
 using namespace stromx::core;
