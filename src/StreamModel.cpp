@@ -18,7 +18,6 @@
 #include "RemoveThreadCmd.h"
 #include "ThreadListModel.h"
 #include "ThreadModel.h"
-#include <boost/bind.hpp>
 #include <QDir>
 #include <QFileInfo>
 #include <QFutureWatcher>
@@ -34,6 +33,12 @@
 #include <stromx/core/XmlReader.h>
 #include <stromx/core/XmlWriter.h>
 #include <stromx/core/Factory.h>
+
+#ifdef __GNUG__
+    #include <tr1/functional>
+#else
+    #include <functional>
+#endif
 
 const quint32 StreamModel::MAGIC_NUMBER = 0x20111202;
 const unsigned int StreamModel::DELAY = 100;
@@ -806,7 +811,7 @@ bool StreamModel::stop()
     emit streamStopped();
     
     // start the thread which waits for the stream to finish
-    QFuture<void> future = QtConcurrent::run(boost::bind(&stromx::core::Stream::join, m_stream));
+    QFuture<void> future = QtConcurrent::run(std::bind(&stromx::core::Stream::join, m_stream));
     m_joinStreamWatcher->setFuture(future);
     
     return true;
