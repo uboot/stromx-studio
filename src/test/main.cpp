@@ -7,6 +7,8 @@
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication app(argc, argv);
+    
     DataConverterTest dataConverter;
     QTest::qExec(&dataConverter, argc, argv);
     

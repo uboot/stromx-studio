@@ -30,7 +30,8 @@ class SetParameterCmd : public QUndoCommand
 {
 public:
     SetParameterCmd(ParameterServer* server, unsigned int parameter,
-                    const stromx::core::DataRef& newValue, QUndoCommand* parent = 0);
+                    const stromx::core::DataRef& newValue, const stromx::core::DataRef& oldValue,
+                    QUndoCommand* parent = 0);
     virtual ~SetParameterCmd();
     virtual void undo();
     virtual void redo();

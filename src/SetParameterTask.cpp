@@ -1,25 +1,28 @@
-#include "GetParameterTask.h"
+#include "SetParameterTask.h"
 
 #include <stromx/core/Operator.h>
 #include <stromx/core/OperatorException.h>
 
-const unsigned int GetParameterTask::TIMEOUT = 5000;
+const unsigned int SetParameterTask::TIMEOUT = 5000;
 
 using namespace stromx::core;
 
-GetParameterTask::GetParameterTask(const stromx::core::Operator* op, unsigned int id, QObject* parent)
+
+SetParameterTask::SetParameterTask(stromx::core::Operator* op, unsigned int id,
+                                   const stromx::core::DataRef & value, QObject* parent)
   : Task(parent),
     m_op(op),
     m_id(id),
+    m_data(value),
     m_errorCode(NO_ERROR)
 {
 }
 
-void GetParameterTask::run()
+void SetParameterTask::run()
 {
     try
     {
-        m_result = m_op->getParameter(m_id, TIMEOUT);
+        m_op->setParameter(m_id, m_data, TIMEOUT);
     }
     catch(stromx::core::Timeout &)
     {

@@ -13,6 +13,7 @@ ParameterServerTest::ParameterServerTest()
     m_op->initialize();
     m_op->setParameter(ParameterOperator::INT_PARAM, stromx::core::Int32(10));
     m_server->refresh();
+    QTest::qWait(100);
 }
 
 ParameterServerTest::~ParameterServerTest()
@@ -29,8 +30,11 @@ void ParameterServerTest::testGetParameter()
 void ParameterServerTest::testSetParameter()
 {
     m_server->setParameter(ParameterOperator::INT_PARAM, QVariant(20));
+    QTest::qWait(1000);
     QCOMPARE(QVariant(20), m_server->getParameter(ParameterOperator::INT_PARAM, Qt::DisplayRole));
+    
     m_server->setParameter(ParameterOperator::BOOL_PARAM, QVariant(1));
+    QTest::qWait(1000);
     QCOMPARE(QVariant(tr("True")), m_server->getParameter(ParameterOperator::BOOL_PARAM, Qt::DisplayRole));
 }
 

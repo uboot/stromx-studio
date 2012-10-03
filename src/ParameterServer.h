@@ -81,6 +81,12 @@ private slots:
      */
     void handleGetParameterTaskFinished();
     
+    /** 
+     * If the task was successful this functions starts another task which gets the 
+     * value of the updated parameter.
+     */
+    void handleSetParameterTaskFinished();
+    
 private:
     /** Returns the stromx operator whose parameters are served. */
     stromx::core::Operator* op() const { return m_op; }
@@ -92,12 +98,10 @@ private:
     bool parameterIsWriteAccessible(const stromx::core::Parameter& par) const;
     
     /** Sets the parameter \c paramId to \c newValue. */
-    void doSetParameter(unsigned int paramId, const stromx::core::Data& newValue);
+    void doSetParameter(unsigned int paramId, const stromx::core::DataRef& newValue);
     
     /** Refreshes the cached value for the parameter \c param. */
     void refreshParameter(const stromx::core::Parameter & param);
-    
-    static const unsigned int TIMEOUT;
     
     stromx::core::Operator* m_op;
     QUndoStack* m_undoStack;

@@ -1,13 +1,12 @@
 #include "ParameterServer.h"
 
 #include "DataConverter.h"
-#include "SetParameterCmd.h"
 #include "GetParameterTask.h"
+#include "SetParameterCmd.h"
+#include "SetParameterTask.h"
 #include <stromx/core/Operator.h>
 #include <stromx/core/Trigger.h>
 #include <stromx/core/OperatorException.h>
-
-const unsigned int ParameterServer::TIMEOUT = 100;
 
 ParameterServer::ParameterServer(stromx::core::Operator* op, QUndoStack* undoStack, QObject* parent)
   : QObject(parent),
@@ -61,13 +60,13 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
             
         // any other parameters are set via an undo stack command
         // obtain the current parameter value
-        stromx::core::DataRef currentValue = m_op->getParameter(id);
+        stromx::core::DataRef currentValue = m_cache[id];
         
         // if the new value is different from the old one
         // construct a set parameter command 
         if(! DataConverter::stromxDataEqualsTarget(stromxData, currentValue))
         {
-            SetParameterCmd* cmd = new SetParameterCmd(this, id, stromxData);
+            SetParameterCmd* cmd = new SetParameterCmd(this, id, currentValue, stromxData);
             m_undoStack->push(cmd);
         }
         return true;
@@ -104,30 +103,22 @@ void ParameterServer::refreshParameter(const stromx::core::Parameter & param)
     }
 }
 
-void ParameterServer::doSetParameter(unsigned int paramId, const stromx::core::Data& newValue)
+void ParameterServer::doSetParameter(unsigned int paramId, const stromx::core::DataRef& newValue)
 {
-    try
-    {
-        // set the parameter
-        m_op->setParameter(paramId, newValue, TIMEOUT);
-        
-        // update the cache for this parameter
-        const stromx::core::Parameter & param = m_op->info().parameter(paramId);
-        refreshParameter(param);
-    } 
-    catch(stromx::core::Timeout&)
-    {
-        emit parameterAccessTimedOut();
-    }
-    catch(stromx::core::ParameterError& e)
-    {
-        emit parameterErrorOccurred(ErrorData(e, ErrorData::PARAMETER_ACCESS));
-    }
-    catch(stromx::core::Exception&)
-    {
-    }
+    SetParameterTask* task = new SetParameterTask(m_op, paramId, newValue);
+    connect(task, SIGNAL(finished()), this, SLOT(handleSetParameterTaskFinished()));
+    task->start();
+}
+
+void ParameterServer::handleSetParameterTaskFinished()
+{
+    SetParameterTask* task = qobject_cast<SetParameterTask*>(sender());
     
-    emit parameterChanged(paramId);
+    if(task)
+    {
+        const stromx::core::Parameter & param = m_op->info().parameter(task->id());
+        refreshParameter(param);
+    }
 }
 
 Qt::ItemFlags ParameterServer::parameterFlags(unsigned int id) const
@@ -199,6 +190,7 @@ void ParameterServer::handleGetParameterTaskFinished()
         {
         case GetParameterTask::NO_ERROR:
             m_cache[task->id()] = task->value();
+            emit parameterChanged(task->id());
             break;
         case GetParameterTask::TIMED_OUT:
             emit parameterAccessTimedOut();

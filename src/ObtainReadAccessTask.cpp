@@ -1,6 +1,6 @@
 #include "ObtainReadAccessTask.h"
 
-const unsigned int ObtainReadAccessTask::TIMEOUT = 1000;
+const unsigned int ObtainReadAccessTask::TIMEOUT = 5000;
 
 using namespace stromx::core;
 

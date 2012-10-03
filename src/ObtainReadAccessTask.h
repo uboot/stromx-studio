@@ -28,7 +28,7 @@ template <class T> class QFuture;
 template <class T> class QFutureWatcher;
 
 /** 
- * \brief Task which asynchronously obtain a read access to a data container.
+ * \brief Task which asynchronously obtains read access to a data container.
  *
  * This class asynchronously tries to obtain read access to the input data container
  * within a certain timeout. After it was either successful or reached the timeout a finish

@@ -17,8 +17,8 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GETPARAMETERTASK_H
-#define GETPARAMETERTASK_H
+#ifndef SETPARAMETERTASK_H
+#define SETPARAMETERTASK_H
 
 #include <stromx/core/DataRef.h>
 #include "ErrorData.h"
@@ -26,14 +26,14 @@
 #include "Task.h"
 
 /** 
- * \brief Task which asynchronously gets the value of an operator parameter.
+ * \brief Task which asynchronously sets the value of an operator parameter.
  *
- * This class asynchronously tries to read the value of an operator parameter
+ * This class asynchronously tries to write the value of an operator parameter
  * within a certain timeout. After it was either successful or reached the timeout a finish
  * signal is emitted and the task destroys itself. If the object is deleted while waiting for
  * task to finish the destructor will stop until the task is finished.
  */
-class GetParameterTask : public Task
+class SetParameterTask : public Task
 {
     Q_OBJECT
     
@@ -46,32 +46,30 @@ public:
     };
     
     /** Constructs a task object for the given parameters. Call run() to actually start the task. */
-    explicit GetParameterTask(const stromx::core::Operator* op, unsigned int id, QObject* parent = 0);
+    explicit SetParameterTask(stromx::core::Operator* op, unsigned int id,
+                              const stromx::core::DataRef & value, QObject* parent = 0);
     
     /** Returns the parameter ID specified in the constructor. */
     unsigned int id() const { return m_id; }
     
-    /** Returns the data. */
-    const stromx::core::DataRef & value() const { return m_result; }
-    
-    /** Returns whether the an error occured when the attempt was made to read the parameter. */
+    /** Returns whether the an error occured when the attempt was made to write the parameter. */
     ErrorCode error() const { return m_errorCode; }
     
-    /** Returns a message explaining any errors which happened while reading the parameter. */
+    /** Returns a message explaining any errors which happened while writing the parameter. */
     const ErrorData & errorData() const { return m_errorData; }
     
 private:
-    /** Tries to get the parameter and stores the results of the attempt in the class members. */
+    /** Tries to set the parameter and stores any error data in the class members. */
     void run();
     
     /** Maximal time to wait for a read access in milliseconds. */
     static const unsigned int TIMEOUT;
     
-    const stromx::core::Operator* m_op;
+    stromx::core::Operator* m_op;
     unsigned int m_id;
-    stromx::core::DataRef m_result;
+    stromx::core::DataRef m_data;
     ErrorCode m_errorCode;
     ErrorData m_errorData;
 };
 
-#endif // GETPARAMETERTASK_H
+#endif // SETPARAMETERTASK_H

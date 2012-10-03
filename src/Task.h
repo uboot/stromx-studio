@@ -28,7 +28,7 @@
 template <class T> class QFutureWatcher;
 
 /** 
- * \brief Task which asynchronously obtain a read access to a data container.
+ * \brief Abstract task which runs some operation asynchronously.
  *
  * This class asynchronously runs a task. After the task has run a finish
  * signal is emitted and the task destroys itself. If the task is deleted
