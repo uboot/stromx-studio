@@ -131,7 +131,7 @@ void ParameterServer::refreshParameter(const stromx::core::Parameter & param)
 
 void ParameterServer::doSetParameter(unsigned int paramId, const stromx::core::DataRef& newValue)
 {
-    SetParameterTask* task = new SetParameterTask(m_op, paramId, newValue);
+    SetParameterTask* task = new SetParameterTask(m_op, paramId, newValue, this);
     connect(task, SIGNAL(finished()), this, SLOT(handleSetParameterTaskFinished()));
     task->start();
     m_cache[paramId].state = SETTING;
