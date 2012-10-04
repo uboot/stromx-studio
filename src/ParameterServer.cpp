@@ -25,7 +25,7 @@ const QVariant ParameterServer::getParameter(unsigned int id, int role)
     
     ParameterValue & value = m_cache[id];
     
-    if(value.state == CURRENT)
+    if(value.state == CURRENT || role == Qt::EditRole)
     {
         return DataConverter::toQVariant(m_cache[id].value, param, role);
     }
@@ -36,9 +36,9 @@ const QVariant ParameterServer::getParameter(unsigned int id, int role)
             switch(value.state)
             {
                 case GETTING:
-                    return tr("Getting");
+                    return tr("Getting...");
                 case SETTING:
-                    return tr("Setting");
+                    return tr("Setting...");
                 case TIMED_OUT:
                     return tr("Time out");
                 default:
@@ -241,12 +241,10 @@ void ParameterServer::handleGetParameterTaskFinished()
             emit parameterChanged(task->id());
             break;
         case GetParameterTask::TIMED_OUT:
-            value.value = stromx::core::DataRef();
             value.state = TIMED_OUT;
             emit parameterAccessTimedOut();
             break;
         case GetParameterTask::EXCEPTION:
-            value.value = stromx::core::DataRef();
             value.state = ERROR;
             emit parameterErrorOccurred(task->errorData());
             break;
