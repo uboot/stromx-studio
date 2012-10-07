@@ -20,9 +20,10 @@
 #ifndef STREAMMODEL_H
 #define STREAMMODEL_H
 
+#include <QList>
+#include <QMap>
 #include <QObject>
 #include <QPointF>
-#include <QList>
 
 namespace stromx
 {
@@ -314,6 +315,10 @@ private:
     
     // The list of uninitialized operators.
     QList<OperatorModel*> m_uninitializedOperators;
+    
+    // The configuration values of the stream such as the maximal
+    // time out and the delay mode.
+    QMap<QString, QVariant> m_configuration;
 };
 
 #endif // STREAMMODEL_H

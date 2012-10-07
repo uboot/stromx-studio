@@ -693,6 +693,8 @@ void StreamModel::serializeModel(QByteArray& data) const
         dataStream << thread;
     
     dataStream << m_observerModel;
+    
+    dataStream << m_configuration;
 }
 
 void StreamModel::deserializeModel(const QByteArray& data)
@@ -753,6 +755,8 @@ void StreamModel::deserializeModel(const QByteArray& data)
         dataStream >> thread;
     
     dataStream >> m_observerModel;
+    
+    dataStream >> m_configuration;
 }
 
 bool StreamModel::start()
