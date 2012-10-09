@@ -178,6 +178,9 @@ void MainWindow::setModel(StreamModel* model)
     connect(m_model, SIGNAL(streamJoined()), this, SLOT(join()));
     connect(m_model->observerModel(), SIGNAL(observerAdded(ObserverModel*)), this, SLOT(createObserverWindow(ObserverModel*)));
     connect(m_model->observerModel(), SIGNAL(observerRemoved(ObserverModel*)), this, SLOT(destroyObserverWindow(ObserverModel*)));
+
+    // update the state of the slow action
+    m_slowAction->setChecked(m_model->delay());
 }
 
 void MainWindow::createActions()
@@ -437,8 +440,6 @@ bool MainWindow::openRecentFile()
         if(! saveBeforeClosing())
             return false;
         
-        m_slowAction->setChecked(false);
-        
         QString filepath = action->data().toString();
         
         if(! readFile(filepath))
@@ -462,8 +463,6 @@ bool MainWindow::open()
 {
     if(! saveBeforeClosing())
         return false;
-    
-    m_slowAction->setChecked(false);
     
     QSettings settings("stromx", "stromx-studio");
     QString lastDir = settings.value("lastStreamOpened", QDir::home().absolutePath()).toString();
@@ -692,7 +691,6 @@ bool MainWindow::closeStream()
     setModel(newModel);
     
     updateCurrentFile("");
-    m_slowAction->setChecked(false);
     
     return true;
 }

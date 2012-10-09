@@ -172,6 +172,12 @@ public:
     
     /** Sets the current exception observer. */
     void setExceptionObserver(ExceptionObserver* observer);
+    
+    /**
+     * Returns true if the operator delay is activated. If the delay is activated
+     * the data processing seems to be in slow-motion.
+     */
+    bool delay() const;
 
 public slots:
     /** Starts the stromx stream. Returns true if successful. */
@@ -288,6 +294,18 @@ private:
     /** Deletes the stromx stream and all models. */ 
     void deleteAllData();
     
+    /** 
+     * Outputs the current configuration options (such as delay, time out)
+     * as key-value dictionary.
+     */
+    QMap<QString, QVariant> writeConfiguration() const;
+    
+    /**
+     * Reads configuration options from the input key-value dictionary
+     * and sets the according values of the stream model.
+     */
+    void readConfiguration(const QMap<QString, QVariant> & configuration);
+    
     /** Finds the operator model which wraps \c op. Returns 0 if no such model exists. */
     OperatorModel* findOperatorModel(const stromx::core::Operator* op) const;
     
@@ -315,10 +333,6 @@ private:
     
     // The list of uninitialized operators.
     QList<OperatorModel*> m_uninitializedOperators;
-    
-    // The configuration values of the stream such as the maximal
-    // time out and the delay mode.
-    QMap<QString, QVariant> m_configuration;
 };
 
 #endif // STREAMMODEL_H

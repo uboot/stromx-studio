@@ -694,7 +694,7 @@ void StreamModel::serializeModel(QByteArray& data) const
     
     dataStream << m_observerModel;
     
-    dataStream << m_configuration;
+    dataStream << writeConfiguration();
 }
 
 void StreamModel::deserializeModel(const QByteArray& data)
@@ -756,7 +756,9 @@ void StreamModel::deserializeModel(const QByteArray& data)
     
     dataStream >> m_observerModel;
     
-    dataStream >> m_configuration;
+    QMap<QString, QVariant> configuration;
+    dataStream >> configuration;
+    readConfiguration(configuration);
 }
 
 bool StreamModel::start()
@@ -832,6 +834,11 @@ bool StreamModel::isActive() const
     return m_stream->status() != stromx::core::Stream::INACTIVE;
 }
 
+bool StreamModel::delay() const
+{
+    return m_stream->delay() > 0;
+}
+
 void StreamModel::setDelay(bool active)
 {
     if(active)
@@ -858,6 +865,23 @@ void StreamModel::handleParameterError(const ErrorData& data)
         m_exceptionObserver->sendErrorData(data);
     }
 }
+
+void StreamModel::readConfiguration(const QMap<QString, QVariant> & configuration)
+{
+    QVariant delay = configuration.value("delay", false);
+    if(delay.type() == QVariant::Bool)
+        setDelay(delay.toBool());
+}
+
+QMap<QString, QVariant> StreamModel::writeConfiguration() const
+{
+    QMap<QString, QVariant> configuration;
+    
+    configuration["delay"] = delay();
+    
+    return configuration;
+}
+
 
 
 
