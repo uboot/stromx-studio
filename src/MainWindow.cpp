@@ -55,6 +55,7 @@
 #include "OperatorLibraryView.h"
 #include "OperatorLibraryModel.h"
 #include "PropertyView.h"
+#include "SettingsDialog.h"
 #include "StreamEditor.h"
 #include "StreamEditorScene.h"
 #include "StreamModel.h"
@@ -69,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_streamEditor = new StreamEditor;
     m_threadListView = new ThreadListView(this);
     m_docWindow = new DocumentationWindow(this);
+    m_settingsDialog = new SettingsDialog(this);
     
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(m_threadListView);
@@ -146,12 +148,6 @@ void MainWindow::setModel(StreamModel* model)
 {
     Q_ASSERT(model);
     
-    // clear the undo stack
-    m_undoStack->clear();
-    
-    // clear the error list
-    m_errorListView->errorListModel()->clear();
-    
     // the model is zero when this function is called for the first time
     if(m_model)
     {
@@ -162,11 +158,21 @@ void MainWindow::setModel(StreamModel* model)
         join();
     }
     
+    // clear the undo stack
+    m_undoStack->clear();
+    
+    // clear the error list
+    m_errorListView->errorListModel()->clear();
+    
+    // close the settings dialog
+    m_settingsDialog->close();
+    
     // set all editors to the new model
     m_streamEditor->streamEditorScene()->setModel(model);
     m_threadListView->setStreamModel(model);
     m_observerTreeView->setModel(model->observerModel());
     model->setExceptionObserver(m_errorListView->errorListModel()->exceptionObserver());
+    m_settingsDialog->setModel(model);
     
     // delete the old model
     if(m_model)
@@ -272,8 +278,12 @@ void MainWindow::createActions()
     connect(m_slowAction, SIGNAL(toggled(bool)), this, SLOT(setSlowProcessing(bool)));
     
     m_emptyRecentFilesAct = new QAction(tr("Empty recent files"), this);
-    m_emptyRecentFilesAct->setStatusTip(tr("Empties the list of recently opened files"));
+    m_emptyRecentFilesAct->setStatusTip(tr("Empty the list of recently opened files"));
     connect(m_emptyRecentFilesAct, SIGNAL(triggered(bool)), this, SLOT(emptyRecentFiles()));
+    
+    m_showSettingsAct = new QAction(tr("Stream settings"), this);
+    m_showSettingsAct->setStatusTip(tr("Show the settings of the current stream"));
+    connect(m_showSettingsAct, SIGNAL(triggered(bool)), m_settingsDialog, SLOT(show()));
     
     m_showOperatorLibraryAct = new QAction(tr("Operator library"), this);
     m_showOperatorLibraryAct->setStatusTip(tr("Show operator library window"));
@@ -341,6 +351,8 @@ void MainWindow::createMenus()
     m_streamMenu->addAction(m_addObserverAct);
     m_streamMenu->addAction(m_removeObserverAct);
     m_streamMenu->addAction(m_removeInputAct);
+    m_streamMenu->addSeparator();
+    m_streamMenu->addAction(m_showSettingsAct);
 
     m_viewMenu = menuBar()->addMenu(tr("&View"));
     m_viewMenu->addAction(m_resetZoomAct);

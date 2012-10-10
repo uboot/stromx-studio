@@ -49,6 +49,7 @@ class ObserverModel;
 class ObserverWindow;
 class OperatorLibraryView;
 class PropertyView;
+class SettingsDialog;
 class StreamEditor;
 class StreamModel;
 class ThreadListView;
@@ -250,6 +251,7 @@ private:
     QAction* m_showObserverTreeViewAct;
     QAction* m_showErrorListViewAct;
     QAction* m_resetZoomAct;
+    QAction* m_showSettingsAct;
     
     LimitUndoStack* m_undoStack;
     
@@ -279,6 +281,7 @@ private:
     bool m_timeoutMessageIsActive;
     QList<ObserverWindow*> m_observerWindows;
     DocumentationWindow* m_docWindow;
+    SettingsDialog* m_settingsDialog;
 };
 
 #endif // MAINWINDOW_H

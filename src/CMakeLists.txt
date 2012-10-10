@@ -72,6 +72,7 @@ set(stromxstudio_SOURCES
     SetInputVisualizationCmd.cpp
     SetThreadCmd.cpp
     SetThreadColorCmd.cpp
+    SettingsDialog.cpp
     StreamEditor.cpp
     StreamEditorScene.cpp
     StreamModel.cpp
@@ -115,6 +116,7 @@ set(stromxstudio_HEADERS
     PropertyView.h
     SelectionModel.h
     SetParameterTask.h
+    SettingsDialog.h
     StreamEditor.h 
     StreamEditorScene.h
     StreamModel.h
