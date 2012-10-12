@@ -281,8 +281,8 @@ void MainWindow::createActions()
     m_emptyRecentFilesAct->setStatusTip(tr("Empty the list of recently opened files"));
     connect(m_emptyRecentFilesAct, SIGNAL(triggered(bool)), this, SLOT(emptyRecentFiles()));
     
-    m_showSettingsAct = new QAction(tr("Stream settings"), this);
-    m_showSettingsAct->setStatusTip(tr("Show the settings of the current stream"));
+    m_showSettingsAct = new QAction(tr("Settings..."), this);
+    m_showSettingsAct->setStatusTip(tr("Edit the settings of the current stream"));
     connect(m_showSettingsAct, SIGNAL(triggered(bool)), m_settingsDialog, SLOT(show()));
     
     m_showOperatorLibraryAct = new QAction(tr("Operator library"), this);
@@ -1025,19 +1025,23 @@ void MainWindow::customEvent(QEvent* event)
         m_timeoutMessageIsActive = true;
         
         QMessageBox msgBox;
-        msgBox.setText(tr("An operation accessing the current stream timed out. The stream might be deadlocked."));
+        msgBox.setText(tr("\
+        An operation accessing the stream was stopped because its waiting time exceeded \
+        the current limit. The stream might be dead-locked in which case it should be \
+        stopped. Otherwise the maximal waiting time for operations accessing the stream \
+        can be increased in <b>Stream -> Settings...</b>"));
         msgBox.setInformativeText(tr("Do you want to stop the stream?"));
-        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-        msgBox.setDefaultButton(QMessageBox::Cancel);
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::No);
         int ret = msgBox.exec();
         
         switch (ret)
         {
-        case QMessageBox::Ok:
+        case QMessageBox::Yes:
             if(m_model->isActive())
                 stop();
             break;
-        case QMessageBox::Cancel:
+        case QMessageBox::No:
             break;
         default:
             Q_ASSERT(false);

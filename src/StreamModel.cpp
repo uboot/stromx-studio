@@ -106,21 +106,27 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     catch(stromx::core::OperatorAllocationFailed& e)
     {
         qWarning() << e.what();
-        QString error = tr("Failed to allocate operator of type %1 of package %2.")
+        QString error = tr("\
+Failed to allocate operator of type <i>%1</i> of package <i>%2</i>. \
+It is possible that the library providing this operator has not been loaded. \
+Use <b>File -> Load Libraries...</b> to load additional libraries.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::core::DataAllocationFailed& e)
     {
         qWarning() << e.what();
-        QString error = tr("Failed to allocate data of type %1 of package %2.")
+        QString error = tr("\
+Failed to allocate data of type <i>%1</i> of package <i>%2</i>. \
+It is possible that the library providing this data type has not been loaded. \
+Use <b>File -> Load Libraries...</b> to load additional libraries.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::core::DeserializationError& e)
     {
         qWarning() << e.what();
-        QString error = tr("Failed to deserialize data of type %1 in package %2.")
+        QString error = tr("Failed to deserialize data of type <i>%1</i> in package <i>%2</i>.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
@@ -128,7 +134,7 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     {
         qWarning() << e.what();
         const stromx::core::OperatorInfo& op = e.op();
-        QString error = tr("Failed to set parameter %1 ('%2') of operator of type %3 in package %4.")
+        QString error = tr("Failed to set parameter <i>%1</i> ('%2') of operator of type <i>%3</i> in package <i>%4</i>.")
                         .arg(QString("%1").arg(e.parameter().id()),
                              QString::fromStdString(e.parameter().doc().title()),
                              QString::fromStdString(op.type()),
@@ -139,7 +145,7 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     {
         qWarning() << e.what();
         const stromx::core::OperatorInfo& op = e.op();
-        QString error = tr("Unknown error related to operator of type %1 in package %2: %3")
+        QString error = tr("Unknown error related to operator of type <i>%1</i> in package <i>%2</i>: %3")
                         .arg(QString::fromStdString(op.type()), QString::fromStdString(op.package()),
                              QString::fromStdString(e.what()));
         throw ReadStreamFailed(error);
