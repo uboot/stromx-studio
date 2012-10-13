@@ -173,11 +173,18 @@ public:
     /** Sets the current exception observer. */
     void setExceptionObserver(ExceptionObserver* observer);
     
-    /**
-     * Returns true if the operator delay is activated. If the delay is activated
-     * the data processing seems to be in slow-motion.
+    /** 
+     * Returns true if the slow processing mode is activated. If slow processing
+     * is activated the execution of the stream is delayed at each operator
+     * input.
      */
-    bool delay() const;
+    bool delayActive() const;
+    
+    /** Returns the length of the delay for slow processing in milliseconds. */ 
+    int delayDuration() const { return m_delayDuration; }
+    
+    /** Returns the maximal time to wait when accessing the stromx stream in milliseconds. */
+    int accessTimeout() const { return m_accessTimeout; }
 
 public slots:
     /** Starts the stromx stream. Returns true if successful. */
@@ -190,10 +197,17 @@ public slots:
     bool stop();
     
     /** 
-     * Activates or deactivates the operator delay. If the delay is activated
-     * the data processing seems to be in slow-motion.
+     * Activates or deactivates the slow processing mode. If slow processing
+     * is activated the execution of the stream is delayed at each operator
+     * input.
      */
-    void setDelay(bool active);
+    void setDelayActive(bool active);
+    
+    /** Sets the length of the delay for slow processing in milliseconds. */ 
+    void setDelayDuration(int delay);
+    
+    /** Sets the maximal time to wait when accessing the stromx stream in milliseconds. */
+    void setAccessTimeout(int timeout);
     
 private slots:
     /** Joins the stromx stream. */
@@ -236,9 +250,15 @@ signals:
     /** An operation accessing data or parameters of the stream timed out. */
     void accessTimedOut();
     
+    /** The maximal time to wait when accessing the stream changed. */
+    void accessTimeoutChanged(int timeout);
+    
 private:
-    /** The operator delay in milliseconds. */
-    static const unsigned int DELAY;
+    /** The default slow processing delay in milliseconds. */
+    static const int DEFAULT_DELAY;
+    
+    /** The default access time out in milliseconds. */
+    static const int DEFAULT_ACCESS_TIMEOUT;
     
     /** Magic number which identifies the first 4 bytes of stromx-studio data files. */
     static const quint32 MAGIC_NUMBER;
@@ -315,14 +335,8 @@ private:
     /** Finds the thread model which wraps \c thread. Returns 0 if no such model exists. */
     ThreadModel* findThreadModel(const stromx::core::Thread* thread) const;
     
+    // The stromx stream. It contains only the initialized operators.
     stromx::core::Stream* m_stream;
-    ThreadListModel* m_threadListModel;
-    ObserverTreeModel* m_observerModel;
-    OperatorLibraryModel* m_operatorLibrary;
-    QUndoStack* m_undoStack;
-    QList<ConnectionModel*> m_connections;
-    QFutureWatcher<void>* m_joinStreamWatcher;
-    ExceptionObserver* m_exceptionObserver;
     
     // The list of all operators in the stream model. This is always the same
     // as m_initializedOperators + m_uninitializedOperators.
@@ -333,6 +347,16 @@ private:
     
     // The list of uninitialized operators.
     QList<OperatorModel*> m_uninitializedOperators;
+    
+    ThreadListModel* m_threadListModel;
+    ObserverTreeModel* m_observerModel;
+    OperatorLibraryModel* m_operatorLibrary;
+    QUndoStack* m_undoStack;
+    QList<ConnectionModel*> m_connections;
+    QFutureWatcher<void>* m_joinStreamWatcher;
+    ExceptionObserver* m_exceptionObserver;
+    int m_delayDuration;
+    int m_accessTimeout;
 };
 
 #endif // STREAMMODEL_H

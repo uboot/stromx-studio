@@ -47,7 +47,8 @@ public:
     
     /** Constructs a task object for the given parameters. Call run() to actually start the task. */
     explicit SetParameterTask(stromx::core::Operator* op, unsigned int id,
-                              const stromx::core::DataRef & value, QObject* parent = 0);
+                              const stromx::core::DataRef & value, int timeout,
+                              QObject* parent = 0);
     
     /** Returns the parameter ID specified in the constructor. */
     unsigned int id() const { return m_id; }
@@ -62,14 +63,12 @@ private:
     /** Tries to set the parameter and stores any error data in the class members. */
     void run();
     
-    /** Maximal time to wait for a read access in milliseconds. */
-    static const unsigned int TIMEOUT;
-    
     stromx::core::Operator* m_op;
     unsigned int m_id;
     stromx::core::DataRef m_data;
     ErrorCode m_errorCode;
     ErrorData m_errorData;
+    int m_timeout;
 };
 
 #endif // SETPARAMETERTASK_H

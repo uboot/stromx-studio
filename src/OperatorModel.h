@@ -125,7 +125,6 @@ public:
     virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
     virtual QModelIndex parent(const QModelIndex& child) const;
     
-    
 signals:
     /** The position of the operator on the stream scene has changed. */
     void posChanged(const QPointF & pos);
@@ -153,7 +152,7 @@ signals:
      * An operation accessing a parameter of the operator or data at an operator
      * connector timed out. 
      */
-    void streamAccessTimedOut() const;
+    void operatorAccessTimedOut() const;
     
     /** A parameter occurred while setting a parameter. */
     void parameterErrorOccurred(const ErrorData &) const;

@@ -186,7 +186,7 @@ void MainWindow::setModel(StreamModel* model)
     connect(m_model->observerModel(), SIGNAL(observerRemoved(ObserverModel*)), this, SLOT(destroyObserverWindow(ObserverModel*)));
 
     // update the state of the slow action
-    m_slowAction->setChecked(m_model->delay());
+    m_slowAction->setChecked(m_model->delayActive());
 }
 
 void MainWindow::createActions()
@@ -863,7 +863,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 void MainWindow::setSlowProcessing(bool isSlow)
 {
-    m_model->setDelay(isSlow);
+    m_model->setDelayActive(isSlow);
 }
 
 void MainWindow::emptyRecentFiles()

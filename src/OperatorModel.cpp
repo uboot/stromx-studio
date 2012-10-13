@@ -37,12 +37,18 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
     // refresh the cache of the parameter server
     m_server->refresh();
     
+    // propagate the current access time out of the stream
+    m_server->setAccessTimeout(m_stream->accessTimeout());
+    
     // Activate and deactivate when the stream stream starts/stop
     connect(m_stream, SIGNAL(streamStarted()), this, SLOT(setActiveTrue()));
     connect(m_stream, SIGNAL(streamStopped()), this, SLOT(setActiveFalse()));
     
+    // forward the access time out of the stream to the parameter server
+    connect(m_stream, SIGNAL(accessTimeoutChanged(int)), m_server, SLOT(setAccessTimeout(int)));
+    
     // forward the parameter server signals
-    connect(m_server, SIGNAL(parameterAccessTimedOut()), this, SIGNAL(streamAccessTimedOut()));
+    connect(m_server, SIGNAL(parameterAccessTimedOut()), this, SIGNAL(operatorAccessTimedOut()));
     connect(m_server, SIGNAL(parameterErrorOccurred(ErrorData)),
             this, SIGNAL(parameterErrorOccurred(ErrorData)));
     
@@ -459,7 +465,8 @@ void OperatorModel::customEvent(QEvent* event)
         if(! dataEvent->data().empty())
         {
             ObtainReadAccessTask* task = new ObtainReadAccessTask(dataEvent->type(), dataEvent->id(),
-                                                                dataEvent->data(), this);
+                                                                  dataEvent->data(), m_stream->accessTimeout(),
+                                                                  this);
             connect(task, SIGNAL(finished()), this, SLOT(handleObtainReadAccessTaskFinished()));
             task->start();
         }
@@ -473,7 +480,7 @@ void OperatorModel::handleObtainReadAccessTaskFinished()
     if(task)
     {
         if(task->readAccess().empty())
-            emit streamAccessTimedOut();
+            emit operatorAccessTimedOut();
         else
             emit connectorDataChanged(task->type(), task->id(), task->readAccess());
     }

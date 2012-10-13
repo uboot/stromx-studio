@@ -42,7 +42,8 @@ class ObtainReadAccessTask : public Task
 public:
     /** Constructs a task object for the given parameters. Call run() to actually start the task. */
     explicit ObtainReadAccessTask(OperatorModel::ConnectorType type, unsigned int id,
-                                  const stromx::core::DataContainer & dataContainer, QObject* parent = 0);
+                                  const stromx::core::DataContainer & dataContainer,
+                                  int timeout, QObject* parent = 0);
     
     /** Returns the input ID specified in the constructor. */
     unsigned int id() const { return m_id; }
@@ -59,14 +60,12 @@ private:
     /** Tries to obtain read access to the data container. */
     void run();
     
-    /** Maximal time to wait for a read access in milliseconds. */
-    static const unsigned int TIMEOUT;
-    
     OperatorModel::ConnectorType m_type;
     unsigned int m_id;
     stromx::core::DataContainer m_data;
     stromx::core::ReadAccess<stromx::core::Data> m_access;
     QFutureWatcher< stromx::core::ReadAccess<stromx::core::Data> >* m_watcher;
+    int m_timeout;
 };
 
 #endif // OBTAINREADACCESSTASK_H

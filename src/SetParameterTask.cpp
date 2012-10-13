@@ -3,18 +3,16 @@
 #include <stromx/core/Operator.h>
 #include <stromx/core/OperatorException.h>
 
-const unsigned int SetParameterTask::TIMEOUT = 5000;
-
 using namespace stromx::core;
 
-
 SetParameterTask::SetParameterTask(stromx::core::Operator* op, unsigned int id,
-                                   const stromx::core::DataRef & value, QObject* parent)
+                                   const stromx::core::DataRef & value, int timeout, QObject* parent)
   : Task(parent),
     m_op(op),
     m_id(id),
     m_data(value),
-    m_errorCode(NO_ERROR)
+    m_errorCode(NO_ERROR),
+    m_timeout(timeout)
 {
 }
 
@@ -22,7 +20,7 @@ void SetParameterTask::run()
 {
     try
     {
-        m_op->setParameter(m_id, m_data, TIMEOUT);
+        m_op->setParameter(m_id, m_data, m_timeout);
     }
     catch(stromx::core::Timeout &)
     {

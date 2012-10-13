@@ -11,7 +11,8 @@
 ParameterServer::ParameterServer(stromx::core::Operator* op, QUndoStack* undoStack, QObject* parent)
   : QObject(parent),
     m_op(op),
-    m_undoStack(undoStack)
+    m_undoStack(undoStack),
+    m_accessTimeout(0)
 {
 
 }
@@ -121,7 +122,7 @@ void ParameterServer::refreshParameter(const stromx::core::Parameter & param)
 {
     if(parameterIsReadAccessible(param))
     {
-        GetParameterTask* task = new GetParameterTask(m_op, param.id(), this);
+        GetParameterTask* task = new GetParameterTask(m_op, param.id(), m_accessTimeout, this);
         connect(task, SIGNAL(finished()), this, SLOT(handleGetParameterTaskFinished()));
         task->start();
         m_cache[param.id()].state = GETTING;
@@ -131,7 +132,7 @@ void ParameterServer::refreshParameter(const stromx::core::Parameter & param)
 
 void ParameterServer::doSetParameter(unsigned int paramId, const stromx::core::DataRef& newValue)
 {
-    SetParameterTask* task = new SetParameterTask(m_op, paramId, newValue, this);
+    SetParameterTask* task = new SetParameterTask(m_op, paramId, newValue, m_accessTimeout, this);
     connect(task, SIGNAL(finished()), this, SLOT(handleSetParameterTaskFinished()));
     task->start();
     m_cache[paramId].state = SETTING;
@@ -187,6 +188,11 @@ bool ParameterServer::parameterIsReadAccessible(const stromx::core::Parameter& p
         else
             return false;
     }
+}
+
+void ParameterServer::setAccessTimeout(int timeout)
+{
+    m_accessTimeout = timeout >= 0 ? timeout : 0;
 }
 
 bool ParameterServer::parameterIsDisplayed(unsigned int id) const

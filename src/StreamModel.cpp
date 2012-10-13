@@ -41,7 +41,8 @@
 #endif
 
 const quint32 StreamModel::MAGIC_NUMBER = 0x20111202;
-const unsigned int StreamModel::DELAY = 100;
+const int StreamModel::DEFAULT_DELAY = 100;
+const int StreamModel::DEFAULT_ACCESS_TIMEOUT = 5000;
 
 StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject* parent) 
   : QObject(parent),
@@ -51,7 +52,9 @@ StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLi
     m_operatorLibrary(operatorLibrary),
     m_undoStack(undoStack),
     m_joinStreamWatcher(0),
-    m_exceptionObserver(0)
+    m_exceptionObserver(0),
+    m_delayDuration(DEFAULT_DELAY),
+    m_accessTimeout(DEFAULT_ACCESS_TIMEOUT)
 {
     initializeSubModels();
 }
@@ -64,7 +67,9 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
     m_operatorLibrary(operatorLibrary),
     m_undoStack(undoStack),
     m_joinStreamWatcher(0),
-    m_exceptionObserver(0)
+    m_exceptionObserver(0),
+    m_delayDuration(DEFAULT_DELAY),
+    m_accessTimeout(DEFAULT_ACCESS_TIMEOUT)
 {
     initializeSubModels();
     
@@ -416,7 +421,7 @@ void StreamModel::doInitializeOperator(OperatorModel* op)
         m_initializedOperators.append(op);
         
         m_stream->addOperator(op->op());
-        connect(op, SIGNAL(streamAccessTimedOut()), this, SIGNAL(accessTimedOut()));
+        connect(op, SIGNAL(operatorAccessTimedOut()), this, SIGNAL(accessTimedOut()));
     }
     catch(stromx::core::OperatorError& e)
     {
@@ -434,7 +439,7 @@ void StreamModel::doDeinitializeOperator(OperatorModel* op)
     
     try
     {
-        disconnect(op, SIGNAL(streamAccessTimedOut()));
+        disconnect(op, SIGNAL(operatorAccessTimedOut()));
         op->setInitialized(false);
         
         // Move the operator from the initialized operators to the
@@ -579,7 +584,7 @@ void StreamModel::allocateObjects(stromx::core::Stream* stream)
         OperatorModel* op = new OperatorModel(*iter, this);
         m_operators.append(op);
         m_initializedOperators.append(op);
-        connect(op, SIGNAL(streamAccessTimedOut()), this, SIGNAL(accessTimedOut()));
+        connect(op, SIGNAL(operatorAccessTimedOut()), this, SIGNAL(accessTimedOut()));
         connect(op, SIGNAL(parameterErrorOccurred(ErrorData)), this, SLOT(handleParameterError(ErrorData)));
     }
     
@@ -840,17 +845,31 @@ bool StreamModel::isActive() const
     return m_stream->status() != stromx::core::Stream::INACTIVE;
 }
 
-bool StreamModel::delay() const
+bool StreamModel::delayActive() const
 {
     return m_stream->delay() > 0;
 }
 
-void StreamModel::setDelay(bool active)
+void StreamModel::setDelayActive(bool active)
 {
     if(active)
-        m_stream->setDelay(DELAY);
+        m_stream->setDelay(m_delayDuration);
     else
         m_stream->setDelay(0);
+}
+
+void StreamModel::setDelayDuration(int delay)
+{
+    m_delayDuration = delay >= 0 ? delay : 0;
+}
+
+void StreamModel::setAccessTimeout(int timeout)
+{
+    if(timeout != m_accessTimeout)
+    {
+        m_accessTimeout = timeout >= 0 ? timeout : 0;
+        emit accessTimeoutChanged(m_accessTimeout);
+    }
 }
 
 void StreamModel::setExceptionObserver(ExceptionObserver* observer)
@@ -874,16 +893,26 @@ void StreamModel::handleParameterError(const ErrorData& data)
 
 void StreamModel::readConfiguration(const QMap<QString, QVariant> & configuration)
 {
-    QVariant delay = configuration.value("delay", false);
+    QVariant delay = configuration.value("delayActive", false);
     if(delay.type() == QVariant::Bool)
-        setDelay(delay.toBool());
+        setDelayActive(delay.toBool());
+    
+    QVariant delayDuration = configuration.value("delayDuration", DEFAULT_DELAY);
+    if(delayDuration.type() == QVariant::Int)
+        setDelayDuration(delayDuration.toInt());
+    
+    QVariant accessTimeout = configuration.value("accessTimeout", DEFAULT_ACCESS_TIMEOUT);
+    if(accessTimeout.type() == QVariant::Int)
+        setAccessTimeout(accessTimeout.toInt());
 }
 
 QMap<QString, QVariant> StreamModel::writeConfiguration() const
 {
     QMap<QString, QVariant> configuration;
     
-    configuration["delay"] = delay();
+    configuration["delayActive"] = delayActive();
+    configuration["delayDuration"] = delayDuration();
+    configuration["accessTimeout"] = accessTimeout();
     
     return configuration;
 }

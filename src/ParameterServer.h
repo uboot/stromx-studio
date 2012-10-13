@@ -64,6 +64,13 @@ public:
      */
     bool parameterIsDisplayed(unsigned int id) const;
     
+    /** Returns the maximal time to wait when accessing the stromx operator in milliseconds. */
+    int accessTimeout() const { return m_accessTimeout; }
+    
+public slots:
+    /** Sets the maximal time to wait when accessing the stromx operator in milliseconds. */
+    void setAccessTimeout(int timeout);
+    
 signals:
     /** The value of the parameter \c id has changed. */
     void parameterChanged(unsigned int id);
@@ -121,6 +128,7 @@ private:
     stromx::core::Operator* m_op;
     QUndoStack* m_undoStack;
     QMap<unsigned int, ParameterValue> m_cache;
+    int m_accessTimeout;
 };
 
 #endif // PARAMETERSERVER_H
