@@ -22,6 +22,7 @@
 
 #include <QDialog>
 
+class QSpinBox;
 class StreamModel;
 
 /** \brief Stream settings dialog. */
@@ -34,10 +35,9 @@ public:
     
     void setModel(StreamModel* stream);
     
-    StreamModel* model() const { return m_stream; }
-    
 private:
-    StreamModel* m_stream;
+    QSpinBox* m_delayDurationSpinBox;
+    QSpinBox* m_accessTimeoutSpinBox;
 };
 
 #endif // SETTINGSDIALOG_H

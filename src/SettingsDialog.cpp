@@ -1,18 +1,19 @@
 #include "SettingsDialog.h"
 
+#include "StreamModel.h"
 #include <QGroupBox>
 #include <QLabel>
 #include <QSpinBox>
 #include <QVBoxLayout>
-#include <boost/concept_check.hpp>
 
 SettingsDialog::SettingsDialog(QWidget* parent)
-  : QDialog(parent)
+  : QDialog(parent),
+    m_delayDurationSpinBox(0),
+    m_accessTimeoutSpinBox(0)
 {
     QGroupBox* box = 0;
     QLabel* label = 0;
     QLabel* documentation = 0;
-    QSpinBox* spinBox = 0;
     QVBoxLayout* groupBoxLayout = 0;
     QHBoxLayout* editLayout = 0;
     
@@ -31,12 +32,15 @@ after which it decides that the latter is the case. This time is defined here. \
 The same value is valid when stromx-studio reads the data which is directed to \
 one of the observer windows."));
     documentation->setWordWrap(true);
-    spinBox = new QSpinBox();
+    m_accessTimeoutSpinBox = new QSpinBox();
+    m_accessTimeoutSpinBox->setMinimum(0);
+    m_accessTimeoutSpinBox->setMaximum(1e6);
+    m_accessTimeoutSpinBox->setSingleStep(100);
     
     groupBoxLayout = new QVBoxLayout;
     editLayout = new QHBoxLayout;
     editLayout->addWidget(label);
-    editLayout->addWidget(spinBox);
+    editLayout->addWidget(m_accessTimeoutSpinBox);
     groupBoxLayout->addItem(editLayout);
     groupBoxLayout->addWidget(documentation);
     box->setLayout(groupBoxLayout);
@@ -50,12 +54,15 @@ pre-defined amount of time each time it sent data to an operator input. \
 The improves the visualization of the data for streams which process data \
 very fast. The length of the delay is defined here."));
     documentation->setWordWrap(true);
-    spinBox = new QSpinBox();
+    m_delayDurationSpinBox = new QSpinBox();
+    m_delayDurationSpinBox->setMinimum(1);
+    m_delayDurationSpinBox->setMaximum(1e6);
+    m_delayDurationSpinBox->setSingleStep(100);
     
     groupBoxLayout = new QVBoxLayout;
     editLayout = new QHBoxLayout;
     editLayout->addWidget(label);
-    editLayout->addWidget(spinBox);
+    editLayout->addWidget(m_delayDurationSpinBox);
     groupBoxLayout->addItem(editLayout);
     groupBoxLayout->addWidget(documentation);
     box->setLayout(groupBoxLayout);
@@ -64,9 +71,17 @@ very fast. The length of the delay is defined here."));
     setLayout(dialogLayout);
 }
 
-
 void SettingsDialog::setModel(StreamModel* stream)
 {
-    m_stream = stream;
+    // get the current values from the stream
+    m_delayDurationSpinBox->setValue(stream->delayDuration());
+    m_accessTimeoutSpinBox->setValue(stream->accessTimeout());
+    
+    // synchronize the dialog with the stream settings
+    connect(stream, SIGNAL(delayDurationChanged(int)), m_delayDurationSpinBox, SLOT(setValue(int)));
+    connect(stream, SIGNAL(accessTimeoutChanged(int)), m_accessTimeoutSpinBox, SLOT(setValue(int)));
+    connect(m_delayDurationSpinBox, SIGNAL(valueChanged(int)), stream, SLOT(setDelayDuration(int)));
+    connect(m_accessTimeoutSpinBox, SIGNAL(valueChanged(int)), stream, SLOT(setAccessTimeout(int)));
 }
+
 

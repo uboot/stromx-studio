@@ -860,14 +860,25 @@ void StreamModel::setDelayActive(bool active)
 
 void StreamModel::setDelayDuration(int delay)
 {
-    m_delayDuration = delay >= 0 ? delay : 0;
+    int truncatedDelay = delay >= 0 ? delay : 0;
+    
+    if(truncatedDelay != m_delayDuration)
+    {
+        m_delayDuration = truncatedDelay;
+        
+        if(delayActive())
+            m_stream->setDelay(m_delayDuration);
+        
+        emit delayDurationChanged(m_delayDuration);
+    }
 }
 
 void StreamModel::setAccessTimeout(int timeout)
 {
-    if(timeout != m_accessTimeout)
+    int truncatedTimeout = timeout >= 0 ? timeout : 0;
+    if(truncatedTimeout != m_accessTimeout)
     {
-        m_accessTimeout = timeout >= 0 ? timeout : 0;
+        m_accessTimeout = truncatedTimeout;
         emit accessTimeoutChanged(m_accessTimeout);
     }
 }

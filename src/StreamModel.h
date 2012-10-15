@@ -250,6 +250,9 @@ signals:
     /** An operation accessing data or parameters of the stream timed out. */
     void accessTimedOut();
     
+    /** The duration of the delay in slow processing mode changed. */
+    void delayDurationChanged(int delay);
+    
     /** The maximal time to wait when accessing the stream changed. */
     void accessTimeoutChanged(int timeout);
     
