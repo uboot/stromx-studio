@@ -36,6 +36,7 @@ private slots:
     void testDefaultConstructor();
     void testFileConstructorCamera();
     void testFileConstructorConnector();
+    void testFileConstructorExtraParameter();
     
 private:
     QUndoStack* m_undoStack;
