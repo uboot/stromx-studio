@@ -69,7 +69,7 @@ InputModel* ObserverModel::input(int position)
     return m_inputs[position];
 }
 
-int ObserverModel::columnCount(const QModelIndex& parent) const
+int ObserverModel::columnCount(const QModelIndex& /*parent*/) const
 {
     return ObserverTreeModel::NUM_COLUMNS;
 }
@@ -104,7 +104,7 @@ QVariant ObserverModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
-QModelIndex ObserverModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex ObserverModel::index(int row, int column, const QModelIndex& /*parent*/) const
 {
     return createIndex(row, column, const_cast<ObserverModel*>(this));
 }
@@ -125,7 +125,7 @@ void ObserverModel::handleRowsAboutToBeInserted(const QModelIndex& parent, int s
         beginInsertRows(QModelIndex(), start, end);
 }
 
-void ObserverModel::handleRowsInserted(const QModelIndex& parent, int start, int end)
+void ObserverModel::handleRowsInserted(const QModelIndex& parent, int /*start*/, int /*end*/)
 {
     if(concernsThisObserver(parent))
         endInsertRows();
@@ -137,7 +137,7 @@ void ObserverModel::handleRowsAboutToBeRemoved(const QModelIndex& parent, int st
         beginRemoveRows(QModelIndex(), start, end);
 }
 
-void ObserverModel::handleRowsRemoved(const QModelIndex& parent, int start, int end)
+void ObserverModel::handleRowsRemoved(const QModelIndex& parent, int /*start*/, int /*end*/)
 {
     if(concernsThisObserver(parent))
         endRemoveRows();
@@ -187,7 +187,8 @@ Qt::DropActions ObserverModel::supportedDropActions() const
     return Qt::MoveAction | Qt::CopyAction;
 }
 
-bool ObserverModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
+bool ObserverModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
+                                 int /*row*/, int /*column*/, const QModelIndex& parent)
 {
     int observerPos = m_parent->observers().indexOf(const_cast<ObserverModel*>(this));
     if(observerPos >= 0)

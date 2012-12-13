@@ -21,6 +21,7 @@ Image::Image(const QImage& image)
 }
 
 Image::Image(const Image& image)
+    : stromx::core::ImageWrapper()
 {
     m_image = image.m_image;
     initializeParent();
@@ -44,7 +45,7 @@ void Image::constructFromImage(const QImage& image)
     initializeParent();
 }
 
-stromx::core::Data*const Image::clone() const
+stromx::core::Data* Image::clone() const
 {
     return new Image(*this);
 }

@@ -42,7 +42,7 @@ class ExceptionOperator : public stromx::core::OperatorKernel
 public:
     ExceptionOperator();
     
-    virtual OperatorKernel* const clone() const { return new ExceptionOperator; }
+    virtual OperatorKernel* clone() const { return new ExceptionOperator; }
     virtual void setParameter(const unsigned int id, const stromx::core::Data& value);
     const stromx::core::DataRef getParameter(const unsigned int id) const;
     virtual void execute(stromx::core::DataProvider& provider);

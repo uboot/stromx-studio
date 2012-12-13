@@ -11,12 +11,12 @@ ErrorListModel::ErrorListModel(QObject* parent)
 {
 }
 
-int ErrorListModel::columnCount(const QModelIndex& parent) const
+int ErrorListModel::columnCount(const QModelIndex& /*parent*/) const
 {
     return 2;
 }
 
-int ErrorListModel::rowCount(const QModelIndex& parent) const
+int ErrorListModel::rowCount(const QModelIndex& /*parent*/) const
 {
     return m_errorList.count();
 }

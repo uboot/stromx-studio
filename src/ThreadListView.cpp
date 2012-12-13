@@ -128,7 +128,7 @@ void ThreadListView::contextMenuEvent(QContextMenuEvent* event)
     menu.exec(event->globalPos());
 }
 
-void ThreadListView::updateThreadSelected(const QModelIndex& current, const QModelIndex& previous)
+void ThreadListView::updateThreadSelected(const QModelIndex& current, const QModelIndex& /*previous*/)
 {
     if(current.isValid() && ! m_model->isActive())
         emit removeThreadActiveChanged(true);

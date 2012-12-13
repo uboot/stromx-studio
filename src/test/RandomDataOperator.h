@@ -44,7 +44,7 @@ class RandomDataOperator : public stromx::core::OperatorKernel
 public:
     RandomDataOperator();
     
-    virtual OperatorKernel* const clone() const { return new RandomDataOperator; }
+    virtual OperatorKernel* clone() const { return new RandomDataOperator; }
     virtual void setParameter(const unsigned int id, const stromx::core::Data& value);
     const stromx::core::DataRef getParameter(const unsigned int id) const;
     virtual void execute(stromx::core::DataProvider& provider);

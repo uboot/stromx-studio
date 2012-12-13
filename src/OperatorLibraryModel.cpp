@@ -102,7 +102,7 @@ QVariant OperatorLibraryModel::data(const QModelIndex& index, int role) const
     }
 }
 
-int OperatorLibraryModel::columnCount(const QModelIndex& parent) const
+int OperatorLibraryModel::columnCount(const QModelIndex& /*parent*/) const
 {
     return NUM_COLUMNS;
 }
@@ -245,7 +245,7 @@ QVariant OperatorLibraryModel::headerData(int section, Qt::Orientation orientati
     return QVariant();
 }
 
-const bool OperatorLibraryModel::isOperator(const QModelIndex& index) const
+bool OperatorLibraryModel::isOperator(const QModelIndex& index) const
 {
     return index.parent().isValid();
 }

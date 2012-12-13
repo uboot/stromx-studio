@@ -42,7 +42,7 @@ class DeadlockOperator : public stromx::core::OperatorKernel
 public:
     DeadlockOperator();
     
-    virtual OperatorKernel* const clone() const { return new DeadlockOperator; }
+    virtual OperatorKernel* clone() const { return new DeadlockOperator; }
     virtual void setParameter(const unsigned int id, const stromx::core::Data& value);
     const stromx::core::DataRef getParameter(const unsigned int id) const;
     virtual void activate();

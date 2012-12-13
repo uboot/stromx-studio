@@ -97,7 +97,7 @@ public:
     void resetLibraries();
     
     /** Returns true if \c index points to a valid operator. */
-    const bool isOperator(const QModelIndex & index) const;
+    bool isOperator(const QModelIndex & index) const;
     
     /** 
      * Allocates an operator data object for the operator which \c index

@@ -42,7 +42,7 @@ void DataManager::addInputLayer(InputModel* input, int pos)
     connectInput(input);
 }
 
-void DataManager::moveInputLayer(InputModel* input, int srcPos, int destPos)
+void DataManager::moveInputLayer(InputModel* /*input*/, int srcPos, int destPos)
 {
     if(srcPos == destPos)
         return;
@@ -93,7 +93,7 @@ void DataManager::removeInputLayer(InputModel* input, int pos)
     m_visualizer->removeLayer(m_inputs.count());
 }
 
-void DataManager::updateLayerData(OperatorModel::ConnectorType type, unsigned int id,
+void DataManager::updateLayerData(OperatorModel::ConnectorType /*type*/, unsigned int id,
                                   stromx::core::ReadAccess<> access)
 {
     if(access.empty())

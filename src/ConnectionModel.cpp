@@ -126,12 +126,12 @@ bool ConnectionModel::setData(const QModelIndex& index, const QVariant& value, i
     } 
 }
 
-QModelIndex ConnectionModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex ConnectionModel::index(int row, int column, const QModelIndex& /*parent*/) const
 {
     return createIndex(row, column);
 }
 
-QModelIndex ConnectionModel::parent(const QModelIndex& child) const
+QModelIndex ConnectionModel::parent(const QModelIndex& /*child*/) const
 {
     return QModelIndex();
 }

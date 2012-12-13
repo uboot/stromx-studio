@@ -42,7 +42,7 @@ public:
     virtual const std::string & type() const { return TYPE; }
     virtual const std::string & package() const { return PACKAGE; }
     
-    virtual Data* const clone() const;
+    virtual Data* clone() const;
     
 private:
     static const std::string TYPE;

@@ -50,7 +50,7 @@ public:
     
     ParameterOperator();
     
-    virtual OperatorKernel* const clone() const { return new ParameterOperator; }
+    virtual OperatorKernel* clone() const { return new ParameterOperator; }
     virtual void setParameter(const unsigned int id, const stromx::core::Data& value);
     const stromx::core::DataRef getParameter(const unsigned int id) const;
     virtual void execute(stromx::core::DataProvider& provider);

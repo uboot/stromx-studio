@@ -31,7 +31,7 @@ void LimitUndoStack::handleCanUndoChanged(bool canUndo)
         emit undoActionEnabledChanged(canUndo);
 }
 
-void LimitUndoStack::handleUndoIndexChanged(int index)
+void LimitUndoStack::handleUndoIndexChanged(int /*index*/)
 {
     // disable undo stack for any undo actions beyond the limit
     if(QUndoStack::index() == m_currentUndoLimit)

@@ -12,7 +12,7 @@ ExceptionObserver::ExceptionObserver(QObject* receiver)
 
 void ExceptionObserver::observe(const stromx::core::ExceptionObserver::Phase phase,
                                 const stromx::core::OperatorError& ex,
-                                const stromx::core::Thread*const thread) const
+                                const stromx::core::Thread* /*thread*/) const
 {
     ErrorData data(ex, ErrorData::Type(phase));
     sendErrorData(data);

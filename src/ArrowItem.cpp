@@ -25,10 +25,6 @@ QRectF ArrowItem::boundingRect() const
     return m_shaft->boundingRect();
 }
 
-void ArrowItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
-{
-}
-
 void ArrowItem::rotateHead()
 {
     double angle = - m_shaft->line().angle();

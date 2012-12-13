@@ -107,7 +107,8 @@ void ObserverTreeView::removeSelectedEntry()
     }
 }
 
-void ObserverTreeView::updateObserverSelected(const QModelIndex& current, const QModelIndex& previous)
+void ObserverTreeView::updateObserverSelected(const QModelIndex& current,
+                                              const QModelIndex& /*previous*/)
 {
     if(current.isValid())
     {

@@ -50,7 +50,8 @@ QPainterPath ConnectionItem::shape() const
     return m_path->shape();
 }
 
-void ConnectionItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void ConnectionItem::paint(QPainter* /*painter*/, const QStyleOptionGraphicsItem* /*option*/,
+                           QWidget* /*widget*/)
 {
 }
 

@@ -5,7 +5,7 @@ PropertyModel::PropertyModel(QObject* parent)
 {
 }
 
-int PropertyModel::columnCount(const QModelIndex& index) const
+int PropertyModel::columnCount(const QModelIndex& /*index*/) const
 {
     return NUM_COLUMNS;
 }

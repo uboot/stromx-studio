@@ -17,7 +17,7 @@ int ThreadListModel::rowCount(const QModelIndex& parent) const
         return 0;
 }
 
-int ThreadListModel::columnCount(const QModelIndex& parent) const
+int ThreadListModel::columnCount(const QModelIndex& /*parent*/) const
 {
     return NUM_COLUMNS;
 }
@@ -75,7 +75,7 @@ QVariant ThreadListModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-bool ThreadListModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool ThreadListModel::setData(const QModelIndex& index, const QVariant& value, int /*role*/)
 {
     if(! index.isValid())
         return false;
@@ -163,7 +163,7 @@ ThreadModel* ThreadListModel::thread(const QModelIndex& index) const
         return 0;
 }
 
-QModelIndex ThreadListModel::index(int row, int column, const QModelIndex & parent) const
+QModelIndex ThreadListModel::index(int row, int column, const QModelIndex & /*parent*/) const
 {
     if(row >= 0 && row < m_threads.size())
         return createIndex(row, column, m_threads[row]);

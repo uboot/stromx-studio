@@ -40,7 +40,7 @@ int ObserverTreeModel::rowCount(const QModelIndex& parent) const
     return 0;
 }
 
-int ObserverTreeModel::columnCount(const QModelIndex& parent) const
+int ObserverTreeModel::columnCount(const QModelIndex& /*parent*/) const
 {
     return NUM_VISIBLE_COLUMNS;
 }
@@ -95,7 +95,7 @@ void ObserverTreeModel::removeInput(ObserverModel* observer, int inputPos)
 {
     InputModel* input = observer->input(inputPos);
     int observerPos = m_observers.indexOf(observer);
-    Q_ASSERT(observer >= 0);
+    Q_ASSERT(observer);
     
     QUndoCommand* cmd = new RemoveInputCmd(this, observerPos, inputPos, input);
     m_undoStack->push(cmd);
@@ -350,7 +350,7 @@ Qt::ItemFlags ObserverTreeModel::flags(const QModelIndex& index) const
 }
 
 bool ObserverTreeModel::dropMimeData(const QMimeData *data,
-     Qt::DropAction action, int row, int column, const QModelIndex &parent)
+     Qt::DropAction action, int row, int /*column*/, const QModelIndex &parent)
 {
     if(action == Qt::IgnoreAction)
         return true;

@@ -71,7 +71,7 @@ public:
     virtual ~OperatorModel();
     
     /** Returns the stromx operator of this model. */
-    stromx::core::Operator* const op() const { return m_op; }
+    stromx::core::Operator* op() const { return m_op; }
     
     /** Returns the package the operator belongs to. */
     const QString & package() const;

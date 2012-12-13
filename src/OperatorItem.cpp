@@ -56,7 +56,8 @@ QRectF OperatorItem::boundingRect() const
     return m_opRect->boundingRect();
 }
 
-void OperatorItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void OperatorItem::paint(QPainter* /*painter*/, const QStyleOptionGraphicsItem* /*option*/,
+                         QWidget* /*widget*/)
 {
 }
 
