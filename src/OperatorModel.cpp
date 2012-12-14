@@ -42,7 +42,7 @@ OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
     
     // Activate and deactivate when the stream stream starts/stop
     connect(m_stream, SIGNAL(streamStarted()), this, SLOT(setActiveTrue()));
-    connect(m_stream, SIGNAL(streamStopped()), this, SLOT(setActiveFalse()));
+    connect(m_stream, SIGNAL(streamJoined()), this, SLOT(setActiveFalse()));
     
     // forward the access time out of the stream to the parameter server
     connect(m_stream, SIGNAL(accessTimeoutChanged(int)), m_server, SLOT(setAccessTimeout(int)));
