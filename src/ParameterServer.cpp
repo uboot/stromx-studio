@@ -42,6 +42,8 @@ const QVariant ParameterServer::getParameter(unsigned int id, int role)
                     return tr("Setting...");
                 case TIMED_OUT:
                     return tr("Time out");
+                case ERROR:
+                    return tr("N/A");
                 default:
                     Q_ASSERT(false);
             }
