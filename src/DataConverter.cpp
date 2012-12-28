@@ -104,7 +104,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
                     ++iter_enumDesc)
                 {
                     if (intValue == iter_enumDesc->value())
-                        return QString::fromStdString(iter_enumDesc->doc().title());
+                        return QString::fromStdString(iter_enumDesc->title());
                 }
                 return QString(QObject::tr("<Unknown ENUM>"));
             }
@@ -128,7 +128,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
                     iter_enumDesc != vectorEnumDesc.end();
                     ++iter_enumDesc)
                 {
-                    choices.append(QString::fromStdString(iter_enumDesc->doc().title()));
+                    choices.append(QString::fromStdString(iter_enumDesc->title()));
                 }
                 return choices;
             }

@@ -110,7 +110,7 @@ const std::vector<const Description*> ExceptionOperator::setupInputs()
     Description* description = 0;
     
     description = new Description(INPUT, DataVariant::NONE);
-    description->setDoc("Input");
+    description->setTitle("Input");
     inputs.push_back(description);
     
     return inputs;
@@ -128,27 +128,27 @@ const std::vector<const Parameter*> ExceptionOperator::setupParameters()
     std::vector<const Parameter*> parameters;
     
     Parameter* param = new Parameter(THROW_INITIALIZE, DataVariant::BOOL);
-    param->setDoc("Exception on initialize");
+    param->setTitle("Exception on initialize");
     param->setAccessMode(Parameter::NONE_WRITE);
     parameters.push_back(param);
     
     param = new Parameter(THROW_ACTIVATE, DataVariant::BOOL);
-    param->setDoc("Exception on activate");
+    param->setTitle("Exception on activate");
     param->setAccessMode(Parameter::INITIALIZED_WRITE);
     parameters.push_back(param);
     
     param = new Parameter(THROW_EXECUTE, DataVariant::BOOL);
-    param->setDoc("Exception on execute");
+    param->setTitle("Exception on execute");
     param->setAccessMode(Parameter::ACTIVATED_WRITE);
     parameters.push_back(param);
     
     param = new Parameter(THROW_DEACTIVATE, DataVariant::BOOL);
-    param->setDoc("Exception on deactivate");
+    param->setTitle("Exception on deactivate");
     param->setAccessMode(Parameter::INITIALIZED_WRITE);
     parameters.push_back(param);
     
     param = new Parameter(THROW_DEINITIALIZE, DataVariant::BOOL);
-    param->setDoc("Exception on deinitialize");
+    param->setTitle("Exception on deinitialize");
     param->setAccessMode(Parameter::INITIALIZED_WRITE);
     parameters.push_back(param);
     

@@ -141,7 +141,7 @@ Use <b>File -> Load Libraries...</b> to load additional libraries.")
         const stromx::core::OperatorInfo& op = e.op();
         QString error = tr("Failed to set parameter <i>%1</i> ('%2') of operator of type <i>%3</i> in package <i>%4</i>.")
                         .arg(QString("%1").arg(e.parameter().id()),
-                             QString::fromStdString(e.parameter().doc().title()),
+                             QString::fromStdString(e.parameter().title()),
                              QString::fromStdString(op.type()),
                              QString::fromStdString(op.package()));
         throw ReadStreamFailed(error);

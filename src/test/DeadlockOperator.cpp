@@ -109,7 +109,7 @@ const std::vector<const Description*> DeadlockOperator::setupInputs()
     Description* description = 0;
     
     description = new Description(INPUT, DataVariant::UINT_32);
-    description->setDoc("Input");
+    description->setTitle("Input");
     inputs.push_back(description);
     
     return inputs;
@@ -121,7 +121,7 @@ const std::vector<const Description*> DeadlockOperator::setupOutputs()
     Description* description = 0;
     
     description = new Description(OUTPUT, DataVariant::UINT_32);
-    description->setDoc("Output");
+    description->setTitle("Output");
     outputs.push_back(description);
     
     return outputs;
@@ -132,17 +132,17 @@ const std::vector<const Parameter*> DeadlockOperator::setupParameters()
     std::vector<const Parameter*> parameters;
     
     Parameter* param = new Parameter(LOCK_PARAMETERS, DataVariant::BOOL);
-    param->setDoc("Deadlock parameter access");
+    param->setTitle("Deadlock parameter access");
     param->setAccessMode(Parameter::INITIALIZED_WRITE);
     parameters.push_back(param);
     
     param = new Parameter(LOCK_DATA, DataVariant::BOOL);
-    param->setDoc("Deadlock data access");
+    param->setTitle("Deadlock data access");
     param->setAccessMode(Parameter::INITIALIZED_WRITE);
     parameters.push_back(param);
     
     param = new Parameter(DUMMY, DataVariant::UINT_8);
-    param->setDoc("Dummy parameter");
+    param->setTitle("Dummy parameter");
     param->setAccessMode(Parameter::ACTIVATED_WRITE);
     parameters.push_back(param);
     
