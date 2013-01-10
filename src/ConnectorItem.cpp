@@ -168,14 +168,22 @@ void ConnectorItem::updateConnectionPosition(ConnectionItem* connection) const
 
 QString ConnectorItem::connectorToolTip() const
 {
-    std::string text;
     const stromx::core::OperatorInfo & info = m_op->op()->info();
-    if(connectorType() == INPUT)
-        text = info.input(m_id).title();
-    else
-        text = info.output(m_id).title();
     
-    return QString::fromStdString(text);
+    QString connectorTitle;
+    QString variantTitle;
+    if(connectorType() == INPUT)
+    {
+        connectorTitle = QString::fromStdString(info.input(m_id).title());
+        variantTitle = QString::fromStdString(info.input(m_id).variant().title());
+    }
+    else
+    {
+        connectorTitle = QString::fromStdString(info.output(m_id).title());
+        variantTitle = QString::fromStdString(info.output(m_id).variant().title());
+    }
+    
+    return QString("%1 (%2)").arg(connectorTitle).arg(variantTitle);
 }
 
 void ConnectorItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
