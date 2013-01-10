@@ -234,13 +234,13 @@ void MainWindow::createActions()
                 this, SLOT(openRecentFile()));
     }
 
-    m_loadLibrariesAct = new QAction(tr("&Load Libraries..."), this);
-    m_loadLibrariesAct->setStatusTip(tr("Load operator libraries"));
-    connect(m_loadLibrariesAct, SIGNAL(triggered()), this, SLOT(loadLibraries()));
+    m_loadPackagesAct = new QAction(tr("&Load packages..."), this);
+    m_loadPackagesAct->setStatusTip(tr("Load operator packages"));
+    connect(m_loadPackagesAct, SIGNAL(triggered()), this, SLOT(loadPackages()));
 
-    m_resetLibrariesAct = new QAction(tr("&Reset Libraries..."), this);
-    m_resetLibrariesAct->setStatusTip(tr("Reset operator libraries"));
-    connect(m_resetLibrariesAct, SIGNAL(triggered()), this, SLOT(resetLibraries()));
+    m_resetPackagesAct = new QAction(tr("&Reset packages..."), this);
+    m_resetPackagesAct->setStatusTip(tr("Reset operator packages"));
+    connect(m_resetPackagesAct, SIGNAL(triggered()), this, SLOT(resetPackages()));
 
     m_quitAct = new QAction(tr("&Quit"), this);
     m_quitAct->setShortcuts(QKeySequence::Quit);
@@ -327,8 +327,8 @@ void MainWindow::createMenus()
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_emptyRecentFilesAct);
     m_fileMenu->addSeparator();
-    m_fileMenu->addAction(m_loadLibrariesAct);
-    m_fileMenu->addAction(m_resetLibrariesAct);
+    m_fileMenu->addAction(m_loadPackagesAct);
+    m_fileMenu->addAction(m_resetPackagesAct);
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_quitAct);
 
@@ -791,20 +791,20 @@ void MainWindow::writeSettings()
     settings.setValue("windowState", saveState());
 }
 
-void MainWindow::loadLibraries()
+void MainWindow::loadPackages()
 {
     QSettings settings("stromx", "stromx-studio");
-    QString lastDir = settings.value("lastLibrary", QDir::home().absolutePath()).toString();
+    QString lastDir = settings.value("lastPackage", QDir::home().absolutePath()).toString();
     
     QStringList files = QFileDialog::getOpenFileNames(
                             this,
-                            tr("Select one or more stromx libraries to open"),
+                            tr("Select one or more stromx packages to open"),
                             lastDir,
 #ifdef UNIX                          
-                            tr("Libraries (*.so)")); 
+                            tr("Package (*.so)")); 
 #endif // UNIX
 #ifdef WIN32                          
-                            tr("Libraries (*.dll)")); 
+                            tr("Package (*.dll)")); 
 #endif // WIN32
     
     // load each library
@@ -814,9 +814,9 @@ void MainWindow::loadLibraries()
     {
         try
         {
-            m_operatorLibraryView->operatorLibraryModel()->loadLibrary(file);
+            m_operatorLibraryView->operatorLibraryModel()->loadPackage(file);
         }
-        catch(LoadLibraryFailed&)
+        catch(LoadPackageFailed&)
         {
             std::cout << "Failed to load '" << file.toStdString() << "'" << std::endl;
         }
@@ -826,11 +826,11 @@ void MainWindow::loadLibraries()
     if(files.size())
     {
         QString lastDir = files.back();
-        settings.setValue("lastLibrary", lastDir);
+        settings.setValue("lastPackage", lastDir);
     }
 }
 
-void MainWindow::resetLibraries()
+void MainWindow::resetPackages()
 {
     QMessageBox msgBox;
     msgBox.setText(tr("Do you want to reset the operator libraries?"));
@@ -839,7 +839,7 @@ void MainWindow::resetLibraries()
     int ret = msgBox.exec();
     
     if(ret == QMessageBox::Ok)
-        m_operatorLibraryView->operatorLibraryModel()->resetLibraries();
+        m_operatorLibraryView->operatorLibraryModel()->resetLibrary();
 }
 
 QString MainWindow::strippedName(const QString &fullFileName)

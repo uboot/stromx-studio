@@ -23,19 +23,19 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
     updateOperators();
     
     QSettings settings("stromx", "stromx-studio");
-    QStringList loadedLibraries = settings.value("loadedLibraries").toStringList();
+    QStringList loadedPackages = settings.value("loadedPackages").toStringList();
             
     // reset the library list
-    settings.setValue("loadedLibraries", QStringList());
+    settings.setValue("loadedPackages", QStringList());
     
-    foreach(QString file, loadedLibraries)
+    foreach(QString file, loadedPackages)
     {
-        // try to load the library and ignore any failures
+        // try to load the package and ignore any failures
         try
         {
-            loadLibrary(file);
+            loadPackage(file);
         }
-        catch(LoadLibraryFailed & e)
+        catch(LoadPackageFailed & e)
         {
             qWarning() << e.what();
         }
@@ -121,9 +121,9 @@ int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
     return 0;
 }
 
-void OperatorLibraryModel::loadLibrary(const QString& libPath)
+void OperatorLibraryModel::loadPackage(const QString& packagePath)
 {
-    QFileInfo info(libPath);
+    QFileInfo info(packagePath);
     
 #ifdef UNIX
     QRegExp regEx("lib(.+)_(.+)");
@@ -135,14 +135,14 @@ void OperatorLibraryModel::loadLibrary(const QString& libPath)
     
     regEx.indexIn(info.baseName());
     if(regEx.captureCount() != 2)
-        throw LoadLibraryFailed();
+        throw LoadPackageFailed();
     
     QString prefix = regEx.cap(1);
     QString postfix = regEx.cap(2);
     postfix[0] = postfix[0].toUpper();
     QString registrationFunctionName = prefix + "Register" + postfix;
     
-    QLibrary* lib = new QLibrary(libPath, this);
+    QLibrary* lib = new QLibrary(packagePath, this);
     
     // resolve the registration function
     void (*registrationFunction)(stromx::core::Registry& registry);
@@ -153,7 +153,7 @@ void OperatorLibraryModel::loadLibrary(const QString& libPath)
     if(! registrationFunction)
     {
         delete lib;
-        throw LoadLibraryFailed();
+        throw LoadPackageFailed();
     }
     
     // try to register the library
@@ -165,31 +165,31 @@ void OperatorLibraryModel::loadLibrary(const QString& libPath)
     {
         // even if an exception was thrown, parts of the library might have been loaded
         // therefore the library is not closed
-        throw LoadLibraryFailed();
+        throw LoadPackageFailed();
     }
     
-    // remember the library
-    m_loadedLibraries.append(libPath);
+    // remember the package
+    m_loadedPackages.append(packagePath);
     
-    // save the library list
+    // save the package list
     QSettings settings("stromx", "stromx-studio");
-    settings.setValue("loadedLibraries", m_loadedLibraries);
+    settings.setValue("loadedPackages", m_loadedPackages);
         
     updateOperators();
 }
 
-void OperatorLibraryModel::resetLibraries()
+void OperatorLibraryModel::resetLibrary()
 {
     delete m_factory;
     m_factory = 0;
-    m_loadedLibraries.clear();
+    m_loadedPackages.clear();
     
     setupFactory();
     updateOperators();
     
-    // reset the library list
+    // reset the package list
     QSettings settings("stromx", "stromx-studio");
-    settings.setValue("loadedLibraries", QStringList());
+    settings.setValue("loadedPackages", QStringList());
 }
 
 void OperatorLibraryModel::setupFactory()

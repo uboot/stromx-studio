@@ -35,10 +35,10 @@ private:
     QString m_message;
 }; 
 
-class LoadLibraryFailed : public Exception
+class LoadPackageFailed : public Exception
 {
 public:
-    LoadLibraryFailed(const QString & message = "") : Exception(message) {}
+    LoadPackageFailed(const QString & message = "") : Exception(message) {}
 };
 
 class ReadStreamFailed : public Exception

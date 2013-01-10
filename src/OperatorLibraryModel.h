@@ -86,15 +86,15 @@ public:
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
     
-    /** Load the shared library located at \c libPath. */
-    void loadLibrary(const QString& libPath);
+    /** Load the operator package located at \c packagePath. */
+    void loadPackage(const QString& packagePath);
     
     /** 
      * Removes all previously loaded packages from the library.
      * All packages which have been loaded in the constructor are
      * preserved (i.e. they are automatically reloaded after resetting).
      */
-    void resetLibraries();
+    void resetLibrary();
     
     /** Returns true if \c index points to a valid operator. */
     bool isOperator(const QModelIndex & index) const;
@@ -132,7 +132,7 @@ private:
     void setupFactory();
     
     QList<Package> m_packages;
-    QStringList m_loadedLibraries;
+    QStringList m_loadedPackages;
     stromx::core::Factory* m_factory;
 };
 

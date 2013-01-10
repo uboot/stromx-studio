@@ -16,14 +16,14 @@ StreamModelTest::StreamModelTest()
     try
     {
 #ifdef UNIX
-    m_operatorLibraryModel->loadLibrary("libstromx_test");
+    m_operatorLibraryModel->loadPackage("libstromx_test");
 #endif // UNIX
     
 #ifdef WIN32
-    m_operatorLibraryModel->loadLibrary("stromx_test");
+    m_operatorLibraryModel->loadPackage("stromx_test");
 #endif // WIN32
     }
-    catch(LoadLibraryFailed&)
+    catch(LoadPackageFailed&)
     {
     }
 }
