@@ -146,9 +146,8 @@ void OperatorLibraryModel::loadPackage(const QString& packagePath)
     
     // resolve the registration function
     void (*registrationFunction)(stromx::core::Registry& registry);
-    const char* registrationFunctionNameCStr = registrationFunctionName.toStdString().c_str();
     registrationFunction = reinterpret_cast<void (*)(stromx::core::Registry& registry)>
-        (lib->resolve(registrationFunctionNameCStr));
+        (lib->resolve(registrationFunctionName.toStdString().c_str()));
         
     if(! registrationFunction)
     {
