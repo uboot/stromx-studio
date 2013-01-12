@@ -96,7 +96,7 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::co
             for(unsigned int i = 0; i < 256; ++i)
                 colorTable[i] = qRgb(i, i, i);
             qtImage.setColorTable(colorTable);
-            QPixmap pixmap(QPixmap::fromImage(qtImage));
+            QPixmap pixmap = QPixmap::fromImage(qtImage);
             items.append(new QGraphicsPixmapItem(pixmap));
         }
     }

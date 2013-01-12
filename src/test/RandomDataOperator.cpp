@@ -98,7 +98,7 @@ const std::vector<const Description*> RandomDataOperator::setupOutputs()
     std::vector<const Description*> outputs;
     
     Description* description = new Description(OUTPUT, DataVariant::NONE);
-    description->setDoc("Output");
+    description->setTitle("Output");
     outputs.push_back(description);
     
     return outputs;
@@ -109,7 +109,7 @@ const std::vector<const Parameter*> RandomDataOperator::setupParameters()
     std::vector<const Parameter*> parameters;
     
     EnumParameter* param = new EnumParameter(DATA_TYPE);
-    param->setDoc("Data type");
+    param->setTitle("Data type");
     param->setAccessMode(Parameter::ACTIVATED_WRITE);
     param->add(EnumDescription(LINE_SEGMENTS, "Line segments"));
     param->add(EnumDescription(STRING, "String"));

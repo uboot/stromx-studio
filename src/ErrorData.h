@@ -44,8 +44,6 @@ public:
     /** The type of error, i.e. the state the error happened in. */
     enum Type
     {
-        /** Undefined error. */
-        UNDEFINED,
         /** Initialization of the operator. */
         INITIALIZATION,
         /** Activation of the operator. */
@@ -57,7 +55,9 @@ public:
         /** Deinitialization of the operator. */
         DEINITIALIZATION,
         /** Accessing a parameter. */
-        PARAMETER_ACCESS
+        PARAMETER_ACCESS,
+        /** Undefined error. */
+        UNDEFINED
     };
     
     /** Constructs an error data of an undefined error. */
