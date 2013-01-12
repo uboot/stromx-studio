@@ -161,7 +161,8 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
         DISPLAY, // 0
         EDIT, // 1
         USER, // 2
-        OTHER // 3
+        OTHER, // 3
+        SETTING // 4
     };
     
     // possible return values
@@ -175,20 +176,21 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
         STRING_NAME, // 5
         NAME, // 6
         PARAMETER_NAME, // 7
-        PARAMETER_VALUE // 8
+        PARAMETER_VALUE, // 8
+        PARAMETER_SETTING // 9
     };
     
     // the decision table
     int table[4][2][5] =
-    /* Row          0  0  0  0    0  0  0  0      1  1  1  1    1  1  1  1 
-     * Column       0  0  0  0    1  1  1  1      0  0  0  0    1  1  1  1
-     * Role         0  1  2  3    0  1  2  3      0  1  2  3    0  1  2  3 */
-    /* Action */ {{{1, 0, 0, 0}, {2, 0, 0, 0}}, {{3, 0, 0, 0}, {4, 0, 0, 0}},
+    /* Row          0  0  0  0  0    0  0  0  0  0      1  1  1  1  1    1  1  1  1  1
+     * Column       0  0  0  0  0    1  1  1  1  1      0  0  0  0  0    1  1  1  1  1
+     * Role         0  1  2  3  4    0  1  2  3  4      0  1  2  3  4    0  1  2  3  4 */
+    /* Action */ {{{1, 0, 0, 0, 0}, {2, 0, 0, 0, 0}}, {{3, 0, 0, 0, 0}, {4, 0, 0, 0, 0}},
                  
-    /* Row          2  2  2  2    2  2  2  2      3  3  3  3    3  3  3  3 
-     * Column       0  0  0  0    1  1  1  1      0  0  0  0    1  1  1  1
-     * Role         0  1  2  3    0  1  2  3      0  1  2  3    0  1  2  3 */
-    /* Action */  {{5, 0, 0, 0}, {6, 6, 0, 0}}, {{7, 0, 0, 0}, {8, 8, 8, 0}}};
+    /* Row          2  2  2  2  2    2  2  2  2  2      3  3  3  3  3    3  3  3  3  0 
+     * Column       0  0  0  0  0    1  1  1  1  1      0  0  0  0  0    1  1  1  1  1
+     * Role         0  1  2  3  4    0  1  2  3  4      0  1  2  3  4    0  1  2  3  4 */
+    /* Action */  {{5, 0, 0, 0, 0}, {6, 6, 0, 0, 0}}, {{7, 0, 0, 0, 0}, {8, 8, 8, 0, 9}}};
      
     // extract row, column and role type
     int row = rowType(index);
@@ -206,6 +208,11 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     case TriggerRole:
     case ImageRole:
         roleType = USER;
+        break;
+    case MinRole:
+    case MaxRole:
+    case StepRole:
+        roleType = SETTING;
         break;
     default:
         roleType = OTHER;
@@ -234,15 +241,41 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     case NAME:
         return QString::fromStdString(m_op->name());
     case PARAMETER_NAME:
-    {
         return QVariant(QString::fromStdString(param->title()));
-    }
     case PARAMETER_VALUE:
         return m_server->getParameter(param->id(), role);
+    case PARAMETER_SETTING:
+        return getParameterSetting(*param, role);
     case NOTHING:
     default:
         return QVariant();
     }
+}
+
+QVariant OperatorModel::getParameterSetting(const stromx::core::Parameter & param, int role)
+{
+    switch(role)
+    {
+        case MinRole:
+            if(param.min().isVariant(stromx::core::DataVariant::NONE))
+                return QVariant();
+            return DataConverter::toQVariant(param.min(), param, Qt::EditRole);
+            
+        case MaxRole:
+            if(param.max().isVariant(stromx::core::DataVariant::NONE))
+                return QVariant();
+            return DataConverter::toQVariant(param.max(), param, Qt::EditRole);
+            
+        case StepRole:
+            if(param.step().isVariant(stromx::core::DataVariant::NONE))
+                return QVariant();
+            return DataConverter::toQVariant(param.step(), param, Qt::EditRole);
+            
+        default:
+            Q_ASSERT(false);
+    }
+    
+    return QVariant();
 }
 
 bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int role)

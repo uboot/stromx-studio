@@ -148,7 +148,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::UInt8 & uint8Data = stromx::core::data_cast<stromx::core::UInt8>(data);
-                return int(uint8Data);
+                return uint(uint8Data);
             }
         }
         
@@ -166,7 +166,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::UInt16 & uint16Data = stromx::core::data_cast<stromx::core::UInt16>(data);
-                return int(uint16Data);
+                return uint(uint16Data);
             }
         }
         
@@ -184,7 +184,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
                 const stromx::core::UInt32 & uint32Data = stromx::core::data_cast<stromx::core::UInt32>(data);
-                return int(uint32Data);
+                return uint(uint32Data);
             }
         }
         

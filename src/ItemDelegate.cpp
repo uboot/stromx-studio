@@ -4,6 +4,7 @@
 #include <QComboBox>
 #include <QPainter>
 #include <QPushButton>
+#include <QSpinBox>
 #include <QMap>
 #include "Common.h"
 #include "ChooseImageButton.h"
@@ -61,7 +62,42 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
         return button;
     }
     
-    return QStyledItemDelegate::createEditor(parent, option, index);
+    // all other cases can be handled with the standard editors obtained
+    // from the parent class
+    QWidget* editor = QStyledItemDelegate::createEditor(parent, option, index);
+    
+    // if the widget is a spin box try to get reasonable paramters (min, max, step) for it
+    if(QSpinBox* spinBox = qobject_cast<QSpinBox*>(editor))
+        setSpinBoxParameters(index, spinBox);
+    
+    // return the editor
+    return editor;
+}
+
+bool ItemDelegate::canConvertToInt(const QVariant value)
+{
+    if(value.type() == QVariant::UInt)
+        return value.toInt() >= 0;
+    
+    if(value.type() == QVariant::Int)
+        return true;
+    
+    return false;
+}
+
+void ItemDelegate::setSpinBoxParameters(const QModelIndex& index, QSpinBox* spinBox) const
+{
+    QVariant min = index.model()->data(index, MinRole);
+    if(canConvertToInt(min))
+        spinBox->setMinimum(min.toInt());
+    
+    QVariant max = index.model()->data(index, MaxRole);
+    if(canConvertToInt(max))
+        spinBox->setMaximum(max.toInt());
+    
+    QVariant step = index.model()->data(index, StepRole);
+    if(canConvertToInt(step))
+        spinBox->setSingleStep(step.toInt());
 }
 
 void ItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const

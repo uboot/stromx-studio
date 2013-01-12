@@ -191,6 +191,9 @@ private:
     
     static QString statusToString(int status);
     
+    /** Returns the min, max or step (depending on \c role) value of \c param. */
+    static QVariant getParameterSetting(const stromx::core::Parameter & param, int role);
+    
     /** Sets the name of the operator. */
     void doSetName(const QString & name);
     
