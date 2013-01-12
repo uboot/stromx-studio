@@ -28,9 +28,7 @@ can block some time if the stream is active and under heavy load. \
 However, if either the stream design or the one of the operators is \
 faulty, the operation can be blocked forever.\n\
 When accessing a parameter stroms-studio waits a pre-defined amount of time \
-after which it decides that the latter is the case. This time is defined here. \
-The same value is valid when stromx-studio reads the data which is directed to \
-one of the observer windows."));
+after which it decides that the latter is the case. This time is defined here."));
     documentation->setWordWrap(true);
     m_accessTimeoutSpinBox = new QSpinBox();
     m_accessTimeoutSpinBox->setMinimum(0);

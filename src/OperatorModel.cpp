@@ -12,7 +12,6 @@
 #include "ConnectorOccupyEvent.h"
 #include "DataConverter.h"
 #include "MoveOperatorCmd.h"
-#include "ObtainReadAccessTask.h"
 #include "ParameterServer.h"
 #include "RenameOperatorCmd.h"
 #include "StreamModel.h"
@@ -490,33 +489,9 @@ QUndoStack* OperatorModel::undoStack() const
 void OperatorModel::customEvent(QEvent* event)
 {
     if(ConnectorOccupyEvent* occupyEvent = dynamic_cast<ConnectorOccupyEvent*>(event))
-    {
         emit connectorOccupiedChanged(occupyEvent->type(), occupyEvent->id(), occupyEvent->occupied());
-    }
     else if(ConnectorDataEvent* dataEvent = dynamic_cast<ConnectorDataEvent*>(event))
-    {
-        if(! dataEvent->data().empty())
-        {
-            ObtainReadAccessTask* task = new ObtainReadAccessTask(dataEvent->type(), dataEvent->id(),
-                                                                  dataEvent->data(), m_stream->accessTimeout(),
-                                                                  this);
-            connect(task, SIGNAL(finished()), this, SLOT(handleObtainReadAccessTaskFinished()));
-            task->start();
-        }
-    }
-}
-
-void OperatorModel::handleObtainReadAccessTaskFinished()
-{
-    ObtainReadAccessTask* task = qobject_cast<ObtainReadAccessTask*>(sender());
-
-    if(task)
-    {
-        if(task->readAccess().empty())
-            emit operatorAccessTimedOut();
-        else
-            emit connectorDataChanged(task->type(), task->id(), task->readAccess());
-    }
+        emit connectorDataChanged(dataEvent->type(), dataEvent->id(), dataEvent->access());
 }
 
 void OperatorModel::handleParameterChanged(unsigned int id)

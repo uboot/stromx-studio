@@ -70,7 +70,7 @@ void DataVisualizer::setActive(int pos, bool active)
     
     foreach(QGraphicsItem* item, m_items[pos])
     {
-        // set the activation status of each valid item
+        // set the visibility status of each item
         if(item)
             item->setVisible(active);
     }

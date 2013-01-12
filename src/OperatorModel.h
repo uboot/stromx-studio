@@ -169,12 +169,6 @@ private slots:
     /** Resets the model and emits <tt>activeChanged(false)</tt>. */
     void setActiveFalse();
     
-    /** 
-     * Gets the read access from the finished task and emits either an connector
-     * data or an timeout signal.
-     */
-    void handleObtainReadAccessTaskFinished();
-    
     /** Emits a data changed event for the cell of the parameter \c id. */
     void handleParameterChanged(unsigned int id);
     
