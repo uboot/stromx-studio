@@ -22,6 +22,7 @@
 
 #include <QStyledItemDelegate>
 
+class QDoubleSpinBox;
 class QSpinBox;
 
 /** 
@@ -44,7 +45,7 @@ public:
     
     /**
      * Returns true if \c value can safely converted to an \c int value
-     * (i.e. the unsigned value is smaller than the maximal integer value.
+     * (i.e. the unsigned value is smaller than the maximal signed integer value).
      */
     static bool canConvertToInt(const QVariant value);
     
@@ -64,6 +65,12 @@ private slots:
      * and sets the according spinbox properties.
      */
     void setSpinBoxParameters(const QModelIndex & index, QSpinBox* spinBox) const;
+    
+    /** 
+     * Tries to read the min, max and step roles from the data at index
+     * and sets the according properties of double spin box.
+     */
+    void setDoubleSpinBoxParameters(const QModelIndex & index, QDoubleSpinBox* spinBox) const;
 };
 
 #endif // ITEMDELEGATE_H

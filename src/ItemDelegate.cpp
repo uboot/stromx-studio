@@ -70,6 +70,10 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
     if(QSpinBox* spinBox = qobject_cast<QSpinBox*>(editor))
         setSpinBoxParameters(index, spinBox);
     
+    // if the widget is a double spin box try to get reasonable paramters (min, max, step) for it
+    if(QDoubleSpinBox* spinBox = qobject_cast<QDoubleSpinBox*>(editor))
+        setDoubleSpinBoxParameters(index, spinBox);
+    
     // return the editor
     return editor;
 }
@@ -98,6 +102,21 @@ void ItemDelegate::setSpinBoxParameters(const QModelIndex& index, QSpinBox* spin
     QVariant step = index.model()->data(index, StepRole);
     if(canConvertToInt(step))
         spinBox->setSingleStep(step.toInt());
+}
+
+void ItemDelegate::setDoubleSpinBoxParameters(const QModelIndex& index, QDoubleSpinBox* spinBox) const
+{
+    QVariant min = index.model()->data(index, MinRole);
+    if(min.canConvert(QVariant::Double))
+        spinBox->setMinimum(min.toDouble());
+    
+    QVariant max = index.model()->data(index, MaxRole);
+    if(max.canConvert(QVariant::Double))
+        spinBox->setMaximum(max.toDouble());
+    
+    QVariant step = index.model()->data(index, StepRole);
+    if(step.canConvert(QVariant::Double))
+        spinBox->setSingleStep(step.toDouble());
 }
 
 void ItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
