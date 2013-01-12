@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-16" standalone="no" ?>
+<!DOCTYPE Stromx SYSTEM "stromx.dtd">
+<Stromx version="0.1.0">
+
+  <Stream name="">
+    <Operator id="0" name="WebCamera" package="Base" type="WebCamera" version="0.1.0">
+      <Parameter id="0">
+        <Data package="Core" type="Double" version="0.1.0">-1</Data>
+      </Parameter>
+      <Parameter id="1">
+        <Data package="Core" type="Double" version="0.1.0">0.5</Data>
+      </Parameter>
+    </Operator>
+    <Operator id="1" name="Blur" package="Base" type="Blur" version="0.1.0">
+      <Parameter id="0">
+        <Data package="Core" type="Bool" version="0.1.0">1</Data>
+      </Parameter>
+      <Parameter id="1">
+        <Data package="Core" type="Enum" version="0.1.0">1</Data>
+      </Parameter>
+      <Parameter id="2">
+        <Data package="Core" type="UInt32" version="0.1.0">1</Data>
+      </Parameter>
+      <Input id="0" operator="0" output="0"/>
+    </Operator>
+    <Operator id="2" name="Dump" package="Core" type="Dump" version="0.1.0">
+      <Input id="0" operator="1" output="0"/>
+    </Operator>
+    <Thread name="Thread 1">
+      <InputConnector input="0" operator="1"/>
+    </Thread>
+    <Thread name="Thread 2">
+      <InputConnector input="0" operator="2"/>
+    </Thread>
+  </Stream>
+
+</Stromx>
+<!--XML generated automatically by XmlWriter of the open source library Stromx-->
