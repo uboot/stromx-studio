@@ -5,84 +5,84 @@
   <Stream name="">
     <Operator id="0" name="Camera" package="Base" type="Camera" version="0.1.0">
       <Parameter id="0">
-        <Data package="Core" type="Bool" version="0.1.0">1</Data>
+        <Data package="Runtime" type="Bool" version="0.1.0">1</Data>
       </Parameter>
       <Parameter id="2">
-        <Data package="Core" type="Enum" version="0.1.0">1</Data>
+        <Data package="Runtime" type="Enum" version="0.1.0">1</Data>
       </Parameter>
       <Parameter id="3">
-        <Data package="Core" type="Trigger" version="0.1.0"></Data>
+        <Data package="Runtime" type="Trigger" version="0.1.0"></Data>
       </Parameter>
       <Parameter id="4">
-        <Data package="Core" type="UInt32" version="0.1.0">10</Data>
+        <Data package="Runtime" type="UInt32" version="0.1.0">10</Data>
       </Parameter>
       <Parameter id="8">
-        <Data package="Core" type="Double" version="0.1.0">1</Data>
+        <Data package="Runtime" type="Double" version="0.1.0">1</Data>
       </Parameter>
       <Parameter id="9">
-        <Data package="Core" type="Double" version="0.1.0">1</Data>
+        <Data package="Runtime" type="Double" version="0.1.0">1</Data>
       </Parameter>
       <Parameter id="10">
-        <Data package="Core" type="Double" version="0.1.0">1</Data>
+        <Data package="Runtime" type="Double" version="0.1.0">1</Data>
       </Parameter>
       <Parameter id="5">
-        <Data package="Core" type="UInt32" version="0.1.0">1000</Data>
+        <Data package="Runtime" type="UInt32" version="0.1.0">1000</Data>
       </Parameter>
       <Parameter id="7">
-        <Data package="Core" type="UInt32" version="0.1.0">2</Data>
+        <Data package="Runtime" type="UInt32" version="0.1.0">2</Data>
       </Parameter>
       <Parameter id="6">
-        <Data package="Core" type="UInt32" version="0.1.0">1500000</Data>
+        <Data package="Runtime" type="UInt32" version="0.1.0">1500000</Data>
       </Parameter>
       <Parameter id="1">
         <Data file="stream_op0_parameter1.png" package="Base" type="Image" version="0.1.0">3 500 512</Data>
       </Parameter>
       <Parameter id="13">
-        <Data package="Core" type="UInt32" version="0.1.0">500</Data>
+        <Data package="Runtime" type="UInt32" version="0.1.0">500</Data>
       </Parameter>
       <Parameter id="14">
-        <Data package="Core" type="UInt32" version="0.1.0">512</Data>
+        <Data package="Runtime" type="UInt32" version="0.1.0">512</Data>
       </Parameter>
       <Parameter id="12">
-        <Data package="Core" type="UInt32" version="0.1.0">0</Data>
+        <Data package="Runtime" type="UInt32" version="0.1.0">0</Data>
       </Parameter>
       <Parameter id="11">
-        <Data package="Core" type="UInt32" version="0.1.0">0</Data>
+        <Data package="Runtime" type="UInt32" version="0.1.0">0</Data>
       </Parameter>
       <Parameter id="15">
-        <Data package="Core" type="Enum" version="0.1.0">1</Data>
+        <Data package="Runtime" type="Enum" version="0.1.0">1</Data>
       </Parameter>
     </Operator>
-    <Operator id="1" name="Dump 2" package="Core" type="Dump" version="0.1.0">
+    <Operator id="1" name="Dump 2" package="Runtime" type="Dump" version="0.1.0">
       <Input id="0" operator="2" output="0"/>
     </Operator>
     <Operator id="2" name="Canny" package="Base" type="Canny" version="0.1.0">
       <Parameter id="0">
-        <Data package="Core" type="Bool" version="0.1.0">1</Data>
+        <Data package="Runtime" type="Bool" version="0.1.0">1</Data>
       </Parameter>
       <Parameter id="1">
-        <Data package="Core" type="Double" version="0.1.0">50</Data>
+        <Data package="Runtime" type="Double" version="0.1.0">50</Data>
       </Parameter>
       <Parameter id="2">
-        <Data package="Core" type="Double" version="0.1.0">150</Data>
+        <Data package="Runtime" type="Double" version="0.1.0">150</Data>
       </Parameter>
       <Input id="0" operator="0" output="0"/>
     </Operator>
     <Operator id="3" name="ExceptionOperator" package="TestPackage" type="ExceptionOperator" version="1.2.3">
       <Parameter id="0">
-        <Data package="Core" type="Bool" version="0.1.0">0</Data>
+        <Data package="Runtime" type="Bool" version="0.1.0">0</Data>
       </Parameter>
       <Parameter id="1">
-        <Data package="Core" type="Bool" version="0.1.0">0</Data>
+        <Data package="Runtime" type="Bool" version="0.1.0">0</Data>
       </Parameter>
       <Parameter id="2">
-        <Data package="Core" type="Bool" version="0.1.0">1</Data>
+        <Data package="Runtime" type="Bool" version="0.1.0">1</Data>
       </Parameter>
       <Parameter id="3">
-        <Data package="Core" type="Bool" version="0.1.0">0</Data>
+        <Data package="Runtime" type="Bool" version="0.1.0">0</Data>
       </Parameter>
       <Parameter id="4">
-        <Data package="Core" type="Bool" version="0.1.0">0</Data>
+        <Data package="Runtime" type="Bool" version="0.1.0">0</Data>
       </Parameter>
       <Input id="0" operator="0" output="1"/>
     </Operator>

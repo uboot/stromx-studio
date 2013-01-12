@@ -22,7 +22,7 @@
 
 namespace stromx
 {
-    namespace core
+    namespace runtime
     {
         class Data;
     }
@@ -88,7 +88,7 @@ public:
      * Properties such as alpha value and color of the layer are reset by
      * this function and must be set again for the new data object.
      */
-    virtual void setData(int pos, const stromx::core::Data& data, Visualization visualization) = 0;
+    virtual void setData(int pos, const stromx::runtime::Data& data, Visualization visualization) = 0;
     
     /**
      * Sets the data at the layer \c pos to be active or inactive, i.e. it is visible or 

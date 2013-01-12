@@ -22,14 +22,14 @@
 
 #include <QObject>
 #include <QVariant>
-#include <stromx/core/DataRef.h>
+#include <stromx/runtime/DataRef.h>
 
 class QUndoStack;
 class QVariant;
 
 namespace stromx
 {
-    namespace core
+    namespace runtime
     {
         class Operator;
         class Parameter;
@@ -50,7 +50,7 @@ public:
      * Constructs a parameter server for \c op. Note that the cache of the server has to be updated
      * by calling refresh() before the server can be used.
      */
-    ParameterServer(stromx::core::Operator* op, QUndoStack* undoStack, QObject* parent = 0);
+    ParameterServer(stromx::runtime::Operator* op, QUndoStack* undoStack, QObject* parent = 0);
     
     const QVariant getParameter(unsigned int id, int role);
     bool setParameter (unsigned int id, const QVariant& value);
@@ -107,25 +107,25 @@ private:
     struct ParameterValue
     {
         ParameterState state;
-        stromx::core::DataRef value;
+        stromx::runtime::DataRef value;
     };
     
     /** Returns the stromx operator whose parameters are served. */
-    stromx::core::Operator* op() const { return m_op; }
+    stromx::runtime::Operator* op() const { return m_op; }
     
     /** Returns whether the parameter \c par can currently be read. */
-    bool parameterIsReadAccessible(const stromx::core::Parameter& par) const;
+    bool parameterIsReadAccessible(const stromx::runtime::Parameter& par) const;
     
     /** Returns whether the parameter \c par can currently be written. */
-    bool parameterIsWriteAccessible(const stromx::core::Parameter& par) const;
+    bool parameterIsWriteAccessible(const stromx::runtime::Parameter& par) const;
     
     /** Sets the parameter \c paramId to \c newValue. */
-    void doSetParameter(unsigned int paramId, const stromx::core::DataRef& newValue);
+    void doSetParameter(unsigned int paramId, const stromx::runtime::DataRef& newValue);
     
     /** Refreshes the cached value for the parameter \c param. */
-    void refreshParameter(const stromx::core::Parameter & param);
+    void refreshParameter(const stromx::runtime::Parameter & param);
     
-    stromx::core::Operator* m_op;
+    stromx::runtime::Operator* m_op;
     QUndoStack* m_undoStack;
     QMap<unsigned int, ParameterValue> m_cache;
     int m_accessTimeout;

@@ -4,7 +4,7 @@
 #include <QGraphicsSceneDragDropEvent>
 #include <QKeyEvent>
 #include <QUndoStack>
-#include <stromx/core/Operator.h>
+#include <stromx/runtime/Operator.h>
 #include "ConnectionItem.h"
 #include "ConnectionModel.h"
 #include "OperatorData.h"

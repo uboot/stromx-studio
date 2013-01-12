@@ -1,8 +1,8 @@
 #include "ErrorData.h"
 
 #include <QApplication>
-#include <stromx/core/OperatorException.h>
-#include <stromx/core/OperatorInfo.h>
+#include <stromx/runtime/OperatorException.h>
+#include <stromx/runtime/OperatorInfo.h>
 
 ErrorData::ErrorData()
   : m_time(QDateTime::currentDateTime()),
@@ -11,7 +11,7 @@ ErrorData::ErrorData()
 
 }
 
-ErrorData::ErrorData(const stromx::core::OperatorError& exception, Type type)
+ErrorData::ErrorData(const stromx::runtime::OperatorError& exception, Type type)
   : m_time(QDateTime::currentDateTime()),
     m_type(type)
 {

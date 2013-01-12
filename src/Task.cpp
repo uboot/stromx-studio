@@ -9,7 +9,7 @@
     #include <functional>
 #endif
 
-using namespace stromx::core;
+using namespace stromx::runtime;
 
 Task::Task(QObject* parent)
   : QObject(parent),

@@ -3,7 +3,7 @@
 <Stromx version="0.1.0">
 
   <Stream name="">
-    <Operator id="0" name="Dump" package="Core" type="Dump" version="0.1.0"/>
+    <Operator id="0" name="Dump" package="Runtime" type="Dump" version="0.1.0"/>
     <Thread name="Thread">
         <InputConnector operator="0" input="0"/>
     </Thread>

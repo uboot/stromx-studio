@@ -23,16 +23,16 @@
 #include <QFutureWatcher>
 #include <QtConcurrentRun>
 #include <QtDebug>
-#include <stromx/core/Description.h>
-#include <stromx/core/DirectoryFileInput.h>
-#include <stromx/core/FileOutput.h>
-#include <stromx/core/Operator.h>
-#include <stromx/core/SortInputsAlgorithm.h>
-#include <stromx/core/Stream.h>
-#include <stromx/core/Thread.h>
-#include <stromx/core/XmlReader.h>
-#include <stromx/core/XmlWriter.h>
-#include <stromx/core/Factory.h>
+#include <stromx/runtime/Description.h>
+#include <stromx/runtime/DirectoryFileInput.h>
+#include <stromx/runtime/FileOutput.h>
+#include <stromx/runtime/Operator.h>
+#include <stromx/runtime/SortInputsAlgorithm.h>
+#include <stromx/runtime/Stream.h>
+#include <stromx/runtime/Thread.h>
+#include <stromx/runtime/XmlReader.h>
+#include <stromx/runtime/XmlWriter.h>
+#include <stromx/runtime/Factory.h>
 
 #ifdef __GNUG__
     #include <tr1/functional>
@@ -59,7 +59,7 @@ StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLi
     initializeSubModels();
 }
 
-StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename, QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject* parent)
+StreamModel::StreamModel(stromx::runtime::FileInput& input, const QString& basename, QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject* parent)
   : QObject(parent),
     m_stream(0),
     m_threadListModel(0),
@@ -73,15 +73,15 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
 {
     initializeSubModels();
     
-    stromx::core::Stream* stream = 0;
+    stromx::runtime::Stream* stream = 0;
     std::string streamFilename = (basename + ".xml").toStdString();
     
     try
     {
-        stromx::core::XmlReader reader;
+        stromx::runtime::XmlReader reader;
         stream = reader.readStream(input, streamFilename, m_operatorLibrary->factory());
     }
-    catch(stromx::core::FileAccessFailed& e)
+    catch(stromx::runtime::FileAccessFailed& e)
     {
         qWarning() << e.what();
         QString error = e.container().empty() 
@@ -90,7 +90,7 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
                                                                                       QString::fromStdString(e.container()));
         throw ReadStreamFailed(error);
     }
-    catch(stromx::core::InconsistentFileContent& e)
+    catch(stromx::runtime::InconsistentFileContent& e)
     {
         qWarning() << e.what();
         QString error = e.container().empty() 
@@ -99,7 +99,7 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
                                                                                QString::fromStdString(e.container()));
         throw ReadStreamFailed(error);
     }
-    catch(stromx::core::InvalidFileFormat& e)
+    catch(stromx::runtime::InvalidFileFormat& e)
     {
         qWarning() << e.what();
         QString error = e.container().empty() 
@@ -108,7 +108,7 @@ StreamModel::StreamModel(stromx::core::FileInput& input, const QString& basename
                                                                             QString::fromStdString(e.container()));
         throw ReadStreamFailed(error);
     }
-    catch(stromx::core::OperatorAllocationFailed& e)
+    catch(stromx::runtime::OperatorAllocationFailed& e)
     {
         qWarning() << e.what();
         QString error = tr("\
@@ -118,7 +118,7 @@ Use <b>File -> Load Libraries...</b> to load additional libraries.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
-    catch(stromx::core::DataAllocationFailed& e)
+    catch(stromx::runtime::DataAllocationFailed& e)
     {
         qWarning() << e.what();
         QString error = tr("\
@@ -128,17 +128,17 @@ Use <b>File -> Load Libraries...</b> to load additional libraries.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
-    catch(stromx::core::DeserializationError& e)
+    catch(stromx::runtime::DeserializationError& e)
     {
         qWarning() << e.what();
         QString error = tr("Failed to deserialize data of type <i>%1</i> in package <i>%2</i>.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
-    catch(stromx::core::ParameterError& e)
+    catch(stromx::runtime::ParameterError& e)
     {
         qWarning() << e.what();
-        const stromx::core::OperatorInfo& op = e.op();
+        const stromx::runtime::OperatorInfo& op = e.op();
         QString error = tr("Failed to set parameter <i>%1</i> ('%2') of operator of type <i>%3</i> in package <i>%4</i>.")
                         .arg(QString("%1").arg(e.parameter().id()),
                              QString::fromStdString(e.parameter().title()),
@@ -146,10 +146,10 @@ Use <b>File -> Load Libraries...</b> to load additional libraries.")
                              QString::fromStdString(op.package()));
         throw ReadStreamFailed(error);
     }
-    catch(stromx::core::OperatorError& e)
+    catch(stromx::runtime::OperatorError& e)
     {
         qWarning() << e.what();
-        const stromx::core::OperatorInfo& op = e.op();
+        const stromx::runtime::OperatorInfo& op = e.op();
         QString error = tr("Unknown error related to operator of type <i>%1</i> in package <i>%2</i>: %3")
                         .arg(QString::fromStdString(op.type()), QString::fromStdString(op.package()),
                              QString::fromStdString(e.what()));
@@ -159,12 +159,12 @@ Use <b>File -> Load Libraries...</b> to load additional libraries.")
     allocateObjects(stream);
 }
 
-void StreamModel::readStudioData(stromx::core::FileInput & input, const QString & basename)
+void StreamModel::readStudioData(stromx::runtime::FileInput & input, const QString & basename)
 {  
     try
     {
         input.initialize("", (basename + ".studio").toStdString());
-        input.openFile(stromx::core::InputProvider::BINARY);
+        input.openFile(stromx::runtime::InputProvider::BINARY);
         
         // read all data from the input stream
         QByteArray modelData;
@@ -185,15 +185,15 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
            
         // read the parameters values of the offlline operators
         std::string parametersFilename = (basename + "_uninitialized.xml").toStdString();
-        std::vector<stromx::core::Operator*> uninitializedOperators;
+        std::vector<stromx::runtime::Operator*> uninitializedOperators;
         foreach(OperatorModel* opModel, m_uninitializedOperators)
             uninitializedOperators.push_back(opModel->op());
 
-        stromx::core::XmlReader reader;
+        stromx::runtime::XmlReader reader;
         reader.readParameters(input, parametersFilename,
                               m_operatorLibrary->factory(), uninitializedOperators);
     }
-    catch(stromx::core::FileAccessFailed& e)
+    catch(stromx::runtime::FileAccessFailed& e)
     {
         qWarning() << e.what();
         QString error = e.container().empty() 
@@ -202,7 +202,7 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
                                                                                       QString::fromStdString(e.container()));
         throw ReadStudioDataFailed(error);
     }
-    catch(stromx::core::InconsistentFileContent& e)
+    catch(stromx::runtime::InconsistentFileContent& e)
     {
         qWarning() << e.what();
         QString error = e.container().empty() 
@@ -211,7 +211,7 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
                                                                                QString::fromStdString(e.container()));
         throw ReadStudioDataFailed(error);
     }
-    catch(stromx::core::InvalidFileFormat& e)
+    catch(stromx::runtime::InvalidFileFormat& e)
     {
         qWarning() << e.what();
         QString error = e.container().empty() 
@@ -220,21 +220,21 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
                                                                            QString::fromStdString(e.container()));
         throw ReadStudioDataFailed(error);
     }
-    catch(stromx::core::OperatorAllocationFailed& e)
+    catch(stromx::runtime::OperatorAllocationFailed& e)
     {
         qWarning() << e.what();
         QString error = tr("Failed to allocate operator of type %1 of package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStudioDataFailed(error);
     }
-    catch(stromx::core::DataAllocationFailed& e)
+    catch(stromx::runtime::DataAllocationFailed& e)
     {
         qWarning() << e.what();
         QString error = tr("Failed to allocate data of type %1 of package %2.")
                         .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()));
         throw ReadStudioDataFailed(error);
     }
-    catch(stromx::core::DeserializationError& e)
+    catch(stromx::runtime::DeserializationError& e)
     {
         qWarning() << e.what();
         QString error = tr("Failed to deserialize data of type %1 in package %2.")
@@ -245,7 +245,7 @@ void StreamModel::readStudioData(stromx::core::FileInput & input, const QString 
 
 void StreamModel::initializeSubModels()
 {
-    m_stream = new stromx::core::Stream;
+    m_stream = new stromx::runtime::Stream;
     m_joinStreamWatcher = new QFutureWatcher<void>(this);
     m_threadListModel = new ThreadListModel(this);
     m_observerModel = new ObserverTreeModel(m_undoStack, this);
@@ -423,10 +423,10 @@ void StreamModel::doInitializeOperator(OperatorModel* op)
         m_stream->addOperator(op->op());
         connect(op, SIGNAL(operatorAccessTimedOut()), this, SIGNAL(accessTimedOut()));
     }
-    catch(stromx::core::OperatorError& e)
+    catch(stromx::runtime::OperatorError& e)
     {
         if(m_exceptionObserver)
-            m_exceptionObserver->observe(stromx::core::ExceptionObserver::INITIALIZATION, e, 0);
+            m_exceptionObserver->observe(stromx::runtime::ExceptionObserver::INITIALIZATION, e, 0);
     }
 }
 
@@ -451,11 +451,11 @@ void StreamModel::doDeinitializeOperator(OperatorModel* op)
         m_operators.append(op);
         m_uninitializedOperators.append(op);
     }
-    catch(stromx::core::OperatorError& e)
+    catch(stromx::runtime::OperatorError& e)
     {
         m_stream->addOperator(op->op());
         if(m_exceptionObserver)
-            m_exceptionObserver->observe(stromx::core::ExceptionObserver::DEINITIALIZATION, e, 0);
+            m_exceptionObserver->observe(stromx::runtime::ExceptionObserver::DEINITIALIZATION, e, 0);
     }
 }
 
@@ -484,7 +484,7 @@ void StreamModel::doRemoveConnection(ConnectionModel* connection)
 
 void StreamModel::doAddThread(ThreadModel* threadModel)
 {
-    stromx::core::Thread* thread = m_stream->addThread();
+    stromx::runtime::Thread* thread = m_stream->addThread();
     threadModel->setThread(thread);
     m_threadListModel->addThread(threadModel);
     emit threadAdded(threadModel);
@@ -498,14 +498,14 @@ void StreamModel::doRemoveThread(ThreadModel* threadModel)
     emit threadRemoved(threadModel);
 }
 
-void StreamModel::write(stromx::core::FileOutput & output, const QString& basename) const
+void StreamModel::write(stromx::runtime::FileOutput & output, const QString& basename) const
 {
     try
     {
-        stromx::core::XmlWriter writer;
+        stromx::runtime::XmlWriter writer;
         writer.writeStream(output, basename.toStdString(), *m_stream);
         
-        std::vector<const stromx::core::Operator*> uninitializedOperators;
+        std::vector<const stromx::runtime::Operator*> uninitializedOperators;
         foreach(OperatorModel* opModel, m_uninitializedOperators)
             uninitializedOperators.push_back(opModel->op());
         writer.writeParameters(output, (basename + "_uninitialized").toStdString(), uninitializedOperators);
@@ -513,10 +513,10 @@ void StreamModel::write(stromx::core::FileOutput & output, const QString& basena
         QByteArray modelData;
         serializeModel(modelData);
         output.initialize(basename.toStdString());
-        output.openFile("studio", stromx::core::OutputProvider::BINARY);
+        output.openFile("studio", stromx::runtime::OutputProvider::BINARY);
         output.file().write(modelData.data(), modelData.size());
     }
-    catch(stromx::core::FileAccessFailed& e)
+    catch(stromx::runtime::FileAccessFailed& e)
     {
         qWarning() << e.what();
         QString error = e.container().empty() 
@@ -525,7 +525,7 @@ void StreamModel::write(stromx::core::FileOutput & output, const QString& basena
                                                                                       QString::fromStdString(e.container()));
         throw WriteStreamFailed(error);
     }
-    catch(stromx::core::SerializationError & e)
+    catch(stromx::runtime::SerializationError & e)
     {
         qWarning() << e.what();
         QString error = tr("Failed to serialize data of type %1 in package %2.").arg(QString::fromStdString(e.type()),
@@ -542,7 +542,7 @@ void StreamModel::deleteAllData()
     QList<ThreadModel*> threads = m_threadListModel->threads();
     
     // backup the uninitialized operators
-    QList<stromx::core::Operator*> uninitializedOperators;
+    QList<stromx::runtime::Operator*> uninitializedOperators;
     foreach(OperatorModel* op, m_uninitializedOperators)
         uninitializedOperators.append(op->op());
     
@@ -564,7 +564,7 @@ void StreamModel::deleteAllData()
         delete op;
 
     // delete the uninitialized operators
-    foreach(stromx::core::Operator* op, uninitializedOperators)
+    foreach(stromx::runtime::Operator* op, uninitializedOperators)
         delete op;
     
     // delete the stream
@@ -572,12 +572,12 @@ void StreamModel::deleteAllData()
     m_stream = 0;
 }
 
-void StreamModel::allocateObjects(stromx::core::Stream* stream)
+void StreamModel::allocateObjects(stromx::runtime::Stream* stream)
 {
     // get the new data
     m_stream = stream;
     
-    for(std::vector<stromx::core::Operator*>::const_iterator iter = m_stream->operators().begin();
+    for(std::vector<stromx::runtime::Operator*>::const_iterator iter = m_stream->operators().begin();
         iter != m_stream->operators().end();
         ++iter)
     {
@@ -590,13 +590,13 @@ void StreamModel::allocateObjects(stromx::core::Stream* stream)
     
     foreach(OperatorModel* opModel, m_initializedOperators)
     {
-        stromx::core::Operator* op = opModel->op();
+        stromx::runtime::Operator* op = opModel->op();
         
-        for(std::vector<const stromx::core::Description*>::const_iterator inputIter = op->info().inputs().begin();
+        for(std::vector<const stromx::runtime::Description*>::const_iterator inputIter = op->info().inputs().begin();
             inputIter != op->info().inputs().end();
             ++inputIter)
         {
-            stromx::core::Output output = m_stream->connectionSource(op, (*inputIter)->id());
+            stromx::runtime::Output output = m_stream->connectionSource(op, (*inputIter)->id());
             
             if(output.valid())
             {
@@ -608,7 +608,7 @@ void StreamModel::allocateObjects(stromx::core::Stream* stream)
         }
     }
     
-    for(std::vector<stromx::core::Thread*>::const_iterator iter = m_stream->threads().begin();
+    for(std::vector<stromx::runtime::Thread*>::const_iterator iter = m_stream->threads().begin();
         iter != m_stream->threads().end();
         ++iter)
     {
@@ -617,14 +617,14 @@ void StreamModel::allocateObjects(stromx::core::Stream* stream)
     }
     
     
-    for(std::vector<stromx::core::Thread*>::const_iterator threadIter = m_stream->threads().begin();
+    for(std::vector<stromx::runtime::Thread*>::const_iterator threadIter = m_stream->threads().begin();
         threadIter != m_stream->threads().end();
         ++threadIter)
     {
         ThreadModel* threadModel = findThreadModel(*threadIter);
-        std::vector<stromx::core::Input>::const_iterator start = (*threadIter)->inputSequence().begin();
-        std::vector<stromx::core::Input>::const_iterator end = (*threadIter)->inputSequence().end();
-        for(std::vector<stromx::core::Input>::const_iterator inputIter = start; inputIter != end; ++inputIter)
+        std::vector<stromx::runtime::Input>::const_iterator start = (*threadIter)->inputSequence().begin();
+        std::vector<stromx::runtime::Input>::const_iterator end = (*threadIter)->inputSequence().end();
+        for(std::vector<stromx::runtime::Input>::const_iterator inputIter = start; inputIter != end; ++inputIter)
         {
             ConnectionModel* connectionModel = findConnectionModel(*inputIter);
             if(connectionModel)
@@ -633,7 +633,7 @@ void StreamModel::allocateObjects(stromx::core::Stream* stream)
     }
 }
 
-OperatorModel* StreamModel::findOperatorModel(const stromx::core::Operator* op) const
+OperatorModel* StreamModel::findOperatorModel(const stromx::runtime::Operator* op) const
 {
     foreach(OperatorModel* opModel, m_operators)
     {
@@ -644,7 +644,7 @@ OperatorModel* StreamModel::findOperatorModel(const stromx::core::Operator* op) 
     return 0;
 }
 
-ConnectionModel* StreamModel::findConnectionModel(const stromx::core::Input& input) const
+ConnectionModel* StreamModel::findConnectionModel(const stromx::runtime::Input& input) const
 {
     foreach(ConnectionModel* connectionModel, m_connections)
     {
@@ -658,7 +658,7 @@ ConnectionModel* StreamModel::findConnectionModel(const stromx::core::Input& inp
     return 0;
 }
 
-ThreadModel* StreamModel::findThreadModel(const stromx::core::Thread* thread) const
+ThreadModel* StreamModel::findThreadModel(const stromx::runtime::Thread* thread) const
 {
     foreach(ThreadModel* threadModel, m_threadListModel->threads())
     {
@@ -683,7 +683,7 @@ void StreamModel::serializeModel(QByteArray& data) const
     dataStream << qint32(m_uninitializedOperators.count());
     foreach(OperatorModel* op, m_uninitializedOperators)
     {
-        const stromx::core::OperatorInfo & info = op->op()->info();
+        const stromx::runtime::OperatorInfo & info = op->op()->info();
         dataStream << QString::fromStdString(info.package());
         dataStream << QString::fromStdString(info.type());
         dataStream << quint32(info.version().major());
@@ -728,7 +728,7 @@ void StreamModel::deserializeModel(const QByteArray& data)
     dataStream.setVersion(QDataStream::Qt_4_7);
 
     dataStream >> count;
-    stromx::core::Factory& factory = m_operatorLibrary->factory();
+    stromx::runtime::Factory& factory = m_operatorLibrary->factory();
     for(int i = 0; i < count; ++i)
     {
         QString package, type;
@@ -741,7 +741,7 @@ void StreamModel::deserializeModel(const QByteArray& data)
         dataStream >> version;
         
         OperatorModel* opModel = 0;
-        stromx::core::Operator* op = factory.newOperator(package.toStdString(), type.toStdString());
+        stromx::runtime::Operator* op = factory.newOperator(package.toStdString(), type.toStdString());
         opModel = new OperatorModel(op, this);
         m_uninitializedOperators.append(opModel);
         m_operators.append(opModel);
@@ -776,28 +776,28 @@ bool StreamModel::start()
 {
     switch(m_stream->status())
     {
-    case stromx::core::Stream::INACTIVE:
+    case stromx::runtime::Stream::INACTIVE:
         {
             // sort inputs before starting
-            stromx::core::SortInputsAlgorithm sort;
+            stromx::runtime::SortInputsAlgorithm sort;
             sort.apply(*m_stream);
         }
         try
         {
             m_stream->start();
         }
-        catch(stromx::core::OperatorError& e)
+        catch(stromx::runtime::OperatorError& e)
         {
             // report any errors to the error observer
             if(m_exceptionObserver)
-                m_exceptionObserver->observe(stromx::core::ExceptionObserver::ACTIVATION, e, 0);
+                m_exceptionObserver->observe(stromx::runtime::ExceptionObserver::ACTIVATION, e, 0);
             
             // return with error
             return false;
         }
         
         break;
-    case stromx::core::Stream::PAUSED:
+    case stromx::runtime::Stream::PAUSED:
         m_stream->resume();
         break;
     default:
@@ -820,7 +820,7 @@ bool StreamModel::pause()
 bool StreamModel::stop()
 {
     // do nothing if the stream is inactive
-    if(m_stream->status() == stromx::core::Stream::INACTIVE)
+    if(m_stream->status() == stromx::runtime::Stream::INACTIVE)
         return true;
     
     // stop the stream
@@ -828,7 +828,7 @@ bool StreamModel::stop()
     emit streamStopped();
     
     // start the thread which waits for the stream to finish
-    QFuture<void> future = QtConcurrent::run(std::tr1::bind(&stromx::core::Stream::join, m_stream));
+    QFuture<void> future = QtConcurrent::run(std::tr1::bind(&stromx::runtime::Stream::join, m_stream));
     m_joinStreamWatcher->setFuture(future);
     
     return true;
@@ -842,7 +842,7 @@ void StreamModel::join()
 
 bool StreamModel::isActive() const
 {
-    return m_stream->status() != stromx::core::Stream::INACTIVE;
+    return m_stream->status() != stromx::runtime::Stream::INACTIVE;
 }
 
 bool StreamModel::delayActive() const

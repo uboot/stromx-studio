@@ -35,11 +35,11 @@
 #include <QtGlobal>
 #include <iostream>
 #include <memory>
-#include <stromx/core/DirectoryFileInput.h>
-#include <stromx/core/DirectoryFileOutput.h>
-#include <stromx/core/Exception.h>
-#include <stromx/core/ZipFileInput.h>
-#include <stromx/core/ZipFileOutput.h>
+#include <stromx/runtime/DirectoryFileInput.h>
+#include <stromx/runtime/DirectoryFileOutput.h>
+#include <stromx/runtime/Exception.h>
+#include <stromx/runtime/ZipFileInput.h>
+#include <stromx/runtime/ZipFileOutput.h>
 #include "Common.h"
 #include "DataVisualizer.h"
 #include "DocumentationWindow.h"
@@ -505,7 +505,7 @@ bool MainWindow::readFile(const QString& filepath)
     
     // try to read the stream
     StreamModel* stream = 0;
-    std::auto_ptr<stromx::core::FileInput> input;
+    std::auto_ptr<stromx::runtime::FileInput> input;
     QString location;
     
     try
@@ -513,15 +513,15 @@ bool MainWindow::readFile(const QString& filepath)
         if(extension == "xml")
         {
             location = QFileInfo(filepath).absoluteDir().absolutePath();
-            input = std::auto_ptr<stromx::core::FileInput>(new stromx::core::DirectoryFileInput(location.toStdString()));
+            input = std::auto_ptr<stromx::runtime::FileInput>(new stromx::runtime::DirectoryFileInput(location.toStdString()));
         }
         else if(extension == "zip" || extension == "stromx")
         {
             location = filepath;
-            input = std::auto_ptr<stromx::core::FileInput>(new stromx::core::ZipFileInput(filepath.toStdString()));
+            input = std::auto_ptr<stromx::runtime::FileInput>(new stromx::runtime::ZipFileInput(filepath.toStdString()));
         }
     }
-    catch(stromx::core::FileAccessFailed&)
+    catch(stromx::runtime::FileAccessFailed&)
     {
         QMessageBox::critical(this, tr("Failed to load file"),
                               tr("The location %1 could not be openend for reading").arg(location),
@@ -544,7 +544,7 @@ bool MainWindow::readFile(const QString& filepath)
         
         updateCurrentFile(filepath);
     }
-    catch(stromx::core::FileAccessFailed&)
+    catch(stromx::runtime::FileAccessFailed&)
     {
         QMessageBox::critical(this, tr("Failed to load file"),
                               tr("The location %1 could not be openend for reading").arg(location),
@@ -739,14 +739,14 @@ bool MainWindow::writeFile(const QString& filepath)
         if(extension == "xml")
         {
             location = QFileInfo(filepath).absoluteDir().absolutePath();
-            stromx::core::DirectoryFileOutput output(location.toStdString());
+            stromx::runtime::DirectoryFileOutput output(location.toStdString());
             m_streamEditor->streamEditorScene()->model()->write(output, basename);
             writeWindowStates(output, basename);
         }
         else if(extension == "zip" || extension == "stromx")
         {
             location = filepath;
-            stromx::core::ZipFileOutput output(location.toStdString());
+            stromx::runtime::ZipFileOutput output(location.toStdString());
             m_streamEditor->streamEditorScene()->model()->write(output, "stream");
             writeWindowStates(output, "stream");
             
@@ -760,7 +760,7 @@ bool MainWindow::writeFile(const QString& filepath)
         QSettings settings("stromx", "stromx-studio");
         settings.setValue("lastStreamSavedDir", QFileInfo(filepath).dir().absolutePath());
     }
-    catch(stromx::core::FileAccessFailed&)
+    catch(stromx::runtime::FileAccessFailed&)
     {
         QMessageBox::critical(this, tr("Failed to save file"),
                               tr("The location %1 could not be openend for writing").arg(location),
@@ -913,14 +913,14 @@ void MainWindow::resetObserverWindows(StreamModel* model)
         createObserverWindow(observer);
 }
 
-void MainWindow::readWindowStates(stromx::core::FileInput& input, const QString& basename)
+void MainWindow::readWindowStates(stromx::runtime::FileInput& input, const QString& basename)
 {
     QByteArray data;
     
     try
     {
         input.initialize("", (basename + ".studio.geometry").toStdString());
-        input.openFile(stromx::core::InputProvider::BINARY);
+        input.openFile(stromx::runtime::InputProvider::BINARY);
         
         // read all data from the input stream
         int dataSize = 0;
@@ -934,7 +934,7 @@ void MainWindow::readWindowStates(stromx::core::FileInput& input, const QString&
         }
         data.resize(dataSize);
     }
-    catch(stromx::core::FileAccessFailed& e)
+    catch(stromx::runtime::FileAccessFailed& e)
     {
         // simply ignore errors and do not update the window geometry
         qWarning() << e.what();
@@ -972,7 +972,7 @@ void MainWindow::readWindowStates(stromx::core::FileInput& input, const QString&
     }
 }
 
-void MainWindow::writeWindowStates(stromx::core::FileOutput& output, const QString& basename) const
+void MainWindow::writeWindowStates(stromx::runtime::FileOutput& output, const QString& basename) const
 {
     // construct an output stream
     QByteArray data;
@@ -998,10 +998,10 @@ void MainWindow::writeWindowStates(stromx::core::FileOutput& output, const QStri
     try
     {
         output.initialize(basename.toStdString());
-        output.openFile("studio.geometry", stromx::core::OutputProvider::BINARY);
+        output.openFile("studio.geometry", stromx::runtime::OutputProvider::BINARY);
         output.file().write(data.data(), data.size());
     }
-    catch(stromx::core::FileAccessFailed& e)
+    catch(stromx::runtime::FileAccessFailed& e)
     {
         qWarning() << e.what();
         QString error = e.container().empty() 

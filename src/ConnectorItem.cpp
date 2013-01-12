@@ -3,7 +3,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QToolTip>
-#include <stromx/core/Operator.h>
+#include <stromx/runtime/Operator.h>
 #include "ArrowItem.h"
 #include "ConnectionItem.h"
 #include "OperatorModel.h"
@@ -168,7 +168,7 @@ void ConnectorItem::updateConnectionPosition(ConnectionItem* connection) const
 
 QString ConnectorItem::connectorToolTip() const
 {
-    const stromx::core::OperatorInfo & info = m_op->op()->info();
+    const stromx::runtime::OperatorInfo & info = m_op->op()->info();
     
     QString connectorTitle;
     QString variantTitle;

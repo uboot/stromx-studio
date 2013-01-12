@@ -1,10 +1,10 @@
 #include "SetParameterCmd.h"
 
 #include "ParameterServer.h"
-#include <stromx/core/Operator.h>
+#include <stromx/runtime/Operator.h>
 
 SetParameterCmd::SetParameterCmd(ParameterServer* server, unsigned int parameter,
-                                 const stromx::core::DataRef& oldValue, const stromx::core::DataRef& newValue,
+                                 const stromx::runtime::DataRef& oldValue, const stromx::runtime::DataRef& newValue,
                                  QUndoCommand* parent)
   : QUndoCommand(QObject::tr("set parameter"), parent),
     m_server(server),

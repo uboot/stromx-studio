@@ -1,20 +1,20 @@
 #include "DataVisualizerUtilities.h"
 
-#include <stromx/core/Image.h>
-#include <stromx/core/Primitive.h>
-#include <stromx/core/String.h>
+#include <stromx/runtime/Image.h>
+#include <stromx/runtime/Primitive.h>
+#include <stromx/runtime/String.h>
 
 namespace
 {
     template <class data_t>
-    static QList<QGraphicsItem*> createPrimitiveItemsTemplate(const stromx::core::Data & data)
+    static QList<QGraphicsItem*> createPrimitiveItemsTemplate(const stromx::runtime::Data & data)
     {
         QList<QGraphicsItem*> items;
         
         try
         {
             // cast to the concrete primitive type
-            const data_t & primitive = stromx::core::data_cast<const data_t &>(data);
+            const data_t & primitive = stromx::runtime::data_cast<const data_t &>(data);
             
             // format it as a astring and create a graphics item from the string
             QGraphicsItem* item = new QGraphicsSimpleTextItem(QString("%1").arg(primitive));
@@ -22,7 +22,7 @@ namespace
             // pack the graphics item into a list
             items.append(item);
         }
-        catch(stromx::core::BadCast&)
+        catch(stromx::runtime::BadCast&)
         {
         }
         
@@ -30,9 +30,9 @@ namespace
     }
     
     template <class data_t>
-    QList< QGraphicsItem* > createLineSegmentItemsTemplate(const stromx::core::Data& data)
+    QList< QGraphicsItem* > createLineSegmentItemsTemplate(const stromx::runtime::Data& data)
     {
-        using namespace stromx::core;
+        using namespace stromx::runtime;
         
         QList<QGraphicsItem*> items;
         try
@@ -62,9 +62,9 @@ namespace
     }
 }
 
-QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::core::Data& data)
+QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::runtime::Data& data)
 {
-    using namespace stromx::core;
+    using namespace stromx::runtime;
     
     QList<QGraphicsItem*> items;
     try
@@ -107,27 +107,27 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::co
     return items;
 }
    
-QList<QGraphicsItem*> DataVisualizerUtilities::createStringItems(const stromx::core::Data & data)
+QList<QGraphicsItem*> DataVisualizerUtilities::createStringItems(const stromx::runtime::Data & data)
 {
-    using namespace stromx::core;
+    using namespace stromx::runtime;
     
     QList<QGraphicsItem*> items;
     try
     {
-        const String & string = stromx::core::data_cast<String>(data);
+        const String & string = stromx::runtime::data_cast<String>(data);
         QGraphicsItem* item = new QGraphicsSimpleTextItem(QString::fromStdString(string));
         items.append(item);
     }
-    catch(stromx::core::BadCast&)
+    catch(stromx::runtime::BadCast&)
     {
     }
     
     return items;
 }
 
-QList< QGraphicsItem* > DataVisualizerUtilities::createLineSegmentItems(const stromx::core::Data& data)
+QList< QGraphicsItem* > DataVisualizerUtilities::createLineSegmentItems(const stromx::runtime::Data& data)
 {
-    using namespace stromx::core;
+    using namespace stromx::runtime;
     
     if(data.isVariant(DataVariant::INT_8_MATRIX))
         return createLineSegmentItemsTemplate<int8_t>(data);
@@ -149,9 +149,9 @@ QList< QGraphicsItem* > DataVisualizerUtilities::createLineSegmentItems(const st
         return QList<QGraphicsItem*>();
 }
 
-QList<QGraphicsItem*> DataVisualizerUtilities::createPrimitiveItems(const stromx::core::Data & data)
+QList<QGraphicsItem*> DataVisualizerUtilities::createPrimitiveItems(const stromx::runtime::Data & data)
 {    
-    using namespace stromx::core;
+    using namespace stromx::runtime;
     
     if(data.isVariant(DataVariant::BOOL))
         return createPrimitiveItemsTemplate<Bool>(data);

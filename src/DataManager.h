@@ -22,7 +22,7 @@
 
 #include <QObject>
 
-#include <stromx/core/ReadAccess.h>
+#include <stromx/runtime/ReadAccess.h>
 #include "OperatorModel.h"
 
 class AbstractDataVisualizer;
@@ -82,7 +82,7 @@ private slots:
      * The input is specified by its type, ID and operator (the sender of the signal).
      */
     void updateLayerData(OperatorModel::ConnectorType type, unsigned int id,
-                         stromx::core::ReadAccess<> access);
+                         stromx::runtime::ReadAccess<> access);
 
     /**
      * Updates the properties (color, alpha, etc.) of all layers which correspond to this input.

@@ -1,6 +1,6 @@
 #include "DataManager.h"
 
-#include <stromx/core/ReadAccess.h>
+#include <stromx/runtime/ReadAccess.h>
 
 #include "AbstractDataVisualizer.h"
 #include "InputModel.h"
@@ -94,7 +94,7 @@ void DataManager::removeInputLayer(InputModel* input, int pos)
 }
 
 void DataManager::updateLayerData(OperatorModel::ConnectorType /*type*/, unsigned int id,
-                                  stromx::core::ReadAccess<> access)
+                                  stromx::runtime::ReadAccess<> access)
 {
     if(access.empty())
         return;
@@ -130,8 +130,8 @@ void DataManager::updateInputProperties(InputModel* input)
 void DataManager::connectInput(InputModel* input)
 {
     // connect only if no connection to this operator exists
-    connect(input->op(), SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::ReadAccess<>)),
-            this, SLOT(updateLayerData(OperatorModel::ConnectorType,uint,stromx::core::ReadAccess<>)), Qt::UniqueConnection);
+    connect(input->op(), SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::runtime::ReadAccess<>)),
+            this, SLOT(updateLayerData(OperatorModel::ConnectorType,uint,stromx::runtime::ReadAccess<>)), Qt::UniqueConnection);
     connect(input, SIGNAL(changed(InputModel*)), this,
             SLOT(updateInputProperties(InputModel*)), Qt::UniqueConnection);
 }

@@ -1,7 +1,7 @@
 #include "InputData.h"
 
 #include <QStringList>
-#include <stromx/core/Operator.h>
+#include <stromx/runtime/Operator.h>
 #include "InputModel.h"
 #include "OperatorModel.h"
 

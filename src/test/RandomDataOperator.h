@@ -20,10 +20,10 @@
 #ifndef RANDOMDATAOPERATOR_H
 #define RANDOMDATAOPERATOR_H
 
-#include <stromx/core/OperatorKernel.h>
-#include <stromx/core/Primitive.h>
+#include <stromx/runtime/OperatorKernel.h>
+#include <stromx/runtime/Primitive.h>
 
-class RandomDataOperator : public stromx::core::OperatorKernel
+class RandomDataOperator : public stromx::runtime::OperatorKernel
 {
     enum Outputs 
     { 
@@ -45,23 +45,23 @@ public:
     RandomDataOperator();
     
     virtual OperatorKernel* clone() const { return new RandomDataOperator; }
-    virtual void setParameter(const unsigned int id, const stromx::core::Data& value);
-    const stromx::core::DataRef getParameter(const unsigned int id) const;
-    virtual void execute(stromx::core::DataProvider& provider);
+    virtual void setParameter(const unsigned int id, const stromx::runtime::Data& value);
+    const stromx::runtime::DataRef getParameter(const unsigned int id) const;
+    virtual void execute(stromx::runtime::DataProvider& provider);
     
 private:
-    static const std::vector<const stromx::core::Description*> setupInputs();
-    static const std::vector<const stromx::core::Description*> setupOutputs();
-    static const std::vector<const stromx::core::Parameter*> setupParameters();
+    static const std::vector<const stromx::runtime::Description*> setupInputs();
+    static const std::vector<const stromx::runtime::Description*> setupOutputs();
+    static const std::vector<const stromx::runtime::Parameter*> setupParameters();
     
     /** Returns a random sample from a uniform distribution on the interval [-\c limit, \c limit]. */
     static double uniform(double limit);
     
     static const std::string TYPE;
     static const std::string PACKAGE;
-    static const stromx::core::Version VERSION;
+    static const stromx::runtime::Version VERSION;
     
-    stromx::core::Enum m_dataType;
+    stromx::runtime::Enum m_dataType;
 };
 
 #endif // RANDOMDATAOPERATOR_H

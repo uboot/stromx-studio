@@ -21,11 +21,11 @@
 #define CONNECTOROBSERVER_H
 
 #include <QMutex>
-#include <stromx/core/ConnectorObserver.h>
+#include <stromx/runtime/ConnectorObserver.h>
 
 namespace stromx
 {
-    namespace core
+    namespace runtime
     { 
         class DataContainer;
         class Input;
@@ -35,13 +35,13 @@ namespace stromx
 class QCoreApplication;
 class QObject;
 
-class ConnectorObserver : public stromx::core::ConnectorObserver
+class ConnectorObserver : public stromx::runtime::ConnectorObserver
 {
 public:
     ConnectorObserver(QObject* receiver);
         
-    virtual void observe(const stromx::core::Connector &connector,
-                         const stromx::core::DataContainer &data) const;
+    virtual void observe(const stromx::runtime::Connector &connector,
+                         const stromx::runtime::DataContainer &data) const;
                          
     void setObserveData(bool observe);
                          

@@ -27,7 +27,7 @@
 
 namespace stromx
 {
-    namespace core
+    namespace runtime
     { 
         class FileInput;
         class FileOutput;
@@ -56,7 +56,7 @@ class ThreadModel;
 /**
  * \brief Model of a stream
  * 
- * This class represents a stromx::core::Stream object in the stromx-studio application.
+ * This class represents a stromx::runtime::Stream object in the stromx-studio application.
  * It records all actions of its public interface to the undo stack. A StreamModel can be 
  * constructed from a file and written to a file.
  * In addition to all properties of a stream as in the stromx library it stores and
@@ -87,7 +87,7 @@ public:
      * 
      * \throws ReadStreamFailed
      */
-    explicit StreamModel(stromx::core::FileInput & input, const QString & basename, 
+    explicit StreamModel(stromx::runtime::FileInput & input, const QString & basename, 
                          QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject *parent = 0);
     
     virtual ~StreamModel();
@@ -97,7 +97,7 @@ public:
      * 
      * \throws ReadStreamFailed
      */
-    void readStudioData(stromx::core::FileInput & input, const QString & basename);
+    void readStudioData(stromx::runtime::FileInput & input, const QString & basename);
     
     /** 
      * Returns the operators of the stream model. The position of each operator
@@ -165,7 +165,7 @@ public:
     ObserverTreeModel* observerModel() const;
     
     /** Writes the content of the stream model. */
-    void write(stromx::core::FileOutput & output, const QString & basename) const;
+    void write(stromx::runtime::FileOutput & output, const QString & basename) const;
     
     /** Returns true if the underlying stromx stream is active. */
     bool isActive() const;
@@ -312,7 +312,7 @@ private:
      * Iterates over \c stream and allocates models for all operators, threads
      * and connections in the stream.
      */
-    void allocateObjects(stromx::core::Stream* stream);
+    void allocateObjects(stromx::runtime::Stream* stream);
     
     /** Deletes the stromx stream and all models. */ 
     void deleteAllData();
@@ -330,16 +330,16 @@ private:
     void readConfiguration(const QMap<QString, QVariant> & configuration);
     
     /** Finds the operator model which wraps \c op. Returns 0 if no such model exists. */
-    OperatorModel* findOperatorModel(const stromx::core::Operator* op) const;
+    OperatorModel* findOperatorModel(const stromx::runtime::Operator* op) const;
     
     /** Finds the connection model which connects to \c input. Returns 0 if no such model exists. */
-    ConnectionModel* findConnectionModel(const stromx::core::Input & input) const;
+    ConnectionModel* findConnectionModel(const stromx::runtime::Input & input) const;
     
     /** Finds the thread model which wraps \c thread. Returns 0 if no such model exists. */
-    ThreadModel* findThreadModel(const stromx::core::Thread* thread) const;
+    ThreadModel* findThreadModel(const stromx::runtime::Thread* thread) const;
     
     // The stromx stream. It contains only the initialized operators.
-    stromx::core::Stream* m_stream;
+    stromx::runtime::Stream* m_stream;
     
     // The list of all operators in the stream model. This is always the same
     // as m_initializedOperators + m_uninitializedOperators.

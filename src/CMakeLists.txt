@@ -150,9 +150,8 @@ add_executable(stromx-studio WIN32
 target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
     ${CMAKE_DL_LIBS}
-    ${stromx_CORE_LIB}
+    ${stromx_RUNTIME_LIB}
     ${stromx_BASE_LIB}
-    /home/matz/Projects/build/uboots-stream/stromx/imgproc/libstromx_imgproc.so
 )
 
 if(WIN32)

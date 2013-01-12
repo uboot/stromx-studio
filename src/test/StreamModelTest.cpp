@@ -2,8 +2,8 @@
 
 #include <QtTest/QtTest>
 #include <QUndoStack>
-#include <stromx/core/DirectoryFileInput.h>
-#include <stromx/core/ZipFileInput.h>
+#include <stromx/runtime/DirectoryFileInput.h>
+#include <stromx/runtime/ZipFileInput.h>
 
 #include "../Exception.h"
 #include "../OperatorLibraryModel.h"
@@ -35,20 +35,20 @@ void StreamModelTest::testDefaultConstructor()
 
 void StreamModelTest::testFileConstructorCamera()
 {
-    stromx::core::ZipFileInput input("camera.stromx");
+    stromx::runtime::ZipFileInput input("camera.stromx");
     StreamModel* model = new StreamModel(input, "stream", m_undoStack, m_operatorLibraryModel, this);
     model->readStudioData(input, "stream");
 }
 
 void StreamModelTest::testFileConstructorConnector()
 {
-    stromx::core::DirectoryFileInput input(".");
+    stromx::runtime::DirectoryFileInput input(".");
     new StreamModel(input, "connector", m_undoStack, m_operatorLibraryModel, this);
 }
 
 void StreamModelTest::testFileConstructorExtraParameter()
 {
-    stromx::core::ZipFileInput input("extra_parameter.stromx");
+    stromx::runtime::ZipFileInput input("extra_parameter.stromx");
     try
     {
         new StreamModel(input, "stream", m_undoStack, m_operatorLibraryModel, this);

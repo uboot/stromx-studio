@@ -20,7 +20,7 @@
 #ifndef SETPARAMETERTASK_H
 #define SETPARAMETERTASK_H
 
-#include <stromx/core/DataRef.h>
+#include <stromx/runtime/DataRef.h>
 #include "ErrorData.h"
 #include "OperatorModel.h"
 #include "Task.h"
@@ -46,8 +46,8 @@ public:
     };
     
     /** Constructs a task object for the given parameters. Call run() to actually start the task. */
-    explicit SetParameterTask(stromx::core::Operator* op, unsigned int id,
-                              const stromx::core::DataRef & value, int timeout,
+    explicit SetParameterTask(stromx::runtime::Operator* op, unsigned int id,
+                              const stromx::runtime::DataRef & value, int timeout,
                               QObject* parent = 0);
     
     /** Returns the parameter ID specified in the constructor. */
@@ -63,9 +63,9 @@ private:
     /** Tries to set the parameter and stores any error data in the class members. */
     void run();
     
-    stromx::core::Operator* m_op;
+    stromx::runtime::Operator* m_op;
     unsigned int m_id;
-    stromx::core::DataRef m_data;
+    stromx::runtime::DataRef m_data;
     ErrorCode m_errorCode;
     ErrorData m_errorData;
     int m_timeout;

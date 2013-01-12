@@ -1,7 +1,7 @@
 #include "ConnectorObserver.h"
 
-#include <stromx/core/Connector.h>
-#include <stromx/core/DataContainer.h>
+#include <stromx/runtime/Connector.h>
+#include <stromx/runtime/DataContainer.h>
 #include <QCoreApplication>
 #include <boost/graph/graph_concepts.hpp>
 #include "ConnectorDataEvent.h"
@@ -13,10 +13,10 @@ ConnectorObserver::ConnectorObserver(QObject* receiver)
 {
 }
 
-void ConnectorObserver::observe(const stromx::core::Connector& connector, const stromx::core::DataContainer& data) const
+void ConnectorObserver::observe(const stromx::runtime::Connector& connector, const stromx::runtime::DataContainer& data) const
 {
     QCoreApplication* application = QCoreApplication::instance();
-    OperatorModel::ConnectorType type = connector.type() == stromx::core::Connector::INPUT ? 
+    OperatorModel::ConnectorType type = connector.type() == stromx::runtime::Connector::INPUT ? 
                                         OperatorModel::INPUT : OperatorModel::OUTPUT;
     ConnectorOccupyEvent* occupyEvent = new ConnectorOccupyEvent(type, connector.id(), data.empty() ? false : true);                                   
     application->postEvent(m_receiver, occupyEvent);
@@ -41,7 +41,7 @@ void ConnectorObserver::observe(const stromx::core::Connector& connector, const 
     if(observeData && type == OperatorModel::INPUT)
     {
         // get a read access to the data (this might take a while)
-        stromx::core::ReadAccess<> access(data);
+        stromx::runtime::ReadAccess<> access(data);
         
         // send an event with the data and the access to the Qt GUI loop
         ConnectorDataEvent* dataEvent = new ConnectorDataEvent(type, connector.id(), access);

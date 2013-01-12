@@ -4,11 +4,11 @@
 #include "GetParameterTask.h"
 #include "SetParameterCmd.h"
 #include "SetParameterTask.h"
-#include <stromx/core/Operator.h>
-#include <stromx/core/Trigger.h>
-#include <stromx/core/OperatorException.h>
+#include <stromx/runtime/Operator.h>
+#include <stromx/runtime/Trigger.h>
+#include <stromx/runtime/OperatorException.h>
 
-ParameterServer::ParameterServer(stromx::core::Operator* op, QUndoStack* undoStack, QObject* parent)
+ParameterServer::ParameterServer(stromx::runtime::Operator* op, QUndoStack* undoStack, QObject* parent)
   : QObject(parent),
     m_op(op),
     m_undoStack(undoStack),
@@ -19,7 +19,7 @@ ParameterServer::ParameterServer(stromx::core::Operator* op, QUndoStack* undoSta
 
 const QVariant ParameterServer::getParameter(unsigned int id, int role)
 {
-    const stromx::core::Parameter & param = m_op->info().parameter(id);
+    const stromx::runtime::Parameter & param = m_op->info().parameter(id);
     
     if(m_cache.find(id) == m_cache.end())
         return QVariant();
@@ -55,11 +55,11 @@ const QVariant ParameterServer::getParameter(unsigned int id, int role)
 
 bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
 {
-    const stromx::core::Parameter & param = m_op->info().parameter(id);
+    const stromx::runtime::Parameter & param = m_op->info().parameter(id);
     
     if(parameterIsWriteAccessible(param))
     {
-        stromx::core::DataRef stromxData = DataConverter::toStromxData(value, param);
+        stromx::runtime::DataRef stromxData = DataConverter::toStromxData(value, param);
         
         if(stromxData.isNull())
             return false;
@@ -67,7 +67,7 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
         // test if this data is trigger data
         try
         {
-            stromx::core::data_cast<stromx::core::Trigger>(stromxData);
+            stromx::runtime::data_cast<stromx::runtime::Trigger>(stromxData);
             
             // triggers are set without informing the undo stack (they can not 
             // be undone)
@@ -75,11 +75,11 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
             
             return true;
         }
-        catch(stromx::core::BadCast&)
+        catch(stromx::runtime::BadCast&)
         {
             // this is no trigger data so continue the exception and continue below
         }
-        catch(stromx::core::Exception&)
+        catch(stromx::runtime::Exception&)
         {
             // triggering failed
             return false;
@@ -87,7 +87,7 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
             
         // any other parameters are set via an undo stack command
         // obtain the current parameter value
-        stromx::core::DataRef currentValue = m_cache[id].value;
+        stromx::runtime::DataRef currentValue = m_cache[id].value;
         
         // if the new value is different from the old one
         // construct a set parameter command 
@@ -106,7 +106,7 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
 
 void ParameterServer::refresh()
 {
-    using namespace stromx::core;
+    using namespace stromx::runtime;
     
     m_cache.clear();
     
@@ -120,7 +120,7 @@ void ParameterServer::refresh()
     }
 }
 
-void ParameterServer::refreshParameter(const stromx::core::Parameter & param)
+void ParameterServer::refreshParameter(const stromx::runtime::Parameter & param)
 {
     if(parameterIsReadAccessible(param))
     {
@@ -132,7 +132,7 @@ void ParameterServer::refreshParameter(const stromx::core::Parameter & param)
     }
 }
 
-void ParameterServer::doSetParameter(unsigned int paramId, const stromx::core::DataRef& newValue)
+void ParameterServer::doSetParameter(unsigned int paramId, const stromx::runtime::DataRef& newValue)
 {
     SetParameterTask* task = new SetParameterTask(m_op, paramId, newValue, m_accessTimeout, this);
     connect(task, SIGNAL(finished()), this, SLOT(handleSetParameterTaskFinished()));
@@ -147,7 +147,7 @@ void ParameterServer::handleSetParameterTaskFinished()
     
     if(task)
     {
-        const stromx::core::Parameter & param = m_op->info().parameter(task->id());
+        const stromx::runtime::Parameter & param = m_op->info().parameter(task->id());
         refreshParameter(param);
         
         switch(task->error())
@@ -166,7 +166,7 @@ void ParameterServer::handleSetParameterTaskFinished()
 
 Qt::ItemFlags ParameterServer::parameterFlags(unsigned int id) const
 {
-    const stromx::core::Parameter & param = m_op->info().parameter(id);
+    const stromx::runtime::Parameter & param = m_op->info().parameter(id);
     
     if(parameterIsWriteAccessible(param))
         return Qt::ItemIsEditable;
@@ -174,18 +174,18 @@ Qt::ItemFlags ParameterServer::parameterFlags(unsigned int id) const
         return Qt::ItemFlags(0);
 }
 
-bool ParameterServer::parameterIsReadAccessible(const stromx::core::Parameter& par) const
+bool ParameterServer::parameterIsReadAccessible(const stromx::runtime::Parameter& par) const
 {
-    if(m_op->status() != stromx::core::Operator::NONE)
+    if(m_op->status() != stromx::runtime::Operator::NONE)
     {
-        if (par.accessMode() == stromx::core::Parameter::NO_ACCESS)
+        if (par.accessMode() == stromx::runtime::Parameter::NO_ACCESS)
             return false;
         else
             return true;
     }
     else
     {
-        if(par.accessMode() == stromx::core::Parameter::NONE_READ || par.accessMode() == stromx::core::Parameter::NONE_WRITE)
+        if(par.accessMode() == stromx::runtime::Parameter::NONE_READ || par.accessMode() == stromx::runtime::Parameter::NONE_WRITE)
             return true;
         else
             return false;
@@ -199,12 +199,12 @@ void ParameterServer::setAccessTimeout(int timeout)
 
 bool ParameterServer::parameterIsDisplayed(unsigned int id) const
 {
-    const stromx::core::Parameter & param = m_op->info().parameter(id);
+    const stromx::runtime::Parameter & param = m_op->info().parameter(id);
     
     return parameterIsReadAccessible(param) || param.members().size();
 }
 
-bool ParameterServer::parameterIsWriteAccessible(const stromx::core::Parameter& par) const
+bool ParameterServer::parameterIsWriteAccessible(const stromx::runtime::Parameter& par) const
 {
     const ParameterValue & value = m_cache[par.id()];
     
@@ -214,20 +214,20 @@ bool ParameterServer::parameterIsWriteAccessible(const stromx::core::Parameter& 
     
     switch(m_op->status())
     {
-        case stromx::core::Operator::NONE:
-            if(par.accessMode() == stromx::core::Parameter::NONE_WRITE)
+        case stromx::runtime::Operator::NONE:
+            if(par.accessMode() == stromx::runtime::Parameter::NONE_WRITE)
                 return true;
             else
                 return false;
             
-        case stromx::core::Operator::INITIALIZED:
-            if(par.accessMode() == stromx::core::Parameter::INITIALIZED_WRITE || par.accessMode() == stromx::core::Parameter::ACTIVATED_WRITE)
+        case stromx::runtime::Operator::INITIALIZED:
+            if(par.accessMode() == stromx::runtime::Parameter::INITIALIZED_WRITE || par.accessMode() == stromx::runtime::Parameter::ACTIVATED_WRITE)
                 return true;
             else
                 return false;
             
         default:
-            if(par.accessMode() == stromx::core::Parameter::ACTIVATED_WRITE)
+            if(par.accessMode() == stromx::runtime::Parameter::ACTIVATED_WRITE)
                 return true;
             else
                 return false;

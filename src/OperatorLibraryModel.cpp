@@ -7,13 +7,13 @@
 #include <QSettings>
 #include <QtDebug>
 #include <stromx/base/Base.h>
-#include <stromx/core/Core.h>
-#include <stromx/core/Factory.h>
-#include <stromx/core/Operator.h>
-#include <stromx/core/OperatorKernel.h>
+#include <stromx/runtime/Runtime.h>
+#include <stromx/runtime/Factory.h>
+#include <stromx/runtime/Operator.h>
+#include <stromx/runtime/OperatorKernel.h>
 #include <iostream>
 
-using namespace stromx::core;
+using namespace stromx::runtime;
     
 OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
   : QAbstractItemModel(parent),
@@ -145,8 +145,8 @@ void OperatorLibraryModel::loadPackage(const QString& packagePath)
     QLibrary* lib = new QLibrary(packagePath, this);
     
     // resolve the registration function
-    void (*registrationFunction)(stromx::core::Registry& registry);
-    registrationFunction = reinterpret_cast<void (*)(stromx::core::Registry& registry)>
+    void (*registrationFunction)(stromx::runtime::Registry& registry);
+    registrationFunction = reinterpret_cast<void (*)(stromx::runtime::Registry& registry)>
         (lib->resolve(registrationFunctionName.toStdString().c_str()));
         
     if(! registrationFunction)
@@ -160,7 +160,7 @@ void OperatorLibraryModel::loadPackage(const QString& packagePath)
     {
         (*registrationFunction)(*m_factory);
     }
-    catch(stromx::core::Exception&)
+    catch(stromx::runtime::Exception&)
     {
         // even if an exception was thrown, parts of the library might have been loaded
         // therefore the library is not closed
@@ -195,8 +195,8 @@ void OperatorLibraryModel::setupFactory()
 {
     Q_ASSERT(m_factory == 0);
     
-    m_factory = new stromx::core::Factory();
-    stromxRegisterCore(*m_factory);
+    m_factory = new stromx::runtime::Factory();
+    stromxRegisterRuntime(*m_factory);
     stromxRegisterBase(*m_factory);
 }
 
@@ -208,7 +208,7 @@ void OperatorLibraryModel::updateOperators()
     
     QMap<QString, int> package2IdMap;
     
-    typedef std::vector<const stromx::core::OperatorKernel*> OperatorKernelList;
+    typedef std::vector<const stromx::runtime::OperatorKernel*> OperatorKernelList;
     for(OperatorKernelList::const_iterator iter = m_factory->availableOperators().begin();
         iter != m_factory->availableOperators().end();
         ++iter)
@@ -256,18 +256,18 @@ OperatorData* OperatorLibraryModel::newOperatorData(const QModelIndex& index) co
         return 0;
     
     const Package* package = reinterpret_cast<const Package*>(index.internalPointer());
-    const stromx::core::OperatorKernel* op = package->operators[index.row()];
+    const stromx::runtime::OperatorKernel* op = package->operators[index.row()];
     
     return new OperatorData(QString::fromStdString(op->package()), QString::fromStdString(op->type()));
 }
 
-stromx::core::Operator* OperatorLibraryModel::newOperator(const OperatorData* data) const
+stromx::runtime::Operator* OperatorLibraryModel::newOperator(const OperatorData* data) const
 {
     try
     {
         return m_factory->newOperator(data->package().toStdString(), data->type().toStdString());
     }
-    catch(stromx::core::WrongArgument &)
+    catch(stromx::runtime::WrongArgument &)
     {
         return 0;
     }

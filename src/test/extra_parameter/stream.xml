@@ -5,19 +5,19 @@
   <Stream name="">
     <Operator id="0" name="ParameterOperator" package="TestPackage" type="ParameterOperator" version="1.2.3">
       <Parameter id="0">
-        <Data package="Core" type="UInt32" version="0.1.0">0</Data>
+        <Data package="Runtime" type="UInt32" version="0.1.0">0</Data>
       </Parameter>
       <Parameter id="1"> <!-- parameter with ID 2 does not exist in ParameterOperator -->
-        <Data package="Core" type="UInt32" version="0.1.0">0</Data>
+        <Data package="Runtime" type="UInt32" version="0.1.0">0</Data>
       </Parameter>
       <Parameter id="3">
-        <Data package="Core" type="Int32" version="0.1.0">0</Data>
+        <Data package="Runtime" type="Int32" version="0.1.0">0</Data>
       </Parameter>
       <Parameter id="4">
-        <Data package="Core" type="Enum" version="0.1.0">0</Data>
+        <Data package="Runtime" type="Enum" version="0.1.0">0</Data>
       </Parameter>
       <Parameter id="5">
-        <Data package="Core" type="Bool" version="0.1.0">0</Data>
+        <Data package="Runtime" type="Bool" version="0.1.0">0</Data>
       </Parameter>
     </Operator>
   </Stream>

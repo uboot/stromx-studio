@@ -32,7 +32,7 @@
 
 namespace stromx
 {
-    namespace core
+    namespace runtime
     { 
         class FileInput;
         class FileOutput;
@@ -213,10 +213,10 @@ private:
     bool saveBeforeClosing();
     
     /** Saves the geometry and view properties of the stream scene and the observer windows. */
-    void writeWindowStates(stromx::core::FileOutput & output, const QString & basename) const;
+    void writeWindowStates(stromx::runtime::FileOutput & output, const QString & basename) const;
     
     /** Reads and geometry and view properties of the stream scene and the observer windows. */
-    void readWindowStates(stromx::core::FileInput & input, const QString & basename);
+    void readWindowStates(stromx::runtime::FileInput & input, const QString & basename);
     
     QAction* m_openAct;
     QAction* m_saveAct;

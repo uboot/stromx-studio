@@ -25,7 +25,7 @@
 
 namespace stromx
 {
-    namespace core
+    namespace runtime
     {
         class OperatorError;
     }
@@ -64,7 +64,7 @@ public:
     ErrorData();
     
     /** Constructs an error data from a stromx exception and the type of the exception. */
-    ErrorData(const stromx::core::OperatorError & exception, Type type);
+    ErrorData(const stromx::runtime::OperatorError & exception, Type type);
     
     /** Returns the title of the error. */
     const QString & title() const { return m_title; }
