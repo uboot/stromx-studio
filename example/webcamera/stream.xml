@@ -3,7 +3,7 @@
 <Stromx version="0.1.0">
 
   <Stream name="">
-    <Operator id="0" name="WebCamera" package="Base" type="WebCamera" version="0.1.0">
+    <Operator id="0" name="WebCamera" package="Example" type="WebCamera" version="0.1.0">
       <Parameter id="0">
         <Data package="Runtime" type="Double" version="0.1.0">-1</Data>
       </Parameter>
@@ -11,7 +11,7 @@
         <Data package="Runtime" type="Double" version="0.1.0">0.5</Data>
       </Parameter>
     </Operator>
-    <Operator id="1" name="Blur" package="Base" type="Blur" version="0.1.0">
+    <Operator id="1" name="Blur" package="Example" type="Blur" version="0.1.0">
       <Parameter id="0">
         <Data package="Runtime" type="Bool" version="0.1.0">1</Data>
       </Parameter>

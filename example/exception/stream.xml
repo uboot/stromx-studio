@@ -3,7 +3,7 @@
 <Stromx version="0.1.0">
 
   <Stream name="">
-    <Operator id="0" name="Camera" package="Base" type="Camera" version="0.1.0">
+    <Operator id="0" name="Camera" package="Example" type="Camera" version="0.1.0">
       <Parameter id="0">
         <Data package="Runtime" type="Bool" version="0.1.0">1</Data>
       </Parameter>
@@ -35,7 +35,7 @@
         <Data package="Runtime" type="UInt32" version="0.1.0">1500000</Data>
       </Parameter>
       <Parameter id="1">
-        <Data file="stream_op0_parameter1.png" package="Base" type="Image" version="0.1.0">3 500 512</Data>
+        <Data file="stream_op0_parameter1.png" package="Example" type="Image" version="0.1.0">3 500 512</Data>
       </Parameter>
       <Parameter id="13">
         <Data package="Runtime" type="UInt32" version="0.1.0">500</Data>
@@ -56,7 +56,7 @@
     <Operator id="1" name="Dump 2" package="Runtime" type="Dump" version="0.1.0">
       <Input id="0" operator="2" output="0"/>
     </Operator>
-    <Operator id="2" name="Canny" package="Base" type="Canny" version="0.1.0">
+    <Operator id="2" name="Canny" package="Example" type="Canny" version="0.1.0">
       <Parameter id="0">
         <Data package="Runtime" type="Bool" version="0.1.0">1</Data>
       </Parameter>

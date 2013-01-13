@@ -6,7 +6,7 @@
 #include <QLibrary>
 #include <QSettings>
 #include <QtDebug>
-#include <stromx/base/Base.h>
+#include <stromx/example/Example.h>
 #include <stromx/runtime/Runtime.h>
 #include <stromx/runtime/Factory.h>
 #include <stromx/runtime/Operator.h>
@@ -197,7 +197,7 @@ void OperatorLibraryModel::setupFactory()
     
     m_factory = new stromx::runtime::Factory();
     stromxRegisterRuntime(*m_factory);
-    stromxRegisterBase(*m_factory);
+    stromxRegisterExample(*m_factory);
 }
 
 void OperatorLibraryModel::updateOperators()

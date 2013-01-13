@@ -151,7 +151,7 @@ target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
     ${CMAKE_DL_LIBS}
     ${stromx_RUNTIME_LIB}
-    ${stromx_BASE_LIB}
+    ${stromx_EXAMPLE_LIB}
 )
 
 if(WIN32)
