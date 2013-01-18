@@ -21,7 +21,7 @@
 #define SETPARAMETERCMD_H
 
 #include <QUndoCommand>
-#include <stromx/core/DataRef.h>
+#include <stromx/runtime/DataRef.h>
 
 class ParameterServer;
 
@@ -30,7 +30,7 @@ class SetParameterCmd : public QUndoCommand
 {
 public:
     SetParameterCmd(ParameterServer* server, unsigned int parameter,
-                    const stromx::core::DataRef& newValue, const stromx::core::DataRef& oldValue,
+                    const stromx::runtime::DataRef& newValue, const stromx::runtime::DataRef& oldValue,
                     QUndoCommand* parent = 0);
     virtual ~SetParameterCmd();
     virtual void undo();
@@ -39,8 +39,8 @@ public:
 private:
     ParameterServer* m_server;
     unsigned int m_parameter;
-    stromx::core::DataRef m_oldValue;
-    stromx::core::DataRef m_newValue;
+    stromx::runtime::DataRef m_oldValue;
+    stromx::runtime::DataRef m_newValue;
 };
 
 #endif // SETPARAMETERCMD_H

@@ -22,14 +22,14 @@
 
 #include <QPointF>
 #include <QSet>
-#include <stromx/core/DataContainer.h>
-#include <stromx/core/ReadAccess.h>
+#include <stromx/runtime/DataContainer.h>
+#include <stromx/runtime/ReadAccess.h>
 #include "ConnectorObserver.h"
 #include "PropertyModel.h"
 
 namespace stromx
 {
-    namespace core
+    namespace runtime
     { 
         class Data;
         class Operator;
@@ -67,11 +67,11 @@ public:
         OUTPUT
     };
     
-    explicit OperatorModel(stromx::core::Operator* op, StreamModel *stream);
+    explicit OperatorModel(stromx::runtime::Operator* op, StreamModel *stream);
     virtual ~OperatorModel();
     
     /** Returns the stromx operator of this model. */
-    stromx::core::Operator* op() const { return m_op; }
+    stromx::runtime::Operator* op() const { return m_op; }
     
     /** Returns the package the operator belongs to. */
     const QString & package() const;
@@ -93,14 +93,14 @@ public:
     
     /** 
      * Returns true if the operator is initialized, i.e. the status of the
-     * stromx operator different from stromx::core::Operator::NONE.
+     * stromx operator different from stromx::runtime::Operator::NONE.
      */
     bool isInitialized() const;
     
     /** 
      * Returns true if the operator is activated, i.e. the status of the
-     * stromx operator is stromx::core::Operator::ACTIVE or 
-     * stromx::core::Operator::EXECUTING.
+     * stromx operator is stromx::runtime::Operator::ACTIVE or 
+     * stromx::runtime::Operator::EXECUTING.
      */
     bool isActive() const;
     
@@ -146,7 +146,7 @@ signals:
     
     /** The connector specified by \c type and \c id was set to \c data. */
     void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id,
-                              stromx::core::ReadAccess<> access);
+                              stromx::runtime::ReadAccess<> access);
       
     /** 
      * An operation accessing a parameter of the operator or data at an operator
@@ -169,12 +169,6 @@ private slots:
     /** Resets the model and emits <tt>activeChanged(false)</tt>. */
     void setActiveFalse();
     
-    /** 
-     * Gets the read access from the finished task and emits either an connector
-     * data or an timeout signal.
-     */
-    void handleObtainReadAccessTaskFinished();
-    
     /** Emits a data changed event for the cell of the parameter \c id. */
     void handleParameterChanged(unsigned int id);
     
@@ -190,6 +184,9 @@ private:
     static const unsigned int TIMEOUT;
     
     static QString statusToString(int status);
+    
+    /** Returns the min, max or step (depending on \c role) value of \c param. */
+    static QVariant getParameterSetting(const stromx::runtime::Parameter & param, int role);
     
     /** Sets the name of the operator. */
     void doSetName(const QString & name);
@@ -207,7 +204,7 @@ private:
      * Returns the number of members \c group which are currently displayed.
      * If \c group is 0 the number of displayed top-level parameters is returned.
      */
-    int numDisplayedParameters(const stromx::core::Parameter* group) const;
+    int numDisplayedParameters(const stromx::runtime::Parameter* group) const;
     
     /**
      * Returns the parameter at the position \c row of the displayed parameters in \c group. 
@@ -215,26 +212,26 @@ private:
      * displayed parameters of \c group. If \c group is 0 the parameter at the
      * position \c row of all displayed top-level parameters is returned.
      */
-    const stromx::core::Parameter* parameterAtRow(const stromx::core::Parameter* group, int row) const;
+    const stromx::runtime::Parameter* parameterAtRow(const stromx::runtime::Parameter* group, int row) const;
     
     /** 
      * Returns the row at which the parameter \c param is displayed. Returns -1 of the parameter
      * is not currently displayed.
      */
-    int rowOfDisplayedParameter(const stromx::core::Parameter* param) const;
+    int rowOfDisplayedParameter(const stromx::runtime::Parameter* param) const;
     
     /** 
      * Returns all parameters which are members of the parameter \c group. Returns all top-level
      * parameters if \c group is 0.
      */
-    QList<const stromx::core::Parameter*> members(const stromx::core::Parameter* group) const;
+    QList<const stromx::runtime::Parameter*> members(const stromx::runtime::Parameter* group) const;
     
     /** 
      * Returns the row type of the row \c index refers to.
      */
     Row rowType(const QModelIndex & index) const;
     
-    stromx::core::Operator* m_op;
+    stromx::runtime::Operator* m_op;
     StreamModel* m_stream;
     QPointF m_pos;
     QSet<ConnectionModel*> m_connections;

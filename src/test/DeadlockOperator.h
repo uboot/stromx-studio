@@ -20,11 +20,11 @@
 #ifndef DEADLOCKOPERATOR_H
 #define DEADLOCKOPERATOR_H
 
-#include <stromx/core/OperatorKernel.h>
-#include <stromx/core/Primitive.h>
-#include <stromx/core/WriteAccess.h>
+#include <stromx/runtime/OperatorKernel.h>
+#include <stromx/runtime/Primitive.h>
+#include <stromx/runtime/WriteAccess.h>
 
-class DeadlockOperator : public stromx::core::OperatorKernel
+class DeadlockOperator : public stromx::runtime::OperatorKernel
 {
     enum Inputs 
     { 
@@ -43,25 +43,25 @@ public:
     DeadlockOperator();
     
     virtual OperatorKernel* clone() const { return new DeadlockOperator; }
-    virtual void setParameter(const unsigned int id, const stromx::core::Data& value);
-    const stromx::core::DataRef getParameter(const unsigned int id) const;
+    virtual void setParameter(const unsigned int id, const stromx::runtime::Data& value);
+    const stromx::runtime::DataRef getParameter(const unsigned int id) const;
     virtual void activate();
-    virtual void execute(stromx::core::DataProvider& provider);
+    virtual void execute(stromx::runtime::DataProvider& provider);
     
 private:
-    static const std::vector<const stromx::core::Description*> setupInputs();
-    static const std::vector<const stromx::core::Description*> setupOutputs();
-    static const std::vector<const stromx::core::Parameter*> setupParameters();
+    static const std::vector<const stromx::runtime::Description*> setupInputs();
+    static const std::vector<const stromx::runtime::Description*> setupOutputs();
+    static const std::vector<const stromx::runtime::Parameter*> setupParameters();
     
     static const std::string TYPE;
     static const std::string PACKAGE;
-    static const stromx::core::Version VERSION;
+    static const stromx::runtime::Version VERSION;
     
-    stromx::core::Bool m_lockParameters;
-    stromx::core::Bool m_lockData;
+    stromx::runtime::Bool m_lockParameters;
+    stromx::runtime::Bool m_lockData;
     bool m_dataHasBeenLocked;
-    stromx::core::WriteAccess<stromx::core::UInt32> m_writeAccess;
-    stromx::core::UInt8 m_dummy;
+    stromx::runtime::WriteAccess<stromx::runtime::UInt32> m_writeAccess;
+    stromx::runtime::UInt8 m_dummy;
 };
 
 #endif // DEADLOCKOPERATOR_H

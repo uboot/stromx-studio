@@ -53,7 +53,25 @@ enum Roles
      * Describes image data. Upon edit the user should be presented an editor to
      * open or generate new image data.
      */
-    ImageRole
+    ImageRole,
+    
+    /**
+     * The minimal value of numeric data. It should be provided to the user 
+     * as an assistance when editing the data.
+     */
+    MinRole,
+    
+    /**
+     * The maximal value of numeric data. It should be provided to the user 
+     * as an assistance when editing the data.
+     */
+    MaxRole,
+    
+    /**
+     * The step size of numeric data. It should be provided to the user 
+     * as an assistance when editing the data.
+     */
+    StepRole
 };
 
 /** Custom event types of stromx-studio. */

@@ -35,11 +35,11 @@
 #include <QtGlobal>
 #include <iostream>
 #include <memory>
-#include <stromx/core/DirectoryFileInput.h>
-#include <stromx/core/DirectoryFileOutput.h>
-#include <stromx/core/Exception.h>
-#include <stromx/core/ZipFileInput.h>
-#include <stromx/core/ZipFileOutput.h>
+#include <stromx/runtime/DirectoryFileInput.h>
+#include <stromx/runtime/DirectoryFileOutput.h>
+#include <stromx/runtime/Exception.h>
+#include <stromx/runtime/ZipFileInput.h>
+#include <stromx/runtime/ZipFileOutput.h>
 #include "Common.h"
 #include "DataVisualizer.h"
 #include "DocumentationWindow.h"
@@ -234,13 +234,13 @@ void MainWindow::createActions()
                 this, SLOT(openRecentFile()));
     }
 
-    m_loadLibrariesAct = new QAction(tr("&Load Libraries..."), this);
-    m_loadLibrariesAct->setStatusTip(tr("Load operator libraries"));
-    connect(m_loadLibrariesAct, SIGNAL(triggered()), this, SLOT(loadLibraries()));
+    m_loadPackagesAct = new QAction(tr("&Load packages..."), this);
+    m_loadPackagesAct->setStatusTip(tr("Load operator packages"));
+    connect(m_loadPackagesAct, SIGNAL(triggered()), this, SLOT(loadPackages()));
 
-    m_resetLibrariesAct = new QAction(tr("&Reset Libraries..."), this);
-    m_resetLibrariesAct->setStatusTip(tr("Reset operator libraries"));
-    connect(m_resetLibrariesAct, SIGNAL(triggered()), this, SLOT(resetLibraries()));
+    m_resetPackagesAct = new QAction(tr("&Reset packages..."), this);
+    m_resetPackagesAct->setStatusTip(tr("Reset operator packages"));
+    connect(m_resetPackagesAct, SIGNAL(triggered()), this, SLOT(resetPackages()));
 
     m_quitAct = new QAction(tr("&Quit"), this);
     m_quitAct->setShortcuts(QKeySequence::Quit);
@@ -327,8 +327,8 @@ void MainWindow::createMenus()
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_emptyRecentFilesAct);
     m_fileMenu->addSeparator();
-    m_fileMenu->addAction(m_loadLibrariesAct);
-    m_fileMenu->addAction(m_resetLibrariesAct);
+    m_fileMenu->addAction(m_loadPackagesAct);
+    m_fileMenu->addAction(m_resetPackagesAct);
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_quitAct);
 
@@ -505,7 +505,7 @@ bool MainWindow::readFile(const QString& filepath)
     
     // try to read the stream
     StreamModel* stream = 0;
-    std::auto_ptr<stromx::core::FileInput> input;
+    std::auto_ptr<stromx::runtime::FileInput> input;
     QString location;
     
     try
@@ -513,15 +513,15 @@ bool MainWindow::readFile(const QString& filepath)
         if(extension == "xml")
         {
             location = QFileInfo(filepath).absoluteDir().absolutePath();
-            input = std::auto_ptr<stromx::core::FileInput>(new stromx::core::DirectoryFileInput(location.toStdString()));
+            input = std::auto_ptr<stromx::runtime::FileInput>(new stromx::runtime::DirectoryFileInput(location.toStdString()));
         }
         else if(extension == "zip" || extension == "stromx")
         {
             location = filepath;
-            input = std::auto_ptr<stromx::core::FileInput>(new stromx::core::ZipFileInput(filepath.toStdString()));
+            input = std::auto_ptr<stromx::runtime::FileInput>(new stromx::runtime::ZipFileInput(filepath.toStdString()));
         }
     }
-    catch(stromx::core::FileAccessFailed&)
+    catch(stromx::runtime::FileAccessFailed&)
     {
         QMessageBox::critical(this, tr("Failed to load file"),
                               tr("The location %1 could not be openend for reading").arg(location),
@@ -544,7 +544,7 @@ bool MainWindow::readFile(const QString& filepath)
         
         updateCurrentFile(filepath);
     }
-    catch(stromx::core::FileAccessFailed&)
+    catch(stromx::runtime::FileAccessFailed&)
     {
         QMessageBox::critical(this, tr("Failed to load file"),
                               tr("The location %1 could not be openend for reading").arg(location),
@@ -739,14 +739,14 @@ bool MainWindow::writeFile(const QString& filepath)
         if(extension == "xml")
         {
             location = QFileInfo(filepath).absoluteDir().absolutePath();
-            stromx::core::DirectoryFileOutput output(location.toStdString());
+            stromx::runtime::DirectoryFileOutput output(location.toStdString());
             m_streamEditor->streamEditorScene()->model()->write(output, basename);
             writeWindowStates(output, basename);
         }
         else if(extension == "zip" || extension == "stromx")
         {
             location = filepath;
-            stromx::core::ZipFileOutput output(location.toStdString());
+            stromx::runtime::ZipFileOutput output(location.toStdString());
             m_streamEditor->streamEditorScene()->model()->write(output, "stream");
             writeWindowStates(output, "stream");
             
@@ -760,7 +760,7 @@ bool MainWindow::writeFile(const QString& filepath)
         QSettings settings("stromx", "stromx-studio");
         settings.setValue("lastStreamSavedDir", QFileInfo(filepath).dir().absolutePath());
     }
-    catch(stromx::core::FileAccessFailed&)
+    catch(stromx::runtime::FileAccessFailed&)
     {
         QMessageBox::critical(this, tr("Failed to save file"),
                               tr("The location %1 could not be openend for writing").arg(location),
@@ -791,20 +791,20 @@ void MainWindow::writeSettings()
     settings.setValue("windowState", saveState());
 }
 
-void MainWindow::loadLibraries()
+void MainWindow::loadPackages()
 {
     QSettings settings("stromx", "stromx-studio");
-    QString lastDir = settings.value("lastLibrary", QDir::home().absolutePath()).toString();
+    QString lastDir = settings.value("lastPackage", QDir::home().absolutePath()).toString();
     
     QStringList files = QFileDialog::getOpenFileNames(
                             this,
-                            tr("Select one or more stromx libraries to open"),
+                            tr("Select one or more stromx packages to open"),
                             lastDir,
 #ifdef UNIX                          
-                            tr("Libraries (*.so)")); 
+                            tr("Package (*.so)")); 
 #endif // UNIX
 #ifdef WIN32                          
-                            tr("Libraries (*.dll)")); 
+                            tr("Package (*.dll)")); 
 #endif // WIN32
     
     // load each library
@@ -814,9 +814,9 @@ void MainWindow::loadLibraries()
     {
         try
         {
-            m_operatorLibraryView->operatorLibraryModel()->loadLibrary(file);
+            m_operatorLibraryView->operatorLibraryModel()->loadPackage(file);
         }
-        catch(LoadLibraryFailed&)
+        catch(LoadPackageFailed&)
         {
             std::cout << "Failed to load '" << file.toStdString() << "'" << std::endl;
         }
@@ -826,11 +826,11 @@ void MainWindow::loadLibraries()
     if(files.size())
     {
         QString lastDir = files.back();
-        settings.setValue("lastLibrary", lastDir);
+        settings.setValue("lastPackage", lastDir);
     }
 }
 
-void MainWindow::resetLibraries()
+void MainWindow::resetPackages()
 {
     QMessageBox msgBox;
     msgBox.setText(tr("Do you want to reset the operator libraries?"));
@@ -839,7 +839,7 @@ void MainWindow::resetLibraries()
     int ret = msgBox.exec();
     
     if(ret == QMessageBox::Ok)
-        m_operatorLibraryView->operatorLibraryModel()->resetLibraries();
+        m_operatorLibraryView->operatorLibraryModel()->resetLibrary();
 }
 
 QString MainWindow::strippedName(const QString &fullFileName)
@@ -913,14 +913,14 @@ void MainWindow::resetObserverWindows(StreamModel* model)
         createObserverWindow(observer);
 }
 
-void MainWindow::readWindowStates(stromx::core::FileInput& input, const QString& basename)
+void MainWindow::readWindowStates(stromx::runtime::FileInput& input, const QString& basename)
 {
     QByteArray data;
     
     try
     {
         input.initialize("", (basename + ".studio.geometry").toStdString());
-        input.openFile(stromx::core::InputProvider::BINARY);
+        input.openFile(stromx::runtime::InputProvider::BINARY);
         
         // read all data from the input stream
         int dataSize = 0;
@@ -934,7 +934,7 @@ void MainWindow::readWindowStates(stromx::core::FileInput& input, const QString&
         }
         data.resize(dataSize);
     }
-    catch(stromx::core::FileAccessFailed& e)
+    catch(stromx::runtime::FileAccessFailed& e)
     {
         // simply ignore errors and do not update the window geometry
         qWarning() << e.what();
@@ -972,7 +972,7 @@ void MainWindow::readWindowStates(stromx::core::FileInput& input, const QString&
     }
 }
 
-void MainWindow::writeWindowStates(stromx::core::FileOutput& output, const QString& basename) const
+void MainWindow::writeWindowStates(stromx::runtime::FileOutput& output, const QString& basename) const
 {
     // construct an output stream
     QByteArray data;
@@ -998,10 +998,10 @@ void MainWindow::writeWindowStates(stromx::core::FileOutput& output, const QStri
     try
     {
         output.initialize(basename.toStdString());
-        output.openFile("studio.geometry", stromx::core::OutputProvider::BINARY);
+        output.openFile("studio.geometry", stromx::runtime::OutputProvider::BINARY);
         output.file().write(data.data(), data.size());
     }
-    catch(stromx::core::FileAccessFailed& e)
+    catch(stromx::runtime::FileAccessFailed& e)
     {
         qWarning() << e.what();
         QString error = e.container().empty() 

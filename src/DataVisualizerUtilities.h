@@ -20,7 +20,7 @@
 #ifndef DATAVISUALIZERUTILITIES_H
 #define DATAVISUALIZERUTILITIES_H
 
-#include <stromx/core/Data.h>
+#include <stromx/runtime/Data.h>
 #include <QGraphicsItem>
 #include <QList>
 
@@ -34,22 +34,22 @@ class DataVisualizerUtilities
 {
 public:    
     /** Casts \c data to an stromx image and returns an image item. */
-    static QList<QGraphicsItem*> createImageItems(const stromx::core::Data & data);
+    static QList<QGraphicsItem*> createImageItems(const stromx::runtime::Data & data);
     
     /** Casts \c data to a string and returns it as an text item. */
-    static QList<QGraphicsItem*> createStringItems(const stromx::core::Data & data);
+    static QList<QGraphicsItem*> createStringItems(const stromx::runtime::Data & data);
     
     /** 
      * Casts \c data to an stromx matrix and returns the line segments defined
      * by the matrix rows.
      */
-    static QList<QGraphicsItem*> createLineSegmentItems(const stromx::core::Data & data);
+    static QList<QGraphicsItem*> createLineSegmentItems(const stromx::runtime::Data & data);
     
     /** 
      * Casts \c data to an stromx primitive and returns its text representation as a
      * text item. 
      */
-    static QList<QGraphicsItem*> createPrimitiveItems(const stromx::core::Data & data);
+    static QList<QGraphicsItem*> createPrimitiveItems(const stromx::runtime::Data & data);
     
 private:
     typedef QList<QGraphicsItem*> ItemList;

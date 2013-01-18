@@ -1,11 +1,11 @@
 #include "ExceptionOperator.h"
 
-#include <stromx/core/DataProvider.h>
-#include <stromx/core/Id2DataPair.h>
-#include <stromx/core/OperatorException.h>
-#include <stromx/core/Primitive.h>
+#include <stromx/runtime/DataProvider.h>
+#include <stromx/runtime/Id2DataPair.h>
+#include <stromx/runtime/OperatorException.h>
+#include <stromx/runtime/Primitive.h>
 
-using namespace stromx::core;
+using namespace stromx::runtime;
 
 const std::string ExceptionOperator::TYPE("ExceptionOperator");
 const std::string ExceptionOperator::PACKAGE("TestPackage");

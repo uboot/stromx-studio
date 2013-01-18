@@ -17,7 +17,7 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <stromx/core/Registry.h>
+#include <stromx/runtime/Registry.h>
 
 #include "DeadlockOperator.h"
 #include "ExceptionOperator.h"
@@ -32,9 +32,9 @@
 
 extern "C"
 {
-    void TEST_API stromxRegisterTest(stromx::core::Registry& registry)
+    void TEST_API stromxRegisterTest(stromx::runtime::Registry& registry)
     {
-        using namespace stromx::core;
+        using namespace stromx::runtime;
         
         registry.registerOperator(new DeadlockOperator);
         registry.registerOperator(new ExceptionOperator);

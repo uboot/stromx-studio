@@ -4,7 +4,7 @@
 
 const std::string Image::TYPE = "Image";
 const std::string Image::PACKAGE = STROMX_STUDIO_PACKAGE_NAME;
-const stromx::core::Version Image::VERSION = stromx::core::Version(STROMX_STUDIO_VERSION_MAJOR,
+const stromx::runtime::Version Image::VERSION = stromx::runtime::Version(STROMX_STUDIO_VERSION_MAJOR,
                                                                    STROMX_STUDIO_VERSION_MINOR,
                                                                    STROMX_STUDIO_VERSION_PATCH);
                
@@ -21,7 +21,7 @@ Image::Image(const QImage& image)
 }
 
 Image::Image(const Image& image)
-    : stromx::core::ImageWrapper()
+    : stromx::runtime::ImageWrapper()
 {
     m_image = image.m_image;
     initializeParent();
@@ -45,22 +45,22 @@ void Image::constructFromImage(const QImage& image)
     initializeParent();
 }
 
-stromx::core::Data* Image::clone() const
+stromx::runtime::Data* Image::clone() const
 {
     return new Image(*this);
 }
 
 void Image::initializeParent()
 {
-    stromx::core::Image::PixelType pixelType = stromx::core::Image::MONO_8;
+    stromx::runtime::Image::PixelType pixelType = stromx::runtime::Image::MONO_8;
     
     switch(m_image.format())
     {
     case QImage::Format_Indexed8:
-        pixelType = stromx::core::Image::MONO_8;
+        pixelType = stromx::runtime::Image::MONO_8;
         break;
     case QImage::Format_RGB888:
-        pixelType = stromx::core::Image::RGB_24;
+        pixelType = stromx::runtime::Image::RGB_24;
         break;
     default:
         m_image = QImage();

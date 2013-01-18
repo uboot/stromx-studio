@@ -20,7 +20,7 @@
 #ifndef GETPARAMETERTASK_H
 #define GETPARAMETERTASK_H
 
-#include <stromx/core/DataRef.h>
+#include <stromx/runtime/DataRef.h>
 #include "ErrorData.h"
 #include "OperatorModel.h"
 #include "Task.h"
@@ -46,14 +46,14 @@ public:
     };
     
     /** Constructs a task object for the given parameters. Call run() to actually start the task. */
-    explicit GetParameterTask(const stromx::core::Operator* op, unsigned int id,
+    explicit GetParameterTask(const stromx::runtime::Operator* op, unsigned int id,
                               int timeout, QObject* parent = 0);
     
     /** Returns the parameter ID specified in the constructor. */
     unsigned int id() const { return m_id; }
     
     /** Returns the data. */
-    const stromx::core::DataRef & value() const { return m_result; }
+    const stromx::runtime::DataRef & value() const { return m_result; }
     
     /** Returns whether the an error occured when the attempt was made to read the parameter. */
     ErrorCode error() const { return m_errorCode; }
@@ -65,9 +65,9 @@ private:
     /** Tries to get the parameter and stores the results of the attempt in the class members. */
     void run();
     
-    const stromx::core::Operator* m_op;
+    const stromx::runtime::Operator* m_op;
     unsigned int m_id;
-    stromx::core::DataRef m_result;
+    stromx::runtime::DataRef m_result;
     ErrorCode m_errorCode;
     ErrorData m_errorData;
     int m_timeout;

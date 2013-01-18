@@ -47,7 +47,6 @@ set(stromxstudio_SOURCES
     ObserverTreeView.cpp
     ObserverView.cpp
     ObserverWindow.cpp
-    ObtainReadAccessTask.cpp
     OperatorItem.cpp
     OperatorData.cpp
     OperatorLibraryView.cpp
@@ -105,7 +104,6 @@ set(stromxstudio_HEADERS
     ObserverTreeView.h
     ObserverView.h
     ObserverWindow.h
-    ObtainReadAccessTask.h
     OperatorItem.h
     OperatorData.h
     OperatorLibraryView.h
@@ -152,8 +150,8 @@ add_executable(stromx-studio WIN32
 target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
     ${CMAKE_DL_LIBS}
-    ${stromx_CORE_LIB}
-    ${stromx_BASE_LIB}
+    ${stromx_RUNTIME_LIB}
+    ${stromx_EXAMPLE_LIB}
 )
 
 if(WIN32)

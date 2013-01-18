@@ -20,10 +20,10 @@
 #ifndef EXCEPTIONOPERATOR_H
 #define EXCEPTIONOPERATOR_H
 
-#include <stromx/core/OperatorKernel.h>
-#include <stromx/core/Primitive.h>
+#include <stromx/runtime/OperatorKernel.h>
+#include <stromx/runtime/Primitive.h>
 
-class ExceptionOperator : public stromx::core::OperatorKernel
+class ExceptionOperator : public stromx::runtime::OperatorKernel
 {
     enum Inputs 
     { 
@@ -43,28 +43,28 @@ public:
     ExceptionOperator();
     
     virtual OperatorKernel* clone() const { return new ExceptionOperator; }
-    virtual void setParameter(const unsigned int id, const stromx::core::Data& value);
-    const stromx::core::DataRef getParameter(const unsigned int id) const;
-    virtual void execute(stromx::core::DataProvider& provider);
+    virtual void setParameter(const unsigned int id, const stromx::runtime::Data& value);
+    const stromx::runtime::DataRef getParameter(const unsigned int id) const;
+    virtual void execute(stromx::runtime::DataProvider& provider);
     virtual void activate();
     virtual void initialize();
     virtual void deactivate();
     virtual void deinitialize();
     
 private:
-    static const std::vector<const stromx::core::Description*> setupInputs();
-    static const std::vector<const stromx::core::Description*> setupOutputs();
-    static const std::vector<const stromx::core::Parameter*> setupParameters();
+    static const std::vector<const stromx::runtime::Description*> setupInputs();
+    static const std::vector<const stromx::runtime::Description*> setupOutputs();
+    static const std::vector<const stromx::runtime::Parameter*> setupParameters();
     
     static const std::string TYPE;
     static const std::string PACKAGE;
-    static const stromx::core::Version VERSION;
+    static const stromx::runtime::Version VERSION;
     
-    stromx::core::Bool m_throwInitialize;
-    stromx::core::Bool m_throwActivate;
-    stromx::core::Bool m_throwExecute;
-    stromx::core::Bool m_throwDeactivate;
-    stromx::core::Bool m_throwDeinitialize;
+    stromx::runtime::Bool m_throwInitialize;
+    stromx::runtime::Bool m_throwActivate;
+    stromx::runtime::Bool m_throwExecute;
+    stromx::runtime::Bool m_throwDeactivate;
+    stromx::runtime::Bool m_throwDeinitialize;
 };
 
 #endif // PARAMETEROPERATOR_H

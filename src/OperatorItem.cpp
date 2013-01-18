@@ -6,7 +6,7 @@
 #include <QMouseEvent>
 #include <QPen>
 #include <QUndoStack>
-#include <stromx/core/Operator.h>
+#include <stromx/runtime/Operator.h>
 #include "ConnectionItem.h"
 #include "ConnectorItem.h"
 #include "StreamEditorScene.h"
@@ -113,7 +113,7 @@ void OperatorItem::setInitialized(bool value)
 
 void OperatorItem::initialize()
 {
-    typedef std::vector<const stromx::core::Description*> DescriptionVector;
+    typedef std::vector<const stromx::runtime::Description*> DescriptionVector;
     
     DescriptionVector inputs = m_model->op()->info().inputs();
     qreal firstInputYPos = computeFirstYPos(inputs.size());

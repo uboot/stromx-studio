@@ -19,7 +19,6 @@ set(stromxstudiotest_HEADERS
     ../InputModel.h
     ../ObserverModel.h
     ../ObserverTreeModel.h
-    ../ObtainReadAccessTask.h
     ../OperatorData.h
     ../OperatorLibraryModel.h
     ../OperatorModel.h
@@ -64,7 +63,6 @@ set(stromxstudiotest_SOURCES
     ../OperatorLibraryModel.cpp
     ../ObserverModel.cpp
     ../ObserverTreeModel.cpp
-    ../ObtainReadAccessTask.cpp
     ../OperatorModel.cpp
     ../ParameterServer.cpp
     ../PropertyModel.cpp
@@ -102,8 +100,8 @@ add_executable(stromx_studio_test
 
 target_link_libraries(stromx_studio_test
     ${QT_LIBRARIES}
-    ${stromx_CORE_LIB}
-    ${stromx_BASE_LIB}
+    ${stromx_RUNTIME_LIB}
+    ${stromx_EXAMPLE_LIB}
 )
 
 add_library(stromx_test SHARED 
@@ -115,6 +113,6 @@ add_library(stromx_test SHARED
 )
 
 target_link_libraries(stromx_test
-    ${stromx_CORE_LIB}
-    ${stromx_BASE_LIB}
+    ${stromx_RUNTIME_LIB}
+    ${stromx_EXAMPLE_LIB}
 )

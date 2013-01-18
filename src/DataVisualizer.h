@@ -22,7 +22,7 @@
 
 #include <QMap>
 
-#include <stromx/core/Data.h>
+#include <stromx/runtime/Data.h>
 
 #include "AbstractDataVisualizer.h"
 #include "GraphicsView.h"
@@ -43,7 +43,7 @@ public:
     virtual void moveLayer(int src, int dest);
     virtual void removeLayer(int pos);
     virtual void setColor(int pos, const QColor & color);
-    virtual void setData(int pos, const stromx::core::Data& data, Visualization visualization);
+    virtual void setData(int pos, const stromx::runtime::Data& data, Visualization visualization);
     virtual void setActive(int pos, bool active);
     
 private:

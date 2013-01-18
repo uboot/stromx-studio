@@ -23,43 +23,43 @@
 #include <QVariant>
 #include <QString>
 #include <QStringList>
-#include <stromx/core/DataRef.h>
-#include <stromx/core/Image.h>
-#include <stromx/core/Parameter.h>
-#include <stromx/core/String.h>
-#include <stromx/core/TriggerData.h>
+#include <stromx/runtime/DataRef.h>
+#include <stromx/runtime/Image.h>
+#include <stromx/runtime/Parameter.h>
+#include <stromx/runtime/String.h>
+#include <stromx/runtime/TriggerData.h>
 #include <qapplication.h>
 
 namespace
 {
     template<class T>
-    bool isEqual(const stromx::core::Data & lhs, const stromx::core::Data & rhs)
+    bool isEqual(const stromx::runtime::Data & lhs, const stromx::runtime::Data & rhs)
     {
         try
         {
-            return stromx::core::data_cast<T>(lhs) == stromx::core::data_cast<T>(rhs);
+            return stromx::runtime::data_cast<T>(lhs) == stromx::runtime::data_cast<T>(rhs);
         }
-        catch(stromx::core::BadCast&)
+        catch(stromx::runtime::BadCast&)
         {
             return false;
         }
     }
 }
 
-QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx::core::Parameter& param, int role)
+QVariant DataConverter::toQVariant(const stromx::runtime::Data& data, const stromx::runtime::Parameter& param, int role)
 {
     try
     {
         QVariant variant;
         QString dataString;
         
-        if (data.isVariant(stromx::core::DataVariant::NONE))
+        if (data.isVariant(stromx::runtime::DataVariant::NONE))
         {
             if(role == Qt::DisplayRole)
                 return QString("None");
         }
         
-        if (data.isVariant(stromx::core::DataVariant::TRIGGER))
+        if (data.isVariant(stromx::runtime::DataVariant::TRIGGER))
         {
             if(role == Qt::DisplayRole)
                 return QString("Trigger");
@@ -68,9 +68,9 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
                 return QString("Trigger");
         }
         
-        if (data.isVariant(stromx::core::DataVariant::BOOL))
+        if (data.isVariant(stromx::runtime::DataVariant::BOOL))
         {
-            const stromx::core::Bool & boolData = stromx::core::data_cast<stromx::core::Bool>(data);
+            const stromx::runtime::Bool & boolData = stromx::runtime::data_cast<stromx::runtime::Bool>(data);
                 
             if(role == Qt::DisplayRole)
             {
@@ -91,15 +91,15 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             }
         }
         
-        if (data.isVariant(stromx::core::DataVariant::ENUM))
+        if (data.isVariant(stromx::runtime::DataVariant::ENUM))
         {
-            const stromx::core::Enum& value = stromx::core::data_cast<stromx::core::Enum>(data);
+            const stromx::runtime::Enum& value = stromx::runtime::data_cast<stromx::runtime::Enum>(data);
             unsigned int intValue = (unsigned int)(value);
-            const std::vector<stromx::core::EnumDescription> & vectorEnumDesc = param.descriptions();
+            const std::vector<stromx::runtime::EnumDescription> & vectorEnumDesc = param.descriptions();
             
             if(role == Qt::DisplayRole)
             {
-                for(std::vector<stromx::core::EnumDescription>::const_iterator iter_enumDesc = vectorEnumDesc.begin();
+                for(std::vector<stromx::runtime::EnumDescription>::const_iterator iter_enumDesc = vectorEnumDesc.begin();
                     iter_enumDesc != vectorEnumDesc.end();
                     ++iter_enumDesc)
                 {
@@ -111,7 +111,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             else if(role == Qt::EditRole)
             {
                 int choice = 0;
-                for(std::vector<stromx::core::EnumDescription>::const_iterator iter_enumDesc = vectorEnumDesc.begin();
+                for(std::vector<stromx::runtime::EnumDescription>::const_iterator iter_enumDesc = vectorEnumDesc.begin();
                     iter_enumDesc != vectorEnumDesc.end();
                     ++iter_enumDesc)
                 {
@@ -124,7 +124,7 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             else if(role == ChoicesRole)
             {
                 QStringList choices;
-                for(std::vector<stromx::core::EnumDescription>::const_iterator iter_enumDesc = vectorEnumDesc.begin();
+                for(std::vector<stromx::runtime::EnumDescription>::const_iterator iter_enumDesc = vectorEnumDesc.begin();
                     iter_enumDesc != vectorEnumDesc.end();
                     ++iter_enumDesc)
                 {
@@ -134,148 +134,148 @@ QVariant DataConverter::toQVariant(const stromx::core::Data& data, const stromx:
             }
         }
         
-        if (data.isVariant(stromx::core::DataVariant::INT_8))
+        if (data.isVariant(stromx::runtime::DataVariant::INT_8))
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::Int8 & int8Data = stromx::core::data_cast<stromx::core::Int8>(data);
+                const stromx::runtime::Int8 & int8Data = stromx::runtime::data_cast<stromx::runtime::Int8>(data);
                 return int(int8Data);
             }
         }
         
-        if (data.isVariant(stromx::core::DataVariant::UINT_8))
+        if (data.isVariant(stromx::runtime::DataVariant::UINT_8))
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::UInt8 & uint8Data = stromx::core::data_cast<stromx::core::UInt8>(data);
-                return int(uint8Data);
+                const stromx::runtime::UInt8 & uint8Data = stromx::runtime::data_cast<stromx::runtime::UInt8>(data);
+                return uint(uint8Data);
             }
         }
         
-        if (data.isVariant(stromx::core::DataVariant::INT_16))
+        if (data.isVariant(stromx::runtime::DataVariant::INT_16))
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::Int16 & int16Data = stromx::core::data_cast<stromx::core::Int16>(data);
+                const stromx::runtime::Int16 & int16Data = stromx::runtime::data_cast<stromx::runtime::Int16>(data);
                 return int(int16Data);
             }
         }
         
-        if (data.isVariant(stromx::core::DataVariant::UINT_16))
+        if (data.isVariant(stromx::runtime::DataVariant::UINT_16))
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::UInt16 & uint16Data = stromx::core::data_cast<stromx::core::UInt16>(data);
-                return int(uint16Data);
+                const stromx::runtime::UInt16 & uint16Data = stromx::runtime::data_cast<stromx::runtime::UInt16>(data);
+                return uint(uint16Data);
             }
         }
         
-        if (data.isVariant(stromx::core::DataVariant::INT_32))
+        if (data.isVariant(stromx::runtime::DataVariant::INT_32))
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::Int32 & int32Data = stromx::core::data_cast<stromx::core::Int32>(data);
+                const stromx::runtime::Int32 & int32Data = stromx::runtime::data_cast<stromx::runtime::Int32>(data);
                 return int(int32Data);
             }
         }
         
-        if (data.isVariant(stromx::core::DataVariant::UINT_32))
+        if (data.isVariant(stromx::runtime::DataVariant::UINT_32))
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::UInt32 & uint32Data = stromx::core::data_cast<stromx::core::UInt32>(data);
-                return int(uint32Data);
+                const stromx::runtime::UInt32 & uint32Data = stromx::runtime::data_cast<stromx::runtime::UInt32>(data);
+                return uint(uint32Data);
             }
         }
         
-        if (data.isVariant(stromx::core::DataVariant::FLOAT))
+        if (data.isVariant(stromx::runtime::DataVariant::FLOAT))
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::Float & floatData = stromx::core::data_cast<stromx::core::Float>(data);
+                const stromx::runtime::Float & floatData = stromx::runtime::data_cast<stromx::runtime::Float>(data);
                 return double(floatData);
             }
         }
         
-        if (data.isVariant(stromx::core::DataVariant::DOUBLE))
+        if (data.isVariant(stromx::runtime::DataVariant::DOUBLE))
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::core::Double & doubleData = stromx::core::data_cast<stromx::core::Double>(data);
+                const stromx::runtime::Double & doubleData = stromx::runtime::data_cast<stromx::runtime::Double>(data);
                 return double(doubleData);
             }
         }
         
-        if (data.isVariant(stromx::core::DataVariant::IMAGE))
+        if (data.isVariant(stromx::runtime::DataVariant::IMAGE))
         {
             if(role == Qt::DisplayRole || role == ImageRole)
             {
                 QString label1;
                 QString label2;
-                const stromx::core::Image & imageData = stromx::core::data_cast<stromx::core::Image>(data);
+                const stromx::runtime::Image & imageData = stromx::runtime::data_cast<stromx::runtime::Image>(data);
                 return QString(QObject::tr("Height: %1 | Width: %2")).arg(label1.setNum(imageData.height()),label2.setNum(imageData.height()));
             }
         }
         
         return QVariant();
     }
-    catch(stromx::core::BadCast&)
+    catch(stromx::runtime::BadCast&)
     {
         return QVariant();
     }  
 }
 
-stromx::core::DataRef DataConverter::toStromxData(const QVariant& variant, const stromx::core::Parameter& param)
+stromx::runtime::DataRef DataConverter::toStromxData(const QVariant& variant, const stromx::runtime::Parameter& param)
 {
-    if(param.variant().isVariant(stromx::core::DataVariant::TRIGGER))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::TRIGGER))
     {
         if(variant.type() == QVariant::Bool && variant.toBool())
-            return stromx::core::DataRef(new stromx::core::TriggerData());
+            return stromx::runtime::DataRef(new stromx::runtime::TriggerData());
     }
     
-    if(param.variant().isVariant(stromx::core::DataVariant::BOOL))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::BOOL))
     {
         if(variant.type() == QVariant::Int)
-            return stromx::core::DataRef(new stromx::core::Bool(variant.toInt()));
+            return stromx::runtime::DataRef(new stromx::runtime::Bool(variant.toInt()));
     }
     
-    if(param.variant().isVariant(stromx::core::DataVariant::INT_8))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::INT_8))
     {
         if(variant.type() == QVariant::Int)
-            return stromx::core::DataRef(new stromx::core::Int8(variant.toInt()));
+            return stromx::runtime::DataRef(new stromx::runtime::Int8(variant.toInt()));
     }
     
-    if(param.variant().isVariant(stromx::core::DataVariant::UINT_8))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::UINT_8))
     {
         if(variant.type() == QVariant::Int)
-            return stromx::core::DataRef(new stromx::core::UInt8(variant.toInt()));
+            return stromx::runtime::DataRef(new stromx::runtime::UInt8(variant.toInt()));
     }
     
-    if(param.variant().isVariant(stromx::core::DataVariant::INT_16))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::INT_16))
     {
         if(variant.type() == QVariant::Int)
-            return stromx::core::DataRef(new stromx::core::Int16(variant.toInt()));
+            return stromx::runtime::DataRef(new stromx::runtime::Int16(variant.toInt()));
     }
     
-    if(param.variant().isVariant(stromx::core::DataVariant::UINT_16))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::UINT_16))
     {
         if(variant.type() == QVariant::Int)
-            return stromx::core::DataRef(new stromx::core::UInt16(variant.toInt()));
+            return stromx::runtime::DataRef(new stromx::runtime::UInt16(variant.toInt()));
     }
     
-    if(param.variant().isVariant(stromx::core::DataVariant::INT_32))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::INT_32))
     {
         if(variant.type() == QVariant::Int)
-            return stromx::core::DataRef(new stromx::core::Int32(variant.toInt()));
+            return stromx::runtime::DataRef(new stromx::runtime::Int32(variant.toInt()));
     }
     
-    if(param.variant().isVariant(stromx::core::DataVariant::UINT_32))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::UINT_32))
     {
         if(variant.type() == QVariant::Int)
-            return stromx::core::DataRef(new stromx::core::UInt32(variant.toInt()));
+            return stromx::runtime::DataRef(new stromx::runtime::UInt32(variant.toInt()));
     }
     
-    if(param.variant().isVariant(stromx::core::DataVariant::ENUM))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::ENUM))
     {
         if(variant.type() == QVariant::Int)
         {  
@@ -284,90 +284,90 @@ stromx::core::DataRef DataConverter::toStromxData(const QVariant& variant, const
             if((unsigned int)(index) < param.descriptions().size())
             {    
                 unsigned int value = param.descriptions()[index].value();
-                return stromx::core::DataRef(new stromx::core::Enum(value));
+                return stromx::runtime::DataRef(new stromx::runtime::Enum(value));
             }
         }
     }
     
-    if(param.variant().isVariant(stromx::core::DataVariant::FLOAT))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::FLOAT))
     {
         if(variant.type() == QVariant::Double)
-            return stromx::core::DataRef(new stromx::core::Float(variant.toDouble()));
+            return stromx::runtime::DataRef(new stromx::runtime::Float(variant.toDouble()));
     }
     
-    if(param.variant().isVariant(stromx::core::DataVariant::DOUBLE))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::DOUBLE))
     {
         if(variant.type() == QVariant::Double)
-            return stromx::core::DataRef(new stromx::core::Double(variant.toDouble()));
+            return stromx::runtime::DataRef(new stromx::runtime::Double(variant.toDouble()));
     }
     
-    if(param.variant().isVariant(stromx::core::DataVariant::IMAGE))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::IMAGE))
     {
         if(variant.type() == QVariant::Image)
-            return stromx::core::DataRef(new Image(variant.value<QImage>()));
+            return stromx::runtime::DataRef(new Image(variant.value<QImage>()));
     }
     
-    return stromx::core::DataRef();
+    return stromx::runtime::DataRef();
 }
 
-bool DataConverter::stromxDataEqualsTarget(const stromx::core::Data& newValue, const stromx::core::Data& targetValue)
+bool DataConverter::stromxDataEqualsTarget(const stromx::runtime::Data& newValue, const stromx::runtime::Data& targetValue)
 {
     if(! newValue.isVariant(targetValue.variant()))
         return false;
     
-    if(targetValue.isVariant(stromx::core::DataVariant::BOOL))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::BOOL))
     {
-        return isEqual<stromx::core::Bool>(newValue, targetValue);
+        return isEqual<stromx::runtime::Bool>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::core::DataVariant::INT_8))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::INT_8))
     {
-        return isEqual<stromx::core::Int8>(newValue, targetValue);
+        return isEqual<stromx::runtime::Int8>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::core::DataVariant::UINT_8))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::UINT_8))
     {
-        return isEqual<stromx::core::UInt8>(newValue, targetValue);
+        return isEqual<stromx::runtime::UInt8>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::core::DataVariant::INT_16))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::INT_16))
     {
-        return isEqual<stromx::core::Int16>(newValue, targetValue);
+        return isEqual<stromx::runtime::Int16>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::core::DataVariant::UINT_16))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::UINT_16))
     {
-        return isEqual<stromx::core::UInt16>(newValue, targetValue);
+        return isEqual<stromx::runtime::UInt16>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::core::DataVariant::INT_32))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::INT_32))
     {
-        return isEqual<stromx::core::Int32>(newValue, targetValue);
+        return isEqual<stromx::runtime::Int32>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::core::DataVariant::UINT_32))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::UINT_32))
     {
-        return isEqual<stromx::core::UInt32>(newValue, targetValue);
+        return isEqual<stromx::runtime::UInt32>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::core::DataVariant::ENUM))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::ENUM))
     {
-        return isEqual<stromx::core::Enum>(newValue, targetValue);
+        return isEqual<stromx::runtime::Enum>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::core::DataVariant::FLOAT))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::FLOAT))
     {
-        return isEqual<stromx::core::Float>(newValue, targetValue);
+        return isEqual<stromx::runtime::Float>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::core::DataVariant::DOUBLE))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::DOUBLE))
     {
-        return isEqual<stromx::core::Double>(newValue, targetValue);
+        return isEqual<stromx::runtime::Double>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::core::DataVariant::STRING))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::STRING))
     {
-        return isEqual<stromx::core::String>(newValue, targetValue);
+        return isEqual<stromx::runtime::String>(newValue, targetValue);
     }
     
     return false;

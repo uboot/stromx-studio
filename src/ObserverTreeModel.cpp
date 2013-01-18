@@ -296,9 +296,14 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
         InputModel* input = observer->input(index.row());
         
-        // set the color
+        // set the activation status
+        // TODO: Setting an input active or inactive only switches the visibility of the 
+        // visualization objects (i.e. the graphic items). In case the input is inactive
+        // it would be preferrable to additionally suppress the obervation of data at the
+        // input connector to avoid waiting for the read access there.
         bool active(value.toBool());
         input->setActive(active);
+        
         emit dataChanged(index, index);
         return true;
     }

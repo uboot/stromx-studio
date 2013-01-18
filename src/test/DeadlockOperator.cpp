@@ -1,9 +1,9 @@
 #include "DeadlockOperator.h"
 
-#include <stromx/core/DataProvider.h>
-#include <stromx/core/Id2DataPair.h>
-#include <stromx/core/OperatorException.h>
-#include <stromx/core/Primitive.h>
+#include <stromx/runtime/DataProvider.h>
+#include <stromx/runtime/Id2DataPair.h>
+#include <stromx/runtime/OperatorException.h>
+#include <stromx/runtime/Primitive.h>
 
 #ifdef WIN32
 #include <Windows.h>
@@ -13,7 +13,7 @@
 #endif // UNIX
 
 
-using namespace stromx::core;
+using namespace stromx::runtime;
 
 const std::string DeadlockOperator::TYPE("DeadlockOperator");
 const std::string DeadlockOperator::PACKAGE("TestPackage");
@@ -24,7 +24,7 @@ DeadlockOperator::DeadlockOperator()
                    setupInputs(), setupOutputs(),
                    setupParameters()),
     m_dataHasBeenLocked(false),
-    m_writeAccess(stromx::core::DataContainer(new UInt32()))
+    m_writeAccess(stromx::runtime::DataContainer(new UInt32()))
 {
 }
 

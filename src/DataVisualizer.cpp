@@ -3,7 +3,7 @@
 #include "DataVisualizerUtilities.h"
 #include "InputModel.h"
 #include <QGraphicsItem>
-#include <stromx/core/Primitive.h>
+#include <stromx/runtime/Primitive.h>
 
 DataVisualizer::DataVisualizer(QWidget* parent)
   : GraphicsView(parent)
@@ -70,7 +70,7 @@ void DataVisualizer::setActive(int pos, bool active)
     
     foreach(QGraphicsItem* item, m_items[pos])
     {
-        // set the activation status of each valid item
+        // set the visibility status of each item
         if(item)
             item->setVisible(active);
     }
@@ -104,9 +104,9 @@ void DataVisualizer::setColor(int pos, const QColor& color)
     }
 }
 
-void DataVisualizer::setData(int pos, const stromx::core::Data& data, Visualization visualization)
+void DataVisualizer::setData(int pos, const stromx::runtime::Data& data, Visualization visualization)
 {
-    using namespace stromx::core;
+    using namespace stromx::runtime;
     
     // return  if the layer does not exist
     if(! m_items.contains(pos))

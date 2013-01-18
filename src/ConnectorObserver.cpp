@@ -1,7 +1,7 @@
 #include "ConnectorObserver.h"
 
-#include <stromx/core/Connector.h>
-#include <stromx/core/DataContainer.h>
+#include <stromx/runtime/Connector.h>
+#include <stromx/runtime/DataContainer.h>
 #include <QCoreApplication>
 #include "ConnectorDataEvent.h"
 #include "ConnectorOccupyEvent.h"
@@ -12,19 +12,38 @@ ConnectorObserver::ConnectorObserver(QObject* receiver)
 {
 }
 
-void ConnectorObserver::observe(const stromx::core::Connector& connector, const stromx::core::DataContainer& data) const
+void ConnectorObserver::observe(const stromx::runtime::Connector& connector, const stromx::runtime::DataContainer& data) const
 {
     QCoreApplication* application = QCoreApplication::instance();
-    OperatorModel::ConnectorType type = connector.type() == stromx::core::Connector::INPUT ? 
+    OperatorModel::ConnectorType type = connector.type() == stromx::runtime::Connector::INPUT ? 
                                         OperatorModel::INPUT : OperatorModel::OUTPUT;
     ConnectorOccupyEvent* occupyEvent = new ConnectorOccupyEvent(type, connector.id(), data.empty() ? false : true);                                   
     application->postEvent(m_receiver, occupyEvent);
     
-    // send data event only if receivers are connected to the respective signal of OperatorModel
-    QMutexLocker lock(&m_mutex);
-    if(m_observeData && type == OperatorModel::INPUT)
+    // Next the actual data is observed:
+    // First make sure the data is not empty.
+    if(data.empty())
+        return;
+    
+    // If receivers are connected to the respective signal of OperatorModel
+    // the member m_observeData is true. Here we obtain the flag in a thread-safe
+    // way.
+    bool observeData = false;
     {
-        ConnectorDataEvent* dataEvent = new ConnectorDataEvent(type, connector.id(), data);
+        QMutexLocker lock(&m_mutex);
+        observeData = m_observeData;
+    }
+    
+    // The data must be observed only if the the flag is true and the connector
+    // is an input (observation of outputs is not supported because it can always
+    // be achieved by observing the corresponding input).
+    if(observeData && type == OperatorModel::INPUT)
+    {
+        // get a read access to the data (this might take a while)
+        stromx::runtime::ReadAccess<> access(data);
+        
+        // send an event with the data and the access to the Qt GUI loop
+        ConnectorDataEvent* dataEvent = new ConnectorDataEvent(type, connector.id(), access);
         application->postEvent(m_receiver, dataEvent);
     }
 }

@@ -21,19 +21,19 @@
 #define EXCEPTIONOBSERVER_H
 
 #include <QMutex>
-#include <stromx/core/ExceptionObserver.h>
+#include <stromx/runtime/ExceptionObserver.h>
 
 class QObject;
 class ErrorData;
 
-class ExceptionObserver : public stromx::core::ExceptionObserver
+class ExceptionObserver : public stromx::runtime::ExceptionObserver
 {
 public:
     ExceptionObserver(QObject* receiver);
     
-    virtual void observe(const stromx::core::ExceptionObserver::Phase phase,
-                         const stromx::core::OperatorError & ex,
-                         const stromx::core::Thread* const thread) const;
+    virtual void observe(const stromx::runtime::ExceptionObserver::Phase phase,
+                         const stromx::runtime::OperatorError & ex,
+                         const stromx::runtime::Thread* const thread) const;
                          
     void sendErrorData(const ErrorData &data) const;
                          

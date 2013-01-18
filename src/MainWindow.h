@@ -32,7 +32,7 @@
 
 namespace stromx
 {
-    namespace core
+    namespace runtime
     { 
         class FileInput;
         class FileOutput;
@@ -93,11 +93,11 @@ private slots:
      */
     bool openRecentFile();
     
-    /** Displays an open file dialog and loads the selected operator libraries. */
-    void loadLibraries();
+    /** Displays an open file dialog and loads the selected operator packages. */
+    void loadPackages();
     
-    /** Unloads all dynamically loaded operator libraries. */
-    void resetLibraries();
+    /** Unloads all dynamically loaded operator packages. */
+    void resetPackages();
     
     /** Displays a window containing information about this application. */
     void about();
@@ -213,17 +213,17 @@ private:
     bool saveBeforeClosing();
     
     /** Saves the geometry and view properties of the stream scene and the observer windows. */
-    void writeWindowStates(stromx::core::FileOutput & output, const QString & basename) const;
+    void writeWindowStates(stromx::runtime::FileOutput & output, const QString & basename) const;
     
     /** Reads and geometry and view properties of the stream scene and the observer windows. */
-    void readWindowStates(stromx::core::FileInput & input, const QString & basename);
+    void readWindowStates(stromx::runtime::FileInput & input, const QString & basename);
     
     QAction* m_openAct;
     QAction* m_saveAct;
     QAction* m_saveAsAct;
     QAction* m_closeAct;
-    QAction* m_loadLibrariesAct;
-    QAction* m_resetLibrariesAct;
+    QAction* m_loadPackagesAct;
+    QAction* m_resetPackagesAct;
     QAction* m_undoAct;
     QAction* m_redoAct;
     QAction* m_quitAct;

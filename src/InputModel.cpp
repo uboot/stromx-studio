@@ -6,7 +6,7 @@
 #include "SetInputColorCmd.h"
 #include "SetInputVisualizationCmd.h"
 #include "StreamModel.h"
-#include <stromx/core/Operator.h>
+#include <stromx/runtime/Operator.h>
 
 InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject* parent)
   : QObject(parent),

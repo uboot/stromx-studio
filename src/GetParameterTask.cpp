@@ -1,11 +1,11 @@
 #include "GetParameterTask.h"
 
-#include <stromx/core/Operator.h>
-#include <stromx/core/OperatorException.h>
+#include <stromx/runtime/Operator.h>
+#include <stromx/runtime/OperatorException.h>
 
-using namespace stromx::core;
+using namespace stromx::runtime;
 
-GetParameterTask::GetParameterTask(const stromx::core::Operator* op, unsigned int id,
+GetParameterTask::GetParameterTask(const stromx::runtime::Operator* op, unsigned int id,
                                    int timeout, QObject* parent)
   : Task(parent),
     m_op(op),
@@ -21,16 +21,16 @@ void GetParameterTask::run()
     {
         m_result = m_op->getParameter(m_id, m_timeout);
     }
-    catch(stromx::core::Timeout &)
+    catch(stromx::runtime::Timeout &)
     {
         m_errorCode = TIMED_OUT;
     }
-    catch(stromx::core::OperatorError& e)
+    catch(stromx::runtime::OperatorError& e)
     {
         m_errorCode = EXCEPTION;
         m_errorData = ErrorData(e, ErrorData::PARAMETER_ACCESS);
     }
-    catch(stromx::core::Exception& e)
+    catch(stromx::runtime::Exception& e)
     {
         Q_ASSERT(false);
     }

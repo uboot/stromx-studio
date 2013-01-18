@@ -20,7 +20,7 @@
 #ifndef TASK_H
 #define TASK_H
 
-#include <stromx/core/DataRef.h>
+#include <stromx/runtime/DataRef.h>
 #include <QObject>
 #include "ErrorData.h"
 #include "OperatorModel.h"

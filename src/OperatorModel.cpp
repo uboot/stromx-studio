@@ -2,24 +2,23 @@
 
 #include <QEvent>
 #include <QUndoStack>
-#include <stromx/core/Operator.h>
-#include <stromx/core/OperatorException.h>
-#include <stromx/core/Parameter.h>
-#include <stromx/core/Trigger.h>
+#include <stromx/runtime/Operator.h>
+#include <stromx/runtime/OperatorException.h>
+#include <stromx/runtime/Parameter.h>
+#include <stromx/runtime/Trigger.h>
 #include "Common.h"
 #include "ConnectorObserver.h"
 #include "ConnectorDataEvent.h"
 #include "ConnectorOccupyEvent.h"
 #include "DataConverter.h"
 #include "MoveOperatorCmd.h"
-#include "ObtainReadAccessTask.h"
 #include "ParameterServer.h"
 #include "RenameOperatorCmd.h"
 #include "StreamModel.h"
 
 const unsigned int OperatorModel::TIMEOUT = 1000;
 
-OperatorModel::OperatorModel(stromx::core::Operator* op, StreamModel* stream)
+OperatorModel::OperatorModel(stromx::runtime::Operator* op, StreamModel* stream)
   : PropertyModel(stream),
     m_op(op),
     m_stream(stream),
@@ -65,11 +64,11 @@ int OperatorModel::rowCount(const QModelIndex& index) const
 {
     if(index.isValid())
     {
-        const stromx::core::Parameter* group = 0;
+        const stromx::runtime::Parameter* group = 0;
         
         if(index.internalPointer())
         {
-            group = reinterpret_cast<const stromx::core::Parameter*>(index.internalPointer());
+            group = reinterpret_cast<const stromx::runtime::Parameter*>(index.internalPointer());
             return numDisplayedParameters(group);
         }
         else
@@ -89,7 +88,7 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
     if(index.column() == 0 || m_op == 0 || !index.isValid())
         return flags;
     
-    const stromx::core::Parameter* param = reinterpret_cast<stromx::core::Parameter*>(index.internalPointer());
+    const stromx::runtime::Parameter* param = reinterpret_cast<stromx::runtime::Parameter*>(index.internalPointer());
   
     int row = index.parent().isValid() ? PARAMETER_OFFSET : index.row();
     
@@ -110,7 +109,7 @@ Qt::ItemFlags OperatorModel::flags(const QModelIndex& index) const
 
 QModelIndex OperatorModel::parent(const QModelIndex& child) const
 {
-    const stromx::core::Parameter* param = reinterpret_cast<const stromx::core::Parameter*>(child.internalPointer());
+    const stromx::runtime::Parameter* param = reinterpret_cast<const stromx::runtime::Parameter*>(child.internalPointer());
     
     // this is no parameter
     if(! param)
@@ -127,12 +126,12 @@ QModelIndex OperatorModel::parent(const QModelIndex& child) const
 
 QModelIndex OperatorModel::index(int row, int column, const QModelIndex& parent) const
 {
-    const stromx::core::Parameter* group = 0;
+    const stromx::runtime::Parameter* group = 0;
     
     if(parent.isValid() && parent.internalPointer())
-        group = reinterpret_cast<const stromx::core::Parameter*>(parent.internalPointer());
+        group = reinterpret_cast<const stromx::runtime::Parameter*>(parent.internalPointer());
     
-    const stromx::core::Parameter* param = 0;
+    const stromx::runtime::Parameter* param = 0;
     
     if(parent.isValid())
         param = parameterAtRow(group, row);
@@ -161,7 +160,8 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
         DISPLAY, // 0
         EDIT, // 1
         USER, // 2
-        OTHER // 3
+        OTHER, // 3
+        SETTING // 4
     };
     
     // possible return values
@@ -175,20 +175,21 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
         STRING_NAME, // 5
         NAME, // 6
         PARAMETER_NAME, // 7
-        PARAMETER_VALUE // 8
+        PARAMETER_VALUE, // 8
+        PARAMETER_SETTING // 9
     };
     
     // the decision table
     int table[4][2][5] =
-    /* Row          0  0  0  0    0  0  0  0      1  1  1  1    1  1  1  1 
-     * Column       0  0  0  0    1  1  1  1      0  0  0  0    1  1  1  1
-     * Role         0  1  2  3    0  1  2  3      0  1  2  3    0  1  2  3 */
-    /* Action */ {{{1, 0, 0, 0}, {2, 0, 0, 0}}, {{3, 0, 0, 0}, {4, 0, 0, 0}},
+    /* Row          0  0  0  0  0    0  0  0  0  0      1  1  1  1  1    1  1  1  1  1
+     * Column       0  0  0  0  0    1  1  1  1  1      0  0  0  0  0    1  1  1  1  1
+     * Role         0  1  2  3  4    0  1  2  3  4      0  1  2  3  4    0  1  2  3  4 */
+    /* Action */ {{{1, 0, 0, 0, 0}, {2, 0, 0, 0, 0}}, {{3, 0, 0, 0, 0}, {4, 0, 0, 0, 0}},
                  
-    /* Row          2  2  2  2    2  2  2  2      3  3  3  3    3  3  3  3 
-     * Column       0  0  0  0    1  1  1  1      0  0  0  0    1  1  1  1
-     * Role         0  1  2  3    0  1  2  3      0  1  2  3    0  1  2  3 */
-    /* Action */  {{5, 0, 0, 0}, {6, 6, 0, 0}}, {{7, 0, 0, 0}, {8, 8, 8, 0}}};
+    /* Row          2  2  2  2  2    2  2  2  2  2      3  3  3  3  3    3  3  3  3  0 
+     * Column       0  0  0  0  0    1  1  1  1  1      0  0  0  0  0    1  1  1  1  1
+     * Role         0  1  2  3  4    0  1  2  3  4      0  1  2  3  4    0  1  2  3  4 */
+    /* Action */  {{5, 0, 0, 0, 0}, {6, 6, 0, 0, 0}}, {{7, 0, 0, 0, 0}, {8, 8, 8, 0, 9}}};
      
     // extract row, column and role type
     int row = rowType(index);
@@ -207,6 +208,11 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     case ImageRole:
         roleType = USER;
         break;
+    case MinRole:
+    case MaxRole:
+    case StepRole:
+        roleType = SETTING;
+        break;
     default:
         roleType = OTHER;
         break;
@@ -216,7 +222,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     ReturnValue action = ReturnValue(table[row][column][roleType]);
     
     // get a pointer to the parameter (is 0 if this index does not point to a parameter)
-    const stromx::core::Parameter* param = reinterpret_cast<stromx::core::Parameter*>(index.internalPointer());
+    const stromx::runtime::Parameter* param = reinterpret_cast<stromx::runtime::Parameter*>(index.internalPointer());
         
     // act accordingly
     switch(action)
@@ -234,15 +240,41 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     case NAME:
         return QString::fromStdString(m_op->name());
     case PARAMETER_NAME:
-    {
         return QVariant(QString::fromStdString(param->title()));
-    }
     case PARAMETER_VALUE:
         return m_server->getParameter(param->id(), role);
+    case PARAMETER_SETTING:
+        return getParameterSetting(*param, role);
     case NOTHING:
     default:
         return QVariant();
     }
+}
+
+QVariant OperatorModel::getParameterSetting(const stromx::runtime::Parameter & param, int role)
+{
+    switch(role)
+    {
+        case MinRole:
+            if(param.min().isVariant(stromx::runtime::DataVariant::NONE))
+                return QVariant();
+            return DataConverter::toQVariant(param.min(), param, Qt::EditRole);
+            
+        case MaxRole:
+            if(param.max().isVariant(stromx::runtime::DataVariant::NONE))
+                return QVariant();
+            return DataConverter::toQVariant(param.max(), param, Qt::EditRole);
+            
+        case StepRole:
+            if(param.step().isVariant(stromx::runtime::DataVariant::NONE))
+                return QVariant();
+            return DataConverter::toQVariant(param.step(), param, Qt::EditRole);
+            
+        default:
+            Q_ASSERT(false);
+    }
+    
+    return QVariant();
 }
 
 bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int role)
@@ -253,7 +285,7 @@ bool OperatorModel::setData(const QModelIndex& index, const QVariant& value, int
     if(!index.isValid() || index.column() == 0)
         return false;
     
-    const stromx::core::Parameter* param = reinterpret_cast<stromx::core::Parameter*>(index.internalPointer());
+    const stromx::runtime::Parameter* param = reinterpret_cast<stromx::runtime::Parameter*>(index.internalPointer());
 
     Row row = rowType(index);
     switch(row)
@@ -317,16 +349,16 @@ void OperatorModel::doSetPos(const QPointF& pos)
     emit posChanged(m_pos);
 }
 
-int OperatorModel::rowOfDisplayedParameter(const stromx::core::Parameter* param) const
+int OperatorModel::rowOfDisplayedParameter(const stromx::runtime::Parameter* param) const
 {
-    const QList<const stromx::core::Parameter*> parameters = members(param->group());
+    const QList<const stromx::runtime::Parameter*> parameters = members(param->group());
     
     int row = 0;
     
     if(! param->group())
         row += PARAMETER_OFFSET;
     
-    foreach(const stromx::core::Parameter* p, parameters)
+    foreach(const stromx::runtime::Parameter* p, parameters)
     {
         if(m_server->parameterIsDisplayed(param->id()))
         {
@@ -340,12 +372,12 @@ int OperatorModel::rowOfDisplayedParameter(const stromx::core::Parameter* param)
     return -1;
 }
 
-const stromx::core::Parameter* OperatorModel::parameterAtRow(const stromx::core::Parameter* group, int row) const
+const stromx::runtime::Parameter* OperatorModel::parameterAtRow(const stromx::runtime::Parameter* group, int row) const
 {
     int currentRow = 0;
-    const QList<const stromx::core::Parameter*> parameters = members(group);
+    const QList<const stromx::runtime::Parameter*> parameters = members(group);
     
-    foreach(const stromx::core::Parameter* param, parameters)
+    foreach(const stromx::runtime::Parameter* param, parameters)
     {
         if(m_server->parameterIsDisplayed(param->id()))
         {
@@ -359,15 +391,15 @@ const stromx::core::Parameter* OperatorModel::parameterAtRow(const stromx::core:
     return 0;
 }
 
-QList<const stromx::core::Parameter*> OperatorModel::members(const stromx::core::Parameter* group) const
+QList<const stromx::runtime::Parameter*> OperatorModel::members(const stromx::runtime::Parameter* group) const
 {
-    QList<const stromx::core::Parameter*> params;
+    QList<const stromx::runtime::Parameter*> params;
     
     if(! group)
     {    
-        const std::vector<const stromx::core::Parameter*> & parameters = m_op->info().parameters();
+        const std::vector<const stromx::runtime::Parameter*> & parameters = m_op->info().parameters();
         
-        for(std::vector<const stromx::core::Parameter*>::const_iterator iter = parameters.begin();
+        for(std::vector<const stromx::runtime::Parameter*>::const_iterator iter = parameters.begin();
             iter != parameters.end();
             ++iter)
         {
@@ -377,9 +409,9 @@ QList<const stromx::core::Parameter*> OperatorModel::members(const stromx::core:
     }
     else
     { 
-        const std::vector<const stromx::core::Parameter*> & parameters = group->members();
+        const std::vector<const stromx::runtime::Parameter*> & parameters = group->members();
         
-        for(std::vector<const stromx::core::Parameter*>::const_iterator iter = parameters.begin();
+        for(std::vector<const stromx::runtime::Parameter*>::const_iterator iter = parameters.begin();
             iter != parameters.end();
             ++iter)
         {
@@ -390,12 +422,12 @@ QList<const stromx::core::Parameter*> OperatorModel::members(const stromx::core:
     return params;
 }
 
-int OperatorModel::numDisplayedParameters(const stromx::core::Parameter* group) const
+int OperatorModel::numDisplayedParameters(const stromx::runtime::Parameter* group) const
 {
     int count = 0;
-    const QList<const stromx::core::Parameter*> parameters = members(group);
+    const QList<const stromx::runtime::Parameter*> parameters = members(group);
     
-    foreach(const stromx::core::Parameter* param, parameters)
+    foreach(const stromx::runtime::Parameter* param, parameters)
     {
         if(m_server->parameterIsDisplayed(param->id()))
             count++;
@@ -405,7 +437,7 @@ int OperatorModel::numDisplayedParameters(const stromx::core::Parameter* group) 
 
 bool OperatorModel::isInitialized() const
 {
-    return m_op->status() != stromx::core::Operator::NONE;
+    return m_op->status() != stromx::runtime::Operator::NONE;
 }
 
 bool OperatorModel::isActive() const
@@ -429,7 +461,7 @@ void OperatorModel::setInitialized(bool status)
         // update the cache of the parameter server
         m_server->refresh();
     }
-    catch(stromx::core::OperatorError &)
+    catch(stromx::runtime::OperatorError &)
     {
         endResetModel();
         throw;
@@ -457,39 +489,15 @@ QUndoStack* OperatorModel::undoStack() const
 void OperatorModel::customEvent(QEvent* event)
 {
     if(ConnectorOccupyEvent* occupyEvent = dynamic_cast<ConnectorOccupyEvent*>(event))
-    {
         emit connectorOccupiedChanged(occupyEvent->type(), occupyEvent->id(), occupyEvent->occupied());
-    }
     else if(ConnectorDataEvent* dataEvent = dynamic_cast<ConnectorDataEvent*>(event))
-    {
-        if(! dataEvent->data().empty())
-        {
-            ObtainReadAccessTask* task = new ObtainReadAccessTask(dataEvent->type(), dataEvent->id(),
-                                                                  dataEvent->data(), m_stream->accessTimeout(),
-                                                                  this);
-            connect(task, SIGNAL(finished()), this, SLOT(handleObtainReadAccessTaskFinished()));
-            task->start();
-        }
-    }
-}
-
-void OperatorModel::handleObtainReadAccessTaskFinished()
-{
-    ObtainReadAccessTask* task = qobject_cast<ObtainReadAccessTask*>(sender());
-
-    if(task)
-    {
-        if(task->readAccess().empty())
-            emit operatorAccessTimedOut();
-        else
-            emit connectorDataChanged(task->type(), task->id(), task->readAccess());
-    }
+        emit connectorDataChanged(dataEvent->type(), dataEvent->id(), dataEvent->access());
 }
 
 void OperatorModel::handleParameterChanged(unsigned int id)
 {
     // get the row of the parameter
-    const stromx::core::Parameter & param = m_op->info().parameter(id);
+    const stromx::runtime::Parameter & param = m_op->info().parameter(id);
     int row = rowOfDisplayedParameter(&param);
     Q_ASSERT(row >= 0);
     
@@ -512,14 +520,14 @@ void OperatorModel::setActiveTrue()
 void OperatorModel::connectNotify(const char* /*signal*/)
 {
     // if there are receivers for data change signals the according events must be sent
-    if(receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::ReadAccess<>))))
+    if(receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::runtime::ReadAccess<>))))
         m_observer.setObserveData(true);  
 }
 
 void OperatorModel::disconnectNotify(const char* /*signal*/)
 {
     // if there are no receivers for data change signals do not send the events
-    if(! receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::core::ReadAccess<>))))
+    if(! receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::runtime::ReadAccess<>))))
         m_observer.setObserveData(false); 
 }
 
@@ -527,12 +535,12 @@ QString OperatorModel::statusToString(int status)
 {
     switch(status)
     {
-    case stromx::core::Operator::NONE:
+    case stromx::runtime::Operator::NONE:
         return tr("None");
-    case stromx::core::Operator::INITIALIZED:
+    case stromx::runtime::Operator::INITIALIZED:
         return tr("Initialized");
-    case stromx::core::Operator::ACTIVE:
-    case stromx::core::Operator::EXECUTING:
+    case stromx::runtime::Operator::ACTIVE:
+    case stromx::runtime::Operator::EXECUTING:
         return tr("Active");
     default:
         Q_ASSERT(false);

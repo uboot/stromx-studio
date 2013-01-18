@@ -22,11 +22,11 @@
 
 #include <QImage>
 #include <QUndoCommand>
-#include <stromx/core/ImageWrapper.h>
-#include <stromx/core/Version.h>
+#include <stromx/runtime/ImageWrapper.h>
+#include <stromx/runtime/Version.h>
 
 /** \brief Stromx image wrapper for QImage objects. */
-class Image : public stromx::core::ImageWrapper
+class Image : public stromx::runtime::ImageWrapper
 {
 public:
     /** Constructs an image from a file. */
@@ -38,7 +38,7 @@ public:
     /** Copy constructs an image from another image. */
     Image(const Image & image);
             
-    virtual const stromx::core::Version & version() const { return VERSION; }
+    virtual const stromx::runtime::Version & version() const { return VERSION; }
     virtual const std::string & type() const { return TYPE; }
     virtual const std::string & package() const { return PACKAGE; }
     
@@ -47,10 +47,10 @@ public:
 private:
     static const std::string TYPE;
     static const std::string PACKAGE;
-    static const stromx::core::Version VERSION;
+    static const stromx::runtime::Version VERSION;
     
     /** 
-     * Initializes the stromx::core::ImageWrapper parent
+     * Initializes the stromx::runtime::ImageWrapper parent
      * from the information in m_image.
      */
     void initializeParent();

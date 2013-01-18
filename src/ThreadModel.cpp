@@ -1,12 +1,12 @@
 #include "ThreadModel.h"
 
-#include <stromx/core/Thread.h>
+#include <stromx/runtime/Thread.h>
 #include "Common.h"
 #include "RenameThreadCmd.h"
 #include "SetThreadColorCmd.h"
 #include "StreamModel.h"
 
-ThreadModel::ThreadModel(stromx::core::Thread* thread, StreamModel* stream)
+ThreadModel::ThreadModel(stromx::runtime::Thread* thread, StreamModel* stream)
   : QObject(stream),
     m_thread(thread),
     m_stream(stream),
@@ -26,7 +26,7 @@ ThreadModel::ThreadModel(StreamModel* stream)
 }
 
 
-void ThreadModel::setThread(stromx::core::Thread* thread)
+void ThreadModel::setThread(stromx::runtime::Thread* thread)
 {
     m_thread = thread;
     if(m_thread)

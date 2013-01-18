@@ -22,6 +22,9 @@
 
 #include <QStyledItemDelegate>
 
+class QDoubleSpinBox;
+class QSpinBox;
+
 /** 
  * \brief Delegate to support custom data in item views.
  * 
@@ -40,6 +43,12 @@ class ItemDelegate : public QStyledItemDelegate
 public:
     static const int ROW_HEIGHT;
     
+    /**
+     * Returns true if \c value can safely converted to an \c int value
+     * (i.e. the unsigned value is smaller than the maximal signed integer value).
+     */
+    static bool canConvertToInt(const QVariant value);
+    
     explicit ItemDelegate(QObject* parent = 0);
     
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -50,6 +59,18 @@ public:
     
 private slots:
     void commitEditEvent();
+    
+    /** 
+     * Tries to read the min, max and step roles from the data at index
+     * and sets the according spinbox properties.
+     */
+    void setSpinBoxParameters(const QModelIndex & index, QSpinBox* spinBox) const;
+    
+    /** 
+     * Tries to read the min, max and step roles from the data at index
+     * and sets the according properties of double spin box.
+     */
+    void setDoubleSpinBoxParameters(const QModelIndex & index, QDoubleSpinBox* spinBox) const;
 };
 
 #endif // ITEMDELEGATE_H

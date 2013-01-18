@@ -25,7 +25,7 @@
 
 namespace stromx
 {
-    namespace core
+    namespace runtime
     {
         class Thread;
     }
@@ -49,7 +49,7 @@ public:
      * Constructs a thread model from a stromx thread. The name of the thread model is set to the 
      * name of \c thread.
      */
-    explicit ThreadModel(stromx::core::Thread* thread, StreamModel *stream = 0);
+    explicit ThreadModel(stromx::runtime::Thread* thread, StreamModel *stream = 0);
     
     /** Constructs a thread model. */
     explicit ThreadModel(StreamModel *stream = 0);
@@ -58,13 +58,13 @@ public:
      * Returns the stromx thread of this model. Returns 0 if no
      * stromx thread is currently assigned to the model.
      */
-    stromx::core::Thread* thread() const { return m_thread; }
+    stromx::runtime::Thread* thread() const { return m_thread; }
     
     /**
      * Sets the stromx thread of the model. If \c thread is not 0 the current name of the 
      * thread model is assigned to \c thread.
      */
-    void setThread(stromx::core::Thread* thread);
+    void setThread(stromx::runtime::Thread* thread);
     
     /**
      * Returns the name of the thread. The thread model stores the thread name even if
@@ -95,7 +95,7 @@ private:
     void doSetColor(const QColor & color);
     void doSetName(const QString & name);
     
-    stromx::core::Thread* m_thread;
+    stromx::runtime::Thread* m_thread;
     StreamModel* m_stream;
     QString m_name;
     QColor m_color;

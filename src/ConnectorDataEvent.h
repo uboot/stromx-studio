@@ -21,7 +21,7 @@
 #define CONNECTORDATAEVENT_H
 
 #include <QEvent>
-#include <stromx/core/DataContainer.h>
+#include <stromx/runtime/DataContainer.h>
 
 #include "Common.h"
 #include "OperatorModel.h"
@@ -31,16 +31,17 @@ class ConnectorDataEvent : public QEvent
 public:
     static const unsigned int TYPE = QEvent::User + ConnectorData;
     
-    ConnectorDataEvent(OperatorModel::ConnectorType type, unsigned int id, const stromx::core::DataContainer & data);
+    ConnectorDataEvent(OperatorModel::ConnectorType type, unsigned int id,
+                       const stromx::runtime::ReadAccess<> & access);
     
     OperatorModel::ConnectorType type() const { return m_type; }
     unsigned int id() const { return m_id; }
-    const stromx::core::DataContainer data() const { return m_data; }
+    const stromx::runtime::ReadAccess<> & access() const { return m_access; }
     
 private:
     OperatorModel::ConnectorType m_type;
     unsigned int m_id;
-    stromx::core::DataContainer m_data;
+    stromx::runtime::ReadAccess<> m_access;
 };
 
 #endif // CONNECTORDATAEVENT_H

@@ -1,15 +1,15 @@
 #include "RandomDataOperator.h"
 
-#include <stromx/base/Matrix.h>
-#include <stromx/core/DataProvider.h>
-#include <stromx/core/EnumParameter.h>
-#include <stromx/core/Id2DataPair.h>
-#include <stromx/core/OperatorException.h>
-#include <stromx/core/String.h>
+#include <stromx/example/Matrix.h>
+#include <stromx/runtime/DataProvider.h>
+#include <stromx/runtime/EnumParameter.h>
+#include <stromx/runtime/Id2DataPair.h>
+#include <stromx/runtime/OperatorException.h>
+#include <stromx/runtime/String.h>
 
 #include <cstdlib>
 
-using namespace stromx::core;
+using namespace stromx::runtime;
 
 const std::string RandomDataOperator::TYPE("RandomDataOperator");
 const std::string RandomDataOperator::PACKAGE("TestPackage");
@@ -59,7 +59,7 @@ void RandomDataOperator::execute(DataProvider& provider)
     {
     case LINE_SEGMENTS:
     {
-        Matrix* segments = new stromx::base::Matrix(2, 4, Matrix::DOUBLE);
+        Matrix* segments = new stromx::example::Matrix(2, 4, Matrix::DOUBLE);
         double* doubleData = reinterpret_cast<double*>(segments->data());
         doubleData[0] = 50 + uniform(20);
         doubleData[1] = 100 + uniform(20);
@@ -75,7 +75,7 @@ void RandomDataOperator::execute(DataProvider& provider)
         break;
     }
     case STRING:
-        data = new stromx::core::String("Random string");
+        data = new stromx::runtime::String("Random string");
         break;
     default:
         ;

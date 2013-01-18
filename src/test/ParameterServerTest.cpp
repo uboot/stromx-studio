@@ -4,14 +4,14 @@
 #include "../ParameterServer.h"
 #include <QUndoStack>
 #include <QtTest/QtTest>
-#include <stromx/core/Operator.h>
+#include <stromx/runtime/Operator.h>
 
 ParameterServerTest::ParameterServerTest()
-  : m_op(new stromx::core::Operator(new ParameterOperator())),
+  : m_op(new stromx::runtime::Operator(new ParameterOperator())),
     m_server(new ParameterServer(m_op, new QUndoStack(this), this))
 {
     m_op->initialize();
-    m_op->setParameter(ParameterOperator::INT_PARAM, stromx::core::Int32(10));
+    m_op->setParameter(ParameterOperator::INT_PARAM, stromx::runtime::Int32(10));
     m_server->refresh();
     QTest::qWait(100);
 }

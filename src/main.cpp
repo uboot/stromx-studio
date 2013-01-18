@@ -19,7 +19,7 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QSplashScreen>
-#include <stromx/core/Exception.h>
+#include <stromx/runtime/Exception.h>
 #include <fstream>
 #include "MainWindow.h"
 
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     {
         return a.exec();
     }
-    catch(stromx::core::Exception &e)
+    catch(stromx::runtime::Exception &e)
     {
         std::ofstream file("callstack.txt");
         file << e.callStack();

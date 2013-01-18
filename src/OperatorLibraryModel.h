@@ -27,7 +27,7 @@
 
 namespace stromx 
 {
-    namespace core 
+    namespace runtime 
     {
         class Factory;
         class Operator;
@@ -71,7 +71,7 @@ public:
     
     /** 
      * Constructs an operator library model which contains all operators
-     * of the packages \em core and \em base.
+     * of the packages \em runtime and \em base.
      * \attention In the future, \em base will \em not be loaded in the
      *            constructor.
      */
@@ -86,15 +86,15 @@ public:
     virtual int rowCount(const QModelIndex & parent) const;
     virtual int columnCount(const QModelIndex & parent) const;
     
-    /** Load the shared library located at \c libPath. */
-    void loadLibrary(const QString& libPath);
+    /** Load the operator package located at \c packagePath. */
+    void loadPackage(const QString& packagePath);
     
     /** 
      * Removes all previously loaded packages from the library.
      * All packages which have been loaded in the constructor are
      * preserved (i.e. they are automatically reloaded after resetting).
      */
-    void resetLibraries();
+    void resetLibrary();
     
     /** Returns true if \c index points to a valid operator. */
     bool isOperator(const QModelIndex & index) const;
@@ -113,10 +113,10 @@ public:
      * can not be allocated (e.g. \c data does not refer to an operator contained
      * in the library) 0 is returned.
      */
-    stromx::core::Operator* newOperator(const OperatorData* data) const;
+    stromx::runtime::Operator* newOperator(const OperatorData* data) const;
     
     /**  Returns a reference to the stromx factory of the operator library. */
-    stromx::core::Factory& factory() const { return *m_factory; }
+    stromx::runtime::Factory& factory() const { return *m_factory; }
     
 private:
     struct Package
@@ -125,15 +125,15 @@ private:
         
         QString package;
         int id;
-        QList<const stromx::core::OperatorKernel*> operators;
+        QList<const stromx::runtime::OperatorKernel*> operators;
     };
     
     void updateOperators();
     void setupFactory();
     
     QList<Package> m_packages;
-    QStringList m_loadedLibraries;
-    stromx::core::Factory* m_factory;
+    QStringList m_loadedPackages;
+    stromx::runtime::Factory* m_factory;
 };
 
 #endif // OPERATORLIBRARYMODEL_H
