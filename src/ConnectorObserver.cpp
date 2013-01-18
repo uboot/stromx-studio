@@ -3,7 +3,6 @@
 #include <stromx/runtime/Connector.h>
 #include <stromx/runtime/DataContainer.h>
 #include <QCoreApplication>
-#include <boost/graph/graph_concepts.hpp>
 #include "ConnectorDataEvent.h"
 #include "ConnectorOccupyEvent.h"
 
