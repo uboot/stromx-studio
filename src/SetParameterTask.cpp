@@ -31,7 +31,7 @@ void SetParameterTask::run()
         m_errorCode = EXCEPTION;
         m_errorData = ErrorData(e, ErrorData::PARAMETER_ACCESS);
     }
-    catch(stromx::runtime::Exception& e)
+    catch(stromx::runtime::Exception&)
     {
         Q_ASSERT(false);
     }
