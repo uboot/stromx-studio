@@ -111,8 +111,8 @@ const std::vector<const Parameter*> RandomDataOperator::setupParameters()
     EnumParameter* param = new EnumParameter(DATA_TYPE);
     param->setTitle("Data type");
     param->setAccessMode(Parameter::ACTIVATED_WRITE);
-    param->add(EnumDescription(LINE_SEGMENTS, "Line segments"));
-    param->add(EnumDescription(STRING, "String"));
+    param->add(EnumDescription(Enum(LINE_SEGMENTS), "Line segments"));
+    param->add(EnumDescription(Enum(STRING), "String"));
     parameters.push_back(param);
     
     return parameters;
