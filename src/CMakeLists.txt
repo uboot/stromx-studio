@@ -147,6 +147,10 @@ add_executable(stromx-studio WIN32
     ${stromxstudio_RESOURCES_RCC}
 )
 
+include_directories(
+    ${CMAKE_SOURCE_DIR}
+)
+
 target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
     ${CMAKE_DL_LIBS}
