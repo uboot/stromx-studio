@@ -1,6 +1,6 @@
 #include "RemoveConnectionCmd.h"
 
-#include "StreamModel.h"
+#include "model/StreamModel.h"
 
 RemoveConnectionCmd::RemoveConnectionCmd(StreamModel* stream, ConnectionModel* model, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("remove connection"), parent),

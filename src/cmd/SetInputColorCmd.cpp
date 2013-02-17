@@ -1,6 +1,6 @@
 #include "SetInputColorCmd.h"
 
-#include "InputModel.h"
+#include "model/InputModel.h"
 
 SetInputColorCmd::SetInputColorCmd(InputModel* model, const QColor& newColor, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("set input color"), parent),

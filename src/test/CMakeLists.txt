@@ -13,22 +13,22 @@ set(stromxstudiotest_HEADERS
     ImageTest.h
     ParameterServerTest.h
     StreamModelTest.h
-    ../ConnectionModel.h
     ../GetParameterTask.h
     ../InputData.h
-    ../InputModel.h
-    ../ObserverModel.h
-    ../ObserverTreeModel.h
     ../OperatorData.h
-    ../OperatorLibraryModel.h
-    ../OperatorModel.h
     ../ParameterServer.h
-    ../PropertyModel.h
     ../Task.h
-    ../ThreadListModel.h
-    ../ThreadModel.h
     ../SetParameterTask.h
-    ../StreamModel.h
+    ../model/ConnectionModel.h
+    ../model/InputModel.h
+    ../model/ObserverModel.h
+    ../model/ObserverTreeModel.h
+    ../model/OperatorLibraryModel.h
+    ../model/OperatorModel.h
+    ../model/PropertyModel.h
+    ../model/ThreadListModel.h
+    ../model/ThreadModel.h
+    ../model/StreamModel.h
 )
 
 set(stromxstudiotest_SOURCES
@@ -61,8 +61,17 @@ set(stromxstudiotest_SOURCES
     ../cmd/SetParameterCmd.cpp
     ../cmd/SetThreadCmd.cpp
     ../cmd/SetThreadColorCmd.cpp
+    ../model/ConnectionModel.cpp
+    ../model/InputModel.cpp
+    ../model/OperatorLibraryModel.cpp
+    ../model/ObserverModel.cpp
+    ../model/ObserverTreeModel.cpp
+    ../model/OperatorModel.cpp
+    ../model/PropertyModel.cpp
+    ../model/StreamModel.cpp
+    ../model/ThreadListModel.cpp
+    ../model/ThreadModel.cpp
     ../Common.cpp
-    ../ConnectionModel.cpp
     ../ConnectorObserver.cpp
     ../ConnectorDataEvent.cpp
     ../ConnectorOccupyEvent.cpp
@@ -72,19 +81,10 @@ set(stromxstudiotest_SOURCES
     ../GetParameterTask.cpp
     ../Image.cpp
     ../InputData.cpp
-    ../InputModel.cpp
     ../OperatorData.cpp
-    ../OperatorLibraryModel.cpp
-    ../ObserverModel.cpp
-    ../ObserverTreeModel.cpp
-    ../OperatorModel.cpp
     ../ParameterServer.cpp
-    ../PropertyModel.cpp
     ../SetParameterTask.cpp
-    ../StreamModel.cpp
     ../Task.cpp
-    ../ThreadListModel.cpp
-    ../ThreadModel.cpp
 )
 
 include_directories(

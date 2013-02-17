@@ -2,8 +2,8 @@
 
 #include <QStringList>
 #include <stromx/runtime/Operator.h>
-#include "InputModel.h"
-#include "OperatorModel.h"
+#include "model/InputModel.h"
+#include "model/OperatorModel.h"
 
 InputData::InputData(OperatorModel* op, unsigned int id)
   : m_id(id),

@@ -6,8 +6,8 @@
 #include <QMenu>
 #include <QTableView>
 #include "ItemDelegate.h"
-#include "StreamModel.h"
-#include "ThreadListModel.h"
+#include "model/StreamModel.h"
+#include "model/ThreadListModel.h"
 
 ThreadListView::ThreadListView(QWidget* parent)
   : QTableView(parent),

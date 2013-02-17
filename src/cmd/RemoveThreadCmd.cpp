@@ -1,5 +1,5 @@
 #include "RemoveThreadCmd.h"
-#include "StreamModel.h"
+#include "model/StreamModel.h"
 
 RemoveThreadCmd::RemoveThreadCmd(StreamModel* stream, ThreadModel* model, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("remove thread"), parent),

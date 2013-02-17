@@ -22,8 +22,6 @@
 
 #include <stromx/runtime/DataRef.h>
 #include <QObject>
-#include "ErrorData.h"
-#include "OperatorModel.h"
 
 template <class T> class QFutureWatcher;
 
@@ -49,7 +47,8 @@ public:
     /** Constructs a task object. Call run() to actually start the task. */
     explicit Task(QObject* parent = 0);
     
-    /** Waits for the task to finish. */
+    /** Waits for the task to finish
+#include "model/OperatorModel.h". */
     virtual ~Task();
     
     /** Starts the task. */

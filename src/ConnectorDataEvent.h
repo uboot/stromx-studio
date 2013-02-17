@@ -24,7 +24,7 @@
 #include <stromx/runtime/DataContainer.h>
 
 #include "Common.h"
-#include "OperatorModel.h"
+#include "model/OperatorModel.h"
 
 class ConnectorDataEvent : public QEvent
 {

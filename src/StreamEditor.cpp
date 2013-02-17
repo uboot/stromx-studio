@@ -4,12 +4,12 @@
 #include <QApplication>
 #include <QGraphicsView>
 #include <QMouseEvent>
-#include "ConnectionModel.h"
 #include "InputData.h"
 #include "StreamEditorScene.h"
-#include "StreamModel.h"
 #include "item/ConnectionItem.h"
 #include "item/ConnectorItem.h"
+#include "model/ConnectionModel.h"
+#include "model/StreamModel.h"
 
 StreamEditor::StreamEditor(QWidget* parent)
   : GraphicsView(parent),

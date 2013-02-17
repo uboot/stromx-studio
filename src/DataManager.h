@@ -23,7 +23,7 @@
 #include <QObject>
 
 #include <stromx/runtime/ReadAccess.h>
-#include "OperatorModel.h"
+#include "model/OperatorModel.h"
 
 class AbstractDataVisualizer;
 class InputModel;

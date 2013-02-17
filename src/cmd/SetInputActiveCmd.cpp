@@ -1,6 +1,6 @@
 #include "SetInputActiveCmd.h"
 
-#include "InputModel.h"
+#include "model/InputModel.h"
 
 SetInputActiveCmd::SetInputActiveCmd(InputModel* model, bool newActive, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("set input active"), parent),

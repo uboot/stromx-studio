@@ -1,6 +1,6 @@
 #include "InitializeOperatorCmd.h"
 
-#include "StreamModel.h"
+#include "model/StreamModel.h"
 
 InitializeOperatorCmd::InitializeOperatorCmd(StreamModel* stream, OperatorModel* model, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("initialize operator"), parent),

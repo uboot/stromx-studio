@@ -1,6 +1,6 @@
 #include "MoveOperatorCmd.h"
 
-#include "OperatorModel.h"
+#include "model/OperatorModel.h"
 
 MoveOperatorCmd::MoveOperatorCmd(OperatorModel* model, const QPointF& newPos, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("move operator"), parent),

@@ -6,10 +6,10 @@
 #include <QPen>
 #include <QVector2D>
 #include <math.h>
-#include "ConnectionModel.h"
-#include "ConnectorItem.h"
-#include "SelectionModel.h"
 #include "StreamEditorScene.h"
+#include "item/ConnectorItem.h"
+#include "model/ConnectionModel.h"
+#include "model/SelectionModel.h"
 
 const qreal ConnectionItem::EXTRA_HEIGHT = 20;
 const qreal ConnectionItem::PI = 3.141592;

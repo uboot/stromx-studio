@@ -22,7 +22,7 @@
 
 #include <QGraphicsObject>
 #include <QPointF>
-#include "OperatorModel.h"
+#include "model/OperatorModel.h"
 
 class QAbstractGraphicsShapeItem;
 class ConnectionItem;

@@ -2,8 +2,8 @@
 #include "Common.h"
 
 #include <QHeaderView>
-#include "ErrorListModel.h"
 #include "ItemDelegate.h"
+#include "model/ErrorListModel.h"
 
 ErrorListView::ErrorListView(QWidget* parent)
   : QTableView(parent),

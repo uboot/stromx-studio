@@ -1,6 +1,6 @@
 #include "RenameObserverCmd.h"
 
-#include "ObserverModel.h"
+#include "model/ObserverModel.h"
 
 RenameObserverCmd::RenameObserverCmd(ObserverModel* model, const QString& newName, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("rename observer"), parent),

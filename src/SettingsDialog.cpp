@@ -1,6 +1,6 @@
 #include "SettingsDialog.h"
 
-#include "StreamModel.h"
+#include "model/StreamModel.h"
 #include <QGroupBox>
 #include <QLabel>
 #include <QSpinBox>

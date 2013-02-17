@@ -1,7 +1,7 @@
 #include "SetThreadCmd.h"
 
-#include "ConnectionModel.h"
-#include "InputModel.h"
+#include "model/ConnectionModel.h"
+#include "model/InputModel.h"
 
 SetThreadCmd::SetThreadCmd(ConnectionModel* connection, ThreadModel* newThread, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("set thread"), parent),

@@ -22,8 +22,8 @@
 
 #include <stromx/runtime/DataRef.h>
 #include "ErrorData.h"
-#include "OperatorModel.h"
 #include "Task.h"
+#include "model/OperatorModel.h"
 
 /** 
  * \brief Task which asynchronously gets the value of an operator parameter.

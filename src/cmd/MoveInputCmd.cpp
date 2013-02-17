@@ -1,6 +1,6 @@
 #include "MoveInputCmd.h"
 
-#include "ObserverTreeModel.h"
+#include "model/ObserverTreeModel.h"
 
 
 MoveInputCmd::MoveInputCmd(ObserverTreeModel* observerTree, int srcObserverPos, int srcInputPos, int destObserverPos, int destInputPos, InputModel* input, QUndoCommand* parent)

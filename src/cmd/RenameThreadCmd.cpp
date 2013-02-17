@@ -1,6 +1,6 @@
 #include "RenameThreadCmd.h"
 
-#include "ThreadModel.h"
+#include "model/ThreadModel.h"
 
 RenameThreadCmd::RenameThreadCmd(ThreadModel* model, const QString& newName, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("rename thread"), parent),

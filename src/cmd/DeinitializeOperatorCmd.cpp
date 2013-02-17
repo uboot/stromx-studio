@@ -1,6 +1,6 @@
 #include "DeinitializeOperatorCmd.h"
 
-#include "StreamModel.h"
+#include "model/StreamModel.h"
 
 DeinitializeOperatorCmd::DeinitializeOperatorCmd(StreamModel* stream, OperatorModel* model, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("deinitialize operator"), parent),

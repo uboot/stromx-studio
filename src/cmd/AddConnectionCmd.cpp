@@ -1,6 +1,6 @@
 #include "AddConnectionCmd.h"
 
-#include "StreamModel.h"
+#include "model/StreamModel.h"
 
 AddConnectionCmd::AddConnectionCmd(StreamModel* stream, ConnectionModel* model, QUndoCommand* parent)
   : QUndoCommand(parent),

@@ -5,9 +5,9 @@
 #include <stromx/runtime/DirectoryFileInput.h>
 #include <stromx/runtime/ZipFileInput.h>
 
-#include "../Exception.h"
-#include "../OperatorLibraryModel.h"
-#include "../StreamModel.h"
+#include "Exception.h"
+#include "model/OperatorLibraryModel.h"
+#include "model/StreamModel.h"
 
 StreamModelTest::StreamModelTest()
   : m_undoStack(new QUndoStack(this)),

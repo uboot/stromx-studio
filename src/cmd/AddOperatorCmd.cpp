@@ -1,6 +1,6 @@
 #include "AddOperatorCmd.h"
 
-#include "StreamModel.h"
+#include "model/StreamModel.h"
 
 AddOperatorCmd::AddOperatorCmd(StreamModel* stream, OperatorModel* model, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("add operator"), parent),

@@ -21,7 +21,7 @@
 #define STREAMEDITOR_H
 
 #include "GraphicsView.h"
-#include "StreamModel.h"
+#include "model/StreamModel.h"
 
 class ConnectionItem;
 class StreamEditorScene;

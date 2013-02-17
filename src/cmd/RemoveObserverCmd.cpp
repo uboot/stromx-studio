@@ -1,7 +1,7 @@
 #include "RemoveObserverCmd.h"
 
-#include "ObserverTreeModel.h"
-#include "StreamModel.h"
+#include "model/ObserverTreeModel.h"
+#include "model/StreamModel.h"
 
 
 RemoveObserverCmd::RemoveObserverCmd(ObserverTreeModel* observerTree, int pos, ObserverModel* observer, QUndoCommand* parent)

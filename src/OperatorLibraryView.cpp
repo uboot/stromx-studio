@@ -4,8 +4,8 @@
 #include <QHeaderView>
 #include <QMouseEvent>
 #include "ItemDelegate.h"
-#include "OperatorLibraryModel.h"
 #include "OperatorData.h"
+#include "model/OperatorLibraryModel.h"
 
 OperatorLibraryView::OperatorLibraryView(QWidget* parent)
   : QTreeView(parent),

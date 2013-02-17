@@ -6,9 +6,9 @@
 #include "DataManager.h"
 #include "DataVisualizer.h"
 #include "LimitUndoStack.h"
-#include "ObserverModel.h"
-#include "ObserverTreeModel.h"
 #include "ObserverView.h"
+#include "model/ObserverModel.h"
+#include "model/ObserverTreeModel.h"
 
 ObserverWindow::ObserverWindow(ObserverModel* observer, LimitUndoStack* undoStack, QWidget* parent) 
   : QMainWindow(parent, Qt::Window),

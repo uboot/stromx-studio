@@ -1,7 +1,7 @@
 #include "InsertInputCmd.h"
 
-#include "ObserverTreeModel.h"
-#include "StreamModel.h"
+#include "model/ObserverTreeModel.h"
+#include "model/StreamModel.h"
 
 
 InsertInputCmd::InsertInputCmd(ObserverTreeModel* observerTree, int observerPos, int inputPos, InputModel* input, QUndoCommand* parent)

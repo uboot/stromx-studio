@@ -33,52 +33,52 @@ set(stromxstudio_SOURCES
     item/ConnectionItem.cpp
     item/ConnectorItem.cpp
     item/OperatorItem.cpp
+    model/ConnectionModel.cpp
+    model/ErrorListModel.cpp
+    model/InputModel.cpp
+    model/ObserverModel.cpp
+    model/ObserverTreeModel.cpp
+    model/OperatorLibraryModel.cpp
+    model/OperatorModel.cpp
+    model/PropertyModel.cpp
+    model/SelectionModel.cpp
+    model/ThreadListModel.cpp
+    model/ThreadModel.cpp
+    model/StreamModel.cpp
     ChooseImageButton.cpp
     Common.cpp
     ConnectorDataEvent.cpp
     ConnectorOccupyEvent.cpp
     ConnectorObserver.cpp
-    ConnectionModel.cpp
     DataConverter.cpp
     DataManager.cpp
     DataVisualizer.cpp
     DataVisualizerUtilities.cpp
     DocumentationWindow.cpp
     ErrorData.cpp
-    ErrorListModel.cpp
     ErrorListView.cpp
     ExceptionObserver.cpp
     GetParameterTask.cpp
     GraphicsView.cpp
     Image.cpp
     InputData.cpp
-    InputModel.cpp
     ItemDelegate.cpp
     LimitUndoStack.cpp
     main.cpp
     MainWindow.cpp
-    ObserverModel.cpp
-    ObserverTreeModel.cpp
     ObserverTreeView.cpp
     ObserverView.cpp
     ObserverWindow.cpp
     OperatorData.cpp
     OperatorLibraryView.cpp
-    OperatorLibraryModel.cpp
-    OperatorModel.cpp
     ParameterServer.cpp
-    PropertyModel.cpp
     PropertyView.cpp
-    SelectionModel.cpp
     SetParameterTask.cpp
     SettingsDialog.cpp
     StreamEditor.cpp
     StreamEditorScene.cpp
-    StreamModel.cpp
     Task.cpp
-    ThreadListModel.cpp
     ThreadListView.cpp
-    ThreadModel.cpp
     TriggerButton.cpp
     UndoStackAction.cpp
 )
@@ -87,41 +87,41 @@ set(stromxstudio_HEADERS
     item/ArrowItem.h
     item/ConnectionItem.h
     item/OperatorItem.h
+    model/ConnectionModel.h
+    model/ErrorListModel.h
+    model/InputModel.h
+    model/ObserverModel.h
+    model/ObserverTreeModel.h
+    model/OperatorLibraryModel.h
+    model/OperatorModel.h
+    model/PropertyModel.h
+    model/ThreadModel.h
+    model/ThreadListModel.h
+    model/SelectionModel.h
+    model/StreamModel.h
     ChooseImageButton.h
-    ConnectionModel.h
     DataManager.h
     DocumentationWindow.h
-    ErrorListModel.h
     ErrorListView.h
     GetParameterTask.h
     GraphicsView.h
     InputData.h
-    InputModel.h
     ItemDelegate.h
     LimitUndoStack.h
     MainWindow.h
-    ObserverModel.h
-    ObserverTreeModel.h
     ObserverTreeView.h
     ObserverView.h
     ObserverWindow.h
     OperatorData.h
     OperatorLibraryView.h
-    OperatorLibraryModel.h
-    OperatorModel.h
     ParameterServer.h
-    PropertyModel.h
     PropertyView.h
-    SelectionModel.h
     SetParameterTask.h
     SettingsDialog.h
     StreamEditor.h 
     StreamEditorScene.h
-    StreamModel.h
     Task.h
-    ThreadListModel.h
     ThreadListView.h
-    ThreadModel.h
     TriggerButton.h
     UndoStackAction.h
 )

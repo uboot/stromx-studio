@@ -1,6 +1,6 @@
 #include "RenameOperatorCmd.h"
 
-#include "OperatorModel.h"
+#include "model/OperatorModel.h"
 
 RenameOperatorCmd::RenameOperatorCmd(OperatorModel* model, const QString& newName, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("rename operator"), parent),

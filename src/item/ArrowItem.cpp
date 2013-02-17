@@ -4,7 +4,7 @@
 #include <QPen>
 #include <QVector2D>
 #include <math.h>
-#include "ConnectionModel.h"
+#include "model/ConnectionModel.h"
 
 ArrowItem::ArrowItem(QGraphicsItem* parent)
   : QGraphicsObject(parent),

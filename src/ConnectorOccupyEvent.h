@@ -22,7 +22,7 @@
 
 #include <QEvent>
 #include "Common.h"
-#include "OperatorModel.h"
+#include "model/OperatorModel.h"
 
 class ConnectorOccupyEvent : public QEvent
 {

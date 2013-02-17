@@ -5,10 +5,10 @@
 #include <QToolTip>
 #include <stromx/runtime/Operator.h>
 #include "ArrowItem.h"
-#include "ConnectionItem.h"
-#include "OperatorModel.h"
 #include "StreamEditorScene.h"
-#include "StreamModel.h"
+#include "item/ConnectionItem.h"
+#include "model/OperatorModel.h"
+#include "model/StreamModel.h"
 
 const qreal ConnectorItem::SIZE = 8;
 const qreal ConnectorItem::FLOAT_Z_VALUE = 1;

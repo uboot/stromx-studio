@@ -3,9 +3,9 @@
 #include <stromx/runtime/ReadAccess.h>
 
 #include "AbstractDataVisualizer.h"
-#include "InputModel.h"
-#include "ObserverModel.h"
-#include "OperatorModel.h"
+#include "model/InputModel.h"
+#include "model/ObserverModel.h"
+#include "model/OperatorModel.h"
 
 DataManager::DataManager(ObserverModel* observer, AbstractDataVisualizer* visualizer, QObject* parent)
   : QObject(parent),

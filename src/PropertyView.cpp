@@ -2,7 +2,7 @@
 
 #include <QHeaderView>
 #include "ItemDelegate.h"
-#include "PropertyModel.h"
+#include "model/PropertyModel.h"
 
 PropertyView::PropertyView(QWidget* parent)
   : QTreeView(parent)

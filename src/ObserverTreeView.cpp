@@ -5,8 +5,8 @@
 #include <QHeaderView>
 #include <QMenu>
 #include "ItemDelegate.h"
-#include "ObserverModel.h"
-#include "ObserverTreeModel.h"
+#include "model/ObserverModel.h"
+#include "model/ObserverTreeModel.h"
 
 ObserverTreeView::ObserverTreeView(QWidget* parent)
   : QTreeView(parent),

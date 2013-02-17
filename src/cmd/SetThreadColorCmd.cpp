@@ -1,6 +1,6 @@
 #include "SetThreadColorCmd.h"
 
-#include "ThreadModel.h"
+#include "model/ThreadModel.h"
 
 SetThreadColorCmd::SetThreadColorCmd(ThreadModel* model, const QColor& newColor, QUndoCommand* parent)
   : QUndoCommand(QObject::tr("set thread color"), parent),
