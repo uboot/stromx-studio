@@ -1,7 +1,7 @@
 #include "OperatorLibraryModel.h"
 
 #include "Exception.h"
-#include "OperatorData.h"
+#include "data/OperatorData.h"
 #include <QFileInfo>
 #include <QLibrary>
 #include <QSettings>

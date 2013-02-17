@@ -23,8 +23,8 @@
 #include <QAbstractTableModel>
 #include <QList>
 
-#include "ErrorData.h"
 #include "ExceptionObserver.h"
+#include "data/ErrorData.h"
 
 /** \brief Model of a list of errors.
  * 

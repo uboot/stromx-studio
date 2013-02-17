@@ -7,7 +7,6 @@
 #include "OperatorModel.h"
 #include "ConnectionModel.h"
 #include "ObserverTreeModel.h"
-#include "OperatorData.h"
 #include "ThreadListModel.h"
 #include "ThreadModel.h"
 #include "cmd/AddConnectionCmd.h"
@@ -18,6 +17,7 @@
 #include "cmd/RemoveConnectionCmd.h"
 #include "cmd/RemoveOperatorCmd.h"
 #include "cmd/RemoveThreadCmd.h"
+#include "data/OperatorData.h"
 #include <QDir>
 #include <QFileInfo>
 #include <QFutureWatcher>

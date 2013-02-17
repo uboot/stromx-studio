@@ -5,7 +5,7 @@
 #include <QKeyEvent>
 #include <QUndoStack>
 #include <stromx/runtime/Operator.h>
-#include "OperatorData.h"
+#include "data/OperatorData.h"
 #include "item/ConnectionItem.h"
 #include "item/OperatorItem.h"
 #include "model/ConnectionModel.h"

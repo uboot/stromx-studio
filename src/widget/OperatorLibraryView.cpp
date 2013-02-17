@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QHeaderView>
 #include <QMouseEvent>
-#include "OperatorData.h"
+#include "data/OperatorData.h"
 #include "delegate/ItemDelegate.h"
 #include "model/OperatorLibraryModel.h"
 

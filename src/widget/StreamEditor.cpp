@@ -4,8 +4,8 @@
 #include <QApplication>
 #include <QGraphicsView>
 #include <QMouseEvent>
-#include "InputData.h"
 #include "StreamEditorScene.h"
+#include "data/InputData.h"
 #include "item/ConnectionItem.h"
 #include "item/ConnectorItem.h"
 #include "model/ConnectionModel.h"

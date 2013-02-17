@@ -21,8 +21,8 @@
 #define SETPARAMETERTASK_H
 
 #include <stromx/runtime/DataRef.h>
-#include "ErrorData.h"
 #include "Task.h"
+#include "data/ErrorData.h"
 #include "model/OperatorModel.h"
 
 /** 

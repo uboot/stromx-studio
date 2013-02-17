@@ -1,8 +1,8 @@
 #include "ExceptionObserver.h"
 
 #include <QCoreApplication>
-#include "ErrorData.h"
 #include "event/ErrorEvent.h"
+#include "data/ErrorData.h"
 
 ExceptionObserver::ExceptionObserver(QObject* receiver)
   : m_receiver(receiver)

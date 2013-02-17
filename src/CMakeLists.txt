@@ -31,6 +31,9 @@ set(stromxstudio_SOURCES
     cmd/SetThreadColorCmd.cpp
     event/ConnectorDataEvent.cpp
     event/ConnectorOccupyEvent.cpp
+    data/ErrorData.cpp
+    data/InputData.cpp
+    data/OperatorData.cpp
     delegate/ChooseImageButton.cpp
     delegate/ItemDelegate.cpp
     delegate/TriggerButton.cpp
@@ -68,14 +71,11 @@ set(stromxstudio_SOURCES
     ConnectorObserver.cpp
     DataConverter.cpp
     DataManager.cpp
-    ErrorData.cpp
     ExceptionObserver.cpp
     GetParameterTask.cpp
     Image.cpp
-    InputData.cpp
     LimitUndoStack.cpp
     main.cpp
-    OperatorData.cpp
     ParameterServer.cpp
     SetParameterTask.cpp
     StreamEditorScene.cpp
@@ -84,6 +84,8 @@ set(stromxstudio_SOURCES
 )
 
 set(stromxstudio_HEADERS
+    data/InputData.h
+    data/OperatorData.h
     delegate/ChooseImageButton.h
     delegate/ItemDelegate.h
     delegate/TriggerButton.h
@@ -116,9 +118,7 @@ set(stromxstudio_HEADERS
     widget/ThreadListView.h
     DataManager.h
     GetParameterTask.h
-    InputData.h
     LimitUndoStack.h
-    OperatorData.h
     ParameterServer.h
     SetParameterTask.h
     StreamEditorScene.h

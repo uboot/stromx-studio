@@ -14,11 +14,11 @@ set(stromxstudiotest_HEADERS
     ParameterServerTest.h
     StreamModelTest.h
     ../GetParameterTask.h
-    ../InputData.h
-    ../OperatorData.h
     ../ParameterServer.h
     ../Task.h
     ../SetParameterTask.h
+    ../data/InputData.h
+    ../data/OperatorData.h
     ../model/ConnectionModel.h
     ../model/InputModel.h
     ../model/ObserverModel.h
@@ -61,6 +61,9 @@ set(stromxstudiotest_SOURCES
     ../cmd/SetParameterCmd.cpp
     ../cmd/SetThreadCmd.cpp
     ../cmd/SetThreadColorCmd.cpp
+    ../data/ErrorData.cpp
+    ../data/InputData.cpp
+    ../data/OperatorData.cpp
     ../event/ConnectorDataEvent.cpp
     ../event/ConnectorOccupyEvent.cpp
     ../model/ConnectionModel.cpp
@@ -76,12 +79,9 @@ set(stromxstudiotest_SOURCES
     ../Common.cpp
     ../ConnectorObserver.cpp
     ../DataConverter.cpp
-    ../ErrorData.cpp
     ../ExceptionObserver.cpp
     ../GetParameterTask.cpp
     ../Image.cpp
-    ../InputData.cpp
-    ../OperatorData.cpp
     ../ParameterServer.cpp
     ../SetParameterTask.cpp
     ../Task.cpp

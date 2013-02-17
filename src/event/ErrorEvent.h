@@ -23,7 +23,7 @@
 #include <QEvent>
 
 #include "Common.h"
-#include "ErrorData.h"
+#include "data/ErrorData.h"
 
 /** \brief Event which contains error data. */
 class ErrorEvent : public QEvent

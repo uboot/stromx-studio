@@ -4,7 +4,6 @@
 #include "Common.h"
 #include "InputModel.h"
 #include "ConnectionModel.h"
-#include "InputData.h"
 #include "ObserverModel.h"
 #include "OperatorModel.h"
 #include "cmd/InsertInputCmd.h"
@@ -12,6 +11,7 @@
 #include "cmd/MoveInputCmd.h"
 #include "cmd/RemoveInputCmd.h"
 #include "cmd/RemoveObserverCmd.h"
+#include "data/InputData.h"
 
 QStringList ObserverTreeModel::m_visualizationLabels(ObserverTreeModel::setupVisualizationLabels());
 
