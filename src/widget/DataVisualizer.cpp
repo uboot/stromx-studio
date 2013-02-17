@@ -1,7 +1,7 @@
 #include "DataVisualizer.h"
 
-#include "DataVisualizerUtilities.h"
 #include "model/InputModel.h"
+#include "widget/DataVisualizerUtilities.h"
 #include <QGraphicsItem>
 #include <stromx/runtime/Primitive.h>
 

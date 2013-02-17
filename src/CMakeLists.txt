@@ -45,6 +45,20 @@ set(stromxstudio_SOURCES
     model/ThreadListModel.cpp
     model/ThreadModel.cpp
     model/StreamModel.cpp
+    widget/DataVisualizer.cpp
+    widget/DataVisualizerUtilities.cpp
+    widget/DocumentationWindow.cpp
+    widget/ErrorListView.cpp
+    widget/GraphicsView.cpp
+    widget/MainWindow.cpp
+    widget/ObserverTreeView.cpp
+    widget/ObserverView.cpp
+    widget/ObserverWindow.cpp
+    widget/OperatorLibraryView.cpp
+    widget/PropertyView.cpp
+    widget/SettingsDialog.cpp
+    widget/StreamEditor.cpp
+    widget/ThreadListView.cpp
     ChooseImageButton.cpp
     Common.cpp
     ConnectorDataEvent.cpp
@@ -52,33 +66,19 @@ set(stromxstudio_SOURCES
     ConnectorObserver.cpp
     DataConverter.cpp
     DataManager.cpp
-    DataVisualizer.cpp
-    DataVisualizerUtilities.cpp
-    DocumentationWindow.cpp
     ErrorData.cpp
-    ErrorListView.cpp
     ExceptionObserver.cpp
     GetParameterTask.cpp
-    GraphicsView.cpp
     Image.cpp
     InputData.cpp
     ItemDelegate.cpp
     LimitUndoStack.cpp
     main.cpp
-    MainWindow.cpp
-    ObserverTreeView.cpp
-    ObserverView.cpp
-    ObserverWindow.cpp
     OperatorData.cpp
-    OperatorLibraryView.cpp
     ParameterServer.cpp
-    PropertyView.cpp
     SetParameterTask.cpp
-    SettingsDialog.cpp
-    StreamEditor.cpp
     StreamEditorScene.cpp
     Task.cpp
-    ThreadListView.cpp
     TriggerButton.cpp
     UndoStackAction.cpp
 )
@@ -99,29 +99,29 @@ set(stromxstudio_HEADERS
     model/ThreadListModel.h
     model/SelectionModel.h
     model/StreamModel.h
+    widget/DocumentationWindow.h
+    widget/ErrorListView.h
+    widget/GraphicsView.h
+    widget/MainWindow.h
+    widget/ObserverTreeView.h
+    widget/ObserverView.h
+    widget/ObserverWindow.h
+    widget/OperatorLibraryView.h
+    widget/PropertyView.h
+    widget/SettingsDialog.h
+    widget/StreamEditor.h 
+    widget/ThreadListView.h
     ChooseImageButton.h
     DataManager.h
-    DocumentationWindow.h
-    ErrorListView.h
     GetParameterTask.h
-    GraphicsView.h
     InputData.h
     ItemDelegate.h
     LimitUndoStack.h
-    MainWindow.h
-    ObserverTreeView.h
-    ObserverView.h
-    ObserverWindow.h
     OperatorData.h
-    OperatorLibraryView.h
     ParameterServer.h
-    PropertyView.h
     SetParameterTask.h
-    SettingsDialog.h
-    StreamEditor.h 
     StreamEditorScene.h
     Task.h
-    ThreadListView.h
     TriggerButton.h
     UndoStackAction.h
 )

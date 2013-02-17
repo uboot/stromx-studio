@@ -21,7 +21,7 @@
 #include <QtGui/QSplashScreen>
 #include <stromx/runtime/Exception.h>
 #include <fstream>
-#include "MainWindow.h"
+#include "widget/MainWindow.h"
 
 int main(int argc, char *argv[])
 {
