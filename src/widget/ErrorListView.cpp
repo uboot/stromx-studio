@@ -2,7 +2,7 @@
 #include "Common.h"
 
 #include <QHeaderView>
-#include "ItemDelegate.h"
+#include "delegate/ItemDelegate.h"
 #include "model/ErrorListModel.h"
 
 ErrorListView::ErrorListView(QWidget* parent)

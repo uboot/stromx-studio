@@ -4,7 +4,7 @@
 #include <QContextMenuEvent>
 #include <QHeaderView>
 #include <QMenu>
-#include "ItemDelegate.h"
+#include "delegate/ItemDelegate.h"
 #include "model/ObserverModel.h"
 #include "model/ObserverTreeModel.h"
 

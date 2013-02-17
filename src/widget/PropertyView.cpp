@@ -1,7 +1,7 @@
 #include "PropertyView.h"
 
 #include <QHeaderView>
-#include "ItemDelegate.h"
+#include "delegate/ItemDelegate.h"
 #include "model/PropertyModel.h"
 
 PropertyView::PropertyView(QWidget* parent)

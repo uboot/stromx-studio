@@ -3,8 +3,8 @@
 #include <QApplication>
 #include <QHeaderView>
 #include <QMouseEvent>
-#include "ItemDelegate.h"
 #include "OperatorData.h"
+#include "delegate/ItemDelegate.h"
 #include "model/OperatorLibraryModel.h"
 
 OperatorLibraryView::OperatorLibraryView(QWidget* parent)

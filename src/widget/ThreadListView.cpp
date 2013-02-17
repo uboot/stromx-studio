@@ -5,7 +5,7 @@
 #include <QContextMenuEvent>
 #include <QMenu>
 #include <QTableView>
-#include "ItemDelegate.h"
+#include "delegate/ItemDelegate.h"
 #include "model/StreamModel.h"
 #include "model/ThreadListModel.h"
 
