@@ -1,7 +1,7 @@
-#include "ParameterServerTest.h"
+#include "test/ParameterServerTest.h"
 
-#include "ParameterOperator.h"
-#include "../ParameterServer.h"
+#include "test/ParameterOperator.h"
+#include "ParameterServer.h"
 #include <QUndoStack>
 #include <QtTest/QtTest>
 #include <stromx/runtime/Operator.h>

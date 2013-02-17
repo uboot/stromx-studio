@@ -1,4 +1,4 @@
-#include "ParameterOperator.h"
+#include "test/ParameterOperator.h"
 
 #include <stromx/runtime/DataProvider.h>
 #include <stromx/runtime/EnumParameter.h>

@@ -148,7 +148,7 @@ add_executable(stromx-studio WIN32
 )
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/src
 )
 
 target_link_libraries(stromx-studio

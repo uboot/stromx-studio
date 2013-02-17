@@ -2,7 +2,7 @@
 
 #include <QtTest/QtTest>
 
-#include "../DataConverter.h"
+#include "DataConverter.h"
 #include <stromx/runtime/Primitive.h>
 #include <stromx/runtime/String.h>
 

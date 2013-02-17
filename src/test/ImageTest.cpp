@@ -2,7 +2,7 @@
 
 #include <QtTest/QtTest>
 
-#include "../Image.h"
+#include "Image.h"
 
 void ImageTest::testFileConstructorColor()
 {

@@ -87,6 +87,10 @@ set(stromxstudiotest_SOURCES
     ../ThreadModel.cpp
 )
 
+include_directories(
+    ${CMAKE_SOURCE_DIR}/src
+)
+
 set(QT_USE_QTTEST TRUE) 
 
 include(${QT_USE_FILE})

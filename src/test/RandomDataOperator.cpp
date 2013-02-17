@@ -1,4 +1,4 @@
-#include "RandomDataOperator.h"
+#include "test/RandomDataOperator.h"
 
 #include <stromx/example/Matrix.h>
 #include <stromx/runtime/DataProvider.h>

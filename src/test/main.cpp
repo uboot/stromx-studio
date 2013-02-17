@@ -1,9 +1,9 @@
 #include <QtTest/QtTest>
 
-#include "DataConverterTest.h"
-#include "ImageTest.h"
-#include "ParameterServerTest.h"
-#include "StreamModelTest.h"
+#include "test/DataConverterTest.h"
+#include "test/ImageTest.h"
+#include "test/ParameterServerTest.h"
+#include "test/StreamModelTest.h"
 
 int main(int argc, char *argv[])
 {

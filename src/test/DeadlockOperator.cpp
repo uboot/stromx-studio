@@ -1,4 +1,4 @@
-#include "DeadlockOperator.h"
+#include "test/DeadlockOperator.h"
 
 #include <stromx/runtime/DataProvider.h>
 #include <stromx/runtime/Id2DataPair.h>

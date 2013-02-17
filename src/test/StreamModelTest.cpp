@@ -1,4 +1,4 @@
-#include "StreamModelTest.h"
+#include "test/StreamModelTest.h"
 
 #include <QtTest/QtTest>
 #include <QUndoStack>

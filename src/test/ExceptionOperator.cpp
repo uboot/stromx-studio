@@ -1,4 +1,4 @@
-#include "ExceptionOperator.h"
+#include "test/ExceptionOperator.h"
 
 #include <stromx/runtime/DataProvider.h>
 #include <stromx/runtime/Id2DataPair.h>
