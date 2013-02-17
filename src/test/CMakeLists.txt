@@ -61,6 +61,8 @@ set(stromxstudiotest_SOURCES
     ../cmd/SetParameterCmd.cpp
     ../cmd/SetThreadCmd.cpp
     ../cmd/SetThreadColorCmd.cpp
+    ../event/ConnectorDataEvent.cpp
+    ../event/ConnectorOccupyEvent.cpp
     ../model/ConnectionModel.cpp
     ../model/InputModel.cpp
     ../model/OperatorLibraryModel.cpp
@@ -73,8 +75,6 @@ set(stromxstudiotest_SOURCES
     ../model/ThreadModel.cpp
     ../Common.cpp
     ../ConnectorObserver.cpp
-    ../ConnectorDataEvent.cpp
-    ../ConnectorOccupyEvent.cpp
     ../DataConverter.cpp
     ../ErrorData.cpp
     ../ExceptionObserver.cpp

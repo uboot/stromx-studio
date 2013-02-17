@@ -3,8 +3,8 @@
 #include <stromx/runtime/Connector.h>
 #include <stromx/runtime/DataContainer.h>
 #include <QCoreApplication>
-#include "ConnectorDataEvent.h"
-#include "ConnectorOccupyEvent.h"
+#include "event/ConnectorDataEvent.h"
+#include "event/ConnectorOccupyEvent.h"
 
 ConnectorObserver::ConnectorObserver(QObject* receiver)
   : m_receiver(receiver),

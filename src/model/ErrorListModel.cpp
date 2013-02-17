@@ -1,7 +1,7 @@
 #include "ErrorListModel.h"
 
 #include <QDebug>
-#include "ErrorEvent.h"
+#include "event/ErrorEvent.h"
 
 const qint32 ErrorListModel::MAX_ERRORS = 100;
 

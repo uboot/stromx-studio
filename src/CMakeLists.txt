@@ -29,6 +29,8 @@ set(stromxstudio_SOURCES
     cmd/SetInputVisualizationCmd.cpp
     cmd/SetThreadCmd.cpp
     cmd/SetThreadColorCmd.cpp
+    event/ConnectorDataEvent.cpp
+    event/ConnectorOccupyEvent.cpp
     item/ArrowItem.cpp
     item/ConnectionItem.cpp
     item/ConnectorItem.cpp
@@ -61,8 +63,6 @@ set(stromxstudio_SOURCES
     widget/ThreadListView.cpp
     ChooseImageButton.cpp
     Common.cpp
-    ConnectorDataEvent.cpp
-    ConnectorOccupyEvent.cpp
     ConnectorObserver.cpp
     DataConverter.cpp
     DataManager.cpp

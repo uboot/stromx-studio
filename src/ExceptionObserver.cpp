@@ -2,7 +2,7 @@
 
 #include <QCoreApplication>
 #include "ErrorData.h"
-#include "ErrorEvent.h"
+#include "event/ErrorEvent.h"
 
 ExceptionObserver::ExceptionObserver(QObject* receiver)
   : m_receiver(receiver)

@@ -8,13 +8,13 @@
 #include <stromx/runtime/Trigger.h>
 #include "Common.h"
 #include "ConnectorObserver.h"
-#include "ConnectorDataEvent.h"
-#include "ConnectorOccupyEvent.h"
 #include "DataConverter.h"
 #include "ParameterServer.h"
 #include "StreamModel.h"
 #include "cmd/MoveOperatorCmd.h"
 #include "cmd/RenameOperatorCmd.h"
+#include "event/ConnectorDataEvent.h"
+#include "event/ConnectorOccupyEvent.h"
 
 const unsigned int OperatorModel::TIMEOUT = 1000;
 
