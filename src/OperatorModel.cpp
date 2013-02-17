@@ -11,10 +11,10 @@
 #include "ConnectorDataEvent.h"
 #include "ConnectorOccupyEvent.h"
 #include "DataConverter.h"
-#include "MoveOperatorCmd.h"
 #include "ParameterServer.h"
-#include "RenameOperatorCmd.h"
 #include "StreamModel.h"
+#include "cmd/MoveOperatorCmd.h"
+#include "cmd/RenameOperatorCmd.h"
 
 const unsigned int OperatorModel::TIMEOUT = 1000;
 

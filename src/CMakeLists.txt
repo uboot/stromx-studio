@@ -6,9 +6,9 @@ configure_file (
 )
 
 set(stromxstudio_SOURCES
-    AddConnectionCmd.cpp
-    AddThreadCmd.cpp
-    AddOperatorCmd.cpp
+    cmd/AddConnectionCmd.cpp
+    cmd/AddThreadCmd.cpp
+    cmd/AddOperatorCmd.cpp
     ArrowItem.cpp
     ChooseImageButton.cpp
     Common.cpp
@@ -22,7 +22,7 @@ set(stromxstudio_SOURCES
     DataManager.cpp
     DataVisualizer.cpp
     DataVisualizerUtilities.cpp
-    DeinitializeOperatorCmd.cpp
+    cmd/DeinitializeOperatorCmd.cpp
     DocumentationWindow.cpp
     ErrorData.cpp
     ErrorListModel.cpp
@@ -31,17 +31,17 @@ set(stromxstudio_SOURCES
     GetParameterTask.cpp
     GraphicsView.cpp
     Image.cpp
-    InitializeOperatorCmd.cpp
+    cmd/InitializeOperatorCmd.cpp
     InputData.cpp
     InputModel.cpp
-    InsertInputCmd.cpp
-    InsertObserverCmd.cpp
+    cmd/InsertInputCmd.cpp
+    cmd/InsertObserverCmd.cpp
     ItemDelegate.cpp
     LimitUndoStack.cpp
     main.cpp
     MainWindow.cpp
-    MoveInputCmd.cpp
-    MoveOperatorCmd.cpp
+    cmd/MoveInputCmd.cpp
+    cmd/MoveOperatorCmd.cpp
     ObserverModel.cpp
     ObserverTreeModel.cpp
     ObserverTreeView.cpp
@@ -55,22 +55,22 @@ set(stromxstudio_SOURCES
     ParameterServer.cpp
     PropertyModel.cpp
     PropertyView.cpp
-    RemoveConnectionCmd.cpp
-    RemoveInputCmd.cpp
-    RemoveObserverCmd.cpp
-    RenameObserverCmd.cpp
-    RemoveOperatorCmd.cpp
-    RenameOperatorCmd.cpp
-    RemoveThreadCmd.cpp
-    RenameThreadCmd.cpp
+    cmd/RemoveConnectionCmd.cpp
+    cmd/RemoveInputCmd.cpp
+    cmd/RemoveObserverCmd.cpp
+    cmd/RenameObserverCmd.cpp
+    cmd/RemoveOperatorCmd.cpp
+    cmd/RenameOperatorCmd.cpp
+    cmd/RemoveThreadCmd.cpp
+    cmd/RenameThreadCmd.cpp
     SelectionModel.cpp
-    SetParameterCmd.cpp
+    cmd/SetParameterCmd.cpp
     SetParameterTask.cpp
-    SetInputActiveCmd.cpp
-    SetInputColorCmd.cpp
-    SetInputVisualizationCmd.cpp
-    SetThreadCmd.cpp
-    SetThreadColorCmd.cpp
+    cmd/SetInputActiveCmd.cpp
+    cmd/SetInputColorCmd.cpp
+    cmd/SetInputVisualizationCmd.cpp
+    cmd/SetThreadCmd.cpp
+    cmd/SetThreadColorCmd.cpp
     SettingsDialog.cpp
     StreamEditor.cpp
     StreamEditorScene.cpp
@@ -167,4 +167,3 @@ else(WIN32)
         RUNTIME DESTINATION bin
     )
 endif(WIN32)
-

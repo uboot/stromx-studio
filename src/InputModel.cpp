@@ -2,10 +2,10 @@
 
 #include "Common.h"
 #include "OperatorModel.h"
-#include "SetInputActiveCmd.h"
-#include "SetInputColorCmd.h"
-#include "SetInputVisualizationCmd.h"
 #include "StreamModel.h"
+#include "cmd/SetInputActiveCmd.h"
+#include "cmd/SetInputColorCmd.h"
+#include "cmd/SetInputVisualizationCmd.h"
 #include <stromx/runtime/Operator.h>
 
 InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject* parent)

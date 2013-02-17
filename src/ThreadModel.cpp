@@ -2,9 +2,9 @@
 
 #include <stromx/runtime/Thread.h>
 #include "Common.h"
-#include "RenameThreadCmd.h"
-#include "SetThreadColorCmd.h"
 #include "StreamModel.h"
+#include "cmd/RenameThreadCmd.h"
+#include "cmd/SetThreadColorCmd.h"
 
 ThreadModel::ThreadModel(stromx::runtime::Thread* thread, StreamModel* stream)
   : QObject(stream),

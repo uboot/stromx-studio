@@ -4,7 +4,7 @@
 #include <stromx/runtime/Thread.h>
 #include "Common.h"
 #include "OperatorModel.h"
-#include "SetThreadCmd.h"
+#include "cmd/SetThreadCmd.h"
 #include "StreamModel.h"
 #include "ThreadModel.h"
 

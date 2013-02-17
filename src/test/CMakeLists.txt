@@ -38,27 +38,27 @@ set(stromxstudiotest_SOURCES
     ParameterOperator.cpp
     ParameterServerTest.cpp
     StreamModelTest.cpp
-    ../AddConnectionCmd.cpp
-    ../AddOperatorCmd.cpp
-    ../AddThreadCmd.cpp
+    ../cmd/AddConnectionCmd.cpp
+    ../cmd/AddOperatorCmd.cpp
+    ../cmd/AddThreadCmd.cpp
     ../Common.cpp
     ../ConnectionModel.cpp
     ../ConnectorObserver.cpp
     ../ConnectorDataEvent.cpp
     ../ConnectorOccupyEvent.cpp
     ../DataConverter.cpp
-    ../DeinitializeOperatorCmd.cpp
+    ../cmd/DeinitializeOperatorCmd.cpp
     ../ErrorData.cpp
     ../ExceptionObserver.cpp
     ../GetParameterTask.cpp
     ../Image.cpp
-    ../InitializeOperatorCmd.cpp
+    ../cmd/InitializeOperatorCmd.cpp
     ../InputData.cpp
     ../InputModel.cpp
-    ../InsertInputCmd.cpp
-    ../InsertObserverCmd.cpp
-    ../MoveInputCmd.cpp
-    ../MoveOperatorCmd.cpp
+    ../cmd/InsertInputCmd.cpp
+    ../cmd/InsertObserverCmd.cpp
+    ../cmd/MoveInputCmd.cpp
+    ../cmd/MoveOperatorCmd.cpp
     ../OperatorData.cpp
     ../OperatorLibraryModel.cpp
     ../ObserverModel.cpp
@@ -66,21 +66,21 @@ set(stromxstudiotest_SOURCES
     ../OperatorModel.cpp
     ../ParameterServer.cpp
     ../PropertyModel.cpp
-    ../RemoveInputCmd.cpp
-    ../RemoveConnectionCmd.cpp
-    ../RemoveOperatorCmd.cpp
-    ../RemoveObserverCmd.cpp
-    ../RemoveThreadCmd.cpp
-    ../RenameObserverCmd.cpp
-    ../RenameOperatorCmd.cpp
-    ../RenameThreadCmd.cpp
-    ../SetInputActiveCmd.cpp
-    ../SetInputColorCmd.cpp
-    ../SetInputVisualizationCmd.cpp
-    ../SetParameterCmd.cpp
+    ../cmd/RemoveInputCmd.cpp
+    ../cmd/RemoveConnectionCmd.cpp
+    ../cmd/RemoveOperatorCmd.cpp
+    ../cmd/RemoveObserverCmd.cpp
+    ../cmd/RemoveThreadCmd.cpp
+    ../cmd/RenameObserverCmd.cpp
+    ../cmd/RenameOperatorCmd.cpp
+    ../cmd/RenameThreadCmd.cpp
+    ../cmd/SetInputActiveCmd.cpp
+    ../cmd/SetInputColorCmd.cpp
+    ../cmd/SetInputVisualizationCmd.cpp
+    ../cmd/SetParameterCmd.cpp
     ../SetParameterTask.cpp
-    ../SetThreadCmd.cpp
-    ../SetThreadColorCmd.cpp
+    ../cmd/SetThreadCmd.cpp
+    ../cmd/SetThreadColorCmd.cpp
     ../StreamModel.cpp
     ../Task.cpp
     ../ThreadListModel.cpp
