@@ -53,6 +53,9 @@ set(stromxstudio_SOURCES
     model/ThreadListModel.cpp
     model/ThreadModel.cpp
     model/StreamModel.cpp
+    task/GetParameterTask.cpp
+    task/SetParameterTask.cpp
+    task/Task.cpp
     widget/DataVisualizer.cpp
     widget/DataVisualizerUtilities.cpp
     widget/DocumentationWindow.cpp
@@ -72,14 +75,11 @@ set(stromxstudio_SOURCES
     DataConverter.cpp
     DataManager.cpp
     ExceptionObserver.cpp
-    GetParameterTask.cpp
     Image.cpp
     LimitUndoStack.cpp
     main.cpp
     ParameterServer.cpp
-    SetParameterTask.cpp
     StreamEditorScene.cpp
-    Task.cpp
     UndoStackAction.cpp
 )
 
@@ -104,6 +104,9 @@ set(stromxstudio_HEADERS
     model/ThreadListModel.h
     model/SelectionModel.h
     model/StreamModel.h
+    task/GetParameterTask.h
+    task/SetParameterTask.h
+    task/Task.h
     widget/DocumentationWindow.h
     widget/ErrorListView.h
     widget/GraphicsView.h
@@ -117,12 +120,9 @@ set(stromxstudio_HEADERS
     widget/StreamEditor.h 
     widget/ThreadListView.h
     DataManager.h
-    GetParameterTask.h
     LimitUndoStack.h
     ParameterServer.h
-    SetParameterTask.h
     StreamEditorScene.h
-    Task.h
     UndoStackAction.h
 )
 

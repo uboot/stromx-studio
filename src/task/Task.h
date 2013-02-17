@@ -47,8 +47,7 @@ public:
     /** Constructs a task object. Call run() to actually start the task. */
     explicit Task(QObject* parent = 0);
     
-    /** Waits for the task to finish
-#include "model/OperatorModel.h". */
+    /** Waits for the task to finish */
     virtual ~Task();
     
     /** Starts the task. */

@@ -13,10 +13,7 @@ set(stromxstudiotest_HEADERS
     ImageTest.h
     ParameterServerTest.h
     StreamModelTest.h
-    ../GetParameterTask.h
     ../ParameterServer.h
-    ../Task.h
-    ../SetParameterTask.h
     ../data/InputData.h
     ../data/OperatorData.h
     ../model/ConnectionModel.h
@@ -29,6 +26,9 @@ set(stromxstudiotest_HEADERS
     ../model/ThreadListModel.h
     ../model/ThreadModel.h
     ../model/StreamModel.h
+    ../task/GetParameterTask.h
+    ../task/SetParameterTask.h
+    ../task/Task.h
 )
 
 set(stromxstudiotest_SOURCES
@@ -76,15 +76,15 @@ set(stromxstudiotest_SOURCES
     ../model/StreamModel.cpp
     ../model/ThreadListModel.cpp
     ../model/ThreadModel.cpp
+    ../task/GetParameterTask.cpp
+    ../task/SetParameterTask.cpp
+    ../task/Task.cpp
     ../Common.cpp
     ../ConnectorObserver.cpp
     ../DataConverter.cpp
     ../ExceptionObserver.cpp
-    ../GetParameterTask.cpp
     ../Image.cpp
     ../ParameterServer.cpp
-    ../SetParameterTask.cpp
-    ../Task.cpp
 )
 
 include_directories(

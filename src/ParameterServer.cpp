@@ -1,9 +1,9 @@
 #include "ParameterServer.h"
 
 #include "DataConverter.h"
-#include "GetParameterTask.h"
-#include "SetParameterTask.h"
 #include "cmd/SetParameterCmd.h"
+#include "task/GetParameterTask.h"
+#include "task/SetParameterTask.h"
 #include <stromx/runtime/Operator.h>
 #include <stromx/runtime/Trigger.h>
 #include <stromx/runtime/OperatorException.h>
