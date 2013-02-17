@@ -9,52 +9,12 @@ set(stromxstudio_SOURCES
     cmd/AddConnectionCmd.cpp
     cmd/AddThreadCmd.cpp
     cmd/AddOperatorCmd.cpp
-    ArrowItem.cpp
-    ChooseImageButton.cpp
-    Common.cpp
-    ConnectionItem.cpp
-    ConnectorItem.cpp
-    ConnectorDataEvent.cpp
-    ConnectorOccupyEvent.cpp
-    ConnectorObserver.cpp
-    ConnectionModel.cpp
-    DataConverter.cpp
-    DataManager.cpp
-    DataVisualizer.cpp
-    DataVisualizerUtilities.cpp
     cmd/DeinitializeOperatorCmd.cpp
-    DocumentationWindow.cpp
-    ErrorData.cpp
-    ErrorListModel.cpp
-    ErrorListView.cpp
-    ExceptionObserver.cpp
-    GetParameterTask.cpp
-    GraphicsView.cpp
-    Image.cpp
     cmd/InitializeOperatorCmd.cpp
-    InputData.cpp
-    InputModel.cpp
     cmd/InsertInputCmd.cpp
     cmd/InsertObserverCmd.cpp
-    ItemDelegate.cpp
-    LimitUndoStack.cpp
-    main.cpp
-    MainWindow.cpp
     cmd/MoveInputCmd.cpp
     cmd/MoveOperatorCmd.cpp
-    ObserverModel.cpp
-    ObserverTreeModel.cpp
-    ObserverTreeView.cpp
-    ObserverView.cpp
-    ObserverWindow.cpp
-    OperatorItem.cpp
-    OperatorData.cpp
-    OperatorLibraryView.cpp
-    OperatorLibraryModel.cpp
-    OperatorModel.cpp
-    ParameterServer.cpp
-    PropertyModel.cpp
-    PropertyView.cpp
     cmd/RemoveConnectionCmd.cpp
     cmd/RemoveInputCmd.cpp
     cmd/RemoveObserverCmd.cpp
@@ -63,14 +23,54 @@ set(stromxstudio_SOURCES
     cmd/RenameOperatorCmd.cpp
     cmd/RemoveThreadCmd.cpp
     cmd/RenameThreadCmd.cpp
-    SelectionModel.cpp
     cmd/SetParameterCmd.cpp
-    SetParameterTask.cpp
     cmd/SetInputActiveCmd.cpp
     cmd/SetInputColorCmd.cpp
     cmd/SetInputVisualizationCmd.cpp
     cmd/SetThreadCmd.cpp
     cmd/SetThreadColorCmd.cpp
+    item/ArrowItem.cpp
+    item/ConnectionItem.cpp
+    item/ConnectorItem.cpp
+    item/OperatorItem.cpp
+    ChooseImageButton.cpp
+    Common.cpp
+    ConnectorDataEvent.cpp
+    ConnectorOccupyEvent.cpp
+    ConnectorObserver.cpp
+    ConnectionModel.cpp
+    DataConverter.cpp
+    DataManager.cpp
+    DataVisualizer.cpp
+    DataVisualizerUtilities.cpp
+    DocumentationWindow.cpp
+    ErrorData.cpp
+    ErrorListModel.cpp
+    ErrorListView.cpp
+    ExceptionObserver.cpp
+    GetParameterTask.cpp
+    GraphicsView.cpp
+    Image.cpp
+    InputData.cpp
+    InputModel.cpp
+    ItemDelegate.cpp
+    LimitUndoStack.cpp
+    main.cpp
+    MainWindow.cpp
+    ObserverModel.cpp
+    ObserverTreeModel.cpp
+    ObserverTreeView.cpp
+    ObserverView.cpp
+    ObserverWindow.cpp
+    OperatorData.cpp
+    OperatorLibraryView.cpp
+    OperatorLibraryModel.cpp
+    OperatorModel.cpp
+    ParameterServer.cpp
+    PropertyModel.cpp
+    PropertyView.cpp
+    SelectionModel.cpp
+    SetParameterTask.cpp
     SettingsDialog.cpp
     StreamEditor.cpp
     StreamEditorScene.cpp
@@ -84,9 +84,10 @@ set(stromxstudio_SOURCES
 )
 
 set(stromxstudio_HEADERS
-    ArrowItem.h
+    item/ArrowItem.h
+    item/ConnectionItem.h
+    item/OperatorItem.h
     ChooseImageButton.h
-    ConnectionItem.h
     ConnectionModel.h
     DataManager.h
     DocumentationWindow.h
@@ -104,7 +105,6 @@ set(stromxstudio_HEADERS
     ObserverTreeView.h
     ObserverView.h
     ObserverWindow.h
-    OperatorItem.h
     OperatorData.h
     OperatorLibraryView.h
     OperatorLibraryModel.h

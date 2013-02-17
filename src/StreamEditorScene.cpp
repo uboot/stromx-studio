@@ -5,13 +5,13 @@
 #include <QKeyEvent>
 #include <QUndoStack>
 #include <stromx/runtime/Operator.h>
-#include "ConnectionItem.h"
 #include "ConnectionModel.h"
 #include "OperatorData.h"
-#include "OperatorItem.h"
 #include "OperatorModel.h"
 #include "SelectionModel.h"
 #include "StreamModel.h"
+#include "item/ConnectionItem.h"
+#include "item/OperatorItem.h"
 
 StreamEditorScene::StreamEditorScene(QObject* parent)
   : QGraphicsScene(parent),

@@ -21,7 +21,7 @@
 #define STREAMEDITORSCENE_H
 
 #include <QGraphicsScene>
-#include "OperatorItem.h"
+#include "item/OperatorItem.h"
 
 class QAction;
 class QAbstractTableModel;

@@ -41,31 +41,12 @@ set(stromxstudiotest_SOURCES
     ../cmd/AddConnectionCmd.cpp
     ../cmd/AddOperatorCmd.cpp
     ../cmd/AddThreadCmd.cpp
-    ../Common.cpp
-    ../ConnectionModel.cpp
-    ../ConnectorObserver.cpp
-    ../ConnectorDataEvent.cpp
-    ../ConnectorOccupyEvent.cpp
-    ../DataConverter.cpp
-    ../cmd/DeinitializeOperatorCmd.cpp
-    ../ErrorData.cpp
-    ../ExceptionObserver.cpp
-    ../GetParameterTask.cpp
-    ../Image.cpp
     ../cmd/InitializeOperatorCmd.cpp
-    ../InputData.cpp
-    ../InputModel.cpp
     ../cmd/InsertInputCmd.cpp
     ../cmd/InsertObserverCmd.cpp
     ../cmd/MoveInputCmd.cpp
     ../cmd/MoveOperatorCmd.cpp
-    ../OperatorData.cpp
-    ../OperatorLibraryModel.cpp
-    ../ObserverModel.cpp
-    ../ObserverTreeModel.cpp
-    ../OperatorModel.cpp
-    ../ParameterServer.cpp
-    ../PropertyModel.cpp
+    ../cmd/DeinitializeOperatorCmd.cpp
     ../cmd/RemoveInputCmd.cpp
     ../cmd/RemoveConnectionCmd.cpp
     ../cmd/RemoveOperatorCmd.cpp
@@ -78,9 +59,28 @@ set(stromxstudiotest_SOURCES
     ../cmd/SetInputColorCmd.cpp
     ../cmd/SetInputVisualizationCmd.cpp
     ../cmd/SetParameterCmd.cpp
-    ../SetParameterTask.cpp
     ../cmd/SetThreadCmd.cpp
     ../cmd/SetThreadColorCmd.cpp
+    ../Common.cpp
+    ../ConnectionModel.cpp
+    ../ConnectorObserver.cpp
+    ../ConnectorDataEvent.cpp
+    ../ConnectorOccupyEvent.cpp
+    ../DataConverter.cpp
+    ../ErrorData.cpp
+    ../ExceptionObserver.cpp
+    ../GetParameterTask.cpp
+    ../Image.cpp
+    ../InputData.cpp
+    ../InputModel.cpp
+    ../OperatorData.cpp
+    ../OperatorLibraryModel.cpp
+    ../ObserverModel.cpp
+    ../ObserverTreeModel.cpp
+    ../OperatorModel.cpp
+    ../ParameterServer.cpp
+    ../PropertyModel.cpp
+    ../SetParameterTask.cpp
     ../StreamModel.cpp
     ../Task.cpp
     ../ThreadListModel.cpp
