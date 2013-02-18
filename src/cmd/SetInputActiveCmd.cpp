@@ -1,4 +1,4 @@
-#include "SetInputActiveCmd.h"
+#include "cmd/SetInputActiveCmd.h"
 
 #include "model/InputModel.h"
 

@@ -1,4 +1,4 @@
-#include "AddConnectionCmd.h"
+#include "cmd/AddConnectionCmd.h"
 
 #include "model/StreamModel.h"
 

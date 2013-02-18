@@ -1,4 +1,4 @@
-#include "SetThreadColorCmd.h"
+#include "cmd/SetThreadColorCmd.h"
 
 #include "model/ThreadModel.h"
 

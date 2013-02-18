@@ -1,4 +1,4 @@
-#include "InsertInputCmd.h"
+#include "cmd/InsertInputCmd.h"
 
 #include "model/ObserverTreeModel.h"
 #include "model/StreamModel.h"

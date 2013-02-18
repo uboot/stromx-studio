@@ -1,4 +1,4 @@
-#include "SetThreadCmd.h"
+#include "cmd/SetThreadCmd.h"
 
 #include "model/ConnectionModel.h"
 #include "model/InputModel.h"

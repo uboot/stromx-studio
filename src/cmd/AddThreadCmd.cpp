@@ -1,4 +1,5 @@
-#include "AddThreadCmd.h"
+#include "cmd/AddThreadCmd.h"
+
 #include "model/StreamModel.h"
 
 AddThreadCmd::AddThreadCmd(StreamModel* stream, ThreadModel* model, QUndoCommand* parent)

@@ -1,4 +1,4 @@
-#include "RemoveObserverCmd.h"
+#include "cmd/RemoveObserverCmd.h"
 
 #include "model/ObserverTreeModel.h"
 #include "model/StreamModel.h"

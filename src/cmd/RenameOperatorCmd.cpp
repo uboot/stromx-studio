@@ -1,4 +1,4 @@
-#include "RenameOperatorCmd.h"
+#include "cmd/RenameOperatorCmd.h"
 
 #include "model/OperatorModel.h"
 

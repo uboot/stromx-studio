@@ -1,4 +1,4 @@
-#include "MoveInputCmd.h"
+#include "cmd/MoveInputCmd.h"
 
 #include "model/ObserverTreeModel.h"
 

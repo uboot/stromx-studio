@@ -1,4 +1,4 @@
-#include "RenameObserverCmd.h"
+#include "cmd/RenameObserverCmd.h"
 
 #include "model/ObserverModel.h"
 

@@ -1,4 +1,4 @@
-#include "SetParameterCmd.h"
+#include "cmd/SetParameterCmd.h"
 
 #include "ParameterServer.h"
 #include <stromx/runtime/Operator.h>

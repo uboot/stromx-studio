@@ -1,4 +1,4 @@
-#include "SetInputVisualizationCmd.h"
+#include "cmd/SetInputVisualizationCmd.h"
 
 #include "model/InputModel.h"
 

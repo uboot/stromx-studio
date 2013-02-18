@@ -1,4 +1,4 @@
-#include "RemoveConnectionCmd.h"
+#include "cmd/RemoveConnectionCmd.h"
 
 #include "model/StreamModel.h"
 

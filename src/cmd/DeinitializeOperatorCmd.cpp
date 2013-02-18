@@ -1,4 +1,4 @@
-#include "DeinitializeOperatorCmd.h"
+#include "cmd/DeinitializeOperatorCmd.h"
 
 #include "model/StreamModel.h"
 

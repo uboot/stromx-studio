@@ -1,4 +1,4 @@
-#include "MoveOperatorCmd.h"
+#include "cmd/MoveOperatorCmd.h"
 
 #include "model/OperatorModel.h"
 

@@ -1,4 +1,4 @@
-#include "RemoveOperatorCmd.h"
+#include "cmd/RemoveOperatorCmd.h"
 
 #include "model/StreamModel.h"
 

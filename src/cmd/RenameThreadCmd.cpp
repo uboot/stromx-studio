@@ -1,4 +1,4 @@
-#include "RenameThreadCmd.h"
+#include "cmd/RenameThreadCmd.h"
 
 #include "model/ThreadModel.h"
 

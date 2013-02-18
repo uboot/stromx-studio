@@ -1,4 +1,4 @@
-#include "SetInputColorCmd.h"
+#include "cmd/SetInputColorCmd.h"
 
 #include "model/InputModel.h"
 

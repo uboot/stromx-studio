@@ -1,4 +1,4 @@
-#include "InsertObserverCmd.h"
+#include "cmd/InsertObserverCmd.h"
 
 #include "model/ObserverTreeModel.h"
 #include "model/StreamModel.h"

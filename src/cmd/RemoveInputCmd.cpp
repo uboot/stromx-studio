@@ -1,4 +1,4 @@
-#include "RemoveInputCmd.h"
+#include "cmd/RemoveInputCmd.h"
 
 #include "model/ObserverTreeModel.h"
 #include "model/StreamModel.h"
