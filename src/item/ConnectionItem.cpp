@@ -1,4 +1,4 @@
-#include "ConnectionItem.h"
+#include "item/ConnectionItem.h"
 
 #include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsView>

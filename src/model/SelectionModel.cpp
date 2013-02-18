@@ -1,10 +1,10 @@
-#include "SelectionModel.h"
+#include "model/SelectionModel.h"
 
-#include "ConnectionModel.h"
-#include "ThreadModel.h"
-#include "StreamModel.h"
 #include <QAction>
 #include <QUndoStack>
+#include "model/ConnectionModel.h"
+#include "model/ThreadModel.h"
+#include "model/StreamModel.h"
 
 SelectionModel::SelectionModel(QObject* parent)
   : PropertyModel(parent)

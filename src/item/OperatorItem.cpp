@@ -1,4 +1,4 @@
-#include "OperatorItem.h"
+#include "item/OperatorItem.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneContextMenuEvent>
@@ -7,9 +7,9 @@
 #include <QPen>
 #include <QUndoStack>
 #include <stromx/runtime/Operator.h>
-#include "ConnectionItem.h"
-#include "ConnectorItem.h"
 #include "StreamEditorScene.h"
+#include "item/ConnectionItem.h"
+#include "item/ConnectorItem.h"
 
 
 const qreal OperatorItem::SIZE = 55;

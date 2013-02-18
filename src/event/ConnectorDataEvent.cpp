@@ -1,4 +1,4 @@
-#include "ConnectorDataEvent.h"
+#include "event/ConnectorDataEvent.h"
 
 ConnectorDataEvent::ConnectorDataEvent(OperatorModel::ConnectorType type, unsigned int id,
                                        const stromx::runtime::ReadAccess<> & access)

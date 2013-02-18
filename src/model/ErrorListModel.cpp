@@ -1,4 +1,4 @@
-#include "ErrorListModel.h"
+#include "model/ErrorListModel.h"
 
 #include <QDebug>
 #include "event/ErrorEvent.h"

@@ -1,4 +1,4 @@
-#include "ConnectorOccupyEvent.h"
+#include "event/ConnectorOccupyEvent.h"
 
 ConnectorOccupyEvent::ConnectorOccupyEvent(OperatorModel::ConnectorType type, unsigned int id, bool isOccupied)
   : QEvent(Type(TYPE)),

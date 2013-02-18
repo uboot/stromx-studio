@@ -1,4 +1,4 @@
-#include "ChooseImageButton.h"
+#include "delegate/ChooseImageButton.h"
 
 #include <QFileDialog>
 #include <QSettings>

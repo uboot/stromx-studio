@@ -1,17 +1,17 @@
-#include "ObserverTreeModel.h"
+#include "model/ObserverTreeModel.h"
 
 #include <QStringList>
 #include "Common.h"
-#include "InputModel.h"
-#include "ConnectionModel.h"
-#include "ObserverModel.h"
-#include "OperatorModel.h"
 #include "cmd/InsertInputCmd.h"
 #include "cmd/InsertObserverCmd.h"
 #include "cmd/MoveInputCmd.h"
 #include "cmd/RemoveInputCmd.h"
 #include "cmd/RemoveObserverCmd.h"
 #include "data/InputData.h"
+#include "model/InputModel.h"
+#include "model/ConnectionModel.h"
+#include "model/ObserverModel.h"
+#include "model/OperatorModel.h"
 
 QStringList ObserverTreeModel::m_visualizationLabels(ObserverTreeModel::setupVisualizationLabels());
 

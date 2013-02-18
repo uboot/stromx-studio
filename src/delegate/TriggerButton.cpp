@@ -1,4 +1,4 @@
-#include "TriggerButton.h"
+#include "delegate/TriggerButton.h"
 
 #include <QFileDialog>
 #include <QSettings>

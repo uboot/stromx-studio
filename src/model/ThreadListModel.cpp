@@ -1,7 +1,7 @@
-#include "ThreadListModel.h"
+#include "model/ThreadListModel.h"
 
 #include "Common.h"
-#include "ThreadModel.h"
+#include "model/ThreadModel.h"
 
 ThreadListModel::ThreadListModel(QObject* parent)
   : QAbstractTableModel(parent)

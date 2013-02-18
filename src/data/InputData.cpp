@@ -1,4 +1,4 @@
-#include "InputData.h"
+#include "data/InputData.h"
 
 #include <QStringList>
 #include <stromx/runtime/Operator.h>

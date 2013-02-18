@@ -1,11 +1,11 @@
-#include "ConnectorItem.h"
+#include "item/ConnectorItem.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QToolTip>
 #include <stromx/runtime/Operator.h>
-#include "ArrowItem.h"
 #include "StreamEditorScene.h"
+#include "item/ArrowItem.h"
 #include "item/ConnectionItem.h"
 #include "model/OperatorModel.h"
 #include "model/StreamModel.h"

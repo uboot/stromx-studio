@@ -1,4 +1,4 @@
-#include "PropertyModel.h"
+#include "model/PropertyModel.h"
 
 PropertyModel::PropertyModel(QObject* parent)
   : QAbstractItemModel(parent)

@@ -1,4 +1,4 @@
-#include "ItemDelegate.h"
+#include "delegate/ItemDelegate.h"
 
 #include <QApplication>
 #include <QComboBox>
@@ -7,8 +7,8 @@
 #include <QSpinBox>
 #include <QMap>
 #include "Common.h"
-#include "ChooseImageButton.h"
-#include "TriggerButton.h"
+#include "delegate/ChooseImageButton.h"
+#include "delegate/TriggerButton.h"
 
 const int ItemDelegate::ROW_HEIGHT = 25;
 

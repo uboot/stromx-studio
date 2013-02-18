@@ -1,9 +1,9 @@
-#include "ObserverModel.h"
+#include "model/ObserverModel.h"
 
-#include "InputModel.h"
-#include "ObserverTreeModel.h"
 #include "cmd/RenameObserverCmd.h"
 #include "data/InputData.h"
+#include "model/InputModel.h"
+#include "model/ObserverTreeModel.h"
 
 ObserverModel::ObserverModel(QUndoStack* undoStack, ObserverTreeModel* parent)
   : QAbstractTableModel(parent),

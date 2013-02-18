@@ -1,4 +1,4 @@
-#include "OperatorModel.h"
+#include "model/OperatorModel.h"
 
 #include <QEvent>
 #include <QUndoStack>

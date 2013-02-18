@@ -1,4 +1,4 @@
-#include "OperatorData.h"
+#include "data/OperatorData.h"
 
 
 OperatorData::OperatorData(const QString& package, const QString& type)

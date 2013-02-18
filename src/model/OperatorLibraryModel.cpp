@@ -1,7 +1,5 @@
-#include "OperatorLibraryModel.h"
+#include "model/OperatorLibraryModel.h"
 
-#include "Exception.h"
-#include "data/OperatorData.h"
 #include <QFileInfo>
 #include <QLibrary>
 #include <QSettings>
@@ -12,6 +10,8 @@
 #include <stromx/runtime/Operator.h>
 #include <stromx/runtime/OperatorKernel.h>
 #include <iostream>
+#include "Exception.h"
+#include "data/OperatorData.h"
 
 using namespace stromx::runtime;
     

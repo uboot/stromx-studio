@@ -1,12 +1,12 @@
-#include "ConnectionModel.h"
+#include "model/ConnectionModel.h"
 
 #include <algorithm>
 #include <stromx/runtime/Thread.h>
 #include "Common.h"
 #include "OperatorModel.h"
 #include "cmd/SetThreadCmd.h"
-#include "StreamModel.h"
-#include "ThreadModel.h"
+#include "model/StreamModel.h"
+#include "model/ThreadModel.h"
 
 ConnectionModel::ConnectionModel(OperatorModel* sourceOp, unsigned int outputId,
                                  OperatorModel* targetOp, unsigned int inputId, StreamModel * stream)

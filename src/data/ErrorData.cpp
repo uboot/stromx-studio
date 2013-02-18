@@ -1,4 +1,4 @@
-#include "ErrorData.h"
+#include "data/ErrorData.h"
 
 #include <QApplication>
 #include <stromx/runtime/OperatorException.h>
