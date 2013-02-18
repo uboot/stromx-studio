@@ -1,4 +1,4 @@
-#include "ObserverView.h"
+#include "widget/ObserverView.h"
 
 #include <QContextMenuEvent>
 #include <QHeaderView>

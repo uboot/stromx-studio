@@ -1,4 +1,4 @@
-#include "PropertyView.h"
+#include "widget/PropertyView.h"
 
 #include <QHeaderView>
 #include "delegate/ItemDelegate.h"

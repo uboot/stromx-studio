@@ -1,9 +1,10 @@
-#include <QMouseEvent>
-#include <QScrollBar>
-#include <QMenu>
-#include "GraphicsView.h"
+#include "widget/GraphicsView.h"
+
 #include <cmath>
+#include <QMenu>
+#include <QMouseEvent>
 #include <QObject>
+#include <QScrollBar>
 
 GraphicsView::GraphicsView(QWidget* parent)
   : QGraphicsView(parent)

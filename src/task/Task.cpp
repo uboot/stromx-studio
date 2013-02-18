@@ -1,4 +1,4 @@
-#include "Task.h"
+#include "task/Task.h"
 
 #include <QFutureWatcher>
 #include <QtConcurrentRun>

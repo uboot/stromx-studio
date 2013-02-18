@@ -1,4 +1,4 @@
-#include "ThreadListView.h"
+#include "widget/ThreadListView.h"
 
 #include <QAction>
 #include <QHeaderView>

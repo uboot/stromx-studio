@@ -1,4 +1,4 @@
-#include "ImageTest.h"
+#include "test/ImageTest.h"
 
 #include <QtTest/QtTest>
 

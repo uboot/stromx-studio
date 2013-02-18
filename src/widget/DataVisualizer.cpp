@@ -1,4 +1,4 @@
-#include "DataVisualizer.h"
+#include "widget/DataVisualizer.h"
 
 #include "model/InputModel.h"
 #include "widget/DataVisualizerUtilities.h"

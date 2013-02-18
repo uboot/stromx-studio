@@ -1,4 +1,4 @@
-#include "DataConverterTest.h"
+#include "test/DataConverterTest.h"
 
 #include <QtTest/QtTest>
 

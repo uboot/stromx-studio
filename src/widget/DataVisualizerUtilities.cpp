@@ -1,4 +1,4 @@
-#include "DataVisualizerUtilities.h"
+#include "widget/DataVisualizerUtilities.h"
 
 #include <stromx/runtime/Image.h>
 #include <stromx/runtime/Primitive.h>

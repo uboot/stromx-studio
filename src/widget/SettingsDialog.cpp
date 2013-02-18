@@ -1,10 +1,10 @@
-#include "SettingsDialog.h"
+#include "widget/SettingsDialog.h"
 
-#include "model/StreamModel.h"
 #include <QGroupBox>
 #include <QLabel>
 #include <QSpinBox>
 #include <QVBoxLayout>
+#include "model/StreamModel.h"
 
 SettingsDialog::SettingsDialog(QWidget* parent)
   : QDialog(parent),

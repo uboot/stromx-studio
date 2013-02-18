@@ -1,4 +1,4 @@
-#include "ObserverTreeView.h"
+#include "widget/ObserverTreeView.h"
 
 #include <QAction>
 #include <QContextMenuEvent>

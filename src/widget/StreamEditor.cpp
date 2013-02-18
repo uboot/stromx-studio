@@ -1,4 +1,4 @@
-#include "StreamEditor.h"
+#include "widget/StreamEditor.h"
 
 // #include <cmath>
 #include <QApplication>

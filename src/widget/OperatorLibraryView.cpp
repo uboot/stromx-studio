@@ -1,4 +1,4 @@
-#include "OperatorLibraryView.h"
+#include "widget/OperatorLibraryView.h"
 
 #include <QApplication>
 #include <QHeaderView>

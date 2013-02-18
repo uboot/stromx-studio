@@ -1,14 +1,14 @@
-#include "ObserverWindow.h"
+#include "widget/ObserverWindow.h"
 
 #include <QAction>
 #include <QDockWidget>
 #include <QMenuBar>
 #include "DataManager.h"
-#include "DataVisualizer.h"
 #include "LimitUndoStack.h"
-#include "ObserverView.h"
 #include "model/ObserverModel.h"
 #include "model/ObserverTreeModel.h"
+#include "widget/DataVisualizer.h"
+#include "widget/ObserverView.h"
 
 ObserverWindow::ObserverWindow(ObserverModel* observer, LimitUndoStack* undoStack, QWidget* parent) 
   : QMainWindow(parent, Qt::Window),

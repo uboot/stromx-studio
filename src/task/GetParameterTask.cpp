@@ -1,4 +1,4 @@
-#include "GetParameterTask.h"
+#include "task/GetParameterTask.h"
 
 #include <stromx/runtime/Operator.h>
 #include <stromx/runtime/OperatorException.h>

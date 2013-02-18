@@ -1,10 +1,10 @@
 #include "test/ParameterServerTest.h"
 
-#include "test/ParameterOperator.h"
-#include "ParameterServer.h"
 #include <QUndoStack>
 #include <QtTest/QtTest>
 #include <stromx/runtime/Operator.h>
+#include "ParameterServer.h"
+#include "test/ParameterOperator.h"
 
 ParameterServerTest::ParameterServerTest()
   : m_op(new stromx::runtime::Operator(new ParameterOperator())),

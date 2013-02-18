@@ -1,7 +1,7 @@
-#include "ErrorListView.h"
-#include "Common.h"
+#include "widget/ErrorListView.h"
 
 #include <QHeaderView>
+#include "Common.h"
 #include "delegate/ItemDelegate.h"
 #include "model/ErrorListModel.h"
 

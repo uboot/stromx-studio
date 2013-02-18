@@ -19,10 +19,10 @@
 
 #include <stromx/runtime/Registry.h>
 
-#include "DeadlockOperator.h"
-#include "ExceptionOperator.h"
-#include "ParameterOperator.h"
-#include "RandomDataOperator.h"
+#include "test/DeadlockOperator.h"
+#include "test/ExceptionOperator.h"
+#include "test/ParameterOperator.h"
+#include "test/RandomDataOperator.h"
 
 #ifdef WIN32
     #define TEST_API __declspec(dllexport)
