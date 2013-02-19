@@ -90,7 +90,7 @@ void OperatorItem::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
     {
         QGraphicsScene* graphicsScene = scene();
         
-        if(StreamEditorScene* streamScene = dynamic_cast<StreamEditorScene*>(graphicsScene))
+        if(StreamEditorScene* streamScene = qobject_cast<StreamEditorScene*>(graphicsScene))
         {
             QMenu menu;
             QAction* initializeAction = streamScene->createInitializeAction(&menu);
