@@ -48,7 +48,7 @@ namespace
                 const uint8_t* rowPtr = matrix.data();
                 for(unsigned int i = 0; i < matrix.rows(); ++i)
                 {
-                    data_t* rowData = (data_t*)(rowPtr);
+                    const data_t* rowData = reinterpret_cast<const data_t*>(rowPtr);
                     items.append(new QGraphicsLineItem(rowData[0], rowData[1], rowData[2], rowData[3]));
                     rowPtr += matrix.stride();
                 }

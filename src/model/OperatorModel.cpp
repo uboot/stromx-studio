@@ -64,10 +64,11 @@ int OperatorModel::rowCount(const QModelIndex& index) const
 {
     if(index.isValid())
     {
-        const stromx::runtime::Parameter* group = 0;
         
         if(index.internalPointer())
         {
+            const stromx::runtime::Parameter* group = 0;
+        
             group = reinterpret_cast<const stromx::runtime::Parameter*>(index.internalPointer());
             return numDisplayedParameters(group);
         }

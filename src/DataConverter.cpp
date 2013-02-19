@@ -50,7 +50,6 @@ QVariant DataConverter::toQVariant(const stromx::runtime::Data& data, const stro
 {
     try
     {
-        QVariant variant;
         QString dataString;
         
         if (data.isVariant(stromx::runtime::DataVariant::NONE))
