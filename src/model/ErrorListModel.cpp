@@ -69,8 +69,10 @@ QVariant ErrorListModel::data(const QModelIndex& index, int role) const
 
 void ErrorListModel::customEvent(QEvent* event)
 {
-    if(ErrorEvent* errorEvent = dynamic_cast<ErrorEvent*>(event))
+    if(event->type() == ErrorEvent::TYPE)
     {
+        ErrorEvent* errorEvent = reinterpret_cast<ErrorEvent*>(event);
+        
         // add the error to the list
         beginInsertRows(QModelIndex(), 0, 0);
         m_errorList.push_front(errorEvent->errorData());

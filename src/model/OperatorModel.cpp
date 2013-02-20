@@ -489,10 +489,16 @@ QUndoStack* OperatorModel::undoStack() const
 
 void OperatorModel::customEvent(QEvent* event)
 {
-    if(ConnectorOccupyEvent* occupyEvent = dynamic_cast<ConnectorOccupyEvent*>(event))
+    if(event->type() == ConnectorOccupyEvent::TYPE)
+    {
+        ConnectorOccupyEvent* occupyEvent = reinterpret_cast<ConnectorOccupyEvent*>(event);
         emit connectorOccupiedChanged(occupyEvent->type(), occupyEvent->id(), occupyEvent->occupied());
-    else if(ConnectorDataEvent* dataEvent = dynamic_cast<ConnectorDataEvent*>(event))
+    }
+    else if(event->type() == ConnectorDataEvent::TYPE)
+    {
+        ConnectorDataEvent* dataEvent = reinterpret_cast<ConnectorDataEvent*>(event);
         emit connectorDataChanged(dataEvent->type(), dataEvent->id(), dataEvent->access());
+    }
 }
 
 void OperatorModel::handleParameterChanged(unsigned int id)
