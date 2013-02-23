@@ -14,7 +14,7 @@ namespace
         try
         {
             // cast to the concrete primitive type
-            const data_t & primitive = stromx::runtime::data_cast<const data_t &>(data);
+            const data_t & primitive = stromx::runtime::data_cast<data_t>(data);
             
             // format it as a astring and create a graphics item from the string
             QGraphicsItem* item = new QGraphicsSimpleTextItem(QString("%1").arg(primitive));
