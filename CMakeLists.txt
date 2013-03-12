@@ -38,9 +38,8 @@ endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 add_subdirectory(src)
 add_subdirectory(example)
+add_subdirectory(desktop)
 
 if(WIN32)
     install (FILES ${PROJECT_SOURCE_DIR}/wix/stromx-studio.wxs DESTINATION .)
-    install (FILES ${PROJECT_SOURCE_DIR}/example/camera.stromx DESTINATION .)
-    install (FILES ${PROJECT_SOURCE_DIR}/example/parallel.stromx DESTINATION .)
 endif(WIN32)

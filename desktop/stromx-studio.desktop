@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=stromx-studio
+GenericName=Stromx stream editor
+Comment=Open and edit .stromx files
+Exec=stromx-studio
+Icon=stromx-studio
+Terminal=false
+Type=Application
+Categories=Development; 
