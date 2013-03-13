@@ -66,6 +66,8 @@ rm -rf %{buildroot}
 %attr(0755, root, root) %{_bindir}/stromx-studio
 %defattr(-, root, root, 0755)
 %{_docdir}/stromx-studio
+%{_datadir}/applications/stromx-studio.desktop
+%{_datadir}/icons/hicolor/*/apps/stromx-studio.png
 %doc
 
 

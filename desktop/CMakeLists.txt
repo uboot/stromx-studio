@@ -1,4 +1,4 @@
-if(LINUX)
+if(UNIX)
     install (
         FILES ${PROJECT_SOURCE_DIR}/desktop/stromx-studio.desktop
         DESTINATION share/applications
@@ -7,4 +7,4 @@ if(LINUX)
         FILES ${PROJECT_SOURCE_DIR}/desktop/stromx-studio.png
         DESTINATION share/icons/hicolor/48x48
     )
-endif(LINUX)
+endif(UNIX)
