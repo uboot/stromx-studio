@@ -5,6 +5,6 @@ if(UNIX)
     )
     install (
         FILES "${PROJECT_SOURCE_DIR}/desktop/stromx-studio.png"
-        DESTINATION "share/icons/hicolor/48x48"
+        DESTINATION "share/icons/hicolor/48x48/apps"
     )
 endif(UNIX)
