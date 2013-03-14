@@ -127,7 +127,7 @@ set(stromxstudio_HEADERS
 )
 
 #set(stromxgui_FORMS mainwindow.ui)
-set(stromxstudio_RESOURCES stromx-studio.qrc)
+set(stromxstudio_RESOURCES stromx-studio.qrc stromx-studio.rc)
 
 if(WIN32)
     set(QT_USE_QTMAIN TRUE)
