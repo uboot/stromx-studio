@@ -47,17 +47,23 @@
             <Component Id="QtGui4" Guid="">
                 <File Id="QtGui4" Source="QtGui4.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="stromx_base" Guid="">
-                <File Id="stromx_base" Source="stromx_base.dll" KeyPath="yes" Checksum="yes"/>
+            <Component Id="stromx_example" Guid="">
+                <File Id="stromx_example" Source="stromx_example.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="stromx_core" Guid="">
-                <File Id="stromx_core" Source="stromx_core.dll" KeyPath="yes" Checksum="yes"/>
+            <Component Id="stromx_runtime" Guid="">
+                <File Id="stromx_runtime" Source="stromx_runtime.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="camera" Guid="">
                 <File Id="camera" Source="camera.stromx" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="parallel" Guid="">
                 <File Id="parallel" Source="parallel.stromx" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="hough" Guid="">
+                <File Id="hough" Source="hough.stromx" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="webcamera" Guid="">
+                <File Id="webcamera" Source="webcamera.stromx" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="stromx_studio" Guid="">
                 <File Id="stromx_studio" Source="stromx-studio.exe" KeyPath="yes" Checksum="yes"/>
@@ -100,11 +106,13 @@
             <ComponentRef Id="opencv_imgproc" />
             <ComponentRef Id="QtCore4" />
             <ComponentRef Id="QtGui4" />
-            <ComponentRef Id="stromx_base" />
-            <ComponentRef Id="stromx_core" />
+            <ComponentRef Id="stromx_example" />
+            <ComponentRef Id="stromx_runtime" />
             <ComponentRef Id="stromx_studio" />
             <ComponentRef Id="camera" />
+            <ComponentRef Id="hough" />
             <ComponentRef Id="parallel" />
+            <ComponentRef Id="webcamera" />
             <ComponentRef Id="xerces_c" />
             <ComponentRef Id="zip" />
             <ComponentRef Id="zlib" />

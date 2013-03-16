@@ -1,11 +1,19 @@
 if(DOC_INSTALL_DIR)
-    install(DIRECTORY "${PROJECT_SOURCE_DIR}/example"
-        DESTINATION "${DOC_INSTALL_DIR}/stromx-studio"
-        FILES_MATCHING PATTERN "*.stromx"
+    install (
+        FILES 
+        "${PROJECT_SOURCE_DIR}/example/camera.stromx"
+        "${PROJECT_SOURCE_DIR}/example/hough.stromx"
+        "${PROJECT_SOURCE_DIR}/example/parallel.stromx"
+        "${PROJECT_SOURCE_DIR}/example/webcamera.stromx"
+        DESTINATION ${DOC_INSTALL_DIR}/stromx-studio/example
     )
 elseif(WIN32)
-    install(DIRECTORY "${PROJECT_SOURCE_DIR}/example"
+    install (
+        FILES 
+        "${PROJECT_SOURCE_DIR}/example/camera.stromx"
+        "${PROJECT_SOURCE_DIR}/example/hough.stromx"
+        "${PROJECT_SOURCE_DIR}/example/parallel.stromx"
+        "${PROJECT_SOURCE_DIR}/example/webcamera.stromx"
         DESTINATION .
-        FILES_MATCHING PATTERN "*.stromx"
     )
 endif()
