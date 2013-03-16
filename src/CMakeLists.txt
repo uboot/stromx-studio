@@ -126,8 +126,15 @@ set(stromxstudio_HEADERS
     UndoStackAction.h
 )
 
+if(WIN32)
+    set(stromxstudio_SOURCES 
+        ${stromxstudio_SOURCES} 
+        stromx-studio.rc
+    )
+endif(WIN32)
+
 #set(stromxgui_FORMS mainwindow.ui)
-set(stromxstudio_RESOURCES stromx-studio.qrc stromx-studio.rc)
+set(stromxstudio_RESOURCES stromx-studio.qrc)
 
 if(WIN32)
     set(QT_USE_QTMAIN TRUE)
