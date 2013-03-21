@@ -69,7 +69,8 @@ bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & paren
     if(parent.isValid())
         return false;
     
-    Q_ASSERT(count == 1);
+    if(count != 1)
+        return false;
     
     ObserverModel* observer = new ObserverModel(m_undoStack, this);
     connect(observer, SIGNAL(changed(ObserverModel*)), this, SLOT(updateObserver(ObserverModel*)));
@@ -104,7 +105,8 @@ void ObserverTreeModel::removeInput(ObserverModel* observer, int inputPos)
 
 bool ObserverTreeModel::removeRows(int row, int count, const QModelIndex & parent)
 {
-    Q_ASSERT(count == 1);
+    if(count != 1)
+        return false;
     
     if(m_suppressRemoveRows)
     {
