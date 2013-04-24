@@ -93,17 +93,21 @@ QDataStream& operator<<(QDataStream& stream, const InputModel* model)
 
 QDataStream& operator>>(QDataStream& stream, InputModel* model)
 {
-    bool active;
-    QColor color;
-    qint32 visualization;
+    QMap<QString, QVariant> properties;
     
-    stream >> active;
-    stream >> color;
-    stream >> visualization;
+    stream >> properties;
     
-    model->doSetActive(active);
-    model->doSetColor(color);
-    model->doSetVisualization(AbstractDataVisualizer::Visualization(visualization));
+    QVariant active = properties.value("active", true);
+    if(active.type() == QVariant::Bool)
+        model->doSetActive(active.toBool());
+    
+    QVariant color = properties.value("color", Qt::black);
+    if(color.type() == QVariant::Color)
+        model->doSetColor(color.value<QColor>());
+    
+    QVariant visualization = properties.value("visualization", AbstractDataVisualizer::AUTOMATIC);
+    if(visualization.type() == QVariant::Int)
+        model->doSetVisualization(AbstractDataVisualizer::Visualization(visualization.toInt()));
     
     return stream;
 }
