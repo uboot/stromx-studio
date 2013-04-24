@@ -44,7 +44,7 @@ class InputModel : public QObject
     friend class SetInputActiveCmd;
     friend class SetInputColorCmd;
     friend class SetInputVisualizationCmd;
-    friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * model);
+    friend QDataStream & operator>> (QDataStream & stream, InputModel * model);
     
 public:
     /** Constructs an input model for the input \c id of the operator \c op. */
@@ -111,5 +111,8 @@ private:
     AbstractDataVisualizer::Visualization m_visualization;
     QUndoStack* m_undoStack;
 };
+
+QDataStream & operator<< (QDataStream & stream, const InputModel * model);
+QDataStream & operator>> (QDataStream & stream, InputModel * model);
 
 #endif // INPUTMODEL_H
