@@ -80,9 +80,13 @@ void InputModel::doSetVisualization(const AbstractDataVisualizer::Visualization&
 
 QDataStream& operator<<(QDataStream& stream, const InputModel* model)
 {
-    stream << model->active();
-    stream << model->color();
-    stream << qint32(model->visualization());
+    QMap<QString, QVariant> properties;
+    
+    properties["active"] = model->active();
+    properties["color"] = model->color();
+    properties["visualization"] = qint32(model->visualization());
+    
+    stream << properties;
     
     return stream;
 }
