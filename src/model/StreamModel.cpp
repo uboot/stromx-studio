@@ -44,6 +44,10 @@ const quint32 StreamModel::MAGIC_NUMBER = 0x20111202;
 const int StreamModel::DEFAULT_DELAY = 100;
 const int StreamModel::DEFAULT_ACCESS_TIMEOUT = 5000;
 
+const int StreamModel::STREAM_FORMAT_VERSION_MAJOR = 0;
+const int StreamModel::STREAM_FORMAT_VERSION_MINOR = 1;
+const int StreamModel::STREAM_FORMAT_VERSION_PATCH = 0;
+
 StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject* parent) 
   : QObject(parent),
     m_stream(0),
@@ -674,9 +678,9 @@ void StreamModel::serializeModel(QByteArray& data) const
     QDataStream dataStream(&data, QIODevice::WriteOnly | QIODevice::Truncate);
     
     dataStream << quint32(MAGIC_NUMBER);
-    dataStream << quint32(STROMX_STUDIO_VERSION_MAJOR);
-    dataStream << quint32(STROMX_STUDIO_VERSION_MINOR);
-    dataStream << quint32(STROMX_STUDIO_VERSION_PATCH);
+    dataStream << quint32(STREAM_FORMAT_VERSION_MAJOR);
+    dataStream << quint32(STREAM_FORMAT_VERSION_MINOR);
+    dataStream << quint32(STREAM_FORMAT_VERSION_PATCH);
     
     dataStream.setVersion(QDataStream::Qt_4_7);
     

@@ -350,6 +350,11 @@ private:
     
     // The list of uninitialized operators.
     QList<OperatorModel*> m_uninitializedOperators;
+                
+    // The version of the stream file format. 
+    static const int STREAM_FORMAT_VERSION_MAJOR;
+    static const int STREAM_FORMAT_VERSION_MINOR;
+    static const int STREAM_FORMAT_VERSION_PATCH;
     
     ThreadListModel* m_threadListModel;
     ObserverTreeModel* m_observerModel;

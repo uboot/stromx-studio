@@ -4,9 +4,7 @@
 
 const std::string Image::TYPE = "Image";
 const std::string Image::PACKAGE = STROMX_STUDIO_PACKAGE_NAME;
-const stromx::runtime::Version Image::VERSION = stromx::runtime::Version(STROMX_STUDIO_VERSION_MAJOR,
-                                                                   STROMX_STUDIO_VERSION_MINOR,
-                                                                   STROMX_STUDIO_VERSION_PATCH);
+const stromx::runtime::Version Image::VERSION = stromx::runtime::Version(0, 1, 0);
                
 Image::Image(const QString& fileName)
 {
