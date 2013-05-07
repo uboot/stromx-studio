@@ -41,6 +41,7 @@
 #include <stromx/runtime/ZipFileInput.h>
 #include <stromx/runtime/ZipFileOutput.h>
 #include "Common.h"
+#include "Config.h"
 #include "Exception.h"
 #include "LimitUndoStack.h"
 #include "StreamEditorScene.h"
@@ -264,7 +265,7 @@ void MainWindow::createActions()
     m_stopAct->setEnabled(false);
     connect(m_stopAct, SIGNAL(triggered()), this, SLOT(stop()));
 
-    m_aboutAct = new QAction(tr("&About"), this);
+    m_aboutAct = new QAction(tr("&About stromx-studio"), this);
     m_aboutAct->setStatusTip(tr("Show the application's About box"));
     connect(m_aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 
@@ -385,8 +386,19 @@ void MainWindow::createToolBars()
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, tr("About stromx-studio"),
-                       tr("The <b>stromx-studio</b> is an editor for stromx streams."));
+    stromx::runtime::Version libVersion = stromx::runtime::version();
+        
+    QString description = tr(
+        "This is stromx-studio <b>%1.%2.%3</b> linked against the stromx ")
+        .arg(STROMX_STUDIO_VERSION_MAJOR)
+        .arg(STROMX_STUDIO_VERSION_MINOR)
+        .arg(STROMX_STUDIO_VERSION_PATCH) +
+        tr("runtime library <b>%1.%2.%3</b>.")
+        .arg(libVersion.major())
+        .arg(libVersion.minor())
+        .arg(libVersion.revision());
+                     
+    QMessageBox::about(this, tr("About stromx-studio"), description);
 }
 
 bool MainWindow::save()
