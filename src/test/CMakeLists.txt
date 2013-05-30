@@ -1,5 +1,3 @@
-project(stromx_studio_test)
-
 add_test(NAME stromx_studio_test COMMAND stromx_studio_test)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/camera.stromx DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
