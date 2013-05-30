@@ -100,6 +100,8 @@ add_executable(stromx_studio_test
     ${stromxstudiotest_HEADERS_MOC} 
 )
 
+add_dependencies(stromx_studio_test stromx-studio)
+
 target_link_libraries(stromx_studio_test
     ${QT_LIBRARIES}
     ${stromx_RUNTIME_LIB}
