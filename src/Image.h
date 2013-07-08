@@ -49,6 +49,9 @@ private:
     static const std::string PACKAGE;
     static const stromx::runtime::Version VERSION;
     
+    virtual void allocate(const unsigned int width, const unsigned int height,
+                          const Image::PixelType pixelType);
+                  
     /** 
      * Initializes the stromx::runtime::ImageWrapper parent
      * from the information in m_image.

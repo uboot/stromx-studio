@@ -48,6 +48,12 @@ stromx::runtime::Data* Image::clone() const
     return new Image(*this);
 }
 
+void Image::allocate(const unsigned int, const unsigned int, const Image::PixelType)
+{
+    throw stromx::runtime::NotImplemented("Image allocation is not implemented.");
+}
+
+
 void Image::initializeParent()
 {
     stromx::runtime::Image::PixelType pixelType = stromx::runtime::Image::MONO_8;
