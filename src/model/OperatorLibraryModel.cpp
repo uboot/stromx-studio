@@ -4,6 +4,9 @@
 #include <QLibrary>
 #include <QSettings>
 #include <QtDebug>
+#include <stromx/cvcore/Cvcore.h>
+#include <stromx/cvimgproc/Cvimgproc.h>
+#include <stromx/cvsupport/Cvsupport.h>
 #include <stromx/example/Example.h>
 #include <stromx/runtime/Runtime.h>
 #include <stromx/runtime/Factory.h>
@@ -198,6 +201,9 @@ void OperatorLibraryModel::setupFactory()
     m_factory = new stromx::runtime::Factory();
     stromxRegisterRuntime(*m_factory);
     stromxRegisterExample(*m_factory);
+    stromxRegisterCvcore(*m_factory);
+    stromxRegisterCvimgproc(*m_factory);
+    stromxRegisterCvsupport(*m_factory);
 }
 
 void OperatorLibraryModel::updateOperators()

@@ -61,6 +61,7 @@ StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLi
     m_accessTimeout(DEFAULT_ACCESS_TIMEOUT)
 {
     initializeSubModels();
+    createTemplate();
 }
 
 StreamModel::StreamModel(stromx::runtime::FileInput& input, const QString& basename, QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject* parent)
@@ -323,8 +324,16 @@ void StreamModel::addConnection(OperatorModel* sourceOp, unsigned int outputId,
     ConnectionModel* connection = new ConnectionModel(sourceOp, outputId,
                                                       targetOp, inputId, this);
     
+    m_undoStack->beginMacro(tr("add connection"));
     AddConnectionCmd* cmd = new AddConnectionCmd(this, connection);
     m_undoStack->push(cmd);
+    
+    if(m_threadListModel->threads().length() > 0)
+    {
+        ThreadModel* thread = m_threadListModel->threads().first();
+        connection->setThread(thread);
+    }
+    m_undoStack->endMacro();
 }
 
 void StreamModel::removeConnection(ConnectionModel* connection)
@@ -930,6 +939,12 @@ QMap<QString, QVariant> StreamModel::writeConfiguration() const
     configuration["accessTimeout"] = accessTimeout();
     
     return configuration;
+}
+
+void StreamModel::createTemplate()
+{
+    ThreadModel* thread = new ThreadModel(this);
+    doAddThread(thread);
 }
 
 

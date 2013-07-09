@@ -269,6 +269,9 @@ private:
     /** Allocates all submodel and sets up the necessary connections. */
     void initializeSubModels();
     
+    /** Populates the empty stream with a thread. */
+    void createTemplate();
+    
     /** Adds an operator. */
     void doAddOperator(OperatorModel* op);
     

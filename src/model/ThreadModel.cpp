@@ -25,7 +25,6 @@ ThreadModel::ThreadModel(StreamModel* stream)
     m_name = tr("New thread");
 }
 
-
 void ThreadModel::setThread(stromx::runtime::Thread* thread)
 {
     m_thread = thread;

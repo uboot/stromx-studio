@@ -163,6 +163,9 @@ target_link_libraries(stromx-studio
     ${CMAKE_DL_LIBS}
     ${stromx_RUNTIME_LIB}
     ${stromx_EXAMPLE_LIB}
+    ${stromx_CVCORE_LIB}
+    ${stromx_CVIMGPROC_LIB}
+    ${stromx_CVSUPPORT_LIB}
 )
 
 if(WIN32)
