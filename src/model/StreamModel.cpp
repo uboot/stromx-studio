@@ -943,8 +943,12 @@ QMap<QString, QVariant> StreamModel::writeConfiguration() const
 
 void StreamModel::createTemplate()
 {
+    // add one thread
     ThreadModel* thread = new ThreadModel(this);
     doAddThread(thread);
+    
+    // add one observer
+    m_observerModel->insertRow(m_observerModel->rowCount());
 }
 
 
