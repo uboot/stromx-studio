@@ -60,9 +60,34 @@ namespace
         
         return items;
     }
+    
+    QList< QGraphicsItem* > createLineSegments(const stromx::runtime::Data& data)
+    {
+        using namespace stromx::runtime;
+        
+        if(data.isVariant(DataVariant::INT_8_MATRIX))
+            return createLineSegmentItemsTemplate<int8_t>(data);
+        else if(data.isVariant(DataVariant::UINT_8_MATRIX))
+            return createLineSegmentItemsTemplate<uint8_t>(data);
+        else if(data.isVariant(DataVariant::INT_16_MATRIX))
+            return createLineSegmentItemsTemplate<int16_t>(data);
+        else if(data.isVariant(DataVariant::UINT_16_MATRIX))
+            return createLineSegmentItemsTemplate<uint16_t>(data);
+        else if(data.isVariant(DataVariant::INT_32_MATRIX))
+            return createLineSegmentItemsTemplate<int32_t>(data);
+        else if(data.isVariant(DataVariant::UINT_32_MATRIX))
+            return createLineSegmentItemsTemplate<uint32_t>(data);
+        else if(data.isVariant(DataVariant::FLOAT_MATRIX))
+            return createLineSegmentItemsTemplate<float>(data);
+        else if(data.isVariant(DataVariant::DOUBLE_MATRIX))
+            return createLineSegmentItemsTemplate<double>(data);
+        else
+            return QList<QGraphicsItem*>();
+    }
 }
 
-QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::runtime::Data& data)
+QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::runtime::Data& data,
+        const AbstractDataVisualizer::Visualization)
 {
     using namespace stromx::runtime;
     
@@ -107,7 +132,8 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
     return items;
 }
    
-QList<QGraphicsItem*> DataVisualizerUtilities::createStringItems(const stromx::runtime::Data & data)
+QList<QGraphicsItem*> DataVisualizerUtilities::createStringItems(const stromx::runtime::Data & data,
+        const AbstractDataVisualizer::Visualization)
 {
     using namespace stromx::runtime;
     
@@ -125,31 +151,21 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createStringItems(const stromx::r
     return items;
 }
 
-QList< QGraphicsItem* > DataVisualizerUtilities::createLineSegmentItems(const stromx::runtime::Data& data)
+QList< QGraphicsItem* > DataVisualizerUtilities::createMatrixItems(const stromx::runtime::Data& data,
+        const AbstractDataVisualizer::Visualization visualization)
 {
+    switch(visualization)
+    {
+        case AbstractDataVisualizer::LINES:
+            return createLineSegments(data);
+        default:
+            return QList<QGraphicsItem*>();
+    }
     using namespace stromx::runtime;
-    
-    if(data.isVariant(DataVariant::INT_8_MATRIX))
-        return createLineSegmentItemsTemplate<int8_t>(data);
-    else if(data.isVariant(DataVariant::UINT_8_MATRIX))
-        return createLineSegmentItemsTemplate<uint8_t>(data);
-    else if(data.isVariant(DataVariant::INT_16_MATRIX))
-        return createLineSegmentItemsTemplate<int16_t>(data);
-    else if(data.isVariant(DataVariant::UINT_16_MATRIX))
-        return createLineSegmentItemsTemplate<uint16_t>(data);
-    else if(data.isVariant(DataVariant::INT_32_MATRIX))
-        return createLineSegmentItemsTemplate<int32_t>(data);
-    else if(data.isVariant(DataVariant::UINT_32_MATRIX))
-        return createLineSegmentItemsTemplate<uint32_t>(data);
-    else if(data.isVariant(DataVariant::FLOAT_MATRIX))
-        return createLineSegmentItemsTemplate<float>(data);
-    else if(data.isVariant(DataVariant::DOUBLE_MATRIX))
-        return createLineSegmentItemsTemplate<double>(data);
-    else
-        return QList<QGraphicsItem*>();
 }
 
-QList<QGraphicsItem*> DataVisualizerUtilities::createPrimitiveItems(const stromx::runtime::Data & data)
+QList<QGraphicsItem*> DataVisualizerUtilities::createPrimitiveItems(const stromx::runtime::Data & data,
+        const AbstractDataVisualizer::Visualization)
 {    
     using namespace stromx::runtime;
     

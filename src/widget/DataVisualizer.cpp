@@ -123,20 +123,19 @@ void DataVisualizer::setData(int pos, const stromx::runtime::Data& data, Visuali
     // create the graphic items representing the stromx data
     if(data.isVariant(DataVariant::IMAGE))
     {
-        m_items[pos] = DataVisualizerUtilities::createImageItems(data);
+        m_items[pos] = DataVisualizerUtilities::createImageItems(data, visualization);
     }
     else if(data.isVariant(DataVariant::PRIMITIVE))
     {
-        m_items[pos] = DataVisualizerUtilities::createPrimitiveItems(data);
+        m_items[pos] = DataVisualizerUtilities::createPrimitiveItems(data, visualization);
     } 
     if(data.isVariant(DataVariant::STRING))
     {
-        m_items[pos] = DataVisualizerUtilities::createStringItems(data);
+        m_items[pos] = DataVisualizerUtilities::createStringItems(data, visualization);
     }
     else if(data.isVariant(DataVariant::MATRIX))
     {
-        if(visualization == LINES)
-            m_items[pos] = DataVisualizerUtilities::createLineSegmentItems(data);
+        m_items[pos] = DataVisualizerUtilities::createMatrixItems(data, visualization);
     }
     
     // add the items and set their z-value
