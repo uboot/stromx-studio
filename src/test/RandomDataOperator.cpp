@@ -59,7 +59,7 @@ void RandomDataOperator::execute(DataProvider& provider)
     {
     case LINE_SEGMENTS:
     {
-        Matrix* segments = new stromx::example::Matrix(2, 4, Matrix::DOUBLE);
+        Matrix* segments = new stromx::example::Matrix(2, 4, Matrix::FLOAT_64);
         double* doubleData = reinterpret_cast<double*>(segments->data());
         doubleData[0] = 50 + uniform(20);
         doubleData[1] = 100 + uniform(20);

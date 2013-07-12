@@ -14,10 +14,10 @@
         <Data package="Runtime" type="Bool" version="0.1.0">1</Data>
       </Parameter>
       <Parameter id="1">
-        <Data package="Runtime" type="Double" version="0.1.0">50</Data>
+        <Data package="Runtime" type="Float64" version="0.1.0">50</Data>
       </Parameter>
       <Parameter id="2">
-        <Data package="Runtime" type="Double" version="0.1.0">100</Data>
+        <Data package="Runtime" type="Float64" version="0.1.0">100</Data>
       </Parameter>
       <Input id="0" operator="3" output="0"/>
     </Operator>
@@ -35,13 +35,13 @@
         <Data package="Runtime" type="UInt32" version="0.1.0">10</Data>
       </Parameter>
       <Parameter id="8">
-        <Data package="Runtime" type="Double" version="0.1.0">1</Data>
+        <Data package="Runtime" type="Float64" version="0.1.0">1</Data>
       </Parameter>
       <Parameter id="9">
-        <Data package="Runtime" type="Double" version="0.1.0">1</Data>
+        <Data package="Runtime" type="Float64" version="0.1.0">1</Data>
       </Parameter>
       <Parameter id="10">
-        <Data package="Runtime" type="Double" version="0.1.0">1</Data>
+        <Data package="Runtime" type="Float64" version="0.1.0">1</Data>
       </Parameter>
       <Parameter id="5">
         <Data package="Runtime" type="UInt32" version="0.1.0">1000</Data>

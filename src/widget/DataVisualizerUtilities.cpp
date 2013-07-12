@@ -77,9 +77,9 @@ namespace
             return createLineSegmentItemsTemplate<int32_t>(data);
         else if(data.isVariant(DataVariant::UINT_32_MATRIX))
             return createLineSegmentItemsTemplate<uint32_t>(data);
-        else if(data.isVariant(DataVariant::FLOAT_MATRIX))
+        else if(data.isVariant(DataVariant::FLOAT_32_MATRIX))
             return createLineSegmentItemsTemplate<float>(data);
-        else if(data.isVariant(DataVariant::DOUBLE_MATRIX))
+        else if(data.isVariant(DataVariant::FLOAT_64_MATRIX))
             return createLineSegmentItemsTemplate<double>(data);
         else
             return QList<QGraphicsItem*>();
@@ -183,10 +183,10 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createPrimitiveItems(const stromx
         return createPrimitiveItemsTemplate<Int32>(data);
     else if(data.isVariant(DataVariant::UINT_32))
         return createPrimitiveItemsTemplate<UInt32>(data);
-    else if(data.isVariant(DataVariant::FLOAT))
-        return createPrimitiveItemsTemplate<Float>(data);
-    else if(data.isVariant(DataVariant::DOUBLE))
-        return createPrimitiveItemsTemplate<Double>(data);
+    else if(data.isVariant(DataVariant::FLOAT_32))
+        return createPrimitiveItemsTemplate<Float32>(data);
+    else if(data.isVariant(DataVariant::FLOAT_64))
+        return createPrimitiveItemsTemplate<Float64>(data);
     else
         return QList<QGraphicsItem*>();
 }

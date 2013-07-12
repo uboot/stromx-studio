@@ -187,20 +187,20 @@ QVariant DataConverter::toQVariant(const stromx::runtime::Data& data, const stro
             }
         }
         
-        if (data.isVariant(stromx::runtime::DataVariant::FLOAT))
+        if (data.isVariant(stromx::runtime::DataVariant::FLOAT_32))
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::runtime::Float & floatData = stromx::runtime::data_cast<stromx::runtime::Float>(data);
+                const stromx::runtime::Float32 & floatData = stromx::runtime::data_cast<stromx::runtime::Float32>(data);
                 return double(floatData);
             }
         }
         
-        if (data.isVariant(stromx::runtime::DataVariant::DOUBLE))
+        if (data.isVariant(stromx::runtime::DataVariant::FLOAT_64))
         {
             if(role == Qt::DisplayRole || role == Qt::EditRole)
             {
-                const stromx::runtime::Double & doubleData = stromx::runtime::data_cast<stromx::runtime::Double>(data);
+                const stromx::runtime::Float64 & doubleData = stromx::runtime::data_cast<stromx::runtime::Float64>(data);
                 return double(doubleData);
             }
         }
@@ -288,16 +288,16 @@ stromx::runtime::DataRef DataConverter::toStromxData(const QVariant& variant, co
         }
     }
     
-    if(param.variant().isVariant(stromx::runtime::DataVariant::FLOAT))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::FLOAT_32))
     {
         if(variant.type() == QVariant::Double)
-            return stromx::runtime::DataRef(new stromx::runtime::Float(variant.toDouble()));
+            return stromx::runtime::DataRef(new stromx::runtime::Float32(variant.toFloat()));
     }
     
-    if(param.variant().isVariant(stromx::runtime::DataVariant::DOUBLE))
+    if(param.variant().isVariant(stromx::runtime::DataVariant::FLOAT_64))
     {
         if(variant.type() == QVariant::Double)
-            return stromx::runtime::DataRef(new stromx::runtime::Double(variant.toDouble()));
+            return stromx::runtime::DataRef(new stromx::runtime::Float64(variant.toDouble()));
     }
     
     if(param.variant().isVariant(stromx::runtime::DataVariant::IMAGE))
@@ -354,14 +354,14 @@ bool DataConverter::stromxDataEqualsTarget(const stromx::runtime::Data& newValue
         return isEqual<stromx::runtime::Enum>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::runtime::DataVariant::FLOAT))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::FLOAT_32))
     {
-        return isEqual<stromx::runtime::Float>(newValue, targetValue);
+        return isEqual<stromx::runtime::Float32>(newValue, targetValue);
     }
     
-    if(targetValue.isVariant(stromx::runtime::DataVariant::DOUBLE))
+    if(targetValue.isVariant(stromx::runtime::DataVariant::FLOAT_64))
     {
-        return isEqual<stromx::runtime::Double>(newValue, targetValue);
+        return isEqual<stromx::runtime::Float64>(newValue, targetValue);
     }
     
     if(targetValue.isVariant(stromx::runtime::DataVariant::STRING))
