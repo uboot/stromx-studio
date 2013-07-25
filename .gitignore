@@ -1,4 +1,5 @@
 .kdev4
+.project
 *.vpp~*
 *.vpp.bak
 *.vpp.new
