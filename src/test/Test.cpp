@@ -32,7 +32,7 @@
 
 extern "C"
 {
-    void TEST_API stromxRegisterTest(stromx::runtime::Registry& registry)
+    void TEST_API stromxTestRegister(stromx::runtime::Registry& registry)
     {
         using namespace stromx::runtime;
         

@@ -143,7 +143,7 @@ void OperatorLibraryModel::loadPackage(const QString& packagePath)
     QString prefix = regEx.cap(1);
     QString postfix = regEx.cap(2);
     postfix[0] = postfix[0].toUpper();
-    QString registrationFunctionName = prefix + "Register" + postfix;
+    QString registrationFunctionName = prefix + postfix + "Register";
     
     QLibrary* lib = new QLibrary(packagePath, this);
     
@@ -199,11 +199,11 @@ void OperatorLibraryModel::setupFactory()
     Q_ASSERT(m_factory == 0);
     
     m_factory = new stromx::runtime::Factory();
-    stromxRegisterRuntime(*m_factory);
-    stromxRegisterExample(*m_factory);
-    stromxRegisterCvcore(*m_factory);
-    stromxRegisterCvimgproc(*m_factory);
-    stromxRegisterCvsupport(*m_factory);
+    stromxRuntimeRegister(*m_factory);
+    stromxExampleRegister(*m_factory);
+    stromxCvcoreRegister(*m_factory);
+    stromxCvimgprocRegister(*m_factory);
+    stromxCvsupportRegister(*m_factory);
 }
 
 void OperatorLibraryModel::updateOperators()
