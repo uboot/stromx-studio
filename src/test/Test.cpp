@@ -23,6 +23,7 @@
 #include "test/ExceptionOperator.h"
 #include "test/ParameterOperator.h"
 #include "test/RandomDataOperator.h"
+#include "test/TestDataOperator.h"
 
 #ifdef WIN32
     #define TEST_API __declspec(dllexport)
@@ -40,5 +41,6 @@ extern "C"
         registry.registerOperator(new ExceptionOperator);
         registry.registerOperator(new ParameterOperator);
         registry.registerOperator(new RandomDataOperator);
+        registry.registerOperator(new TestDataOperator);
     }
 }

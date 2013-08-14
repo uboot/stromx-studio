@@ -116,10 +116,11 @@ add_library(stromx_test SHARED
     ExceptionOperator.cpp
     ParameterOperator.cpp
     RandomDataOperator.cpp
+    TestDataOperator.cpp
     Test.cpp
 )
 
 target_link_libraries(stromx_test
     ${stromx_RUNTIME_LIB}
-    ${stromx_EXAMPLE_LIB}
+    ${stromx_CVSUPPORT_LIB}
 )
