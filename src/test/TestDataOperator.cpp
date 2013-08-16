@@ -1,9 +1,29 @@
+/* 
+*  Copyright 2013 Matthias Fuchs
+*
+*  This file is part of stromx-studio.
+*
+*  Stromx-studio is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  Stromx-studio is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "test/TestDataOperator.h"
 
 #include <stromx/example/Matrix.h>
 #include <stromx/runtime/DataProvider.h>
 #include <stromx/runtime/EnumParameter.h>
 #include <stromx/runtime/Id2DataPair.h>
+#include <stromx/runtime/NumericParameter.h>
 #include <stromx/runtime/OperatorException.h>
 #include <stromx/runtime/String.h>
 
@@ -29,6 +49,15 @@ void TestDataOperator::setParameter(unsigned int id, const Data& value)
         case DATA_TYPE:
             m_dataType = data_cast<Enum>(value);
             break;
+        case OBJECT_TYPE:
+            m_objectType = data_cast<Enum>(value);
+            break;
+        case SIZE_X:
+            m_sizeX = data_cast<Enum>(value);
+            break;
+        case SIZE_Y:
+            m_sizeY = data_cast<Enum>(value);
+            break;
         default:
             throw WrongParameterId(id, *this);
         }
@@ -45,6 +74,12 @@ const DataRef TestDataOperator::getParameter(const unsigned int id) const
     {
     case DATA_TYPE:
         return m_dataType;
+    case OBJECT_TYPE:
+        return m_objectType;
+    case SIZE_X:
+        return m_sizeX;
+    case SIZE_Y:
+        return m_sizeY;
     default:
         throw WrongParameterId(id, *this);
     }
@@ -55,17 +90,6 @@ void TestDataOperator::execute(DataProvider& provider)
     Data* data = 0;
     switch(m_dataType)
     {
-    case LINE_SEGMENTS:
-    {
-        Matrix* segments = new stromx::example::Matrix(2, 4, Matrix::FLOAT_64);
-        double* doubleData = reinterpret_cast<double*>(segments->data());
-        
-        data = segments;
-        break;
-    }
-    case STRING:
-        data = new stromx::runtime::String("Random string");
-        break;
     default:
         ;
     }
@@ -97,12 +121,38 @@ const std::vector<const Parameter*> TestDataOperator::setupParameters()
 {
     std::vector<const Parameter*> parameters;
     
-    EnumParameter* param = new EnumParameter(DATA_TYPE);
-    param->setTitle("Data type");
-    param->setAccessMode(Parameter::ACTIVATED_WRITE);
-    param->add(EnumDescription(Enum(LINE_SEGMENTS), "Line segments"));
-    param->add(EnumDescription(Enum(STRING), "String"));
-    parameters.push_back(param);
+    EnumParameter* enumParam = 0;
+    NumericParameter<UInt32>* uint32Param = 0;
+    
+    enumParam = new EnumParameter(DATA_TYPE);
+    enumParam->setTitle("Data type");
+    enumParam->setAccessMode(Parameter::ACTIVATED_WRITE);
+    enumParam->add(EnumDescription(Enum(IMAGE_MONO_8), "Image mono 8-bit"));
+    enumParam->add(EnumDescription(Enum(IMAGE_MONO_16), "Image mono 16-bit"));
+    enumParam->add(EnumDescription(Enum(IMAGE_RGB_24), "Image RGB 8-bit"));
+    enumParam->add(EnumDescription(Enum(IMAGE_RGB_48), "Image RGB 16-bit"));
+    enumParam->add(EnumDescription(Enum(MATRIX_FLOAT_32), "Matrix 32-bit float"));
+    parameters.push_back(enumParam);
+    
+    enumParam = new EnumParameter(OBJECT_TYPE);
+    enumParam->setTitle("Object type");
+    enumParam->setAccessMode(Parameter::ACTIVATED_WRITE);
+    enumParam->add(EnumDescription(Enum(IMAGE_RAMP), "Image ramp"));
+    enumParam->add(EnumDescription(Enum(HISTOGRAM), "Histogram"));
+    enumParam->add(EnumDescription(Enum(LINE_SEGMENTS), "Line segments"));
+    parameters.push_back(enumParam);
+    
+    uint32Param = new NumericParameter<UInt32>(SIZE_X);
+    uint32Param->setAccessMode(Parameter::ACTIVATED_WRITE);
+    uint32Param->setTitle("Data size X");
+    uint32Param->setMin(UInt32(0));
+    parameters.push_back(uint32Param);
+    
+    uint32Param = new NumericParameter<UInt32>(SIZE_Y);
+    uint32Param->setAccessMode(Parameter::ACTIVATED_WRITE);
+    uint32Param->setTitle("Data size Y");
+    uint32Param->setMin(UInt32(0));
+    parameters.push_back(uint32Param);
     
     return parameters;
 }

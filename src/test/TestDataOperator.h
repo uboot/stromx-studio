@@ -1,5 +1,5 @@
 /* 
-*  Copyright 2012 Matthias Fuchs
+*  Copyright 2013 Matthias Fuchs
 *
 *  This file is part of stromx-studio.
 *
@@ -32,13 +32,26 @@ class TestDataOperator : public stromx::runtime::OperatorKernel
     
     enum Parameters
     { 
-        DATA_TYPE
+        DATA_TYPE,
+        OBJECT_TYPE,
+        SIZE_X,
+        SIZE_Y
     };
     
     enum DataType
     {
-        LINE_SEGMENTS,
-        STRING
+        IMAGE_MONO_8,
+        IMAGE_MONO_16,
+        IMAGE_RGB_24,
+        IMAGE_RGB_48,
+        MATRIX_FLOAT_32
+    };
+    
+    enum ObjectType
+    {
+        IMAGE_RAMP,
+        HISTOGRAM,
+        LINE_SEGMENTS 
     };
     
 public:
@@ -59,6 +72,9 @@ private:
     static const stromx::runtime::Version VERSION;
     
     stromx::runtime::Enum m_dataType;
+    stromx::runtime::Enum m_objectType;
+    stromx::runtime::UInt32 m_sizeX;
+    stromx::runtime::UInt32 m_sizeY;
 };
 
 #endif // TESTDATAOPERATOR_H
