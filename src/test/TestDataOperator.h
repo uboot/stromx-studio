@@ -20,6 +20,7 @@
 #ifndef TESTDATAOPERATOR_H
 #define TESTDATAOPERATOR_H
 
+#include <stromx/runtime/Matrix.h>
 #include <stromx/runtime/OperatorKernel.h>
 #include <stromx/runtime/Primitive.h>
 
@@ -66,6 +67,13 @@ private:
     static const std::vector<const stromx::runtime::Description*> setupInputs();
     static const std::vector<const stromx::runtime::Description*> setupOutputs();
     static const std::vector<const stromx::runtime::Parameter*> setupParameters();
+    
+    stromx::runtime::Data* imageRamp();
+    stromx::runtime::Data* lineSegments();
+    stromx::runtime::Data* histogram();
+    
+    void setPixel(stromx::runtime::Matrix* matrix, unsigned int row,
+                  unsigned int col, unsigned int value);
     
     static const std::string TYPE;
     static const std::string PACKAGE;

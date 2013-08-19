@@ -19,7 +19,8 @@
 
 #include "test/TestDataOperator.h"
 
-#include <stromx/example/Matrix.h>
+#include <stromx/cvsupport/Image.h>
+#include <stromx/cvsupport/Matrix.h>
 #include <stromx/runtime/DataProvider.h>
 #include <stromx/runtime/EnumParameter.h>
 #include <stromx/runtime/Id2DataPair.h>
@@ -53,10 +54,10 @@ void TestDataOperator::setParameter(unsigned int id, const Data& value)
             m_objectType = data_cast<Enum>(value);
             break;
         case SIZE_X:
-            m_sizeX = data_cast<Enum>(value);
+            m_sizeX = data_cast<UInt32>(value);
             break;
         case SIZE_Y:
-            m_sizeY = data_cast<Enum>(value);
+            m_sizeY = data_cast<UInt32>(value);
             break;
         default:
             throw WrongParameterId(id, *this);
@@ -88,8 +89,17 @@ const DataRef TestDataOperator::getParameter(const unsigned int id) const
 void TestDataOperator::execute(DataProvider& provider)
 {
     Data* data = 0;
-    switch(m_dataType)
+    switch(m_objectType)
     {
+    case IMAGE_RAMP:
+        data = imageRamp();
+        break;
+    case HISTOGRAM:
+        data = histogram();
+        break;
+    case LINE_SEGMENTS:
+        data = lineSegments();
+        break;
     default:
         ;
     }
@@ -156,4 +166,97 @@ const std::vector<const Parameter*> TestDataOperator::setupParameters()
     
     return parameters;
 }
+
+Data* TestDataOperator::imageRamp()
+{
+    Matrix* matrix = 0;
+    unsigned int numChannels = 1;
+    
+    switch(m_dataType)
+    {
+    case IMAGE_MONO_8:
+        matrix = new stromx::cvsupport::Image(m_sizeX, m_sizeY, Image::MONO_8);
+        break;
+    case IMAGE_MONO_16:
+        matrix = new stromx::cvsupport::Image(m_sizeX, m_sizeY, Image::MONO_16);
+        break;
+    case IMAGE_RGB_24:
+        matrix = new stromx::cvsupport::Image(m_sizeX, m_sizeY, Image::RGB_24);
+        numChannels = 3;
+        break;
+    case IMAGE_RGB_48:
+        matrix = new stromx::cvsupport::Image(m_sizeX, m_sizeY, Image::RGB_48);
+        numChannels = 3;
+        break;
+    case MATRIX_FLOAT_32:
+        matrix = new stromx::cvsupport::Matrix(m_sizeY, m_sizeX, Matrix::FLOAT_32);
+        break;
+    default:
+        throw WrongArgument("Unsupported data type.");
+    }
+    
+    const unsigned int RAMP_WIDTH = 255;
+    const unsigned int RAMP_HEIGHT = 255;
+    const unsigned int STEP = RAMP_HEIGHT / RAMP_WIDTH;
+    
+    for (unsigned int row = 0; row < matrix->rows(); ++row)
+    {
+        unsigned int remainingPixels = m_sizeX;
+        unsigned int activeChannel = 0;
+        while(remainingPixels > 0)
+        {
+            unsigned int numPixels = std::min(remainingPixels, RAMP_WIDTH);
+            unsigned int value = 0;
+            for (unsigned int offset = 0; offset < numPixels; ++offset)
+            {
+                unsigned int pixel = m_sizeX - remainingPixels + offset;
+                for (unsigned int channel = 0; channel < numChannels; ++channel)
+                {
+                    unsigned int subpixel = pixel * numChannels + channel;
+                    if (channel == activeChannel)
+                        setPixel(matrix, row, subpixel, value);
+                    else
+                        setPixel(matrix, row, subpixel, 0);
+                }
+                value += STEP;
+            }
+            remainingPixels -= numPixels;
+            activeChannel = (activeChannel + 1) % numChannels;
+        }
+    }
+    
+    return matrix;
+}
+
+Data* TestDataOperator::histogram()
+{
+    return 0;
+}
+
+Data* TestDataOperator::lineSegments()
+{
+    return 0;
+}
+
+void TestDataOperator::setPixel(Matrix* matrix, unsigned int row, 
+                                unsigned int col, unsigned int value)
+{   
+    switch(m_dataType)
+    {
+    case IMAGE_MONO_8:
+    case IMAGE_RGB_24:
+        matrix->at<uint8_t>(row, col) = value;
+        break;
+    case IMAGE_MONO_16:
+    case IMAGE_RGB_48:
+        matrix->at<uint16_t>(row, col) = value;
+        break;
+    case MATRIX_FLOAT_32:
+        matrix->at<float>(row, col) = value;
+        break;
+    default:
+        throw WrongArgument("Unsupported data type.");
+    }
+}
+
 

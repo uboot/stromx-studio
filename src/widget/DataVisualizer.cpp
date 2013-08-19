@@ -129,7 +129,7 @@ void DataVisualizer::setData(int pos, const stromx::runtime::Data& data, Visuali
     {
         m_items[pos] = DataVisualizerUtilities::createPrimitiveItems(data, visualization);
     } 
-    if(data.isVariant(DataVariant::STRING))
+    else if(data.isVariant(DataVariant::STRING))
     {
         m_items[pos] = DataVisualizerUtilities::createStringItems(data, visualization);
     }
