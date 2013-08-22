@@ -20,8 +20,6 @@
 #include "test/TestDataOperator.h"
 
 #include <cmath>
-#include <boost/concept_check.hpp>
-#include <boost/graph/graph_concepts.hpp>
 
 #include <stromx/cvsupport/Image.h>
 #include <stromx/cvsupport/Matrix.h>
