@@ -118,6 +118,10 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
         }
         
         QImage qtImage;
+                    QVector<QRgb> colorTable(256);
+            for(unsigned int i = 0; i < 256; ++i)
+                colorTable[i] = qRgb(i, i, i);
+            qtImage.setColorTable(colorTable);
         if(validPixelType)
         {
             if(image.pixelType() == Image::MONO_16)
@@ -128,9 +132,10 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
                 for(unsigned int i = 0; i < image.rows(); ++i)
                 {
                     const uint16_t* pixelPtr = reinterpret_cast<const uint16_t*>(rowPtr);
+                    uchar* pixelPtrDst = qtImage.scanLine(i);
                     for(unsigned int j = 0; j < image.cols(); ++j)
                     {
-                        qtImage.setPixel(i,j,*pixelPtr/256);
+                        pixelPtrDst[j] = *pixelPtr;
                         ++pixelPtr;
                     }
                     rowPtr += image.stride();
@@ -140,10 +145,7 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
             {
                 qtImage = QImage(image.data(), image.width(), image.height(), image.stride(), format);
             }
-            QVector<QRgb> colorTable(256);
-            for(unsigned int i = 0; i < 256; ++i)
-                colorTable[i] = qRgb(i, i, i);
-            qtImage.setColorTable(colorTable);
+
             QPixmap pixmap = QPixmap::fromImage(qtImage);
             items.append(new QGraphicsPixmapItem(pixmap));
         }
