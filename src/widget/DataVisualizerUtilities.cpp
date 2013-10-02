@@ -104,6 +104,7 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
         case Image::MONO_8:
         case Image::BAYERBG_8:
         case Image::BAYERGB_8:
+        case Image::MONO_16:
             format = QImage::Format_Indexed8;
             break;
         case Image::RGB_24:
@@ -114,9 +115,27 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
             validPixelType = false;
         }
         
+        QImage qtImage;
         if(validPixelType)
         {
-            QImage qtImage(image.data(), image.width(), image.height(), image.stride(), format);
+            if(image.pixelType() == Image::MONO_16)
+            {
+                // loop over all pixels and divide it by 256
+                qtImage = QImage(image.width(), image.height(), format);
+                const uint8_t* rowPtr = image.data();
+                for(unsigned int i = 0; i < image.rows(); ++i)
+                {
+                    for(unsigned int j = 0; j < image.cols(); ++j)
+                    {
+                        qtImage.setPixel(i,j,rowPtr[j]/256);
+                        rowPtr += image.stride();
+                    }
+                }
+            }
+            else
+            {
+                qtImage = QImage(image.data(), image.width(), image.height(), image.stride(), format);
+            }
             QVector<QRgb> colorTable(256);
             for(unsigned int i = 0; i < 256; ++i)
                 colorTable[i] = qRgb(i, i, i);
