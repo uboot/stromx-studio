@@ -4,6 +4,8 @@
 #include <stromx/runtime/Primitive.h>
 #include <stromx/runtime/String.h>
 
+#include <iostream>
+
 namespace
 {
     template <class data_t>
@@ -125,11 +127,13 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
                 const uint8_t* rowPtr = image.data();
                 for(unsigned int i = 0; i < image.rows(); ++i)
                 {
+                    const uint16_t* pixelPtr = reinterpret_cast<const uint16_t*>(rowPtr);
                     for(unsigned int j = 0; j < image.cols(); ++j)
                     {
-                        qtImage.setPixel(i,j,rowPtr[j]/256);
-                        rowPtr += image.stride();
+                        qtImage.setPixel(i,j,*pixelPtr/256);
+                        ++pixelPtr;
                     }
+                    rowPtr += image.stride();
                 }
             }
             else
