@@ -250,7 +250,7 @@ Data* TestDataOperator::imageRamp()
     }
     
     unsigned int RAMP_WIDTH = 255;
-    const unsigned int STEP = rampHeight / RAMP_WIDTH;
+    const unsigned int step = rampHeight / RAMP_WIDTH;
     
     for (unsigned int row = 0; row < matrix->rows(); ++row)
     {
@@ -259,7 +259,7 @@ Data* TestDataOperator::imageRamp()
         while(remainingPixels > 0)
         {
             unsigned int numPixels = std::min(remainingPixels, RAMP_WIDTH);
-            unsigned int value = m_index % RAMP_WIDTH;
+            unsigned int value = (m_index % RAMP_WIDTH) * step;
             for (unsigned int offset = 0; offset < numPixels; ++offset)
             {
                 unsigned int pixel = m_sizeX - remainingPixels + offset;
@@ -271,7 +271,7 @@ Data* TestDataOperator::imageRamp()
                     else
                         setMatrixEntry(matrix, row, subpixel, 0);
                 }
-                value += STEP;
+                value += step;
                 if (value > rampHeight)
                     value = 0;
             }
