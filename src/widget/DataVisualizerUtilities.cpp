@@ -118,27 +118,28 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
         }
         
         QImage qtImage;
-                    QVector<QRgb> colorTable(256);
-            for(unsigned int i = 0; i < 256; ++i)
-                colorTable[i] = qRgb(i, i, i);
-            qtImage.setColorTable(colorTable);
+        QVector<QRgb> colorTable(256);
+        for(unsigned int i = 0; i < 256; ++i)
+            colorTable[i] = qRgb(i, i, i);
+        qtImage.setColorTable(colorTable);
+        
         if(validPixelType)
         {
             if(image.pixelType() == Image::MONO_16)
             {
                 // loop over all pixels and divide it by 256
                 qtImage = QImage(image.width(), image.height(), format);
-                const uint8_t* rowPtr = image.data();
+                const uint8_t* rowPtrSrc = image.data();
                 for(unsigned int i = 0; i < image.rows(); ++i)
                 {
-                    const uint16_t* pixelPtr = reinterpret_cast<const uint16_t*>(rowPtr);
+                    const uint16_t* pixelPtrSrc = reinterpret_cast<const uint16_t*>(rowPtrSrc);
                     uchar* pixelPtrDst = qtImage.scanLine(i);
                     for(unsigned int j = 0; j < image.cols(); ++j)
                     {
-                        pixelPtrDst[j] = *pixelPtr;
-                        ++pixelPtr;
+                        pixelPtrDst[j] = (*pixelPtrSrc)/256;
+                        ++pixelPtrSrc;
                     }
-                    rowPtr += image.stride();
+                    rowPtrSrc += image.stride();
                 }
             }
             else
