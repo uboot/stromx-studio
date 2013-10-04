@@ -230,6 +230,7 @@ Data* TestDataOperator::imageRamp()
         break;
     case IMAGE_MONO_16:
         matrix = new stromx::cvsupport::Image(m_sizeX, m_sizeY, Image::MONO_16);
+        rampHeight = 256 * 255;
         break;
     case IMAGE_RGB_24:
         matrix = new stromx::cvsupport::Image(m_sizeX, m_sizeY, Image::RGB_24);
