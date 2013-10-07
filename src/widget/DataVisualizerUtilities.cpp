@@ -155,11 +155,11 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
                     qtImage = QImage(image.width(), image.height(), format);
                     const uint8_t* rowPtrSrc = image.data();
                     const uint16_t* pixelPtrSrc = reinterpret_cast<const uint16_t*>(rowPtrSrc);
-                    for(unsigned int i = 0; i < image.rows(); ++i)
+                    for(unsigned int i = 0; i < image.height(); ++i)
                     {                     
                         uchar* rowPtrDst = qtImage.scanLine(i);
                         uint8_t* pixelPtrDst = reinterpret_cast<uint8_t*>(rowPtrDst);
-                        for(unsigned int j = 0; j < image.cols(); ++j)
+                        for(unsigned int j = 0; j < image.width(); ++j)
                         {
                             for(unsigned int iChannel = 0; iChannel < 3; ++iChannel)
                             {
