@@ -5,6 +5,7 @@
 #include <stromx/runtime/String.h>
 
 #include <iostream>
+#include <boost/config/no_tr1/complex.hpp>
 
 namespace
 {
@@ -111,6 +112,8 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
             break;
         case Image::RGB_24:
         case Image::BGR_24:
+        case Image::RGB_48:
+        case Image::BGR_48:
             format = QImage::Format_RGB888;
             break;
         default:
@@ -125,26 +128,55 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
         
         if(validPixelType)
         {
-            if(image.pixelType() == Image::MONO_16)
+            switch(image.pixelType())
             {
-                // loop over all pixels and divide it by 256
-                qtImage = QImage(image.width(), image.height(), format);
-                const uint8_t* rowPtrSrc = image.data();
-                for(unsigned int i = 0; i < image.rows(); ++i)
-                {
-                    const uint16_t* pixelPtrSrc = reinterpret_cast<const uint16_t*>(rowPtrSrc);
-                    uchar* pixelPtrDst = qtImage.scanLine(i);
-                    for(unsigned int j = 0; j < image.cols(); ++j)
+                case Image::MONO_16:                   
                     {
-                        pixelPtrDst[j] = (*pixelPtrSrc)/256;
-                        ++pixelPtrSrc;
+                        // loop over all pixels and divide it by 256
+                        qtImage = QImage(image.width(), image.height(), format);
+                        const uint8_t* rowPtrSrc = image.data();
+                        for(unsigned int i = 0; i < image.rows(); ++i)
+                        {
+                            const uint16_t* pixelPtrSrc = reinterpret_cast<const uint16_t*>(rowPtrSrc);
+                            uchar* pixelPtrDst = qtImage.scanLine(i);
+                            for(unsigned int j = 0; j < image.cols(); ++j)
+                            {
+                                pixelPtrDst[j] = (*pixelPtrSrc)/256;
+                                ++pixelPtrSrc;
+                            }
+                            rowPtrSrc += image.stride();
+                        }
+                        break;
                     }
-                    rowPtrSrc += image.stride();
+                case Image::RGB_48:
+                case Image::BGR_48:
+                {
+                    //loop over all pixels separated by color and divide each channel by 256
+                    qtImage = QImage(image.width(), image.height(), format);
+                    const uint8_t* rowPtrSrc = image.data();
+                    const uint16_t* pixelPtrSrc = reinterpret_cast<const uint16_t*>(rowPtrSrc);
+                    for(unsigned int i = 0; i < image.rows(); ++i)
+                    {                     
+                        uchar* rowPtrDst = qtImage.scanLine(i);
+                        uint8_t* pixelPtrDst = reinterpret_cast<uint8_t*>(rowPtrDst);
+                        for(unsigned int j = 0; j < image.cols(); ++j)
+                        {
+                            for(unsigned int iChannel = 0; iChannel < 3; ++iChannel)
+                            {
+                                *pixelPtrDst = (*pixelPtrSrc)/256;
+                                ++pixelPtrSrc;
+                                ++pixelPtrDst;
+                            }
+                        }
+                        rowPtrSrc += image.stride();
+                    }
+                    break;
                 }
-            }
-            else
-            {
-                qtImage = QImage(image.data(), image.width(), image.height(), image.stride(), format);
+                    
+                default:
+                    {
+                        qtImage = QImage(image.data(), image.width(), image.height(), image.stride(), format);
+                    }
             }
 
             QPixmap pixmap = QPixmap::fromImage(qtImage);
