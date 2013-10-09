@@ -4,11 +4,9 @@
 #include <stromx/runtime/Primitive.h>
 #include <stromx/runtime/String.h>
 
-#include <iostream>
-#include <boost/config/no_tr1/complex.hpp>
-
 #include <QBrush>
 #include <QPen>
+
 namespace
 {
     template <class data_t>
