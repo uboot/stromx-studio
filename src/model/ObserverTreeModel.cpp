@@ -535,6 +535,7 @@ QStringList ObserverTreeModel::setupVisualizationLabels()
     QStringList labels;
     labels << "Automatic";
     labels << "Lines";
+    labels << "Points";
     
     return labels;
 }
