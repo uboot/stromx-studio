@@ -24,9 +24,7 @@ set(stromxstudio_SOURCES
     cmd/RemoveThreadCmd.cpp
     cmd/RenameThreadCmd.cpp
     cmd/SetParameterCmd.cpp
-    cmd/SetInputActiveCmd.cpp
-    cmd/SetInputColorCmd.cpp
-    cmd/SetInputVisualizationCmd.cpp
+    cmd/SetVisualizationPropertiesCmd.cpp
     cmd/SetThreadCmd.cpp
     cmd/SetThreadColorCmd.cpp
     event/ConnectorDataEvent.cpp

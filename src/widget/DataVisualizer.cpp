@@ -104,7 +104,8 @@ void DataVisualizer::setColor(int pos, const QColor& color)
     }
 }
 
-void DataVisualizer::setData(int pos, const stromx::runtime::Data& data, Visualization visualization)
+void DataVisualizer::setData(int pos, const stromx::runtime::Data& data,
+                             const VisualizationProperties & visualizationProperties)
 {
     using namespace stromx::runtime;
     
@@ -120,22 +121,26 @@ void DataVisualizer::setData(int pos, const stromx::runtime::Data& data, Visuali
     }
     m_items[pos].clear();
     
+    // if the input is not active return
+    if(! visualizationProperties.value("active", true).toBool())
+        return;
+    
     // create the graphic items representing the stromx data
     if(data.isVariant(DataVariant::IMAGE))
     {
-        m_items[pos] = DataVisualizerUtilities::createImageItems(data, visualization);
+        m_items[pos] = DataVisualizerUtilities::createImageItems(data, visualizationProperties);
     }
     else if(data.isVariant(DataVariant::PRIMITIVE))
     {
-        m_items[pos] = DataVisualizerUtilities::createPrimitiveItems(data, visualization);
+        m_items[pos] = DataVisualizerUtilities::createPrimitiveItems(data, visualizationProperties);
     } 
     else if(data.isVariant(DataVariant::STRING))
     {
-        m_items[pos] = DataVisualizerUtilities::createStringItems(data, visualization);
+        m_items[pos] = DataVisualizerUtilities::createStringItems(data, visualizationProperties);
     }
     else if(data.isVariant(DataVariant::MATRIX))
     {
-        m_items[pos] = DataVisualizerUtilities::createMatrixItems(data, visualization);
+        m_items[pos] = DataVisualizerUtilities::createMatrixItems(data, visualizationProperties);
     }
     
     // add the items and set their z-value

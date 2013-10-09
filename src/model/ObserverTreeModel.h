@@ -59,12 +59,8 @@ public:
         OBSERVER = 0,
         /** The documentation title of the input. */
         INPUT,
-        /** The activation status of the input. */
-        ACTIVE,
-        /** The color of the input. */
-        COLOR,
-        /** The visualization type of the input. */
-        VISUALIZATION,
+        /** The visualization properties of the input. */
+        VISUALIZATION_PROPERTIES,
         /** The total number of columns. */
         NUM_COLUMNS
     };
@@ -172,7 +168,7 @@ private:
      * position \c visualization in the visualization label list exists it is returned.
      * Otherwise \c visualization is converted to a string an returned.
      */
-    static QString visualizationLabel(AbstractDataVisualizer::Visualization visualization);
+    static QString visualizationLabel(AbstractDataVisualizer::VisualizationType visualization);
     
     void doInsertObserver(int pos, ObserverModel* observer);
     void doRemoveObserver(int pos);

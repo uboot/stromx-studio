@@ -1,5 +1,8 @@
 #include "widget/DataVisualizerUtilities.h"
 
+#include <QPen>
+#include <boost/concept_check.hpp>
+
 #include <stromx/runtime/Image.h>
 #include <stromx/runtime/Primitive.h>
 #include <stromx/runtime/String.h>
@@ -7,9 +10,12 @@
 namespace
 {
     template <class data_t>
-    static QList<QGraphicsItem*> createPrimitiveItemsTemplate(const stromx::runtime::Data & data)
+    static QList<QGraphicsItem*> createPrimitiveItemsTemplate(const stromx::runtime::Data & data,
+        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
     {
         QList<QGraphicsItem*> items;
+        QVariant colorVariant = visualizationProperties.value("color", Qt::black);
+        QColor color = colorVariant.value<QColor>();
         
         try
         {
@@ -17,7 +23,11 @@ namespace
             const data_t & primitive = stromx::runtime::data_cast<data_t>(data);
             
             // format it as a astring and create a graphics item from the string
-            QGraphicsItem* item = new QGraphicsSimpleTextItem(QString("%1").arg(primitive));
+            QGraphicsSimpleTextItem* item = new QGraphicsSimpleTextItem(QString("%1").arg(primitive));
+            
+            QBrush brush = item->brush();
+            brush.setColor(color);
+            item->setBrush(brush);
             
             // pack the graphics item into a list
             items.append(item);
@@ -29,10 +39,15 @@ namespace
         return items;
     }
     
+    
+    
     template <class data_t>
-    QList< QGraphicsItem* > createLineSegmentItemsTemplate(const stromx::runtime::Data& data)
+    QList< QGraphicsItem* > createLineSegmentItemsTemplate(const stromx::runtime::Data& data, 
+        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
     {
         using namespace stromx::runtime;
+        QVariant colorVariant = visualizationProperties.value("color", Qt::black);
+        QColor color = colorVariant.value<QColor>();
         
         QList<QGraphicsItem*> items;
         try
@@ -49,7 +64,12 @@ namespace
                 for(unsigned int i = 0; i < matrix.rows(); ++i)
                 {
                     const data_t* rowData = reinterpret_cast<const data_t*>(rowPtr);
-                    items.append(new QGraphicsLineItem(rowData[0], rowData[1], rowData[2], rowData[3]));
+                    QGraphicsLineItem* lineItem = 
+                        new QGraphicsLineItem(rowData[0], rowData[1], rowData[2], rowData[3]);
+                    QPen pen = lineItem->pen();
+                    pen.setColor(color);
+                    lineItem->setPen(pen);
+                    items.append(lineItem);
                     rowPtr += matrix.stride();
                 }
             }
@@ -61,33 +81,34 @@ namespace
         return items;
     }
     
-    QList< QGraphicsItem* > createLineSegments(const stromx::runtime::Data& data)
+    QList< QGraphicsItem* > createLineSegments(const stromx::runtime::Data& data, 
+        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
     {
         using namespace stromx::runtime;
         
         if(data.isVariant(DataVariant::INT_8_MATRIX))
-            return createLineSegmentItemsTemplate<int8_t>(data);
+            return createLineSegmentItemsTemplate<int8_t>(data, visualizationProperties);
         else if(data.isVariant(DataVariant::UINT_8_MATRIX))
-            return createLineSegmentItemsTemplate<uint8_t>(data);
+            return createLineSegmentItemsTemplate<uint8_t>(data, visualizationProperties);
         else if(data.isVariant(DataVariant::INT_16_MATRIX))
-            return createLineSegmentItemsTemplate<int16_t>(data);
+            return createLineSegmentItemsTemplate<int16_t>(data, visualizationProperties);
         else if(data.isVariant(DataVariant::UINT_16_MATRIX))
-            return createLineSegmentItemsTemplate<uint16_t>(data);
+            return createLineSegmentItemsTemplate<uint16_t>(data, visualizationProperties);
         else if(data.isVariant(DataVariant::INT_32_MATRIX))
-            return createLineSegmentItemsTemplate<int32_t>(data);
+            return createLineSegmentItemsTemplate<int32_t>(data, visualizationProperties);
         else if(data.isVariant(DataVariant::UINT_32_MATRIX))
-            return createLineSegmentItemsTemplate<uint32_t>(data);
+            return createLineSegmentItemsTemplate<uint32_t>(data, visualizationProperties);
         else if(data.isVariant(DataVariant::FLOAT_32_MATRIX))
-            return createLineSegmentItemsTemplate<float>(data);
+            return createLineSegmentItemsTemplate<float>(data, visualizationProperties);
         else if(data.isVariant(DataVariant::FLOAT_64_MATRIX))
-            return createLineSegmentItemsTemplate<double>(data);
+            return createLineSegmentItemsTemplate<double>(data, visualizationProperties);
         else
             return QList<QGraphicsItem*>();
     }
 }
 
 QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::runtime::Data& data,
-        const AbstractDataVisualizer::Visualization)
+    const AbstractDataVisualizer::VisualizationProperties & /*visualizationProperties*/)
 {
     using namespace stromx::runtime;
     
@@ -188,15 +209,20 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
 }
    
 QList<QGraphicsItem*> DataVisualizerUtilities::createStringItems(const stromx::runtime::Data & data,
-        const AbstractDataVisualizer::Visualization)
+    const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
 {
     using namespace stromx::runtime;
+    QVariant colorVariant = visualizationProperties.value("color", Qt::black);
+    QColor color = colorVariant.value<QColor>();
     
     QList<QGraphicsItem*> items;
     try
     {
         const String & string = stromx::runtime::data_cast<String>(data);
-        QGraphicsItem* item = new QGraphicsSimpleTextItem(QString::fromStdString(string));
+        QGraphicsSimpleTextItem* item = new QGraphicsSimpleTextItem(QString::fromStdString(string));
+        QBrush brush = item->brush();
+        brush.setColor(color);
+        item->setBrush(brush);
         items.append(item);
     }
     catch(stromx::runtime::BadCast&)
@@ -207,12 +233,15 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createStringItems(const stromx::r
 }
 
 QList< QGraphicsItem* > DataVisualizerUtilities::createMatrixItems(const stromx::runtime::Data& data,
-        const AbstractDataVisualizer::Visualization visualization)
+    const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
 {
-    switch(visualization)
+    const QVariant visualizationVariant = 
+        visualizationProperties.value(QString("visualization"), AbstractDataVisualizer::AUTOMATIC);
+        
+    switch(visualizationVariant.toInt())
     {
         case AbstractDataVisualizer::LINES:
-            return createLineSegments(data);
+            return createLineSegments(data, visualizationProperties);
         default:
             return QList<QGraphicsItem*>();
     }
@@ -220,28 +249,28 @@ QList< QGraphicsItem* > DataVisualizerUtilities::createMatrixItems(const stromx:
 }
 
 QList<QGraphicsItem*> DataVisualizerUtilities::createPrimitiveItems(const stromx::runtime::Data & data,
-        const AbstractDataVisualizer::Visualization)
+    const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
 {    
     using namespace stromx::runtime;
     
     if(data.isVariant(DataVariant::BOOL))
-        return createPrimitiveItemsTemplate<Bool>(data);
+        return createPrimitiveItemsTemplate<Bool>(data, visualizationProperties);
     else if(data.isVariant(DataVariant::INT_8))
-        return createPrimitiveItemsTemplate<Int8>(data);
+        return createPrimitiveItemsTemplate<Int8>(data, visualizationProperties);
     else if(data.isVariant(DataVariant::UINT_8))
-        return createPrimitiveItemsTemplate<UInt8>(data);
+        return createPrimitiveItemsTemplate<UInt8>(data, visualizationProperties);
     else if(data.isVariant(DataVariant::INT_16))
-        return createPrimitiveItemsTemplate<Int16>(data);
+        return createPrimitiveItemsTemplate<Int16>(data, visualizationProperties);
     else if(data.isVariant(DataVariant::UINT_16))
-        return createPrimitiveItemsTemplate<UInt16>(data);
+        return createPrimitiveItemsTemplate<UInt16>(data, visualizationProperties);
     else if(data.isVariant(DataVariant::INT_32))
-        return createPrimitiveItemsTemplate<Int32>(data);
+        return createPrimitiveItemsTemplate<Int32>(data, visualizationProperties);
     else if(data.isVariant(DataVariant::UINT_32))
-        return createPrimitiveItemsTemplate<UInt32>(data);
+        return createPrimitiveItemsTemplate<UInt32>(data, visualizationProperties);
     else if(data.isVariant(DataVariant::FLOAT_32))
-        return createPrimitiveItemsTemplate<Float32>(data);
+        return createPrimitiveItemsTemplate<Float32>(data, visualizationProperties);
     else if(data.isVariant(DataVariant::FLOAT_64))
-        return createPrimitiveItemsTemplate<Float64>(data);
+        return createPrimitiveItemsTemplate<Float64>(data, visualizationProperties);
     else
         return QList<QGraphicsItem*>();
 }

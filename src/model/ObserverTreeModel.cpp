@@ -209,62 +209,6 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
         case INPUT:
             return input->docTitle().isEmpty() 
                 ? QVariant(input->id()) : QVariant(input->docTitle());
-        case ACTIVE:
-            return input->active() ? tr("True") : tr("False");
-        case COLOR:
-        {
-            QColor color = input->color();
-            QString name = colorTable().key(color);
-            if(name.isEmpty())
-                return color;
-            else
-                return name;
-        }
-        case VISUALIZATION:
-            return visualizationLabel(input->visualization());
-        default:
-            return QVariant();
-        }
-    case Qt::EditRole:
-        switch(index.column())
-        {
-        case ACTIVE:
-            return input->active() ? 1 : 0;
-        case VISUALIZATION:
-            return input->visualization();
-        default:
-            return QVariant();
-        }
-    case Qt::DecorationRole:
-        switch(index.column())
-        {
-        case COLOR:
-            return input->color();
-        default:
-            return QVariant();
-        }
-    case ColorRole:
-        switch(index.column())
-        {
-        case COLOR:
-            return input->color();
-        default:
-            return QVariant();
-        }
-    case ChoicesRole:
-        switch(index.column())
-        {
-        case ACTIVE:
-        {
-            QStringList choices;
-            
-            choices.append(tr("False"));
-            choices.append(tr("True"));
-            
-            return choices;
-        }
-        case VISUALIZATION:
-            return m_visualizationLabels;
         default:
             return QVariant();
         }
@@ -292,48 +236,20 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
     }
     
     // the index points to an input activation status
-    if(index.isValid() && index.internalPointer() && index.column() == ACTIVE)
+    if(index.isValid() && index.internalPointer() && index.column() == VISUALIZATION_PROPERTIES)
     {
         // get the input
         ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
         InputModel* input = observer->input(index.row());
         
-        // set the activation status
+        // Set the visualization properties
         // TODO: Setting an input active or inactive only switches the visibility of the 
         // visualization objects (i.e. the graphic items). In case the input is inactive
         // it would be preferrable to additionally suppress the obervation of data at the
         // input connector to avoid waiting for the read access there.
-        bool active(value.toBool());
-        input->setActive(active);
+        AbstractDataVisualizer::VisualizationProperties properties(value.toMap());
+        input->setVisualizationProperties(properties);
         
-        emit dataChanged(index, index);
-        return true;
-    }
-    
-    // the index points to an input color
-    if(index.isValid() && index.internalPointer() && index.column() == COLOR)
-    {
-        // get the input
-        ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
-        InputModel* input = observer->input(index.row());
-        
-        // set the color
-        QColor color(value.toString());
-        input->setColor(color);
-        emit dataChanged(index, index);
-        return true;
-    }
-    
-    // the index points to an input visualization
-    if(index.isValid() && index.internalPointer() && index.column() == VISUALIZATION)
-    {
-        // get the input
-        ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
-        InputModel* input = observer->input(index.row());
-        
-        // set the color
-        int visualization(value.toInt());
-        input->setVisualization(AbstractDataVisualizer::Visualization(visualization));
         emit dataChanged(index, index);
         return true;
     }
@@ -522,7 +438,7 @@ void ObserverTreeModel::updateInput(InputModel* input)
     }
 }
 
-QString ObserverTreeModel::visualizationLabel(AbstractDataVisualizer::Visualization visualization)
+QString ObserverTreeModel::visualizationLabel(AbstractDataVisualizer::VisualizationType visualization)
 {
     if(int(visualization) < 0 || int(visualization) >= m_visualizationLabels.count())
         return QString("%1").arg(visualization);

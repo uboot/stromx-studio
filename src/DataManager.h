@@ -83,11 +83,6 @@ private slots:
      */
     void updateLayerData(OperatorModel::ConnectorType type, unsigned int id,
                          stromx::runtime::ReadAccess<> access);
-
-    /**
-     * Updates the properties (color, alpha, etc.) of all layers which correspond to this input.
-     */
-    void updateInputProperties(InputModel* input);
     
 private:
     /** 

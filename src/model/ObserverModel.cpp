@@ -92,12 +92,10 @@ QVariant ObserverModel::headerData(int section, Qt::Orientation orientation, int
             return tr("Operator");
         case ObserverTreeModel::INPUT:
             return tr("Input");
-        case ObserverTreeModel::ACTIVE:
-            return tr("Active");
-        case ObserverTreeModel::COLOR:
-            return tr("Color");
-        case ObserverTreeModel::VISUALIZATION:
-            return tr("Visualization");
+        case ObserverTreeModel::VISUALIZATION_PROPERTIES:
+            return tr("Visualization properties");
+        default:
+            return QVariant();
         }
     }
     
@@ -219,9 +217,7 @@ Qt::ItemFlags ObserverModel::flags(const QModelIndex& index) const
     
     switch(index.column())
     {
-    case ObserverTreeModel::ACTIVE:
-    case ObserverTreeModel::COLOR:
-    case ObserverTreeModel::VISUALIZATION:
+    case ObserverTreeModel::VISUALIZATION_PROPERTIES:
         flags |= Qt::ItemIsEditable;
     default:
         flags |= (Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);

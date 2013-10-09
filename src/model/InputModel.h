@@ -20,8 +20,8 @@
 #ifndef INPUTMODEL_H
 #define INPUTMODEL_H
 
-#include <QObject>
 #include <QColor>
+#include <QObject>
 
 class QUndoStack;
 class ObserverTreeModel;
@@ -41,32 +41,20 @@ class InputModel : public QObject
 {
     Q_OBJECT
     
-    friend class SetInputActiveCmd;
-    friend class SetInputColorCmd;
-    friend class SetInputVisualizationCmd;
+    friend class SetVisualizationPropertiesCmd;
     friend QDataStream & operator>> (QDataStream & stream, InputModel * model);
     
-public:
+    typedef AbstractDataVisualizer::VisualizationProperties VisualizationProperties;
+    
+public:    
     /** Constructs an input model for the input \c id of the operator \c op. */
     InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject * parent);
     
-    /** Pushes a set color command on the undo stack. */
-    void setColor(const QColor & color);
-    
-    /** Returns the current color. */
-    const QColor & color() const { return m_color; }
-    
-    /** Pushes a set active command on the undo stack. */
-    void setActive(bool active);
-    
-    /** Returns the current color. */
-    bool active() const { return m_active; }
-    
-    /** Returns the current visualization type. */
-    AbstractDataVisualizer::Visualization visualization() const { return m_visualization; }
+    /** Returns the visualization properties. */
+    VisualizationProperties visualizationProperties() const { return m_visualizationProperties; }
     
     /** Pushes a set visualization command on the undo stack. */
-    void setVisualization(AbstractDataVisualizer::Visualization visualization);
+    void setVisualizationProperties(const VisualizationProperties & visualization);
     
     /** Returns the operator model. */
     OperatorModel* op() const { return m_op; }
@@ -92,7 +80,7 @@ signals:
     void colorChanged(const QColor & color);
     
     /** The visualization type of the input changed. */
-    void visualizationChanged(AbstractDataVisualizer::Visualization visualization);
+    void visualizationPropertiesChanged(VisualizationProperties properties);
     
 private:
     /** Sets the activation status of the input. */
@@ -102,13 +90,11 @@ private:
     void doSetColor(const QColor & color);
     
     /** Sets the visualization type of the input. */
-    void doSetVisualization(const AbstractDataVisualizer::Visualization & visualization);
+    void doSetVisualizationProperties(const VisualizationProperties & visualizationProperties);
     
     OperatorModel* m_op;
     unsigned int m_id;
-    bool m_active;
-    QColor m_color;
-    AbstractDataVisualizer::Visualization m_visualization;
+    VisualizationProperties m_visualizationProperties;
     QUndoStack* m_undoStack;
 };
 

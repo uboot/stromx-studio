@@ -20,6 +20,9 @@
 #ifndef ABSTRACTDATAVISUALIZER_H
 #define ABSTRACTDATAVISUALIZER_H
 
+#include <QMap>
+#include <QVariant>
+
 namespace stromx
 {
     namespace runtime
@@ -37,17 +40,19 @@ class QColor;
  * layers of data. Each layer has a z-position can contain at most one data object. 
  * The data is displayed according to the \em position of its layer, i.e. layers with
  * smaller position values are displayed on top of layers with larger positions.
- * 
- * In addition to the z-value each layer has several properties such as color and
- * alpha value wich can influence the way how data in the layer is displayed. 
- * However, these properties of a layer are not persistent, i.e. they are note preserved
- * if the data of a layer changes.
  */
 class AbstractDataVisualizer
 {
 public:
-    /** Different ways to visualize data. */
-    enum Visualization
+    /** 
+     * List of properties of the visualization of data, e.g.
+     * the color of the painted primitives or the scaling of floating point
+     * image data.
+     */
+    typedef QMap<QString, QVariant> VisualizationProperties;
+    
+    /** Determines how data is interpreted for visualization. */
+    enum VisualizationType
     {
         /** 
          * The visualization is automatically determined from the data type. 
@@ -75,26 +80,15 @@ public:
     virtual void removeLayer(int pos) = 0;
     
     /** 
-     * Sets the color of the data in the layer \c pos to \c color. 
-     * If no layer exists at \c src the function does not do anything.
-     */
-    virtual void setColor(int pos, const QColor & color) = 0;
-    
-    /** 
      * Sets the data in the layer at \c pos to \c data. Any other data is
      * automatically removed from the layer. The data is visualized as 
-     * defined by the parameter \c visualization.
+     * defined by the parameter \c visualizationProperties.
      * If no layer exists at \c pos the function does not do anything.
      * Properties such as alpha value and color of the layer are reset by
      * this function and must be set again for the new data object.
      */
-    virtual void setData(int pos, const stromx::runtime::Data& data, Visualization visualization) = 0;
-    
-    /**
-     * Sets the data at the layer \c pos to be active or inactive, i.e. it is visible or 
-     * invisible. If no layer exists at \c src the function does not do anything.
-     */
-    virtual void setActive(int pos, bool active) = 0;
+    virtual void setData(int pos, const stromx::runtime::Data& data,
+                         const VisualizationProperties & visualizationProperties) = 0;
     
 private:
     
