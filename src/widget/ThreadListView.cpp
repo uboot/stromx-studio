@@ -20,8 +20,7 @@ ThreadListView::ThreadListView(QWidget* parent)
     setItemDelegate(new ItemDelegate(this));
     setShowGrid(false);
     setAlternatingRowColors(true);
-    setSelectionBehavior(QAbstractItemView::SelectRows);
-    setSelectionMode(QAbstractItemView::SingleSelection);
+    setEditTriggers(QAbstractItemView::AllEditTriggers);
     verticalHeader()->hide();
     
     m_addThreadAct = createAddThreadAction(this);

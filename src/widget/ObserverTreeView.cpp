@@ -21,6 +21,7 @@ ObserverTreeView::ObserverTreeView(QWidget* parent)
     setDragDropMode(QAbstractItemView::DragDrop);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
+    setEditTriggers(QAbstractItemView::AllEditTriggers);
     
     m_addObserverAct = createAddObserverAction(this);
     m_removeInputAct = createRemoveInputAction(this);
