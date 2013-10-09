@@ -21,6 +21,7 @@ ObserverView::ObserverView(ObserverModel* observer, QWidget* parent)
     setDragDropMode(QAbstractItemView::DragDrop);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
+    setEditTriggers(QAbstractItemView::AllEditTriggers);
     horizontalHeader()->setResizeMode(ObserverTreeModel::OPERATOR, QHeaderView::Interactive);
     horizontalHeader()->setResizeMode(ObserverTreeModel::INPUT, QHeaderView::Interactive);
     horizontalHeader()->setResizeMode(QHeaderView::Stretch);

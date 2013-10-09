@@ -53,8 +53,6 @@ protected:
 private slots:
     void updateThreadSelected( const QModelIndex & current, const QModelIndex & previous );
     void updateStreamActive();
-    void editName();
-    void editColor();
     
 private:
     
@@ -63,8 +61,6 @@ private:
     StreamModel* m_model;
     QAction* m_addThreadAct;
     QAction* m_removeThreadAct;
-    QAction* m_editNameAct;
-    QAction* m_editColorAct;
 };
 
 #endif // THREADLISTVIEW_H

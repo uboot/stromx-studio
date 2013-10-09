@@ -209,6 +209,8 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
         case INPUT:
             return input->docTitle().isEmpty() 
                 ? QVariant(input->id()) : QVariant(input->docTitle());
+        case VISUALIZATION_PROPERTIES:
+            return input->visualizationProperties();
         default:
             return QVariant();
         }
