@@ -4,7 +4,7 @@
 
 SetVisualizationPropertiesCmd::SetVisualizationPropertiesCmd(InputModel* model,
     const InputModel::VisualizationProperties& newProperties, QUndoCommand* parent)
-  : QUndoCommand(QObject::tr("set input visualization"), parent),
+  : QUndoCommand(QObject::tr("set visualization properties"), parent),
     m_model(model),
     m_oldProperties(model->visualizationProperties()),
     m_newProperties(newProperties)
