@@ -60,7 +60,10 @@ public:
         AUTOMATIC,
         
         /** If possible the data is visualized as a set of lines or line segments.*/
-        LINES
+        LINES,
+        
+        /** If possible the data is visualized as a set of points.*/
+        POINTS
     };
     
     /** 

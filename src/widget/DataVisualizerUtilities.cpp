@@ -7,6 +7,9 @@
 #include <stromx/runtime/Primitive.h>
 #include <stromx/runtime/String.h>
 
+#include <QBrush>
+#include <QPen>
+
 namespace
 {
     template <class data_t>
@@ -105,6 +108,66 @@ namespace
         else
             return QList<QGraphicsItem*>();
     }
+}
+
+template <class data_t>
+QList< QGraphicsItem* > createPointItemsTemplate(const stromx::runtime::Data& data)
+{
+    using namespace stromx::runtime;
+    
+    QList<QGraphicsItem*> items;
+    try
+    {
+        // cast the data to a matrix
+        const Matrix & matrix = data_cast<Matrix>(data);
+        
+        // check if the value size of the matrix matches the size of the template
+        // parameter and make sure the matrix has 2 columns
+        if(matrix.valueSize() == sizeof(data_t) && matrix.cols() == 2)
+        {
+            // loop over the rows of the matrix and construct a point item from each row
+            const uint8_t* rowPtr = matrix.data();
+            for(unsigned int i = 0; i < matrix.rows(); ++i)
+            {
+                const data_t* rowData = reinterpret_cast<const data_t*>(rowPtr);
+                QGraphicsEllipseItem* newItem = new QGraphicsEllipseItem(rowData[0]-2, rowData[1]-2, 4, 4);
+                newItem->setPen(QPen(Qt::NoPen));
+                newItem->setBrush(QBrush(Qt::red));
+                items.append(newItem);
+                rowPtr += matrix.stride();
+            }
+        }
+    }
+    catch(BadCast&)
+    {
+    }
+    
+    return items;
+}
+
+QList< QGraphicsItem* > createPoints(const stromx::runtime::Data& data,
+    const AbstractDataVisualizer::VisualizationProperties & /*visualizationProperties*/)
+{
+    using namespace stromx::runtime;
+    
+    if(data.isVariant(DataVariant::INT_8_MATRIX))
+        return createPointItemsTemplate<int8_t>(data);
+    else if(data.isVariant(DataVariant::UINT_8_MATRIX))
+        return createPointItemsTemplate<uint8_t>(data);
+    else if(data.isVariant(DataVariant::INT_16_MATRIX))
+        return createPointItemsTemplate<int16_t>(data);
+    else if(data.isVariant(DataVariant::UINT_16_MATRIX))
+        return createPointItemsTemplate<uint16_t>(data);
+    else if(data.isVariant(DataVariant::INT_32_MATRIX))
+        return createPointItemsTemplate<int32_t>(data);
+    else if(data.isVariant(DataVariant::UINT_32_MATRIX))
+        return createPointItemsTemplate<uint32_t>(data);
+    else if(data.isVariant(DataVariant::FLOAT_32_MATRIX))
+        return createPointItemsTemplate<float>(data);
+    else if(data.isVariant(DataVariant::FLOAT_64_MATRIX))
+        return createPointItemsTemplate<double>(data);
+    else
+        return QList<QGraphicsItem*>();
 }
 
 QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::runtime::Data& data,
@@ -242,6 +305,8 @@ QList< QGraphicsItem* > DataVisualizerUtilities::createMatrixItems(const stromx:
     {
         case AbstractDataVisualizer::LINES:
             return createLineSegments(data, visualizationProperties);
+        case AbstractDataVisualizer::POINTS:
+            return createPoints(data, visualizationProperties);
         default:
             return QList<QGraphicsItem*>();
     }
