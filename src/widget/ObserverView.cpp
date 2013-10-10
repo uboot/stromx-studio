@@ -3,31 +3,25 @@
 #include <QContextMenuEvent>
 #include <QHeaderView>
 #include <QMenu>
-#include "delegate/ItemDelegate.h"
+#include "delegate/InputDelegate.h"
 #include "model/ObserverModel.h"
 #include "model/ObserverTreeModel.h"
 
 ObserverView::ObserverView(ObserverModel* observer, QWidget* parent)
-  : QTableView(parent),
+  : QListView(parent),
     m_observer(observer),
     m_removeInputAct(0)
 {
     Q_ASSERT(m_observer);
     
     setModel(observer);
-    setShowGrid(false);
     setAlternatingRowColors(true);
     setDropIndicatorShown(true);
     setDragDropMode(QAbstractItemView::DragDrop);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
     setEditTriggers(QAbstractItemView::AllEditTriggers);
-    horizontalHeader()->setResizeMode(ObserverTreeModel::OPERATOR, QHeaderView::Interactive);
-    horizontalHeader()->setResizeMode(ObserverTreeModel::INPUT, QHeaderView::Interactive);
-    horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    verticalHeader()->setDefaultSectionSize(ItemDelegate::ROW_HEIGHT);
-    verticalHeader()->hide();
-    setItemDelegate(new ItemDelegate(this));
+    setItemDelegate(new InputDelegate(this));
     
     m_removeInputAct = createRemoveInputAction(this);
 }

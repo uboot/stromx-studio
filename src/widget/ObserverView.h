@@ -20,7 +20,7 @@
 #ifndef OBSERVERVIEW_H
 #define OBSERVERVIEW_H
 
-#include <QTableView>
+#include <QListView>
 
 class ObserverModel;
 /**
@@ -29,7 +29,7 @@ class ObserverModel;
  * The observer view displays the contents of an observer model, i.e. a list
  * of inputs and their properties, in a table view.
  */
-class ObserverView : public QTableView
+class ObserverView : public QListView
 {
     Q_OBJECT
     
