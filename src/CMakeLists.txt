@@ -33,6 +33,7 @@ set(stromxstudio_SOURCES
     data/InputData.cpp
     data/OperatorData.cpp
     delegate/ChooseImageButton.cpp
+    delegate/InputDelegate.cpp
     delegate/ItemDelegate.cpp
     delegate/TriggerButton.cpp
     item/ArrowItem.cpp
@@ -85,6 +86,7 @@ set(stromxstudio_HEADERS
     data/InputData.h
     data/OperatorData.h
     delegate/ChooseImageButton.h
+    delegate/InputDelegate.h
     delegate/ItemDelegate.h
     delegate/TriggerButton.h
     item/ArrowItem.h
