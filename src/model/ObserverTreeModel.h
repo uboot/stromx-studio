@@ -50,21 +50,6 @@ class ObserverTreeModel : public QAbstractItemModel
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * op);
     
 public:
-    /** The columns of the observer tree. */
-    enum Column
-    {
-        /** The name of the operator. */
-        OPERATOR = 0,
-        /** The name of the observer. */
-        OBSERVER = 0,
-        /** The documentation title of the input. */
-        INPUT,
-        /** The visualization properties of the input. */
-        VISUALIZATION_PROPERTIES,
-        /** The total number of columns. */
-        NUM_COLUMNS
-    };
-    
     /** Constructs an observer tree model. */
     ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent);
     
@@ -77,7 +62,6 @@ public:
     virtual QModelIndex index(int row, int column, const QModelIndex & parent) const;
     virtual QModelIndex parent(const QModelIndex & child) const;
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
     /** 
      * Pushes an remove input command on the undo stack. The 
@@ -102,7 +86,7 @@ public:
     virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
     virtual Qt::ItemFlags flags(const QModelIndex& index) const;
     virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex & parent) const;
+    virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
     virtual QStringList mimeTypes() const;
     
     /**

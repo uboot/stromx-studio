@@ -71,7 +71,12 @@ enum Roles
      * The step size of numeric data. It should be provided to the user 
      * as an assistance when editing the data.
      */
-    StepRole
+    StepRole,
+    
+    /**
+     * The visualization properties of an observed input.
+     */
+    VisualizationPropertiesRole
 };
 
 /** Custom event types of stromx-studio. */

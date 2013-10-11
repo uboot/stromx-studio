@@ -20,6 +20,7 @@ ObserverTreeView::ObserverTreeView(QWidget* parent)
     setDragDropMode(QAbstractItemView::DragDrop);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
+    setHeaderHidden(true);
     setEditTriggers(QAbstractItemView::AllEditTriggers);
     
     m_addObserverAct = createAddObserverAction(this);
@@ -30,9 +31,6 @@ ObserverTreeView::ObserverTreeView(QWidget* parent)
 void ObserverTreeView::setModel(QAbstractItemModel* model)
 {
     QTreeView::setModel(model);
-    
-    header()->setResizeMode(ObserverTreeModel::OPERATOR, QHeaderView::Interactive);
-    header()->setResizeMode(ObserverTreeModel::INPUT, QHeaderView::Stretch);
     
     connect(selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), 
             this, SLOT(updateObserverSelected(QModelIndex,QModelIndex)));

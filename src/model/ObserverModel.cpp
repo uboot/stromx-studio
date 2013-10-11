@@ -71,7 +71,7 @@ InputModel* ObserverModel::input(int position)
 
 int ObserverModel::columnCount(const QModelIndex& /*parent*/) const
 {
-    return ObserverTreeModel::NUM_COLUMNS;
+    return 1;
 }
 
 int ObserverModel::rowCount(const QModelIndex& parent) const
@@ -80,26 +80,6 @@ int ObserverModel::rowCount(const QModelIndex& parent) const
         return 0;
     else
         return numInputs();
-}
-
-QVariant ObserverModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if(orientation == Qt::Horizontal && role == Qt::DisplayRole)
-    {
-        switch(section)
-        {
-        case ObserverTreeModel::OPERATOR:
-            return tr("Operator");
-        case ObserverTreeModel::INPUT:
-            return tr("Input");
-        case ObserverTreeModel::VISUALIZATION_PROPERTIES:
-            return tr("Visualization properties");
-        default:
-            return QVariant();
-        }
-    }
-    
-    return QVariant();
 }
 
 QModelIndex ObserverModel::index(int row, int column, const QModelIndex& /*parent*/) const
@@ -215,13 +195,7 @@ Qt::ItemFlags ObserverModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = QAbstractTableModel::flags(index);
     
-    switch(index.column())
-    {
-    case ObserverTreeModel::VISUALIZATION_PROPERTIES:
-        flags |= Qt::ItemIsEditable;
-    default:
-        flags |= (Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
-    }
+    flags |= (Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
     
     return flags;
 }

@@ -42,26 +42,7 @@ int ObserverTreeModel::rowCount(const QModelIndex& parent) const
 
 int ObserverTreeModel::columnCount(const QModelIndex& /*parent*/) const
 {
-    return NUM_VISIBLE_COLUMNS;
-}
-
-QVariant ObserverTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if(role != Qt::DisplayRole)
-        return QVariant();
-        
-    if(orientation != Qt::Horizontal)
-        return QVariant();
-    
-    switch(section)
-    {
-    case OPERATOR:
-        return tr("Operator");
-    case INPUT:
-        return tr("Input");
-    default:
-        return QVariant();
-    }
+    return 1;
 }
 
 bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & parent)
@@ -183,9 +164,6 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     // this is an observer
     if(! index.internalPointer())
     {
-        if(index.column() != 0)
-            return QVariant();
-        
         switch(role)
         {
         case Qt::DisplayRole:
@@ -202,19 +180,10 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     switch(role)
     {
     case Qt::DisplayRole:
-        switch(index.column())
-        {
-        case OPERATOR:
-            return input->op()->name();
-        case INPUT:
-            return input->docTitle().isEmpty() 
-                ? QVariant(input->id()) : QVariant(input->docTitle());
-        case VISUALIZATION_PROPERTIES:
-            return input->visualizationProperties();
-        default:
-            return QVariant();
-        }
-            
+        return tr("%1 at %2").arg(input->docTitle().isEmpty())
+                             .arg(input->op()->name());
+    case VisualizationPropertiesRole:
+        return input->visualizationProperties();
     default:
         return QVariant();
     }
@@ -226,7 +195,7 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
         
     // the index points to an observer name
-    if(index.isValid() && ! index.internalPointer() && index.column() == OPERATOR)
+    if(index.isValid() && ! index.internalPointer())
     {
         QString newName = value.toString();
         
@@ -237,8 +206,8 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         emit dataChanged(index, index);
     }
     
-    // the index points to an input activation status
-    if(index.isValid() && index.internalPointer() && index.column() == VISUALIZATION_PROPERTIES)
+    // the index points to an input 
+    if(index.isValid() && index.internalPointer())
     {
         // get the input
         ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
@@ -268,7 +237,7 @@ Qt::ItemFlags ObserverTreeModel::flags(const QModelIndex& index) const
         return flags;
     
     // observer names are editable
-    if(! index.internalPointer() && index.column() == OPERATOR)
+    if(! index.internalPointer())
         return flags |= Qt::ItemIsEditable | Qt::ItemIsDropEnabled;
     
     return flags |= Qt::ItemIsDragEnabled;
@@ -411,7 +380,7 @@ void ObserverTreeModel::updateObserver(ObserverModel *observer)
 {
     int pos = m_observers.indexOf(observer);
     if(pos >= 0)
-        emit dataChanged(createIndex(pos, 0), createIndex(pos, NUM_COLUMNS - 1));
+        emit dataChanged(createIndex(pos, 0), createIndex(pos, 0));
 }
 
 void ObserverTreeModel::doMoveInput(int srcObserverPos, int srcInputPos, int destObserverPos, int destInputPos, InputModel* input)
@@ -436,7 +405,7 @@ void ObserverTreeModel::updateInput(InputModel* input)
     {
         int pos = observer->inputs().indexOf(input);
         if(pos >= 0)
-            emit dataChanged(createIndex(pos, 0, observer), createIndex(pos, NUM_COLUMNS - 1, observer));
+            emit dataChanged(createIndex(pos, 0, observer), createIndex(pos, 0, observer));
     }
 }
 
