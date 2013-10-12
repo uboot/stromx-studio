@@ -15,7 +15,6 @@ ObserverView::ObserverView(ObserverModel* observer, QWidget* parent)
     Q_ASSERT(m_observer);
     
     setModel(observer);
-    setAlternatingRowColors(true);
     setDropIndicatorShown(true);
     setDragDropMode(QAbstractItemView::DragDrop);
     setSelectionBehavior(QAbstractItemView::SelectRows);

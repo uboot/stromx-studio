@@ -27,6 +27,9 @@ class InputDelegate : public QStyledItemDelegate
     Q_OBJECT
     
 public:
+    static const int ROW_HEIGHT;
+    static const int BORDER_OFFSET;
+    
     explicit InputDelegate(QObject* parent = 0);
     
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;

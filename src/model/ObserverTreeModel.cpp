@@ -180,7 +180,7 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     switch(role)
     {
     case Qt::DisplayRole:
-        return tr("%1 at %2").arg(input->docTitle().isEmpty())
+        return tr("%1 at %2").arg(input->docTitle())
                              .arg(input->op()->name());
     case VisualizationPropertiesRole:
         return input->visualizationProperties();
