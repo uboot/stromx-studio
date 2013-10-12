@@ -60,6 +60,8 @@ set(stromxstudio_SOURCES
     widget/DocumentationWindow.cpp
     widget/ErrorListView.cpp
     widget/GraphicsView.cpp
+    widget/InputEditWidget.cpp
+    widget/InputWidget.cpp
     widget/MainWindow.cpp
     widget/ObserverTreeView.cpp
     widget/ObserverView.cpp
@@ -110,6 +112,8 @@ set(stromxstudio_HEADERS
     widget/DocumentationWindow.h
     widget/ErrorListView.h
     widget/GraphicsView.h
+    widget/InputEditWidget.h
+    widget/InputWidget.h
     widget/MainWindow.h
     widget/ObserverTreeView.h
     widget/ObserverView.h

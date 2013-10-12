@@ -5,6 +5,7 @@
 namespace 
 {
     static QMap<QString, QColor> gColorTable;
+    static QStringList gVisualizationLabels;
 }
 
 const QMap<QString, QColor>& colorTable()
@@ -17,4 +18,16 @@ const QMap<QString, QColor>& colorTable()
     }
     
     return gColorTable;
+}
+
+QStringList & visualizationLabels()
+{
+    if (gVisualizationLabels.count() == 0)
+    {    
+        gVisualizationLabels << "Automatic";
+        gVisualizationLabels << "Lines";
+        gVisualizationLabels << "Points";
+    }
+    
+    return gVisualizationLabels;
 }

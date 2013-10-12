@@ -1,9 +1,13 @@
 #include "delegate/InputDelegate.h"
 
-#include <QGroupBox>
 #include <QPainter>
+#include <QApplication>
 
-const int InputDelegate::ROW_HEIGHT = 50;
+#include "Common.h"
+#include "widget/InputEditWidget.h"
+#include "widget/InputWidget.h"
+
+const int InputDelegate::ROW_HEIGHT = 100;
 const int InputDelegate::BORDER_OFFSET = 5;
 
 InputDelegate::InputDelegate(QObject* parent)
@@ -11,46 +15,64 @@ InputDelegate::InputDelegate(QObject* parent)
 {
 }
 
-QWidget* InputDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
+QWidget* InputDelegate::createEditor(QWidget* parent,
+                                     const QStyleOptionViewItem& /*option*/,
+                                     const QModelIndex& /*index*/) const
 {
-    return QStyledItemDelegate::createEditor(parent, option, index);
+    InputEditWidget* editor = new InputEditWidget(parent);
+    return editor;
 }
 
 void InputDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
-
-    QStyledItemDelegate::setEditorData(editor, index);
+    InputEditWidget* widget = qobject_cast<InputEditWidget*>(editor);
+    widget->setInputTitle(index.data(Qt::DisplayRole).toString());
+    
+    AbstractDataVisualizer::VisualizationProperties properties
+        = index.data(VisualizationPropertiesRole).toMap();
+        
+    QColor color = properties.value("color", Qt::black).value<QColor>();
+    widget->setInputColor(color);
+    
+    bool isActive = properties.value("active", true).toBool();
+    widget->setInputActive(isActive);
+    
+    int visualizationType = properties.value("visualization", 0).toInt();
+    widget->setVisualizationType(visualizationType);
 }
 
 void InputDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
-
-    QStyledItemDelegate::setModelData(editor, model, index);
+    InputEditWidget* widget = qobject_cast<InputEditWidget*>(editor);
+    AbstractDataVisualizer::VisualizationProperties properties;
+    
+    properties["color"] = widget->inputColor();
+    properties["active"] = widget->inputActive();
+    properties["visualization"] = widget->visualizationType();
+    
+    model->setData(index, properties, VisualizationPropertiesRole);
 }
 
 void InputDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     if (option.state & QStyle::State_Selected)
-        painter->fillRect(option.rect, option.palette.highlight());
-    else if (option.state)
+    {
         painter->fillRect(option.rect, option.palette.background());
+        return;
+    }
     
-    QGroupBox box;
-    QRect boxRect(0, 0, 
-                  option.rect.width() - 2 * BORDER_OFFSET, 
-                  option.rect.height() - 2 * BORDER_OFFSET);
-    QRect itemRect(option.rect.adjusted(BORDER_OFFSET, BORDER_OFFSET,
-                                        -BORDER_OFFSET, -BORDER_OFFSET));
-    box.setGeometry(boxRect);
-    box.setTitle(index.data(Qt::DisplayRole).toString());
-    QPixmap pixmap(boxRect.size());
+    InputWidget box;
+    QRect widgetRect(0, 0, option.rect.width(), option.rect.height());
+    box.setGeometry(widgetRect);
+    box.setInputTitle(index.data(Qt::DisplayRole).toString());
+    QPixmap pixmap(option.rect.size());
     QPainter widgetPainter;
  
     widgetPainter.begin(&pixmap);
     box.render(&widgetPainter);
     widgetPainter.end();
     
-    painter->drawPixmap(itemRect, pixmap, boxRect);
+    painter->drawPixmap(option.rect, pixmap, widgetRect);
 }
 
 QSize InputDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const

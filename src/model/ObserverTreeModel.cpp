@@ -13,8 +13,6 @@
 #include "model/ObserverModel.h"
 #include "model/OperatorModel.h"
 
-QStringList ObserverTreeModel::m_visualizationLabels(ObserverTreeModel::setupVisualizationLabels());
-
 ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent)
   : QAbstractItemModel(parent),
     m_undoStack(undoStack),
@@ -191,11 +189,8 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
 
 bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if(role != Qt::EditRole)
-        return false;
-        
     // the index points to an observer name
-    if(index.isValid() && ! index.internalPointer())
+    if(index.isValid() && ! index.internalPointer() && role == Qt::EditRole)
     {
         QString newName = value.toString();
         
@@ -207,7 +202,7 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
     }
     
     // the index points to an input 
-    if(index.isValid() && index.internalPointer())
+    if(index.isValid() && index.internalPointer() && role == VisualizationPropertiesRole)
     {
         // get the input
         ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
@@ -407,24 +402,6 @@ void ObserverTreeModel::updateInput(InputModel* input)
         if(pos >= 0)
             emit dataChanged(createIndex(pos, 0, observer), createIndex(pos, 0, observer));
     }
-}
-
-QString ObserverTreeModel::visualizationLabel(AbstractDataVisualizer::VisualizationType visualization)
-{
-    if(int(visualization) < 0 || int(visualization) >= m_visualizationLabels.count())
-        return QString("%1").arg(visualization);
-    else
-        return m_visualizationLabels[visualization];
-}
-
-QStringList ObserverTreeModel::setupVisualizationLabels()
-{
-    QStringList labels;
-    labels << "Automatic";
-    labels << "Lines";
-    labels << "Points";
-    
-    return labels;
 }
 
 QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)

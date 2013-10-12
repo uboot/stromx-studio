@@ -25,6 +25,8 @@
 #include <QColor>
 #include <QMap>
 
+#include "AbstractDataVisualizer.h"
+
 /** Custom roles of stromx-studio. */
 enum Roles
 {
@@ -96,5 +98,12 @@ enum EventTypes
 };
 
 const QMap<QString, QColor> & colorTable();
+    
+/**
+* Returns the appropriate label for the input \c visualization. If an entry at the 
+* position \c visualization in the visualization label list exists it is returned.
+* Otherwise \c visualization is converted to a string an returned.
+*/
+QStringList & visualizationLabels();
 
 #endif // COMMON_H

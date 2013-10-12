@@ -17,7 +17,6 @@ ObserverView::ObserverView(ObserverModel* observer, QWidget* parent)
     setModel(observer);
     setDropIndicatorShown(true);
     setDragDropMode(QAbstractItemView::DragDrop);
-    setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
     setEditTriggers(QAbstractItemView::AllEditTriggers);
     setItemDelegate(new InputDelegate(this));

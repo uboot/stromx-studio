@@ -139,20 +139,6 @@ private:
      * class ObserverModel which is not displayed by the tree view.
      */
     const static int NUM_VISIBLE_COLUMNS = 2;
-    static QStringList m_visualizationLabels;
-    
-    /** 
-     * Fills the visualization label list with strings representing the different 
-     * visualization types. 
-     */
-    static QStringList setupVisualizationLabels();
-    
-    /**
-     * Returns the appropriate label for the input \c visualization. If an entry at the 
-     * position \c visualization in the visualization label list exists it is returned.
-     * Otherwise \c visualization is converted to a string an returned.
-     */
-    static QString visualizationLabel(AbstractDataVisualizer::VisualizationType visualization);
     
     void doInsertObserver(int pos, ObserverModel* observer);
     void doRemoveObserver(int pos);
