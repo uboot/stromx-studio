@@ -20,6 +20,7 @@ QWidget* InputDelegate::createEditor(QWidget* parent,
                                      const QModelIndex& /*index*/) const
 {
     InputEditWidget* editor = new InputEditWidget(parent);
+    connect(editor, SIGNAL(dataChanged(QWidget*)), this, SIGNAL(commitData(QWidget*)));
     return editor;
 }
 

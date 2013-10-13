@@ -1,21 +1,22 @@
 #include "widget/InputPaintWidget.h"
 
+#include <QCheckBox>
+#include <QFormLayout>
 #include <QLabel>
 #include <QPainter>
-#include <QVBoxLayout>
 
 #include <Common.h>
 
 InputPaintWidget::InputPaintWidget(QWidget* parent)
   : InputWidget(parent),
-    m_activeLabel(new QLabel()),
+    m_activeCheckBox(new QCheckBox(tr("Active"))),
     m_colorLabel(new QLabel()),
     m_visualizationTypeLabel(new QLabel())
 {
-    QVBoxLayout* layout = new QVBoxLayout();
-    layout->addWidget(m_activeLabel);
-    layout->addWidget(m_visualizationTypeLabel);
-    layout->addWidget(m_colorLabel);
+    QFormLayout* layout = new QFormLayout();
+    layout->addRow(m_activeCheckBox);
+    layout->addRow(tr("Visualization"), m_visualizationTypeLabel);
+    layout->addRow(tr("Color"), m_colorLabel);
     
     setLayout(layout);
 }
@@ -27,8 +28,7 @@ void InputPaintWidget::setInputTitle(const QString& title)
 
 void InputPaintWidget::setInputActive(const bool isActive)
 {
-    QString text = isActive ? tr("Active") : tr("Inactive");
-    m_activeLabel->setText(text);
+    m_activeCheckBox->setChecked(isActive);
 }
 
 void InputPaintWidget::setInputColor(const QColor& color)

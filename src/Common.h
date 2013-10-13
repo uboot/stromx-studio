@@ -97,6 +97,22 @@ enum EventTypes
     Timeout
 };
 
+/** 
+ * Constant colors which can be chosen by the user for the visualization of
+ * inputs and threads. 
+ */
+class Colors
+{
+public:
+    static const QColor RED;
+    static const QColor GREEN;
+    static const QColor BLUE;
+};
+
+/** 
+ * Returns the table which maps (localized) names to the colors in the class
+ * Colors.
+ */
 const QMap<QString, QColor> & colorTable();
     
 /**

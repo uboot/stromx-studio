@@ -16,10 +16,13 @@ InputEditWidget::InputEditWidget(QWidget* parent)
     QFormLayout* layout = new QFormLayout();
 
     m_activeCheckBox = new QCheckBox(tr("Active"));
+    connect(m_activeCheckBox, SIGNAL(stateChanged(int)), this, SLOT(emitDataChangedEvent()));
     layout->addRow(m_activeCheckBox);
     
     m_visualizationTypeComboBox = new QComboBox();
     m_visualizationTypeComboBox->addItems(visualizationLabels());
+    connect(m_visualizationTypeComboBox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(emitDataChangedEvent()));
     layout->addRow(tr("Visualization"), m_visualizationTypeComboBox);
     
     m_colorComboBox = new QComboBox();
@@ -32,7 +35,8 @@ InputEditWidget::InputEditWidget(QWidget* parent)
         m_colorComboBox->setItemData(i, iter.value(), Qt::DecorationRole);
         ++i;
     }
-    
+    connect(m_colorComboBox, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(emitDataChangedEvent()));
     layout->addRow(tr("Color"), m_colorComboBox);
     
     setLayout(layout);
@@ -73,4 +77,10 @@ void InputEditWidget::setVisualizationType(const int type)
 {
     m_visualizationTypeComboBox->setCurrentIndex(type);
 }
+
+void InputEditWidget::emitDataChangedEvent()
+{
+    emit dataChanged(this);
+}
+
 

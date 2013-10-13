@@ -22,6 +22,7 @@
 
 #include "widget/InputWidget.h"
 
+class QCheckBox;
 class QLabel;
 
 /** 
@@ -44,7 +45,7 @@ public:
     void setVisualizationType(const int type);
     
 private:
-    QLabel* m_activeLabel;
+    QCheckBox* m_activeCheckBox;
     QLabel* m_colorLabel;
     QLabel* m_visualizationTypeLabel;
 };
