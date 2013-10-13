@@ -20,9 +20,7 @@
 #ifndef INPUTEDITWIDGET_H
 #define INPUTEDITWIDGET_H
 
-#include <QGroupBox>
-
-#include "AbstractDataVisualizer.h"
+#include "widget/InputWidget.h"
 
 class QCheckBox;
 class QComboBox;
@@ -34,7 +32,7 @@ class QComboBox;
  * observer list view. It is used by the item delegate of the observer list
  * view (InputDelegate).
  */
-class InputEditWidget : public QGroupBox
+class InputEditWidget : public InputWidget
 {
     Q_OBJECT
     

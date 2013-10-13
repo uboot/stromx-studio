@@ -22,6 +22,8 @@
 
 #include <QStyledItemDelegate>
 
+class InputWidget;
+
 class InputDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
@@ -37,6 +39,9 @@ public:
     virtual void setEditorData (QWidget* editor, const QModelIndex & index) const;
     virtual void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index ) const;
     virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    
+private:
+    static void setInputWidgetData(InputWidget* widget, const QModelIndex & index);
 };
 
 #endif // INPUTDELEGATE_H

@@ -17,12 +17,10 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTWIDGET_H
-#define INPUTWIDGET_H
+#ifndef INPUTPAINTWIDGET_H
+#define INPUTPAINTWIDGET_H
 
-#include <QGroupBox>
-
-#include "AbstractDataVisualizer.h"
+#include "widget/InputWidget.h"
 
 class QLabel;
 
@@ -33,15 +31,22 @@ class QLabel;
  * observer list view. It is used by the item delegate of the observer list
  * view (InputDelegate).
  */
-class InputWidget : public QGroupBox
+class InputPaintWidget : public InputWidget
 {
-public:
-    InputWidget(QWidget* parent = 0) : QGroupBox(parent) {}
+    Q_OBJECT
     
-    virtual void setInputTitle(const QString & title) = 0;
-    virtual void setInputColor(const QColor & color) = 0;
-    virtual void setInputActive(const bool isActive) = 0;
-    virtual void setVisualizationType(const int type) = 0;
+public:
+    InputPaintWidget(QWidget* parent = 0);
+    
+    void setInputTitle(const QString & title);
+    void setInputColor(const QColor & color);
+    void setInputActive(const bool isActive);
+    void setVisualizationType(const int type);
+    
+private:
+    QLabel* m_activeLabel;
+    QLabel* m_colorLabel;
+    QLabel* m_visualizationTypeLabel;
 };
 
-#endif // INPUTWIDGET_H
+#endif // INPUTPAINTWIDGET_H

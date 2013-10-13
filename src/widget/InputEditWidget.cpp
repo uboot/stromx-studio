@@ -7,7 +7,11 @@
 
 #include "Common.h"
 
-InputEditWidget::InputEditWidget(QWidget* parent) : QGroupBox(parent)
+InputEditWidget::InputEditWidget(QWidget* parent)
+  : InputWidget(parent),
+    m_activeCheckBox(0),
+    m_colorComboBox(0),
+    m_visualizationTypeComboBox(0)
 {
     QFormLayout* layout = new QFormLayout();
 
