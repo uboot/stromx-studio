@@ -48,11 +48,8 @@ public:
     void setInputActive(const bool isActive);
     void setVisualizationType(const int type);
     
-private slots:
-    void emitDataChangedEvent();
-    
 signals:
-    void dataChanged(QWidget* widget);
+    void dataChanged();
     
 private:    
     QCheckBox* m_activeCheckBox;

@@ -40,6 +40,9 @@ public:
     virtual void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index ) const;
     virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
     
+private slots:
+    void commitEditEvent();
+    
 private:
     static void setInputWidgetData(InputWidget* widget, const QModelIndex & index);
 };

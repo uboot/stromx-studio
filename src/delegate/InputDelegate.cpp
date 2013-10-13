@@ -20,7 +20,7 @@ QWidget* InputDelegate::createEditor(QWidget* parent,
                                      const QModelIndex& /*index*/) const
 {
     InputEditWidget* editor = new InputEditWidget(parent);
-    connect(editor, SIGNAL(dataChanged(QWidget*)), this, SIGNAL(commitData(QWidget*)));
+    connect(editor, SIGNAL(dataChanged()), this, SLOT(commitEditEvent()));
     return editor;
 }
 
@@ -90,4 +90,8 @@ void InputDelegate::setInputWidgetData(InputWidget* widget, const QModelIndex& i
     widget->setVisualizationType(visualizationType);
 }
 
-
+void InputDelegate::commitEditEvent()
+{
+    QWidget* widget = qobject_cast<QWidget* >(sender());
+    emit commitData(widget);
+}

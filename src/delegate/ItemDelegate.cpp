@@ -26,6 +26,8 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
         QComboBox* comboBox = new QComboBox(parent);
         foreach(QVariant label, list)
             comboBox->addItem(label.toString());
+        connect(comboBox, SIGNAL(currentIndexChanged(int)),
+                this, SLOT(commitEditEvent()));
         return comboBox;
     }
     
@@ -43,6 +45,8 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
             comboBox->setItemData(i, iter.value(), Qt::DecorationRole);
             ++i;
         }
+        connect(comboBox, SIGNAL(currentIndexChanged(int)),
+                this, SLOT(commitEditEvent()));
         return comboBox;
     }
     
@@ -226,8 +230,8 @@ QSize ItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInd
 
 void ItemDelegate::commitEditEvent()
 {
-    QWidget* pushButton = qobject_cast<QWidget* >(sender());
-    emit commitData(pushButton);
+    QWidget* widget = qobject_cast<QWidget* >(sender());
+    emit commitData(widget);
 }
 
 
