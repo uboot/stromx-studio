@@ -1,10 +1,11 @@
 #include "model/InputModel.h"
 
+#include <stromx/runtime/Operator.h>
+
 #include "Common.h"
 #include "cmd/SetVisualizationPropertiesCmd.h"
 #include "model/OperatorModel.h"
 #include "model/StreamModel.h"
-#include <stromx/runtime/Operator.h>
 
 InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject* parent)
   : QObject(parent),

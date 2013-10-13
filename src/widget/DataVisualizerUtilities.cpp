@@ -1,7 +1,6 @@
 #include "widget/DataVisualizerUtilities.h"
 
 #include <QPen>
-#include <boost/concept_check.hpp>
 
 #include <stromx/runtime/Image.h>
 #include <stromx/runtime/Primitive.h>
