@@ -12,6 +12,10 @@ InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack
     m_id(id),
     m_undoStack(undoStack) 
 {
+    m_visualizationProperties["color"] = colorTable()["Red"];
+    m_visualizationProperties["visualization"] = AbstractDataVisualizer::AUTOMATIC;
+    m_visualizationProperties["active"] = true;
+    
     connect(op, SIGNAL(nameChanged(QString)), this, SLOT(updateOperatorName(QString)));
 }
 
