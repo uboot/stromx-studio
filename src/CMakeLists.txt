@@ -33,6 +33,7 @@ set(stromxstudio_SOURCES
     data/InputData.cpp
     data/OperatorData.cpp
     delegate/ChooseImageButton.cpp
+    delegate/EditMatrixButton.cpp
     delegate/InputDelegate.cpp
     delegate/InputEditWidget.cpp
     delegate/InputPaintWidget.cpp
@@ -88,6 +89,7 @@ set(stromxstudio_HEADERS
     data/InputData.h
     data/OperatorData.h
     delegate/ChooseImageButton.h
+    delegate/EditMatrixButton.h
     delegate/InputDelegate.h
     delegate/InputEditWidget.h
     delegate/InputPaintWidget.h
