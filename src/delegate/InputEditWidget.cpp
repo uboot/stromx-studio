@@ -1,4 +1,4 @@
-#include "widget/InputEditWidget.h"
+#include "delegate/InputEditWidget.h"
 
 #include <QCheckBox>
 #include <QComboBox>

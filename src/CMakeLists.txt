@@ -34,6 +34,8 @@ set(stromxstudio_SOURCES
     data/OperatorData.cpp
     delegate/ChooseImageButton.cpp
     delegate/InputDelegate.cpp
+    delegate/InputEditWidget.cpp
+    delegate/InputPaintWidget.cpp
     delegate/ItemDelegate.cpp
     delegate/TriggerButton.cpp
     item/ArrowItem.cpp
@@ -60,8 +62,6 @@ set(stromxstudio_SOURCES
     widget/DocumentationWindow.cpp
     widget/ErrorListView.cpp
     widget/GraphicsView.cpp
-    widget/InputEditWidget.cpp
-    widget/InputPaintWidget.cpp
     widget/MainWindow.cpp
     widget/ObserverTreeView.cpp
     widget/ObserverView.cpp
@@ -89,6 +89,8 @@ set(stromxstudio_HEADERS
     data/OperatorData.h
     delegate/ChooseImageButton.h
     delegate/InputDelegate.h
+    delegate/InputEditWidget.h
+    delegate/InputPaintWidget.h
     delegate/ItemDelegate.h
     delegate/TriggerButton.h
     item/ArrowItem.h
@@ -112,8 +114,6 @@ set(stromxstudio_HEADERS
     widget/DocumentationWindow.h
     widget/ErrorListView.h
     widget/GraphicsView.h
-    widget/InputEditWidget.h
-    widget/InputPaintWidget.h
     widget/MainWindow.h
     widget/ObserverTreeView.h
     widget/ObserverView.h

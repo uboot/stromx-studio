@@ -1,4 +1,4 @@
-#include "widget/InputPaintWidget.h"
+#include "delegate/InputPaintWidget.h"
 
 #include <QCheckBox>
 #include <QFormLayout>

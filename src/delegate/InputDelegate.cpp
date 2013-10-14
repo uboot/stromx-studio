@@ -4,8 +4,8 @@
 #include <QApplication>
 
 #include "Common.h"
-#include "widget/InputEditWidget.h"
-#include "widget/InputPaintWidget.h"
+#include "delegate/InputEditWidget.h"
+#include "delegate/InputPaintWidget.h"
 
 const int InputDelegate::ROW_HEIGHT = 100;
 const int InputDelegate::BORDER_OFFSET = 5;

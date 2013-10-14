@@ -20,7 +20,7 @@
 #ifndef INPUTPAINTWIDGET_H
 #define INPUTPAINTWIDGET_H
 
-#include "widget/InputWidget.h"
+#include "delegate/InputWidget.h"
 
 class QCheckBox;
 class QLabel;

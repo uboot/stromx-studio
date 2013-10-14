@@ -20,7 +20,7 @@
 #ifndef INPUTEDITWIDGET_H
 #define INPUTEDITWIDGET_H
 
-#include "widget/InputWidget.h"
+#include "delegate/InputWidget.h"
 
 class QCheckBox;
 class QComboBox;
