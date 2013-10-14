@@ -209,10 +209,19 @@ QVariant DataConverter::toQVariant(const stromx::runtime::Data& data, const stro
         {
             if(role == Qt::DisplayRole || role == ImageRole)
             {
-                QString label1;
-                QString label2;
                 const stromx::runtime::Image & imageData = stromx::runtime::data_cast<stromx::runtime::Image>(data);
-                return QString(QObject::tr("Height: %1 | Width: %2")).arg(label1.setNum(imageData.height()),label2.setNum(imageData.height()));
+                return QString(QObject::tr("Width: %1 | Height: %2"))
+                    .arg(imageData.width()).arg(imageData.height());
+            }
+        }
+        
+        if (data.isVariant(stromx::runtime::DataVariant::MATRIX))
+        {
+            if(role == Qt::DisplayRole || role == ImageRole)
+            {
+                const stromx::runtime::Matrix & matrixData = stromx::runtime::data_cast<stromx::runtime::Matrix>(data);
+                return QString(QObject::tr("Rows: %1 | Columns: %2"))
+                    .arg(matrixData.rows()).arg(matrixData.cols());
             }
         }
         
