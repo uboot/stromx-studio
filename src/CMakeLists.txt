@@ -80,6 +80,7 @@ set(stromxstudio_SOURCES
     Image.cpp
     LimitUndoStack.cpp
     main.cpp
+    Matrix.cpp
     ParameterServer.cpp
     StreamEditorScene.cpp
     UndoStackAction.cpp
