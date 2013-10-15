@@ -24,12 +24,13 @@
 #include <QPushButton>
 #include <QVariant>
 
+#include "Matrix.h"
+
 class EditMatrixButton : public QPushButton
 {   
     Q_OBJECT
     
 public:
-    typedef QMap<QString, QVariant> Matrix;
     explicit EditMatrixButton(QWidget* parent = 0);
     
     const Matrix & matrix() const { return m_matrix; }

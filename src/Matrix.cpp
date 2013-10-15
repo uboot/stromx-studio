@@ -8,6 +8,28 @@ const stromx::runtime::Version Matrix::VERSION
     = stromx::runtime::Version(STROMX_STUDIO_VERSION_MAJOR, 
                                STROMX_STUDIO_VERSION_MINOR, 
                                STROMX_STUDIO_VERSION_PATCH);
+    
+Matrix::Matrix(const Matrix& matrix)
+  : MatrixWrapper(),
+    m_data(0)
+{
+    allocate(matrix.rows(), matrix.cols(), matrix.valueType());
+    memcpy(m_data, matrix.m_data, bufferSize());
+}
+
+Matrix::Matrix(const unsigned int rows, const unsigned int cols, const Matrix::ValueType valueType)
+  : m_data(0) 
+{
+    allocate(rows, cols, valueType);
+}
+
+const Matrix & Matrix::operator=(const Matrix& matrix)
+{
+    allocate(matrix.rows(), matrix.cols(), matrix.valueType());
+    memcpy(m_data, matrix.m_data, bufferSize());
+    
+    return *this;
+}
 
 void Matrix::allocate(const unsigned int rows, const unsigned int cols, const ValueType valueType)
 {

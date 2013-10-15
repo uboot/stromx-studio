@@ -20,6 +20,8 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <QVariant>
+
 #include <stromx/runtime/MatrixWrapper.h>
 #include <stromx/runtime/Version.h>
 
@@ -28,19 +30,16 @@ class Matrix : public stromx::runtime::MatrixWrapper
 {
 public:
     Matrix() : m_data(0) {}
-    
     Matrix(const Matrix & matrix);
+    Matrix(const unsigned int rows, const unsigned int cols, const ValueType valueType);
     
-    Matrix(const unsigned int rows, const unsigned int cols, const ValueType valueType) 
-        : m_data(0) 
-    {
-        allocate(rows, cols, valueType);
-    }
     const stromx::runtime::Version & version() const { return VERSION; }
     const std::string & type() const { return TYPE; }
     const std::string & package() const { return PACKAGE; }
     
     Data* clone() const { return new Matrix(); }
+    
+    const Matrix & operator=(const Matrix & matrix);
     
 protected:
     void allocate(const unsigned int rows, const unsigned int cols, const ValueType valueType);
@@ -51,5 +50,7 @@ private:
     static const stromx::runtime::Version VERSION;
     uint8_t* m_data;
 };
+
+Q_DECLARE_METATYPE(Matrix)
 
 #endif // MATRIX_H
