@@ -207,6 +207,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     case ChoicesRole:
     case TriggerRole:
     case ImageRole:
+    case MatrixRole:
         roleType = USER;
         break;
     case MinRole:

@@ -80,6 +80,7 @@ set(stromxstudiotest_SOURCES
     ../DataConverter.cpp
     ../ExceptionObserver.cpp
     ../Image.cpp
+    ../Matrix.cpp
     ../ParameterServer.cpp
 )
 

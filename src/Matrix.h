@@ -33,6 +33,8 @@ public:
     Matrix(const Matrix & matrix);
     Matrix(const unsigned int rows, const unsigned int cols, const ValueType valueType);
     
+    explicit Matrix(const stromx::runtime::Matrix & matrix);
+    
     const stromx::runtime::Version & version() const { return VERSION; }
     const std::string & type() const { return TYPE; }
     const std::string & package() const { return PACKAGE; }

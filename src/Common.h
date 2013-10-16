@@ -76,6 +76,11 @@ enum Roles
     StepRole,
     
     /**
+     * A matrix data which can be edited by the user in a separate editor.
+     */
+    MatrixRole,
+    
+    /**
      * The visualization properties of an observed input.
      */
     VisualizationPropertiesRole

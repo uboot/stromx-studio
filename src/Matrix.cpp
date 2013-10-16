@@ -31,6 +31,12 @@ const Matrix & Matrix::operator=(const Matrix& matrix)
     return *this;
 }
 
+Matrix::Matrix(const stromx::runtime::Matrix& matrix)
+  : m_data(0)
+{
+    allocate(matrix.rows(), matrix.cols(), matrix.valueType());
+}
+
 void Matrix::allocate(const unsigned int rows, const unsigned int cols, const ValueType valueType)
 {
     if(m_data)

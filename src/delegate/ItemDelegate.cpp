@@ -6,8 +6,10 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QMap>
+
 #include "Common.h"
 #include "delegate/ChooseImageButton.h"
+#include "delegate/EditMatrixButton.h"
 #include "delegate/TriggerButton.h"
 
 const int ItemDelegate::ROW_HEIGHT = 25;
@@ -63,6 +65,15 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
     {
         QPushButton* button = new ChooseImageButton(parent);
         connect(button, SIGNAL(choseImage()), this, SLOT(commitEditEvent()));
+        return button;
+    }
+    
+    data = index.data(MatrixRole);
+    if(data.canConvert<Matrix>())
+    {
+        EditMatrixButton* button = new EditMatrixButton(parent);
+        button->setMatrix(data.value<Matrix>());
+        connect(button, SIGNAL(finishedEditing()), this, SLOT(commitEditEvent()));
         return button;
     }
     
@@ -197,6 +208,18 @@ void ItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, cons
             if(! image.isNull())
                 model->setData(index, image, Qt::EditRole);
             button->reset();
+        }
+        return;
+    }
+    
+    data = index.model()->data(index, MatrixRole);
+    if(data.canConvert<Matrix>())
+    {
+        if(EditMatrixButton* button = qobject_cast<EditMatrixButton*>(editor))
+        {
+            QVariant variantData;
+            variantData.setValue(button->matrix());
+            model->setData(index, variantData, Qt::EditRole);
         }
         return;
     }

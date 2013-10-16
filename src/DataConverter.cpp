@@ -18,8 +18,6 @@
 */
 #include "DataConverter.h"
 
-#include "Common.h"
-#include "Image.h"
 #include <QVariant>
 #include <QString>
 #include <QStringList>
@@ -29,6 +27,10 @@
 #include <stromx/runtime/String.h>
 #include <stromx/runtime/TriggerData.h>
 #include <qapplication.h>
+
+#include "Common.h"
+#include "Image.h"
+#include "Matrix.h"
 
 namespace
 {
@@ -217,11 +219,20 @@ QVariant DataConverter::toQVariant(const stromx::runtime::Data& data, const stro
         
         if (data.isVariant(stromx::runtime::DataVariant::MATRIX))
         {
-            if(role == Qt::DisplayRole || role == ImageRole)
+            if(role == Qt::DisplayRole)
             {
                 const stromx::runtime::Matrix & matrixData = stromx::runtime::data_cast<stromx::runtime::Matrix>(data);
                 return QString(QObject::tr("Rows: %1 | Columns: %2"))
                     .arg(matrixData.rows()).arg(matrixData.cols());
+            }
+            
+            if(role == MatrixRole)
+            {
+                const stromx::runtime::Matrix & matrixData = stromx::runtime::data_cast<stromx::runtime::Matrix>(data);
+                const Matrix matrix(matrixData);
+                QVariant variantData;
+                variantData.setValue<Matrix>(matrix);
+                return variantData;
             }
         }
         
@@ -313,6 +324,12 @@ stromx::runtime::DataRef DataConverter::toStromxData(const QVariant& variant, co
     {
         if(variant.type() == QVariant::Image)
             return stromx::runtime::DataRef(new Image(variant.value<QImage>()));
+    }
+    
+    if(param.variant().isVariant(stromx::runtime::DataVariant::MATRIX))
+    {
+        if(variant.canConvert<Matrix>())
+            return stromx::runtime::DataRef(new Matrix(variant.value<Matrix>()));
     }
     
     return stromx::runtime::DataRef();
