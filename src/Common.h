@@ -80,10 +80,14 @@ enum Roles
      */
     MatrixRole,
     
-    /**
-     * The visualization properties of an observed input.
-     */
-    VisualizationPropertiesRole
+    /** The visualization properties of an observed input. */
+    VisualizationPropertiesRole,
+    
+    /** The number of rows of a matrix parameter. */
+    NumRowsRole,
+    
+    /** The number of columns of a matrix parameter. */
+    NumColsRole
 };
 
 /** Custom event types of stromx-studio. */

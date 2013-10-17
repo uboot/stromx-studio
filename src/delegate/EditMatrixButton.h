@@ -31,10 +31,11 @@ class EditMatrixButton : public QPushButton
     Q_OBJECT
     
 public:
-    explicit EditMatrixButton(QWidget* parent = 0);
+    explicit EditMatrixButton(const Matrix & matrix, QWidget* parent = 0);
     
     const Matrix & matrix() const { return m_matrix; }
-    void setMatrix(const Matrix & matrix);
+    void setNumColumns(const int cols);
+    void setNumRows(const int rows);
    
 signals:
     void finishedEditing();

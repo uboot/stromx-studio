@@ -71,9 +71,19 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
     data = index.data(MatrixRole);
     if(data.canConvert<Matrix>())
     {
-        EditMatrixButton* button = new EditMatrixButton(parent);
-        button->setMatrix(data.value<Matrix>());
+        const Matrix matrix = data.value<Matrix>();
+        EditMatrixButton* button = new EditMatrixButton(matrix, parent);
         connect(button, SIGNAL(finishedEditing()), this, SLOT(commitEditEvent()));
+        
+        // get and set information about the matrix dimensions
+        data = index.data(NumRowsRole);
+        if (data.canConvert(QVariant::Int))
+            button->setNumRows(data.toInt());
+        
+        data = index.data(NumColsRole);
+        if (data.canConvert(QVariant::Int))
+            button->setNumColumns(data.toInt());
+        
         return button;
     }
     

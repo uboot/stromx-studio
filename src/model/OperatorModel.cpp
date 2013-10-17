@@ -213,6 +213,8 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     case MinRole:
     case MaxRole:
     case StepRole:
+    case NumRowsRole:
+    case NumColsRole:
         roleType = SETTING;
         break;
     default:
@@ -271,6 +273,12 @@ QVariant OperatorModel::getParameterSetting(const stromx::runtime::Parameter & p
             if(param.step().isVariant(stromx::runtime::DataVariant::NONE))
                 return QVariant();
             return DataConverter::toQVariant(param.step(), param, Qt::EditRole);
+            
+        case NumRowsRole:
+            return param.rows();
+            
+        case NumColsRole:
+            return param.cols();
             
         default:
             Q_ASSERT(false);
