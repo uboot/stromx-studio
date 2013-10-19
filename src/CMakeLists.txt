@@ -64,6 +64,7 @@ set(stromxstudio_SOURCES
     widget/ErrorListView.cpp
     widget/GraphicsView.cpp
     widget/MainWindow.cpp
+    widget/MatrixEditor.cpp
     widget/ObserverTreeView.cpp
     widget/ObserverView.cpp
     widget/ObserverWindow.cpp
@@ -118,6 +119,7 @@ set(stromxstudio_HEADERS
     widget/ErrorListView.h
     widget/GraphicsView.h
     widget/MainWindow.h
+    widget/MatrixEditor.h
     widget/ObserverTreeView.h
     widget/ObserverView.h
     widget/ObserverWindow.h

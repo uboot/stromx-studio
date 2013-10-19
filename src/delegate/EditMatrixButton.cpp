@@ -1,10 +1,16 @@
 #include "delegate/EditMatrixButton.h"
 
-EditMatrixButton::EditMatrixButton(const Matrix & matrix, QWidget* parent)
+#include "widget/MatrixEditor.h"
+
+
+EditMatrixButton::EditMatrixButton(const Matrix & matrix, const int rows,
+                                   const int cols, QWidget* parent)
   : QPushButton(parent),
-    m_matrix(matrix)
+    m_editor(0)
 {
     setText(tr("Edit..."));
+    m_editor = new MatrixEditor(matrix, rows, cols, this);
+    
     connect(this, SIGNAL(clicked(bool)), this, SLOT(openEditor()));
 }
 
@@ -13,12 +19,8 @@ void EditMatrixButton::openEditor()
     emit finishedEditing();
 }
 
-void EditMatrixButton::setNumColumns(const int cols)
+const Matrix& EditMatrixButton::matrix()
 {
-
+    return m_editor->matrix();
 }
 
-void EditMatrixButton::setNumRows(const int rows)
-{
-
-}

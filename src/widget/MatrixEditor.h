@@ -17,34 +17,27 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef EDITMATRIXBUTTON_H
-#define EDITMATRIXBUTTON_H
+#ifndef MATRIXEDITOR_H
+#define MATRIXEDITOR_H
 
-#include <QMap>
-#include <QPushButton>
-#include <QVariant>
+#include <QDialog>
+
+#include "Matrix.h"
 
 class Matrix;
-class MatrixEditor;
 
-class EditMatrixButton : public QPushButton
+class MatrixEditor : public QDialog
 {   
     Q_OBJECT
     
 public:
-    explicit EditMatrixButton(const Matrix & matrix, const int rows,
-                              const int cols, QWidget* parent = 0);
+    explicit MatrixEditor(const Matrix& matrix, const int rows,
+                          const int cols, QWidget* parent = 0);
     
-    const Matrix & matrix();
-   
-signals:
-    void finishedEditing();
-    
-private slots:
-    void openEditor();
+    const Matrix & matrix() { return m_matrix; }
     
 private:
-    MatrixEditor* m_editor;
+    Matrix m_matrix;
 };
 
-#endif // EDITMATRIXBUTTON_H
+#endif // MATRIXEDITOR_H

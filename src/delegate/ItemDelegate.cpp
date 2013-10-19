@@ -8,6 +8,7 @@
 #include <QMap>
 
 #include "Common.h"
+#include "Matrix.h"
 #include "delegate/ChooseImageButton.h"
 #include "delegate/EditMatrixButton.h"
 #include "delegate/TriggerButton.h"
@@ -71,18 +72,22 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
     data = index.data(MatrixRole);
     if(data.canConvert<Matrix>())
     {
+        // get the matrix
         const Matrix matrix = data.value<Matrix>();
-        EditMatrixButton* button = new EditMatrixButton(matrix, parent);
-        connect(button, SIGNAL(finishedEditing()), this, SLOT(commitEditEvent()));
         
-        // get and set information about the matrix dimensions
+        // get and information about the matrix dimensions
+        int rows = -1;
+        int cols = -1;
         data = index.data(NumRowsRole);
         if (data.canConvert(QVariant::Int))
-            button->setNumRows(data.toInt());
+            rows = data.toInt();
         
         data = index.data(NumColsRole);
         if (data.canConvert(QVariant::Int))
-            button->setNumColumns(data.toInt());
+            cols = data.toInt();
+        
+        EditMatrixButton* button = new EditMatrixButton(matrix, rows, cols, parent);
+        connect(button, SIGNAL(finishedEditing()), this, SLOT(commitEditEvent()));
         
         return button;
     }
