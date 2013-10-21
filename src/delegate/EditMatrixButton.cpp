@@ -1,7 +1,7 @@
 #include "delegate/EditMatrixButton.h"
 
 #include "widget/MatrixEditor.h"
-
+#include <boost/graph/graph_concepts.hpp>
 
 EditMatrixButton::EditMatrixButton(const Matrix & matrix, const int rows,
                                    const int cols, QWidget* parent)
@@ -16,6 +16,7 @@ EditMatrixButton::EditMatrixButton(const Matrix & matrix, const int rows,
 
 void EditMatrixButton::openEditor()
 {
+    m_editor->exec();
     emit finishedEditing();
 }
 
