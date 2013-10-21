@@ -25,6 +25,7 @@
 #include "Matrix.h"
 
 class Matrix;
+class QTableWidget;
 
 class MatrixEditor : public QDialog
 {   
@@ -37,7 +38,10 @@ public:
     const Matrix & matrix() { return m_matrix; }
     
 private:
+    void fillTable();
+    
     Matrix m_matrix;
+    QTableWidget* m_table;
 };
 
 #endif // MATRIXEDITOR_H
