@@ -35,6 +35,14 @@ Matrix::Matrix(const stromx::runtime::Matrix& matrix)
   : m_data(0)
 {
     allocate(matrix.rows(), matrix.cols(), matrix.valueType());
+    
+    for (unsigned int i = 0; i < rows(); ++i)
+    {
+        const uint8_t* srcRowPtr = matrix.data() + i * matrix.stride();
+        uint8_t* dstRowPtr = data() + i * stride();
+        unsigned int rowBytes = rows() * valueSize();
+        memcpy(dstRowPtr, srcRowPtr, rowBytes);
+    }
 }
 
 void Matrix::allocate(const unsigned int rows, const unsigned int cols, const ValueType valueType)
