@@ -1,27 +1,28 @@
 #include "delegate/EditMatrixButton.h"
 
 #include "widget/MatrixEditor.h"
-#include <boost/graph/graph_concepts.hpp>
 
 EditMatrixButton::EditMatrixButton(const Matrix & matrix, const int rows,
                                    const int cols, QWidget* parent)
   : QPushButton(parent),
-    m_editor(0)
+    m_matrix(matrix),
+    m_rows(rows),
+    m_cols(cols)
 {
     setText(tr("Edit..."));
-    m_editor = new MatrixEditor(matrix, rows, cols, this);
-    
     connect(this, SIGNAL(clicked(bool)), this, SLOT(openEditor()));
 }
 
 void EditMatrixButton::openEditor()
 {
-    m_editor->exec();
+    MatrixEditor editor(m_matrix, m_rows, m_cols, this);
+    editor.exec();
+    m_matrix = editor.matrix();
     emit finishedEditing();
 }
 
 const Matrix& EditMatrixButton::matrix()
 {
-    return m_editor->matrix();
+    return m_matrix;
 }
 

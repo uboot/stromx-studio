@@ -18,15 +18,16 @@
 */
 #include "DataConverter.h"
 
+#include <QApplication>
 #include <QVariant>
 #include <QString>
 #include <QStringList>
+
 #include <stromx/runtime/DataRef.h>
 #include <stromx/runtime/Image.h>
 #include <stromx/runtime/Parameter.h>
 #include <stromx/runtime/String.h>
 #include <stromx/runtime/TriggerData.h>
-#include <qapplication.h>
 
 #include "Common.h"
 #include "Image.h"

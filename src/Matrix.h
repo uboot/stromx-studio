@@ -35,6 +35,8 @@ public:
     
     explicit Matrix(const stromx::runtime::Matrix & matrix);
     
+    virtual ~Matrix();
+    
     const stromx::runtime::Version & version() const { return VERSION; }
     const std::string & type() const { return TYPE; }
     const std::string & package() const { return PACKAGE; }

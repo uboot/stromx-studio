@@ -24,8 +24,7 @@
 #include <QPushButton>
 #include <QVariant>
 
-class Matrix;
-class MatrixEditor;
+#include "Matrix.h"
 
 class EditMatrixButton : public QPushButton
 {   
@@ -44,7 +43,9 @@ private slots:
     void openEditor();
     
 private:
-    MatrixEditor* m_editor;
+    Matrix m_matrix;
+    int m_rows;
+    int m_cols;
 };
 
 #endif // EDITMATRIXBUTTON_H

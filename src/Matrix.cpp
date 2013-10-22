@@ -23,6 +23,12 @@ Matrix::Matrix(const unsigned int rows, const unsigned int cols, const Matrix::V
     allocate(rows, cols, valueType);
 }
 
+Matrix::~Matrix()
+{
+    delete [] m_data;
+    m_data = 0;
+}
+
 const Matrix & Matrix::operator=(const Matrix& matrix)
 {
     allocate(matrix.rows(), matrix.cols(), matrix.valueType());
@@ -40,7 +46,7 @@ Matrix::Matrix(const stromx::runtime::Matrix& matrix)
     {
         const uint8_t* srcRowPtr = matrix.data() + i * matrix.stride();
         uint8_t* dstRowPtr = data() + i * stride();
-        unsigned int rowBytes = rows() * valueSize();
+        unsigned int rowBytes = cols() * valueSize();
         memcpy(dstRowPtr, srcRowPtr, rowBytes);
     }
 }
