@@ -24,8 +24,6 @@
 
 #include "Matrix.h"
 
-class QSpinBox;
-class Matrix;
 class QTableWidget;
 
 class MatrixEditor : public QDialog
@@ -38,12 +36,14 @@ public:
     
     const Matrix & matrix() { return m_matrix; }
     
-private:
+private slots:
+    void handleRowsChanged(const int rows);
+    void handleColsChanged(const int cols);
     void fillTable();
+    void readTable();
     
+private:
     Matrix m_matrix;
-    QSpinBox* m_rowsSpinBox;
-    QSpinBox* m_colsSpinBox;
     QTableWidget* m_table;
 };
 

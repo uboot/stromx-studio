@@ -16,8 +16,9 @@ EditMatrixButton::EditMatrixButton(const Matrix & matrix, const int rows,
 void EditMatrixButton::openEditor()
 {
     MatrixEditor editor(m_matrix, m_rows, m_cols, this);
-    editor.exec();
-    m_matrix = editor.matrix();
+    if (editor.exec() == QDialog::Accepted)
+        m_matrix = editor.matrix();
+    
     emit finishedEditing();
 }
 
