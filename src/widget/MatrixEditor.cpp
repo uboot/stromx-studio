@@ -4,6 +4,8 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QFormLayout>
+#include <QSpinBox>
 
 namespace
 {
@@ -38,18 +40,37 @@ namespace
 
 MatrixEditor::MatrixEditor(const Matrix& matrix, const int rows, const int cols, QWidget* parent)
   : QDialog(parent),
-    m_matrix(matrix)
+    m_matrix(matrix),
+    m_rowsSpinBox(0),
+    m_colsSpinBox(0),
+    m_table(0)
 {
+    QFormLayout* dimensions = new QFormLayout();
+    
+    m_rowsSpinBox = new QSpinBox();
+    m_rowsSpinBox->setMinimum(0);
+    m_rowsSpinBox->setValue(matrix.rows());
+    m_rowsSpinBox->setEnabled(rows < 0);
+    dimensions->addRow(tr("Rows:"), m_rowsSpinBox);
+    
+    m_colsSpinBox = new QSpinBox();
+    m_colsSpinBox->setMinimum(0);
+    m_colsSpinBox->setValue(matrix.cols());
+    m_colsSpinBox->setEnabled(cols < 0);
+    dimensions->addRow(tr("Columns:"), m_colsSpinBox);
+    
     m_table = new QTableWidget(this);
     fillTable();
     
     QPushButton* okButton = new QPushButton(tr("Ok"), this);
     QPushButton* cancelButton = new QPushButton(tr("Cancel"), this);
     
+    okButton->setDefault(true);
     connect(okButton, SIGNAL(clicked(bool)), this, SLOT(accept()));
-    connect(cancelButton, SIGNAL(clicked(bool)), this, SLOT(accept()));
+    connect(cancelButton, SIGNAL(clicked(bool)), this, SLOT(reject()));
     
     QVBoxLayout* main = new QVBoxLayout();
+    main->addLayout(dimensions);
     main->addWidget(m_table);
     
     QHBoxLayout* buttons = new QHBoxLayout();

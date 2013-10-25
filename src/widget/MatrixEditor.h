@@ -24,6 +24,7 @@
 
 #include "Matrix.h"
 
+class QSpinBox;
 class Matrix;
 class QTableWidget;
 
@@ -41,6 +42,8 @@ private:
     void fillTable();
     
     Matrix m_matrix;
+    QSpinBox* m_rowsSpinBox;
+    QSpinBox* m_colsSpinBox;
     QTableWidget* m_table;
 };
 

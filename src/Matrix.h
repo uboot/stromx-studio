@@ -41,9 +41,10 @@ public:
     const std::string & type() const { return TYPE; }
     const std::string & package() const { return PACKAGE; }
     
-    Data* clone() const { return new Matrix(); }
+    Data* clone() const;
     
     const Matrix & operator=(const Matrix & matrix);
+    const Matrix & operator=(const stromx::runtime::Matrix & matrix);
     
 protected:
     void allocate(const unsigned int rows, const unsigned int cols, const ValueType valueType);
