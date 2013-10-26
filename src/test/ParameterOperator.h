@@ -48,7 +48,8 @@ public:
         INT_PARAM,
         ENUM_PARAM,
         BOOL_PARAM,
-        MATRIX_PARAM
+        MATRIX_PARAM,
+        INT_MATRIX_PARAM
     };
     
     ParameterOperator();
@@ -74,6 +75,7 @@ private:
     stromx::runtime::Enum m_enumParam;
     stromx::runtime::Bool m_boolParam;
     Matrix m_matrixParam;
+    Matrix m_intMatrixParam;
 };
 
 #endif // PARAMETEROPERATOR_H

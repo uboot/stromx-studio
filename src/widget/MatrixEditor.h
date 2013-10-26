@@ -25,6 +25,7 @@
 #include "Matrix.h"
 
 class QTableWidget;
+class QTableWidgetItem;
 
 class MatrixEditor : public QDialog
 {   
@@ -41,6 +42,7 @@ private slots:
     void handleColsChanged(const int cols);
     void fillTable();
     void readTable();
+    void checkItemContent(QTableWidgetItem* item);
     
 private:
     Matrix m_matrix;

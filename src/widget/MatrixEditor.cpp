@@ -98,6 +98,8 @@ MatrixEditor::MatrixEditor(const Matrix& matrix, const int rows, const int cols,
     
     m_table = new QTableWidget(this);
     fillTable();
+    connect(m_table, SIGNAL(itemChanged(QTableWidgetItem*)),
+            this, SLOT(checkItemContent(QTableWidgetItem*)));
     
     QPushButton* okButton = new QPushButton(tr("Ok"), this);
     QPushButton* cancelButton = new QPushButton(tr("Cancel"), this);
@@ -145,12 +147,7 @@ void MatrixEditor::readTable()
         for (unsigned int j = 0; j < m_matrix.cols(); ++j)
         {
             QVariant data = m_table->item(i, j)->data(Qt::EditRole);
-            double value = 0.0;
-            
-            if (data.canConvert(QVariant::Double))
-                value = data.toDouble();
-            
-            setValueAt(m_matrix, i, j, value);
+            setValueAt(m_matrix, i, j, data.toDouble());
         }
     }  
 }
@@ -184,4 +181,13 @@ void MatrixEditor::handleColsChanged(const int cols)
         }
     }
 }
+
+void MatrixEditor::checkItemContent(QTableWidgetItem* item)
+{
+    QVariant data = item->data(Qt::EditRole);
+    
+    item->setData(Qt::EditRole, data.toDouble());
+    item->setData(Qt::DisplayRole, data.toDouble());
+}
+
 
