@@ -396,6 +396,11 @@ bool DataConverter::stromxDataEqualsTarget(const stromx::runtime::Data& newValue
         return isEqual<stromx::runtime::String>(newValue, targetValue);
     }
     
+    if(targetValue.isVariant(stromx::runtime::DataVariant::MATRIX))
+    {
+        return isEqual<stromx::runtime::Matrix>(newValue, targetValue);
+    }
+    
     return false;
 }
 
