@@ -22,8 +22,12 @@ void EditMatrixButton::openEditor()
     emit finishedEditing();
 }
 
-const Matrix& EditMatrixButton::matrix()
+const Matrix& EditMatrixButton::matrix() const
 {
     return m_matrix;
 }
 
+void EditMatrixButton::setMatrix(const Matrix& matrix)
+{
+    m_matrix = matrix;
+}

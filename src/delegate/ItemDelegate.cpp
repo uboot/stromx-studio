@@ -178,6 +178,15 @@ void ItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) cons
         return;
     }
     
+    data = index.model()->data(index, MatrixRole);
+    if(data.canConvert<Matrix>())
+    {
+        Matrix matrix = data.value<Matrix>();
+        if(EditMatrixButton* button = qobject_cast<EditMatrixButton*>(editor))
+            button->setMatrix(matrix);
+        return;
+    }
+    
     QStyledItemDelegate::setEditorData(editor, index);
 }
 

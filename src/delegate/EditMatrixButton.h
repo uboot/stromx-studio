@@ -34,7 +34,8 @@ public:
     explicit EditMatrixButton(const Matrix & matrix, const int rows,
                               const int cols, QWidget* parent = 0);
     
-    const Matrix & matrix();
+    const Matrix & matrix() const;
+    void setMatrix(const Matrix & matrix);
    
 signals:
     void finishedEditing();

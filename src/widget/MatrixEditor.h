@@ -35,7 +35,7 @@ public:
     explicit MatrixEditor(const Matrix& matrix, const int rows,
                           const int cols, QWidget* parent = 0);
     
-    const Matrix & matrix() { return m_matrix; }
+    const Matrix & matrix() const { return m_matrix; }
     
 private slots:
     void handleRowsChanged(const int rows);
