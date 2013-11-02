@@ -1,7 +1,7 @@
 Source: stromx-studio
 Priority: extra
-Maintainer: roter_oktober <stromx-devel@googlegroups.com>
-Build-Depends: debhelper (>= 7.0.50~), cmake, cdbs, stromx-dev, libqt4-dev
+Maintainer: Matthias Fuchs <stromx-devel@googlegroups.com>
+Build-Depends: debhelper (>= 7.0.50~), cmake, cdbs, libstromx-dev, libqt4-dev
 Standards-Version: 3.9.1
 Section: devel
 Homepage: http://www.stromx.org
