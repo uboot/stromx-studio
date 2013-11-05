@@ -26,7 +26,7 @@ const QVariant ParameterServer::getParameter(unsigned int id, int role)
     
     ParameterValue & value = m_cache[id];
     
-    if(value.state == CURRENT || role == Qt::EditRole)
+    if(value.state == CURRENT)
     {
         return DataConverter::toQVariant(m_cache[id].value, param, role);
     }

@@ -208,6 +208,15 @@ QVariant DataConverter::toQVariant(const stromx::runtime::Data& data, const stro
             }
         }
         
+        if (data.isVariant(stromx::runtime::DataVariant::STRING))
+        {
+            if(role == Qt::DisplayRole || role == Qt::EditRole)
+            {
+                const stromx::runtime::String & stringData = stromx::runtime::data_cast<stromx::runtime::String>(data);
+                return QString::fromStdString(std::string(stringData));
+            }
+        }
+        
         if (data.isVariant(stromx::runtime::DataVariant::IMAGE))
         {
             if(role == Qt::DisplayRole || role == ImageRole)
