@@ -4,6 +4,7 @@
 #include <stromx/runtime/EnumParameter.h>
 #include <stromx/runtime/Id2DataComposite.h>
 #include <stromx/runtime/Id2DataPair.h>
+#include <stromx/runtime/MatrixParameter.h>
 #include <stromx/runtime/NumericParameter.h>
 #include <stromx/runtime/OperatorException.h>
 #include <stromx/runtime/ParameterGroup.h>
@@ -23,6 +24,16 @@ ParameterOperator::ParameterOperator()
 void ParameterOperator::initialize()
 {
     OperatorKernel::initialize(setupInputs(), setupOutputs(), setupParameters());
+    
+    m_matrixParam.resize(3, 4, stromx::runtime::Matrix::FLOAT_32);
+    for (unsigned int i = 0; i < m_matrixParam.rows(); ++i)
+        for (unsigned int j = 0; j < m_matrixParam.cols(); ++j)
+            m_matrixParam.at<float>(i, j) = i + j;
+        
+    m_intMatrixParam.resize(1, 2, stromx::runtime::Matrix::UINT_32);
+    for (unsigned int i = 0; i < m_intMatrixParam.rows(); ++i)
+        for (unsigned int j = 0; j < m_intMatrixParam.cols(); ++j)
+            m_intMatrixParam.at<uint32_t>(i, j) = i + j;
 }
 
 void ParameterOperator::setParameter(unsigned int id, const Data& value)
@@ -42,6 +53,12 @@ void ParameterOperator::setParameter(unsigned int id, const Data& value)
             break;
         case BOOL_PARAM:
             m_boolParam = data_cast<Bool>(value);
+            break;
+        case MATRIX_PARAM:
+            m_matrixParam = data_cast<stromx::runtime::Matrix>(value);
+            break;
+        case INT_MATRIX_PARAM:
+            m_intMatrixParam = data_cast<stromx::runtime::Matrix>(value);
             break;
         default:
             throw WrongParameterId(id, *this);
@@ -65,6 +82,10 @@ const DataRef ParameterOperator::getParameter(const unsigned int id) const
         return m_enumParam;
     case BOOL_PARAM:
         return m_boolParam;
+    case MATRIX_PARAM:
+        return m_matrixParam;
+    case INT_MATRIX_PARAM:
+        return m_intMatrixParam;
     default:
         throw WrongParameterId(id, *this);
     }
@@ -147,6 +168,18 @@ const std::vector<const Parameter*> ParameterOperator::setupParameters()
     boolParam->setTitle("Boolean parameter");
     boolParam->setAccessMode(Parameter::INITIALIZED_WRITE);
     parameters.push_back(boolParam);
+    
+    Parameter* matrixParam = new MatrixParameter(MATRIX_PARAM, DataVariant::FLOAT_32_MATRIX);
+    matrixParam->setTitle("Matrix parameter");
+    matrixParam->setAccessMode(Parameter::INITIALIZED_WRITE);
+    parameters.push_back(matrixParam);
+    
+    MatrixParameter* intMatrixParam = new MatrixParameter(INT_MATRIX_PARAM, DataVariant::UINT_32_MATRIX);
+    intMatrixParam->setTitle("Integer matrix parameter");
+    intMatrixParam->setAccessMode(Parameter::INITIALIZED_WRITE);
+    intMatrixParam->setRows(1);
+    intMatrixParam->setCols(2);
+    parameters.push_back(intMatrixParam);
     
     return parameters;
 }

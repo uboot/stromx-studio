@@ -4,8 +4,8 @@
 #include <QApplication>
 
 #include "Common.h"
-#include "widget/InputEditWidget.h"
-#include "widget/InputPaintWidget.h"
+#include "delegate/InputEditWidget.h"
+#include "delegate/InputPaintWidget.h"
 
 const int InputDelegate::ROW_HEIGHT = 100;
 const int InputDelegate::BORDER_OFFSET = 5;
@@ -20,6 +20,7 @@ QWidget* InputDelegate::createEditor(QWidget* parent,
                                      const QModelIndex& /*index*/) const
 {
     InputEditWidget* editor = new InputEditWidget(parent);
+    connect(editor, SIGNAL(dataChanged()), this, SLOT(commitEditEvent()));
     return editor;
 }
 
@@ -89,4 +90,8 @@ void InputDelegate::setInputWidgetData(InputWidget* widget, const QModelIndex& i
     widget->setVisualizationType(visualizationType);
 }
 
-
+void InputDelegate::commitEditEvent()
+{
+    QWidget* widget = qobject_cast<QWidget* >(sender());
+    emit commitData(widget);
+}

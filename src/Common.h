@@ -76,9 +76,18 @@ enum Roles
     StepRole,
     
     /**
-     * The visualization properties of an observed input.
+     * A matrix data which can be edited by the user in a separate editor.
      */
-    VisualizationPropertiesRole
+    MatrixRole,
+    
+    /** The visualization properties of an observed input. */
+    VisualizationPropertiesRole,
+    
+    /** The number of rows of a matrix parameter. */
+    NumRowsRole,
+    
+    /** The number of columns of a matrix parameter. */
+    NumColsRole
 };
 
 /** Custom event types of stromx-studio. */
@@ -97,6 +106,22 @@ enum EventTypes
     Timeout
 };
 
+/** 
+ * Constant colors which can be chosen by the user for the visualization of
+ * inputs and threads. 
+ */
+class Colors
+{
+public:
+    static const QColor RED;
+    static const QColor GREEN;
+    static const QColor BLUE;
+};
+
+/** 
+ * Returns the table which maps (localized) names to the colors in the class
+ * Colors.
+ */
 const QMap<QString, QColor> & colorTable();
     
 /**

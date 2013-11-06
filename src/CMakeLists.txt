@@ -33,7 +33,10 @@ set(stromxstudio_SOURCES
     data/InputData.cpp
     data/OperatorData.cpp
     delegate/ChooseImageButton.cpp
+    delegate/EditMatrixButton.cpp
     delegate/InputDelegate.cpp
+    delegate/InputEditWidget.cpp
+    delegate/InputPaintWidget.cpp
     delegate/ItemDelegate.cpp
     delegate/TriggerButton.cpp
     item/ArrowItem.cpp
@@ -60,9 +63,8 @@ set(stromxstudio_SOURCES
     widget/DocumentationWindow.cpp
     widget/ErrorListView.cpp
     widget/GraphicsView.cpp
-    widget/InputEditWidget.cpp
-    widget/InputPaintWidget.cpp
     widget/MainWindow.cpp
+    widget/MatrixEditor.cpp
     widget/ObserverTreeView.cpp
     widget/ObserverView.cpp
     widget/ObserverWindow.cpp
@@ -79,6 +81,7 @@ set(stromxstudio_SOURCES
     Image.cpp
     LimitUndoStack.cpp
     main.cpp
+    Matrix.cpp
     ParameterServer.cpp
     StreamEditorScene.cpp
     UndoStackAction.cpp
@@ -88,7 +91,10 @@ set(stromxstudio_HEADERS
     data/InputData.h
     data/OperatorData.h
     delegate/ChooseImageButton.h
+    delegate/EditMatrixButton.h
     delegate/InputDelegate.h
+    delegate/InputEditWidget.h
+    delegate/InputPaintWidget.h
     delegate/ItemDelegate.h
     delegate/TriggerButton.h
     item/ArrowItem.h
@@ -112,9 +118,8 @@ set(stromxstudio_HEADERS
     widget/DocumentationWindow.h
     widget/ErrorListView.h
     widget/GraphicsView.h
-    widget/InputEditWidget.h
-    widget/InputPaintWidget.h
     widget/MainWindow.h
+    widget/MatrixEditor.h
     widget/ObserverTreeView.h
     widget/ObserverView.h
     widget/ObserverWindow.h

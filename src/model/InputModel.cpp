@@ -1,10 +1,11 @@
 #include "model/InputModel.h"
 
+#include <stromx/runtime/Operator.h>
+
 #include "Common.h"
 #include "cmd/SetVisualizationPropertiesCmd.h"
 #include "model/OperatorModel.h"
 #include "model/StreamModel.h"
-#include <stromx/runtime/Operator.h>
 
 InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject* parent)
   : QObject(parent),
@@ -12,7 +13,7 @@ InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack
     m_id(id),
     m_undoStack(undoStack) 
 {
-    m_visualizationProperties["color"] = colorTable()["Red"];
+    m_visualizationProperties["color"] = Colors::RED;
     m_visualizationProperties["visualization"] = AbstractDataVisualizer::AUTOMATIC;
     m_visualizationProperties["active"] = true;
     
@@ -57,6 +58,14 @@ QDataStream& operator>>(QDataStream& stream, InputModel* model)
     QMap<QString, QVariant> properties;
     
     stream >> properties;
+    
+    if (! properties.keys().contains("color"))
+        properties["color"] = Colors::RED;
+    if (! properties.keys().contains("visualization"))
+        properties["visualization"] = AbstractDataVisualizer::AUTOMATIC;
+    if (! properties.keys().contains("active"))
+        properties["active"] = true;
+    
     model->doSetVisualizationProperties(properties);
     
     return stream;

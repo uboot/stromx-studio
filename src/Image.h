@@ -21,7 +21,7 @@
 #define IMAGE_H
 
 #include <QImage>
-#include <QUndoCommand>
+
 #include <stromx/runtime/ImageWrapper.h>
 #include <stromx/runtime/Version.h>
 

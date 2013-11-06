@@ -80,6 +80,7 @@ set(stromxstudiotest_SOURCES
     ../DataConverter.cpp
     ../ExceptionObserver.cpp
     ../Image.cpp
+    ../Matrix.cpp
     ../ParameterServer.cpp
 )
 
@@ -109,7 +110,8 @@ target_link_libraries(stromx_studio_test
     ${stromx_CVSUPPORT_LIB}
 )
 
-add_library(stromx_test SHARED 
+add_library(stromx_test SHARED
+    ../Matrix.cpp 
     DeadlockOperator.cpp
     ExceptionOperator.cpp
     ParameterOperator.cpp

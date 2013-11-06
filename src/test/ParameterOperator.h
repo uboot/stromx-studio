@@ -23,6 +23,8 @@
 #include <stromx/runtime/OperatorKernel.h>
 #include <stromx/runtime/Primitive.h>
 
+#include "Matrix.h"
+
 class ParameterOperator : public stromx::runtime::OperatorKernel
 {
 public:
@@ -45,7 +47,9 @@ public:
         PARAM_GROUP_2,
         INT_PARAM,
         ENUM_PARAM,
-        BOOL_PARAM
+        BOOL_PARAM,
+        MATRIX_PARAM,
+        INT_MATRIX_PARAM
     };
     
     ParameterOperator();
@@ -70,6 +74,8 @@ private:
     stromx::runtime::Int32 m_intParam;
     stromx::runtime::Enum m_enumParam;
     stromx::runtime::Bool m_boolParam;
+    Matrix m_matrixParam;
+    Matrix m_intMatrixParam;
 };
 
 #endif // PARAMETEROPERATOR_H

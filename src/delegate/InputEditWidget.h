@@ -17,12 +17,13 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef INPUTPAINTWIDGET_H
-#define INPUTPAINTWIDGET_H
+#ifndef INPUTEDITWIDGET_H
+#define INPUTEDITWIDGET_H
 
-#include "widget/InputWidget.h"
+#include "delegate/InputWidget.h"
 
-class QLabel;
+class QCheckBox;
+class QComboBox;
 
 /** 
  * \brief Widget for the properties of an observed input
@@ -31,22 +32,29 @@ class QLabel;
  * observer list view. It is used by the item delegate of the observer list
  * view (InputDelegate).
  */
-class InputPaintWidget : public InputWidget
+class InputEditWidget : public InputWidget
 {
     Q_OBJECT
     
 public:
-    InputPaintWidget(QWidget* parent = 0);
+    InputEditWidget(QWidget* parent = 0);
+    
+    const QColor inputColor() const;
+    bool inputActive() const;
+    int visualizationType() const;
     
     void setInputTitle(const QString & title);
     void setInputColor(const QColor & color);
     void setInputActive(const bool isActive);
     void setVisualizationType(const int type);
     
-private:
-    QLabel* m_activeLabel;
-    QLabel* m_colorLabel;
-    QLabel* m_visualizationTypeLabel;
+signals:
+    void dataChanged();
+    
+private:    
+    QCheckBox* m_activeCheckBox;
+    QComboBox* m_colorComboBox;
+    QComboBox* m_visualizationTypeComboBox;
 };
 
-#endif // INPUTPAINTWIDGET_H
+#endif // INPUTEDITWIDGET_H

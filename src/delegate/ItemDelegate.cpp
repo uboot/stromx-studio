@@ -6,8 +6,11 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QMap>
+
 #include "Common.h"
+#include "Matrix.h"
 #include "delegate/ChooseImageButton.h"
+#include "delegate/EditMatrixButton.h"
 #include "delegate/TriggerButton.h"
 
 const int ItemDelegate::ROW_HEIGHT = 25;
@@ -26,6 +29,8 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
         QComboBox* comboBox = new QComboBox(parent);
         foreach(QVariant label, list)
             comboBox->addItem(label.toString());
+        connect(comboBox, SIGNAL(currentIndexChanged(int)),
+                this, SLOT(commitEditEvent()));
         return comboBox;
     }
     
@@ -43,6 +48,8 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
             comboBox->setItemData(i, iter.value(), Qt::DecorationRole);
             ++i;
         }
+        connect(comboBox, SIGNAL(currentIndexChanged(int)),
+                this, SLOT(commitEditEvent()));
         return comboBox;
     }
     
@@ -59,6 +66,29 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
     {
         QPushButton* button = new ChooseImageButton(parent);
         connect(button, SIGNAL(choseImage()), this, SLOT(commitEditEvent()));
+        return button;
+    }
+    
+    data = index.data(MatrixRole);
+    if(data.canConvert<Matrix>())
+    {
+        // get the matrix
+        const Matrix matrix = data.value<Matrix>();
+        
+        // get and information about the matrix dimensions
+        int rows = -1;
+        int cols = -1;
+        data = index.data(NumRowsRole);
+        if (data.canConvert(QVariant::Int))
+            rows = data.toInt();
+        
+        data = index.data(NumColsRole);
+        if (data.canConvert(QVariant::Int))
+            cols = data.toInt();
+        
+        EditMatrixButton* button = new EditMatrixButton(matrix, rows, cols, parent);
+        connect(button, SIGNAL(finishedEditing()), this, SLOT(commitEditEvent()));
+        
         return button;
     }
     
@@ -148,6 +178,15 @@ void ItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) cons
         return;
     }
     
+    data = index.model()->data(index, MatrixRole);
+    if(data.canConvert<Matrix>())
+    {
+        Matrix matrix = data.value<Matrix>();
+        if(EditMatrixButton* button = qobject_cast<EditMatrixButton*>(editor))
+            button->setMatrix(matrix);
+        return;
+    }
+    
     QStyledItemDelegate::setEditorData(editor, index);
 }
 
@@ -197,6 +236,18 @@ void ItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, cons
         return;
     }
     
+    data = index.model()->data(index, MatrixRole);
+    if(data.canConvert<Matrix>())
+    {
+        if(EditMatrixButton* button = qobject_cast<EditMatrixButton*>(editor))
+        {
+            QVariant variantData;
+            variantData.setValue(button->matrix());
+            model->setData(index, variantData, Qt::EditRole);
+        }
+        return;
+    }
+    
     QStyledItemDelegate::setModelData(editor, model, index);
 }
 
@@ -226,8 +277,8 @@ QSize ItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInd
 
 void ItemDelegate::commitEditEvent()
 {
-    QWidget* pushButton = qobject_cast<QWidget* >(sender());
-    emit commitData(pushButton);
+    QWidget* widget = qobject_cast<QWidget* >(sender());
+    emit commitData(widget);
 }
 
 

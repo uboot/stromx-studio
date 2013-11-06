@@ -8,7 +8,6 @@ ChooseImageButton::ChooseImageButton(QWidget* parent)
   : QPushButton(parent)
 {
     setText(tr("Choose..."));
-    
     connect(this, SIGNAL(clicked(bool)), this, SLOT(chooseImage()));
 }
 
