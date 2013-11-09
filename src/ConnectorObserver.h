@@ -23,6 +23,8 @@
 #include <QMutex>
 #include <stromx/runtime/ConnectorObserver.h>
 
+#include "ObserverScheduler.h"
+
 namespace stromx
 {
     namespace runtime
@@ -48,6 +50,8 @@ public:
 private:
     const static int NUM_VALUES;
     const static int MIN_SPAN_MILLISECONDS;
+    
+    static ObserverScheduler gScheduler;
     
     QObject* m_receiver;
     bool m_observeData;

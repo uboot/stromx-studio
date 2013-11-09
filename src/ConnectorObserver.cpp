@@ -9,6 +9,9 @@
 const int ConnectorObserver::NUM_VALUES = 10;
 const int ConnectorObserver::MIN_SPAN_MILLISECONDS = 100;
 
+ObserverScheduler ConnectorObserver::gScheduler(ConnectorObserver::NUM_VALUES,
+                                                ConnectorObserver::MIN_SPAN_MILLISECONDS);
+
 ConnectorObserver::ConnectorObserver(QObject* receiver)
   : m_receiver(receiver),
     m_observeData(false)
@@ -17,6 +20,11 @@ ConnectorObserver::ConnectorObserver(QObject* receiver)
 
 void ConnectorObserver::observe(const stromx::runtime::Connector& connector, const stromx::runtime::DataContainer& data) const
 {
+    // First check if there have been too many events recently. If this is the
+    // case return and give the GUI the chance to handle the remaining events.
+    if (! gScheduler.schedule())
+        return;
+        
     QCoreApplication* application = QCoreApplication::instance();
     OperatorModel::ConnectorType type = connector.type() == stromx::runtime::Connector::INPUT ? 
                                         OperatorModel::INPUT : OperatorModel::OUTPUT;
