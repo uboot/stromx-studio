@@ -9,6 +9,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lenna_bw.jpg DESTINATION ${CMAKE_CURRENT_B
 set(stromxstudiotest_HEADERS
     DataConverterTest.h
     ImageTest.h
+    ObserverSchedulerTest.h
     ParameterServerTest.h
     StreamModelTest.h
     ../ParameterServer.h
@@ -33,6 +34,7 @@ set(stromxstudiotest_SOURCES
     main.cpp
     DataConverterTest.cpp
     ImageTest.cpp
+    ObserverSchedulerTest.cpp
     ParameterOperator.cpp
     ParameterServerTest.cpp
     StreamModelTest.cpp
@@ -81,6 +83,7 @@ set(stromxstudiotest_SOURCES
     ../ExceptionObserver.cpp
     ../Image.cpp
     ../Matrix.cpp
+    ../ObserverScheduler.cpp
     ../ParameterServer.cpp
 )
 

@@ -6,6 +6,9 @@
 #include "event/ConnectorDataEvent.h"
 #include "event/ConnectorOccupyEvent.h"
 
+const int ConnectorObserver::NUM_VALUES = 10;
+const int ConnectorObserver::MIN_SPAN_MILLISECONDS = 100;
+
 ConnectorObserver::ConnectorObserver(QObject* receiver)
   : m_receiver(receiver),
     m_observeData(false)

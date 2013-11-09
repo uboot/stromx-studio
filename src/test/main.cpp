@@ -2,6 +2,7 @@
 
 #include "test/DataConverterTest.h"
 #include "test/ImageTest.h"
+#include "test/ObserverSchedulerTest.h"
 #include "test/ParameterServerTest.h"
 #include "test/StreamModelTest.h"
 
@@ -14,6 +15,9 @@ int main(int argc, char *argv[])
     
     ImageTest image;
     QTest::qExec(&image, argc, argv);
+    
+    ObserverSchedulerTest observerScheduler;
+    QTest::qExec(&observerScheduler, argc, argv);
     
     ParameterServerTest parameterServer;
     QTest::qExec(&parameterServer, argc, argv);

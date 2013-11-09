@@ -46,6 +46,9 @@ public:
     void setObserveData(bool observe);
                          
 private:
+    const static int NUM_VALUES;
+    const static int MIN_SPAN_MILLISECONDS;
+    
     QObject* m_receiver;
     bool m_observeData;
     mutable QMutex m_mutex;
