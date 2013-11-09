@@ -13,23 +13,32 @@ bool ObserverScheduler::schedule()
 {
     QMutexLocker lock(&m_mutex);
     const int elapsed = m_time.restart();
+    m_currentSum += elapsed;
         
-    if (m_values.count() < m_numValues)
+    // check if enough data has been collected to compute a decision
+    if (m_values.count() >= m_numValues)
     {
-        m_values.append(elapsed);
-        m_currentSum += elapsed;
-        return true;
+        // if this is long enough ago update the data and return with success
+        if (m_currentSum > m_minSpanMicroseconds)
+        {
+            const int first = m_values.front();
+            m_values.removeFirst();
+            m_values.append(elapsed);
+            m_currentSum -= first;
+            
+            return true;
+        }
+        else
+        {
+            m_values.last() += elapsed;
+            return false;
+        }
     }
     else
     {
-        const int first = m_values.front();
-        m_values.removeFirst();
+        // add the data and return
         m_values.append(elapsed);
-        
-        m_currentSum -= first;
-        m_currentSum += elapsed;
-        
-        return m_currentSum > m_minSpanMicroseconds;
+        return true;
     }
 }
 
