@@ -7,7 +7,7 @@
 #include "event/ConnectorOccupyEvent.h"
 
 const int ConnectorObserver::NUM_VALUES = 10;
-const int ConnectorObserver::MIN_SPAN_MILLISECONDS = 100;
+const int ConnectorObserver::MIN_SPAN_MILLISECONDS = 1;
 
 ObserverScheduler ConnectorObserver::gScheduler(ConnectorObserver::NUM_VALUES,
                                                 ConnectorObserver::MIN_SPAN_MILLISECONDS);
