@@ -223,21 +223,8 @@ namespace
                     rowPtr += matrix.stride();
                 }
                 
-                //in case of negative values all entries have to be shifted
-                //to positive numbers; in particular the maximal value which
-                //is responsible for the rescaling
-                if(minimum < 0)
-                {
-                    maximum = maximum - minimum;
-         
-                }
-                else
-                {
-                    //reset minimum to zero in case it was positive
-                    minimum = 0;
-                }
+                data_t range = maximum - minimum;
            
-                
                 //loop over the rows of the matrix and re-scale each entry such that
                 //the determined maximum value becomes 255 (uchar) and store it in
                 //grey-scale QT image
@@ -256,7 +243,7 @@ namespace
                     for(unsigned int j = 0; j < matrix.cols(); ++j)
                     {
                         //Caution: cast to double necessary to prevent integer arithmetic in case of data_t being a int or uint variant
-                        pixelPtrDst[j] = static_cast<uchar>(qFloor((static_cast<double>(*pixelPtrSrc) - static_cast<double>(minimum))/static_cast<double>(maximum) * 255.0));
+                        pixelPtrDst[j] = static_cast<uchar>(qFloor((static_cast<double>(*pixelPtrSrc) - static_cast<double>(minimum))/static_cast<double>(range) * 255.0));
                         ++pixelPtrSrc;
                     }
                     rowPtrSrc += matrix.stride();

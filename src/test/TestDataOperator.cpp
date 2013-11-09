@@ -254,7 +254,7 @@ Data* TestDataOperator::imageRamp()
         break;
     case MATRIX_UINT_16:
         matrix = new stromx::cvsupport::Matrix(m_sizeY, m_sizeX, Matrix::UINT_16);
-        rampHeight = 256 * 255;
+        rampHeight = 65535;
         break;
     default:
         throw WrongArgument("Unsupported data type.");
