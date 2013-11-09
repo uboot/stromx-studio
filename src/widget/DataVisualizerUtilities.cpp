@@ -255,7 +255,8 @@ namespace
                     uchar* pixelPtrDst = qtImage.scanLine(i);
                     for(unsigned int j = 0; j < matrix.cols(); ++j)
                     {
-                        pixelPtrDst[j] = static_cast<uchar>(qFloor((*pixelPtrSrc - minimum)/maximum * 255));
+                        //Caution: cast to double necessary to prevent integer arithmetic in case of data_t being a int or uint variant
+                        pixelPtrDst[j] = static_cast<uchar>(qFloor((static_cast<double>(*pixelPtrSrc) - static_cast<double>(minimum))/static_cast<double>(maximum) * 255.0));
                         ++pixelPtrSrc;
                     }
                     rowPtrSrc += matrix.stride();
