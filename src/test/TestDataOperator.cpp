@@ -172,7 +172,10 @@ const std::vector<const Parameter*> TestDataOperator::setupParameters()
     enumParam->add(EnumDescription(Enum(IMAGE_MONO_16), "Image mono 16-bit"));
     enumParam->add(EnumDescription(Enum(IMAGE_RGB_24), "Image RGB 8-bit"));
     enumParam->add(EnumDescription(Enum(IMAGE_RGB_48), "Image RGB 16-bit"));
+    enumParam->add(EnumDescription(Enum(MATRIX_UINT_16), "Matrix 16-bit uint"));   
     enumParam->add(EnumDescription(Enum(MATRIX_FLOAT_32), "Matrix 32-bit float"));
+    enumParam->add(EnumDescription(Enum(MATRIX_FLOAT_64), "Matrix 64-bit float"));
+
     parameters.push_back(enumParam);
     
     enumParam = new EnumParameter(OBJECT_TYPE);
@@ -244,6 +247,14 @@ Data* TestDataOperator::imageRamp()
     case MATRIX_FLOAT_32:
         matrix = new stromx::cvsupport::Matrix(m_sizeY, m_sizeX, Matrix::FLOAT_32);
         rampHeight = 10000;
+        break;
+    case MATRIX_FLOAT_64:
+        matrix = new stromx::cvsupport::Matrix(m_sizeY, m_sizeX, Matrix::FLOAT_64);
+        rampHeight = 100000;
+        break;
+    case MATRIX_UINT_16:
+        matrix = new stromx::cvsupport::Matrix(m_sizeY, m_sizeX, Matrix::UINT_16);
+        rampHeight = 256 * 255;
         break;
     default:
         throw WrongArgument("Unsupported data type.");
@@ -387,8 +398,14 @@ void TestDataOperator::setMatrixEntry(Matrix* matrix, unsigned int row,
     case IMAGE_RGB_48:
         matrix->at<uint16_t>(row, col) = value;
         break;
+    case MATRIX_UINT_16:
+        matrix->at<uint16_t>(row, col) = value;
+        break;
     case MATRIX_FLOAT_32:
         matrix->at<float>(row, col) = value;
+        break;
+    case MATRIX_FLOAT_64:
+        matrix->at<double>(row,col) = value;
         break;
     default:
         throw WrongArgument("Unsupported data type.");

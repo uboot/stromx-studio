@@ -48,6 +48,7 @@ class TestDataOperator : public stromx::runtime::OperatorKernel
         IMAGE_MONO_16,
         IMAGE_RGB_24,
         IMAGE_RGB_48,
+        MATRIX_UINT_16,
         MATRIX_FLOAT_32,
         MATRIX_FLOAT_64
     };

@@ -1,12 +1,11 @@
 #include "widget/DataVisualizerUtilities.h"
 
-#include <boost/concept_check.hpp>
-
 #include <stromx/runtime/Image.h>
 #include <stromx/runtime/Primitive.h>
 #include <stromx/runtime/String.h>
 
 #include <QBrush>
+#include <QtCore/qmath.h>
 #include <QPen>
 
 namespace
@@ -111,9 +110,11 @@ namespace
 
     template <class data_t>
     QList< QGraphicsItem* > createPointItemsTemplate(const stromx::runtime::Data& data,
-        const AbstractDataVisualizer::VisualizationProperties & /*visualizationProperties*/)
+        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
     {
         using namespace stromx::runtime;
+        QVariant colorVariant = visualizationProperties.value("color", Qt::black);
+        QColor color = colorVariant.value<QColor>();
         
         QList<QGraphicsItem*> items;
         try
@@ -132,7 +133,7 @@ namespace
                     const data_t* rowData = reinterpret_cast<const data_t*>(rowPtr);
                     QGraphicsEllipseItem* newItem = new QGraphicsEllipseItem(rowData[0]-2, rowData[1]-2, 4, 4);
                     newItem->setPen(QPen(Qt::NoPen));
-                    newItem->setBrush(QBrush(Qt::red));
+                    newItem->setBrush(QBrush(color));
                     items.append(newItem);
                     rowPtr += matrix.stride();
                 }
@@ -166,6 +167,132 @@ namespace
             return createPointItemsTemplate<float>(data, visualizationProperties);
         else if(data.isVariant(DataVariant::FLOAT_64_MATRIX))
             return createPointItemsTemplate<double>(data, visualizationProperties);
+        else
+            return QList<QGraphicsItem*>();
+    }
+    
+    template <class data_t>
+    QList< QGraphicsItem* > createImageFromMatrixTemplate(const stromx::runtime::Data& data,
+                                                          const AbstractDataVisualizer::VisualizationProperties & /*visualizationProperties*/)
+    {
+        using namespace stromx::runtime;
+        
+        QList<QGraphicsItem*> items;
+        try
+        {
+            // cast the data to a matrix
+            const Matrix & matrix = data_cast<Matrix>(data);
+            
+            // check if the value size of the matrix matches the size of the template
+            // parameter
+            data_t maximum = data_t();
+            data_t minimum = data_t();
+            if(matrix.valueSize() == sizeof(data_t))
+            {
+                // loop over the rows of the matrix and search for maximum value
+                const uint8_t* rowPtr = matrix.data();
+                for(unsigned int i = 0; i < matrix.rows(); ++i)
+                {
+                    const data_t* rowData = reinterpret_cast<const data_t*>(rowPtr);
+                    for(unsigned int j = 0; j < matrix.cols(); ++j)
+                    {
+                        data_t currentValue = rowData[j];
+                        if(i==1 && j==1)
+                        {
+                            //Initialization of min and max with first matrix entry
+                            maximum = currentValue;
+                            minimum = currentValue;
+                        }
+                        else
+                        {
+                            //Update maximum
+                            if(currentValue > maximum)
+                            {
+                                maximum = currentValue;
+                            }
+                            else
+                            {
+                                if(currentValue < minimum)
+                                {
+                                    //Update minimum
+                                    minimum = currentValue;
+                                }
+                            }
+                        }
+                    }
+                    rowPtr += matrix.stride();
+                }
+                
+                //in case of negative values all entries have to be shifted
+                //to positive numbers; in particular the maximal value which
+                //is responsible for the rescaling
+                if(minimum < 0)
+                {
+                    maximum = maximum - minimum;
+         
+                }
+                else
+                {
+                    //reset minimum to zero in case it was positive
+                    minimum = 0;
+                }
+           
+                
+                //loop over the rows of the matrix and re-scale each entry such that
+                //the determined maximum value becomes 255 (uchar) and store it in
+                //grey-scale QT image
+                QImage qtImage = QImage(matrix.cols(), matrix.rows(), QImage::Format_Indexed8);
+                
+                QVector<QRgb> colorTable(256);
+                for(unsigned int i = 0; i < 256; ++i)
+                    colorTable[i] = qRgb(i, i, i);
+                qtImage.setColorTable(colorTable);
+                
+                const uint8_t* rowPtrSrc = matrix.data();
+                for(unsigned int i = 0; i < matrix.rows(); ++i)
+                {
+                    const data_t* pixelPtrSrc = reinterpret_cast<const data_t*>(rowPtrSrc);
+                    uchar* pixelPtrDst = qtImage.scanLine(i);
+                    for(unsigned int j = 0; j < matrix.cols(); ++j)
+                    {
+                        pixelPtrDst[j] = static_cast<uchar>(qFloor((*pixelPtrSrc - minimum)/maximum * 255));
+                        ++pixelPtrSrc;
+                    }
+                    rowPtrSrc += matrix.stride();
+                }
+                
+                QPixmap pixmap = QPixmap::fromImage(qtImage);
+                items.append(new QGraphicsPixmapItem(pixmap));
+            }
+        }
+        catch(BadCast&)
+        {
+        }
+        
+        return items;
+    }
+    
+    QList< QGraphicsItem* > createImageFromMatrix(const stromx::runtime::Data& data,
+                                                  const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+    {
+        using namespace stromx::runtime;
+        
+        if(data.isVariant(DataVariant::INT_8_MATRIX))
+            return createImageFromMatrixTemplate<int8_t>(data, visualizationProperties);
+        else if(data.isVariant(DataVariant::UINT_8_MATRIX))
+            return createImageFromMatrixTemplate<uint8_t>(data, visualizationProperties);
+        else if(data.isVariant(DataVariant::INT_16_MATRIX))
+            return createImageFromMatrixTemplate<int16_t>(data, visualizationProperties);
+        else if(data.isVariant(DataVariant::UINT_16_MATRIX))
+            return createImageFromMatrixTemplate<uint16_t>(data, visualizationProperties);
+        else if(data.isVariant(DataVariant::INT_32_MATRIX))
+            return createImageFromMatrixTemplate<int32_t>(data, visualizationProperties);
+        else if(data.isVariant(DataVariant::UINT_32_MATRIX))
+            return createImageFromMatrixTemplate<uint32_t>(data, visualizationProperties);
+        else if(data.isVariant(DataVariant::FLOAT_32_MATRIX))
+            return createImageFromMatrixTemplate<float>(data, visualizationProperties);
+        else if(data.isVariant(DataVariant::FLOAT_64_MATRIX))
+            return createImageFromMatrixTemplate<double>(data, visualizationProperties);
         else
             return QList<QGraphicsItem*>();
     }
@@ -308,6 +435,8 @@ QList< QGraphicsItem* > DataVisualizerUtilities::createMatrixItems(const stromx:
             return createLineSegments(data, visualizationProperties);
         case AbstractDataVisualizer::POINTS:
             return createPoints(data, visualizationProperties);
+        case AbstractDataVisualizer::IMAGE:
+            return createImageFromMatrix(data, visualizationProperties);
         default:
             return QList<QGraphicsItem*>();
     }

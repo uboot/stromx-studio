@@ -63,7 +63,11 @@ public:
         LINES,
         
         /** If possible the data is visualized as a set of points.*/
-        POINTS
+        POINTS,
+        
+        /** If possible the data is visualized as an image although 
+         *it is not explicitly of type image (e.g. a matrix of floats). */
+        IMAGE
     };
     
     /** 

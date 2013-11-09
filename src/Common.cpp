@@ -31,6 +31,7 @@ QStringList & visualizationLabels()
         gVisualizationLabels << "Automatic";
         gVisualizationLabels << "Lines";
         gVisualizationLabels << "Points";
+        gVisualizationLabels << "Image";
     }
     
     return gVisualizationLabels;
