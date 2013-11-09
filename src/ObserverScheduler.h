@@ -20,21 +20,23 @@
 #ifndef OBSERVERSCHEDULER_H
 #define OBSERVERSCHEDULER_H
 
+#include <QList>
 #include <QMutex>
+#include <QTime>
 
 class ObserverScheduler
 {
 public:
     ObserverScheduler(const int numValues, const int minSpanMicroseconds);
-    ~ObserverScheduler();
-    
     bool schedule();
     
 private:
     const int m_numValues;
     const int m_minSpanMicroseconds;
     QMutex m_mutex;
-    int* m_values;
+    QTime m_time;
+    QList<int> m_values;
+    int m_currentSum;
 };
 
 #endif // OBSERVERSCHEDULER_H

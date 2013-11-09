@@ -4,19 +4,38 @@
 
 #include <QtTest/QtTest>
 
-ObserverSchedulerTest::ObserverSchedulerTest()
-  : QObject(),
-    m_scheduler(new ObserverScheduler(3, 100))
+ObserverSchedulerTest::ObserverSchedulerTest() : QObject()
 {}
 
-ObserverSchedulerTest::~ObserverSchedulerTest()
+void ObserverSchedulerTest::testScheduleLittle()
 {
-    delete m_scheduler;
+    ObserverScheduler scheduler(3, 100);
+    
+    QVERIFY(scheduler.schedule());
+    QVERIFY(scheduler.schedule());
+    QVERIFY(scheduler.schedule());
 }
 
-void ObserverSchedulerTest::testSchedulePositive()
+void ObserverSchedulerTest::testScheduleTooMany()
 {
-    QVERIFY(m_scheduler->schedule());
-    QVERIFY(m_scheduler->schedule());
-    QVERIFY(m_scheduler->schedule());
+    ObserverScheduler scheduler(3, 100);
+    
+    QVERIFY(scheduler.schedule());
+    QVERIFY(scheduler.schedule());
+    QVERIFY(scheduler.schedule());
+    QVERIFY(! scheduler.schedule());
+    QVERIFY(! scheduler.schedule());
+}
+
+void ObserverSchedulerTest::testScheduleManyWithDelay()
+{
+    ObserverScheduler scheduler(3, 100);
+    
+    QVERIFY(scheduler.schedule());
+    QVERIFY(scheduler.schedule());
+    QVERIFY(scheduler.schedule());
+
+    QTest::qWait(200);
+    
+    QVERIFY(scheduler.schedule());
 }

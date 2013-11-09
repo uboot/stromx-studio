@@ -22,21 +22,17 @@
 
 #include <QObject>
 
-class ObserverScheduler;
-
 class ObserverSchedulerTest : public QObject
 {
     Q_OBJECT
     
 public:
     explicit ObserverSchedulerTest();
-    virtual ~ObserverSchedulerTest();
     
 private slots:
-    void testSchedulePositive();
-    
-private:
-    ObserverScheduler* m_scheduler;
+    void testScheduleLittle();
+    void testScheduleTooMany();
+    void testScheduleManyWithDelay();
 };
 
 #endif // OBSERVERSCHEDULERTEST_H
