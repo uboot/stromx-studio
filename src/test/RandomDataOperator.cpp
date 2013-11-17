@@ -1,12 +1,11 @@
 #include "test/RandomDataOperator.h"
 
+#include <stromx/cvsupport/Matrix.h>
 #include <stromx/runtime/DataProvider.h>
 #include <stromx/runtime/EnumParameter.h>
 #include <stromx/runtime/Id2DataPair.h>
 #include <stromx/runtime/OperatorException.h>
 #include <stromx/runtime/String.h>
-
-#include "Matrix.h"
 
 #include <cstdlib>
 
@@ -60,7 +59,7 @@ void RandomDataOperator::execute(DataProvider& provider)
     {
     case LINE_SEGMENTS:
     {
-        ::Matrix* segments = new ::Matrix(2, 4, ::Matrix::FLOAT_64);
+        stromx::runtime::Matrix* segments = new stromx::cvsupport::Matrix(2, 4, ::Matrix::FLOAT_64);
         double* doubleData = reinterpret_cast<double*>(segments->data());
         doubleData[0] = 50 + uniform(20);
         doubleData[1] = 100 + uniform(20);
