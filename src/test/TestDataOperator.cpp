@@ -312,7 +312,7 @@ Data* TestDataOperator::histogram()
     
     for (unsigned int i = 0; i < m_numBins; ++i)
     {
-        float arg = 10.0 * float(i + m_index) / float(m_numBins);
+        float arg = 10.0f * float(i + m_index) / float(m_numBins);
         float value = 200 * fabs(sin(arg));
         setMatrixEntry(matrix, i, 0, value);
     }
@@ -373,8 +373,8 @@ Data* TestDataOperator::points()
     {
         for (unsigned int j = 0; j < numPointsY; ++j)
         {
-            const float xOffset = i * m_pointOffset + m_index % m_pointOffset;
-            const float yOffset = j * m_pointOffset + m_index % m_pointOffset;
+            const float xOffset = float(i * m_pointOffset + m_index % m_pointOffset);
+            const float yOffset = float(j * m_pointOffset + m_index % m_pointOffset);
             
             const unsigned int pos = i * numPointsY + j;
             setMatrixEntry(matrix, pos, 0, xOffset);
@@ -392,17 +392,17 @@ void TestDataOperator::setMatrixEntry(Matrix* matrix, unsigned int row,
     {
     case IMAGE_MONO_8:
     case IMAGE_RGB_24:
-        matrix->at<uint8_t>(row, col) = value;
+        matrix->at<uint8_t>(row, col) = uint8_t(value);
         break;
     case IMAGE_MONO_16:
     case IMAGE_RGB_48:
-        matrix->at<uint16_t>(row, col) = value;
+        matrix->at<uint16_t>(row, col) = uint16_t(value);
         break;
     case MATRIX_UINT_16:
-        matrix->at<uint16_t>(row, col) = value;
+        matrix->at<uint16_t>(row, col) = uint16_t(value);
         break;
     case MATRIX_FLOAT_32:
-        matrix->at<float>(row, col) = value;
+        matrix->at<float>(row, col) = float(value);
         break;
     case MATRIX_FLOAT_64:
         matrix->at<double>(row,col) = value;

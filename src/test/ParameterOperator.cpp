@@ -28,7 +28,7 @@ void ParameterOperator::initialize()
     m_matrixParam.resize(3, 4, stromx::runtime::Matrix::FLOAT_32);
     for (unsigned int i = 0; i < m_matrixParam.rows(); ++i)
         for (unsigned int j = 0; j < m_matrixParam.cols(); ++j)
-            m_matrixParam.at<float>(i, j) = i + j;
+            m_matrixParam.at<float>(i, j) = float(i + j);
         
     m_intMatrixParam.resize(1, 2, stromx::runtime::Matrix::UINT_32);
     for (unsigned int i = 0; i < m_intMatrixParam.rows(); ++i)
