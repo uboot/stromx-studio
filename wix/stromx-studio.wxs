@@ -47,6 +47,15 @@
             <Component Id="QtGui4" Guid="">
                 <File Id="QtGui4" Source="QtGui4.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
+            <Component Id="stromx_cvcore" Guid="">
+                <File Id="stromx_cvcore" Source="stromx_cvcore.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="stromx_cvimgproc" Guid="">
+                <File Id="stromx_cvimgproc" Source="stromx_cvimgproc.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="stromx_cvsupport" Guid="">
+                <File Id="stromx_cvsupport" Source="stromx_cvsupport.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
             <Component Id="stromx_example" Guid="">
                 <File Id="stromx_example" Source="stromx_example.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
@@ -106,6 +115,9 @@
             <ComponentRef Id="opencv_imgproc" />
             <ComponentRef Id="QtCore4" />
             <ComponentRef Id="QtGui4" />
+            <ComponentRef Id="stromx_cvcore" />
+            <ComponentRef Id="stromx_cvimgproc" />
+            <ComponentRef Id="stromx_cvsupport" />
             <ComponentRef Id="stromx_example" />
             <ComponentRef Id="stromx_runtime" />
             <ComponentRef Id="stromx_studio" />
