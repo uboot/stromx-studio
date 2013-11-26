@@ -28,7 +28,7 @@ namespace stromx
 {
     namespace runtime
     {
-        class Operator;
+        class OperatorTester;
     }
 }
 
@@ -46,7 +46,7 @@ private slots:
     void testRefresh();
     
 private:
-    stromx::runtime::Operator* m_op;
+    stromx::runtime::OperatorTester* m_op;
     ParameterServer* m_server;
 };
 

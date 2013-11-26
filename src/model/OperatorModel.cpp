@@ -455,28 +455,16 @@ bool OperatorModel::isActive() const
     return m_stream->isActive();
 }
 
-void OperatorModel::setInitialized(bool status)
+void OperatorModel::beginChangeInitialized()
 {
-    if(isInitialized() == status)
-        return;
-
     beginResetModel();
-    try
-    {
-        if(status == true)
-            m_op->initialize();
-        else
-            m_op->deinitialize();
+}
+
+void OperatorModel::endChangeInitialized()
+{
+    // update the cache of the parameter server
+    m_server->refresh();
         
-        // update the cache of the parameter server
-        m_server->refresh();
-    }
-    catch(stromx::runtime::OperatorError &)
-    {
-        endResetModel();
-        throw;
-    }  
-    
     endResetModel();
     emit initializedChanged(isInitialized());
 }

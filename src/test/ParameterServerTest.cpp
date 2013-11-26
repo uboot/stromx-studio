@@ -2,12 +2,12 @@
 
 #include <QUndoStack>
 #include <QtTest/QtTest>
-#include <stromx/runtime/Operator.h>
+#include <stromx/runtime/OperatorTester.h>
 #include "ParameterServer.h"
 #include "test/ParameterOperator.h"
 
 ParameterServerTest::ParameterServerTest()
-  : m_op(new stromx::runtime::Operator(new ParameterOperator())),
+  : m_op(new stromx::runtime::OperatorTester(new ParameterOperator())),
     m_server(new ParameterServer(m_op, new QUndoStack(this), this))
 {
     m_op->initialize();

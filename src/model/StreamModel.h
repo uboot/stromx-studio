@@ -344,15 +344,8 @@ private:
     // The stromx stream. It contains only the initialized operators.
     stromx::runtime::Stream* m_stream;
     
-    // The list of all operators in the stream model. This is always the same
-    // as m_initializedOperators + m_uninitializedOperators.
+    // The list of all operator models.
     QList<OperatorModel*> m_operators;
-    
-    // The list of initialized operators.
-    QList<OperatorModel*> m_initializedOperators;
-    
-    // The list of uninitialized operators.
-    QList<OperatorModel*> m_uninitializedOperators;
                 
     // The version of the stream file format. 
     static const int STREAM_FORMAT_VERSION_MAJOR;
