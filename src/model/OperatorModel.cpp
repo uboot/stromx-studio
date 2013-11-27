@@ -356,6 +356,8 @@ void OperatorModel::doSetName(const QString& name)
 void OperatorModel::doSetPos(const QPointF& pos)
 {
     m_pos = pos;
+    stromx::runtime::Position stromxPos(pos.x(), pos.y());
+    m_op->setPosition(stromxPos);
     emit posChanged(m_pos);
 }
 
@@ -565,6 +567,9 @@ QDataStream& operator<<(QDataStream& stream, const OperatorModel* op)
 
 QDataStream& operator>>(QDataStream& stream, OperatorModel* op)
 {
-    return stream >> op->m_pos;
+    stream >> op->m_pos;
+    stromx::runtime::Position stromxPos(op->m_pos.x(), op->m_pos.y());
+    op->op()->setPosition(stromxPos);
+    return stream;
 }
 
