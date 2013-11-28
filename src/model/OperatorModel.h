@@ -52,7 +52,7 @@ class OperatorModel : public PropertyModel
     Q_PROPERTY(QString type READ type)
     Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(QPointF pos READ pos WRITE setPos)
-    Q_PROPERTY(bool initialized READ isInitialized WRITE setInitialized)
+    Q_PROPERTY(bool initialized READ isInitialized)
     
     friend class MoveOperatorCmd;
     friend class RenameOperatorCmd;
@@ -195,10 +195,16 @@ private:
     void doSetPos(const QPointF & pos);
     
     /** 
-     * Initializes or deinitializes the operator. This functions is called by 
+     * Starts a change of the initialzed state of the operator. This functions is called by 
      * the class StreamModel.
      */
-    void setInitialized(bool initialized);
+    void beginChangeInitialized();
+    
+    /** 
+     * Ends a change of the initialzed state of the operator. This functions is called by 
+     * the class StreamModel. This triggers an update of the operator model.
+     */
+    void endChangeInitialized();
     
     /**
      * Returns the number of members \c group which are currently displayed.

@@ -94,6 +94,7 @@ signals:
 private:
     void doSetColor(const QColor & color);
     void doSetName(const QString & name);
+    void updateStromxColor();
     
     stromx::runtime::Thread* m_thread;
     StreamModel* m_stream;

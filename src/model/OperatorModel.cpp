@@ -22,6 +22,7 @@ OperatorModel::OperatorModel(stromx::runtime::Operator* op, StreamModel* stream)
   : PropertyModel(stream),
     m_op(op),
     m_stream(stream),
+    m_pos(m_op->position().x(), m_op->position().y()),
     m_package(QString::fromStdString(m_op->info().package())),
     m_type(QString::fromStdString(m_op->info().type())),
     m_name(QString::fromStdString(m_op->name())),
@@ -356,6 +357,8 @@ void OperatorModel::doSetName(const QString& name)
 void OperatorModel::doSetPos(const QPointF& pos)
 {
     m_pos = pos;
+    stromx::runtime::Position stromxPos(pos.x(), pos.y());
+    m_op->setPosition(stromxPos);
     emit posChanged(m_pos);
 }
 
@@ -455,28 +458,16 @@ bool OperatorModel::isActive() const
     return m_stream->isActive();
 }
 
-void OperatorModel::setInitialized(bool status)
+void OperatorModel::beginChangeInitialized()
 {
-    if(isInitialized() == status)
-        return;
-
     beginResetModel();
-    try
-    {
-        if(status == true)
-            m_op->initialize();
-        else
-            m_op->deinitialize();
+}
+
+void OperatorModel::endChangeInitialized()
+{
+    // update the cache of the parameter server
+    m_server->refresh();
         
-        // update the cache of the parameter server
-        m_server->refresh();
-    }
-    catch(stromx::runtime::OperatorError &)
-    {
-        endResetModel();
-        throw;
-    }  
-    
     endResetModel();
     emit initializedChanged(isInitialized());
 }
@@ -577,6 +568,9 @@ QDataStream& operator<<(QDataStream& stream, const OperatorModel* op)
 
 QDataStream& operator>>(QDataStream& stream, OperatorModel* op)
 {
-    return stream >> op->m_pos;
+    stream >> op->m_pos;
+    stromx::runtime::Position stromxPos(op->m_pos.x(), op->m_pos.y());
+    op->op()->setPosition(stromxPos);
+    return stream;
 }
 
