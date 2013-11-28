@@ -45,7 +45,7 @@ public:
     void setVisualizationType(const int type);
     
 private:
-    QCheckBox* m_activeCheckBox;
+    QLabel* m_activeLabel;
     QLabel* m_colorLabel;
     QLabel* m_visualizationTypeLabel;
 };

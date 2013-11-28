@@ -9,12 +9,12 @@
 
 InputPaintWidget::InputPaintWidget(QWidget* parent)
   : InputWidget(parent),
-    m_activeCheckBox(new QCheckBox(tr("Active"))),
+    m_activeLabel(new QLabel()),
     m_colorLabel(new QLabel()),
     m_visualizationTypeLabel(new QLabel())
 {
     QFormLayout* layout = new QFormLayout();
-    layout->addRow(m_activeCheckBox);
+    layout->addRow(tr("Active"), m_activeLabel);
     layout->addRow(tr("Visualization"), m_visualizationTypeLabel);
     layout->addRow(tr("Color"), m_colorLabel);
     
@@ -28,7 +28,8 @@ void InputPaintWidget::setInputTitle(const QString& title)
 
 void InputPaintWidget::setInputActive(const bool isActive)
 {
-    m_activeCheckBox->setChecked(isActive);
+    QString text = isActive ? tr("yes") : tr("no");
+    m_activeLabel->setText(text);
 }
 
 void InputPaintWidget::setInputColor(const QColor& color)
