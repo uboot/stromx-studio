@@ -5,7 +5,6 @@
 #include "cmd/RenameThreadCmd.h"
 #include "cmd/SetThreadColorCmd.h"
 #include "model/StreamModel.h"
-#include <boost/graph/graph_concepts.hpp>
 
 ThreadModel::ThreadModel(stromx::runtime::Thread* thread, StreamModel* stream)
   : QObject(stream),
