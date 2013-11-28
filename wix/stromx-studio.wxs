@@ -20,6 +20,9 @@
             <Component Id="boost_filesystem" Guid="">
                 <File Id="boost_filesystem" Source="boost_filesystem-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
+            <Component Id="boost_regex" Guid="">
+                <File Id="boost_regex" Source="boost_regex-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
             <Component Id="boost_system" Guid="">
                 <File Id="boost_system" Source="boost_system-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
@@ -106,6 +109,7 @@
         <Feature Id="stromx_studio" Title="stromx-studio" Level="1">
             <ComponentRef Id="boost_date_time" />
             <ComponentRef Id="boost_filesystem" />
+            <ComponentRef Id="boost_regex" />
             <ComponentRef Id="boost_system" />
             <ComponentRef Id="boost_thread" />
             <ComponentRef Id="msvcp100" />
