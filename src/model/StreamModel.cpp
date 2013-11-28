@@ -45,8 +45,10 @@ const int StreamModel::DEFAULT_DELAY = 100;
 const int StreamModel::DEFAULT_ACCESS_TIMEOUT = 5000;
 
 const int StreamModel::STREAM_FORMAT_VERSION_MAJOR = 0;
-const int StreamModel::STREAM_FORMAT_VERSION_MINOR = 1;
-const int StreamModel::STREAM_FORMAT_VERSION_PATCH = 0;
+const int StreamModel::STREAM_FORMAT_VERSION_MINOR = 2;
+const int StreamModel::STREAM_FORMAT_VERSION_REVISION = 0;
+
+const stromx::runtime::Version StreamModel::STREAM_FORMAT_V2(0, 2, 0);
 
 StreamModel::StreamModel(QUndoStack* undoStack, OperatorLibraryModel* operatorLibrary, QObject* parent) 
   : QObject(parent),
@@ -646,21 +648,22 @@ void StreamModel::serializeModel(QByteArray& data) const
     dataStream << quint32(MAGIC_NUMBER);
     dataStream << quint32(STREAM_FORMAT_VERSION_MAJOR);
     dataStream << quint32(STREAM_FORMAT_VERSION_MINOR);
-    dataStream << quint32(STREAM_FORMAT_VERSION_PATCH);
+    dataStream << quint32(STREAM_FORMAT_VERSION_REVISION);
     
     dataStream.setVersion(QDataStream::Qt_4_7);
     
-    dataStream << qint32(0);  // uninitialized operators
+    // The uninitialized operators. They were instantiated by stromx-
+    // studio in earlier versions but are part of the stromx stream now.
+    dataStream << qint32(0);  // number of uninitialized operators
     
-    dataStream << qint32(m_operators.count()); // model data of initialized operators
-    foreach(OperatorModel* op, m_operators)
-        dataStream << op;
+    // The model data (i.e. positions) of the operators. They were stored by
+    // stromx-studio in earlier versions but are part of the stromx stream now.
+    dataStream << qint32(0); // number of model data of initialized operators
+    dataStream << qint32(0);  // number of model data of uninitialized operators
     
-    dataStream << qint32(0);  // model data of uninitialized operators
-    
-    dataStream << qint32(m_threadListModel->threads().count());
-    foreach(ThreadModel* thread, m_threadListModel->threads())
-        dataStream << thread;
+    // The model data (i.e. colors) of the threads.  They were stored by
+    // stromx-studio in earlier versions but are part of the stromx stream now.
+    dataStream << qint32(0);
     
     dataStream << m_observerModel;
     
@@ -676,7 +679,7 @@ void StreamModel::deserializeModel(const QByteArray& data)
     QList<OperatorModel*> stromxStudioOperators;
     quint32 versionMajor = 0;
     quint32 versionMinor = 0;
-    quint32 versionPatch = 0;
+    quint32 versionRevision = 0;
     
     dataStream >> magicNumber;
     if(magicNumber != MAGIC_NUMBER)
@@ -684,7 +687,8 @@ void StreamModel::deserializeModel(const QByteArray& data)
     
     dataStream >> versionMajor;
     dataStream >> versionMinor;
-    dataStream >> versionPatch;
+    dataStream >> versionRevision;
+    stromx::runtime::Version streamFormatVersion(versionMajor, versionMinor, versionRevision);
     
     dataStream.setVersion(QDataStream::Qt_4_7);
 
@@ -709,23 +713,44 @@ void StreamModel::deserializeModel(const QByteArray& data)
         stromxStudioOperators.append(opModel);
     }
     
-    dataStream >> count;
-    if(count != xmlOperators.count())
-        throw ReadStudioDataFailed(tr("Number of XML serialized operators does not match the stromx-studio data."));
-    foreach(OperatorModel* op, xmlOperators)
-        dataStream >>  op;
+    // Deserialize the model data of the operator and thread models below. In 
+    // files with file format v2 and higher this data is not stored anymore. 
+    // I.e. do not throw an exception if the data is missing in this case.
     
-    dataStream >> count;
-    if(count != stromxStudioOperators.count())
-        throw ReadStudioDataFailed(tr("Number of stromx-studio serialized operators does not match stromx-studio data."));
-    foreach(OperatorModel* op, stromxStudioOperators)
-        dataStream >> op;
+    if (streamFormatVersion < STREAM_FORMAT_V2)
+    {   
+        dataStream >> count;
+        if (count != xmlOperators.count())
+            throw ReadStudioDataFailed(tr("Number of XML serialized operators does not match the stromx-studio data."));
+        foreach(OperatorModel* op, xmlOperators)
+            dataStream >>  op;
     
-    dataStream >> count;
-    if(count != m_threadListModel->threads().count())
-        throw ReadStudioDataFailed(tr("Number of threads does not match stromx-studio data."));
-    foreach(ThreadModel* thread, m_threadListModel->threads())
-        dataStream >> thread;
+        dataStream >> count;
+        if(streamFormatVersion < STREAM_FORMAT_V2 && count != stromxStudioOperators.count())
+            throw ReadStudioDataFailed(tr("Number of stromx-studio serialized operators does not match stromx-studio data."));
+        foreach(OperatorModel* op, stromxStudioOperators)
+            dataStream >> op;
+        
+        dataStream >> count;
+        if(streamFormatVersion < STREAM_FORMAT_V2 && count != m_threadListModel->threads().count())
+            throw ReadStudioDataFailed(tr("Number of threads does not match stromx-studio data."));
+        foreach(ThreadModel* thread, m_threadListModel->threads())
+            dataStream >> thread;
+    }
+    else
+    {
+        dataStream >> count;
+        if (count)
+            throw ReadStudioDataFailed(tr("Number of XML serialized operators must be 0."));
+        
+        dataStream >> count;
+        if (count)
+            throw ReadStudioDataFailed(tr("Number of stromx-studio serialized operators must be 0."));
+        
+        dataStream >> count;
+        if (count)
+            throw ReadStudioDataFailed(tr("Number of threads must be 0."));
+    }
     
     dataStream >> m_observerModel;
     

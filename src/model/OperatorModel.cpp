@@ -22,6 +22,7 @@ OperatorModel::OperatorModel(stromx::runtime::Operator* op, StreamModel* stream)
   : PropertyModel(stream),
     m_op(op),
     m_stream(stream),
+    m_pos(m_op->position().x(), m_op->position().y()),
     m_package(QString::fromStdString(m_op->info().package())),
     m_type(QString::fromStdString(m_op->info().type())),
     m_name(QString::fromStdString(m_op->name())),
