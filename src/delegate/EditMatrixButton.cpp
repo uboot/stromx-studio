@@ -1,11 +1,12 @@
 #include "delegate/EditMatrixButton.h"
 
+#include "Common.h"
 #include "widget/MatrixEditor.h"
 
-EditMatrixButton::EditMatrixButton(const Matrix & matrix, const int rows,
-                                   const int cols, QWidget* parent)
+EditMatrixButton::EditMatrixButton(const int rows, const int cols,
+                                   const QModelIndex & index, QWidget* parent)
   : QPushButton(parent),
-    m_matrix(matrix),
+    m_index(index),
     m_rows(rows),
     m_cols(cols)
 {
@@ -15,11 +16,19 @@ EditMatrixButton::EditMatrixButton(const Matrix & matrix, const int rows,
 
 void EditMatrixButton::openEditor()
 {
-    MatrixEditor editor(m_matrix, m_rows, m_cols, this);
-    if (editor.exec() == QDialog::Accepted)
-        m_matrix = editor.matrix();
+    // update the data from the model
+    QVariant data = m_index.data(MatrixRole);
+    if(! data.canConvert<Matrix>())
+        return;
     
-    emit finishedEditing();
+    Matrix matrix = data.value<Matrix>();
+    MatrixEditor editor(matrix, m_rows, m_cols, this);
+    
+    if (editor.exec() == QDialog::Accepted)
+    {
+        m_matrix = editor.matrix();
+        emit editedMatrix();
+    }
 }
 
 const Matrix& EditMatrixButton::matrix() const
@@ -31,3 +40,4 @@ void EditMatrixButton::setMatrix(const Matrix& matrix)
 {
     m_matrix = matrix;
 }
+

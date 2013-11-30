@@ -86,8 +86,8 @@ QWidget* ItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
         if (data.canConvert(QVariant::Int))
             cols = data.toInt();
         
-        EditMatrixButton* button = new EditMatrixButton(matrix, rows, cols, parent);
-        connect(button, SIGNAL(finishedEditing()), this, SLOT(commitEditEvent()));
+        EditMatrixButton* button = new EditMatrixButton(rows, cols, index, parent);
+        connect(button, SIGNAL(editedMatrix()), this, SLOT(commitEditEvent()));
         
         return button;
     }

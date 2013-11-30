@@ -20,6 +20,7 @@
 #ifndef EDITMATRIXBUTTON_H
 #define EDITMATRIXBUTTON_H
 
+#include <QAbstractItemModel>
 #include <QMap>
 #include <QPushButton>
 #include <QVariant>
@@ -31,19 +32,19 @@ class EditMatrixButton : public QPushButton
     Q_OBJECT
     
 public:
-    explicit EditMatrixButton(const Matrix & matrix, const int rows,
-                              const int cols, QWidget* parent = 0);
+    explicit EditMatrixButton(const int rows, const int cols, const QModelIndex & index, QWidget* parent = 0);
     
     const Matrix & matrix() const;
     void setMatrix(const Matrix & matrix);
    
 signals:
-    void finishedEditing();
+    void editedMatrix();
     
 private slots:
     void openEditor();
     
 private:
+    QModelIndex m_index;
     Matrix m_matrix;
     int m_rows;
     int m_cols;
