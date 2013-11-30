@@ -20,6 +20,8 @@
 #ifndef INPUTEDITWIDGET_H
 #define INPUTEDITWIDGET_H
 
+#include <QAbstractItemModel>
+
 #include "delegate/InputWidget.h"
 
 class QCheckBox;
@@ -37,11 +39,13 @@ class InputEditWidget : public InputWidget
     Q_OBJECT
     
 public:
-    InputEditWidget(QWidget* parent = 0);
+    InputEditWidget(const QModelIndex & index, QWidget* parent = 0);
     
     const QColor inputColor() const;
     bool inputActive() const;
     int visualizationType() const;
+    
+    void updateFromModel();
     
     void setInputTitle(const QString & title);
     void setInputColor(const QColor & color);
@@ -51,7 +55,11 @@ public:
 signals:
     void dataChanged();
     
+private slots:
+    void handleDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    
 private:    
+    QModelIndex m_index;
     QCheckBox* m_activeCheckBox;
     QComboBox* m_colorComboBox;
     QComboBox* m_visualizationTypeComboBox;

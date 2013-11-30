@@ -17,17 +17,17 @@ InputDelegate::InputDelegate(QObject* parent)
 
 QWidget* InputDelegate::createEditor(QWidget* parent,
                                      const QStyleOptionViewItem& /*option*/,
-                                     const QModelIndex& /*index*/) const
+                                     const QModelIndex& index) const
 {
-    InputEditWidget* editor = new InputEditWidget(parent);
-    connect(editor, SIGNAL(dataChanged()), this, SLOT(commitEditEvent()));
+    InputEditWidget* editor = new InputEditWidget(index, parent);
+    connect(editor, SIGNAL(dataChanged()), this, SLOT(emitCommitData()));
     return editor;
 }
 
-void InputDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
+void InputDelegate::setEditorData(QWidget* editor, const QModelIndex& /*index*/) const
 {
     InputEditWidget* widget = qobject_cast<InputEditWidget*>(editor);
-    setInputWidgetData(widget, index);
+    widget->updateFromModel();
 }
 
 void InputDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
@@ -90,7 +90,7 @@ void InputDelegate::setInputWidgetData(InputWidget* widget, const QModelIndex& i
     widget->setVisualizationType(visualizationType);
 }
 
-void InputDelegate::commitEditEvent()
+void InputDelegate::emitCommitData()
 {
     QWidget* widget = qobject_cast<QWidget* >(sender());
     emit commitData(widget);

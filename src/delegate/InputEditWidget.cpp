@@ -7,8 +7,9 @@
 
 #include "Common.h"
 
-InputEditWidget::InputEditWidget(QWidget* parent)
+InputEditWidget::InputEditWidget(const QModelIndex & index, QWidget* parent)
   : InputWidget(parent),
+    m_index(index),
     m_activeCheckBox(0),
     m_colorComboBox(0),
     m_visualizationTypeComboBox(0)
@@ -39,6 +40,9 @@ InputEditWidget::InputEditWidget(QWidget* parent)
     connect(m_colorComboBox, SIGNAL(currentIndexChanged(int)),
             this, SIGNAL(dataChanged()));
     layout->addRow(tr("Color"), m_colorComboBox);
+    
+    connect(index.model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this, SLOT(handleDataChanged(QModelIndex,QModelIndex)));
     
     setLayout(layout);
 }
@@ -77,6 +81,30 @@ void InputEditWidget::setInputColor(const QColor& color)
 void InputEditWidget::setVisualizationType(const int type)
 {
     m_visualizationTypeComboBox->setCurrentIndex(type);
+}
+
+void InputEditWidget::updateFromModel()
+{
+    setTitle(m_index.data(Qt::DisplayRole).toString());
+    
+    AbstractDataVisualizer::VisualizationProperties properties
+        = m_index.data(VisualizationPropertiesRole).toMap();
+        
+    QColor color = properties.value("color", Qt::black).value<QColor>();
+    int index = m_colorComboBox->findData(color, int(Qt::DecorationRole));
+    m_colorComboBox->setCurrentIndex(index);
+    
+    bool isActive = properties.value("active", true).toBool();
+    m_activeCheckBox->setChecked(isActive);
+    
+    int visualizationType = properties.value("visualization", 0).toInt();
+    m_visualizationTypeComboBox->setCurrentIndex(visualizationType);
+}
+
+void InputEditWidget::handleDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+{
+    if (topLeft.row() >= m_index.row() && bottomRight.row() <= m_index.row())
+        updateFromModel();
 }
 
 

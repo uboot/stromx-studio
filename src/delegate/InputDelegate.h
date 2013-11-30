@@ -41,7 +41,7 @@ public:
     virtual QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const;
     
 private slots:
-    void commitEditEvent();
+    void emitCommitData();
     
 private:
     static void setInputWidgetData(InputWidget* widget, const QModelIndex & index);
