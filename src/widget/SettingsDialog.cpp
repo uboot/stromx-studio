@@ -48,8 +48,8 @@ after which it decides that the latter is the case. This time is defined here.")
     label = new QLabel(tr("Delay (ms)"));
     documentation = new QLabel(tr("\
 Slow processing refers to a mode where the stream delays the execution for a \
-pre-defined amount of time each time it sent data to an operator input. \
-The improves the visualization of the data for streams which process data \
+pre-defined amount of time each time it sends data to an operator input. \
+This improves the visualization of the data for streams which process data \
 very fast. The length of the delay is defined here."));
     documentation->setWordWrap(true);
     m_delayDurationSpinBox = new QSpinBox();
