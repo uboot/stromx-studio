@@ -69,14 +69,15 @@ class StreamModel : public QObject
 {
     Q_OBJECT
     
-    friend class AddOperatorCmd;
-    friend class RemoveOperatorCmd;
-    friend class InitializeOperatorCmd;
-    friend class DeinitializeOperatorCmd;
     friend class AddConnectionCmd;
-    friend class RemoveConnectionCmd;
+    friend class AddOperatorCmd;
     friend class AddThreadCmd;
+    friend class DeinitializeOperatorCmd;
+    friend class InitializeOperatorCmd;
+    friend class RemoveConnectionCmd;
+    friend class RemoveOperatorCmd;
     friend class RemoveThreadCmd;
+    friend class SetStreamSettingsCmd;
     
 public:
     /** Constructs an empty stream model. */
@@ -314,7 +315,18 @@ private:
      */
     void doRemoveThread(ThreadModel* threadModel);
     
-    /** Sets the current stream configuration. */
+    /**
+     * Overwrites the values in the current stream settings with the values
+     * in \c settings. E.g. if \c settings are empty the stream settings are not
+     * altered.
+     */
+    void doOverwriteSettings(const QMap<QString, QVariant> & settings);
+    
+    /** 
+     * Sets the current stream configuration to \em settings. E.g. if 
+     * \c settings are empty the stream settings will be empty after this function
+     * has been called.
+     */
     void doSetSettings(const QMap<QString, QVariant> & settings);
     
     /** 

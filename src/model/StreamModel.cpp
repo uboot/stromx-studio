@@ -26,6 +26,7 @@
 #include "cmd/RemoveConnectionCmd.h"
 #include "cmd/RemoveOperatorCmd.h"
 #include "cmd/RemoveThreadCmd.h"
+#include "cmd/SetStreamSettingsCmd.h"
 #include "data/OperatorData.h"
 #include "model/OperatorLibraryModel.h"
 #include "model/OperatorModel.h"
@@ -385,20 +386,20 @@ void StreamModel::deinitializeOperator(OperatorModel* op)
 
 int StreamModel::accessTimeout() const
 {
-    QVariant accessTimeout = m_settings.value("accessTimeout", DEFAULT_ACCESS_TIMEOUT);
-    return accessTimeout.toInt();
+    int accessTimeout = m_settings.value("accessTimeout", DEFAULT_ACCESS_TIMEOUT).toInt();
+    return accessTimeout;
 }
 
 bool StreamModel::delayActive() const
 {
-    QVariant delayActive = m_settings.value("delayActive", DEFAULT_DELAY);
-    return delayActive.toBool();
+    bool delayActive = m_settings.value("delayActive", DEFAULT_DELAY_ACTIVE).toBool();
+    return delayActive;
 }
 
 int StreamModel::delayDuration() const
 {
-    QVariant delayDuration = m_settings.value("delayDuration", DEFAULT_DELAY);
-    return delayDuration.toInt();
+    int delayDuration = m_settings.value("delayDuration", DEFAULT_DELAY).toInt();
+    return delayDuration;
 }
 
 void StreamModel::doAddOperator(OperatorModel* op)
@@ -498,10 +499,9 @@ void StreamModel::doRemoveThread(ThreadModel* threadModel)
     emit threadRemoved(threadModel);
 }
 
-void StreamModel::doSetSettings(const QMap< QString, QVariant >& settings)
+void StreamModel::doOverwriteSettings(const QMap< QString, QVariant >& settings)
 {
-    if (settings.keys().contains("delayActive") &&
-        settings["delayActive"] != m_settings.value("delayActive", DEFAULT_DELAY_ACTIVE))
+    if (settings.keys().contains("delayActive"))
     {
         bool active = settings["delayActive"].toBool();
         if(active)
@@ -512,8 +512,7 @@ void StreamModel::doSetSettings(const QMap< QString, QVariant >& settings)
         emit delayActiveChanged(active);
     }
     
-    if (settings.keys().contains("delayDuration") &&
-        settings["delayDuration"] != m_settings.value("delayDuration", DEFAULT_DELAY))
+    if (settings.keys().contains("delayDuration"))
     {
         int delay = settings["delayDuration"].toInt();
         
@@ -523,14 +522,42 @@ void StreamModel::doSetSettings(const QMap< QString, QVariant >& settings)
         emit delayDurationChanged(delay);
     }
     
-    if (settings.keys().contains("accessTimeout") &&
-        settings["accessTimeout"] != m_settings.value("accessTimeout", DEFAULT_DELAY))
+    if (settings.keys().contains("accessTimeout"))
     {
         int timeout = settings["accessTimeout"].toInt();
         
         m_settings["accessTimeout"] = timeout;
         emit accessTimeoutChanged(timeout);
     }
+}
+
+void StreamModel::doSetSettings(const QMap< QString, QVariant >& settings)
+{
+    bool delayActiveWillChange = settings.value("delayActive", DEFAULT_DELAY_ACTIVE).toBool() != delayActive();
+    bool delayDurationWillChange = settings.value("delayDuration", DEFAULT_DELAY).toInt() != delayDuration();
+    bool accessTimeoutWillChange = settings.value("accessTimeout", DEFAULT_ACCESS_TIMEOUT).toBool() != accessTimeout();
+    
+    m_settings = settings;
+    
+    bool active = delayActive();
+    if(active)
+        m_stream->setDelay(delayDuration());
+    else
+        m_stream->setDelay(0);
+    
+    
+    int delay = delayDuration();
+    if(delayActive())
+        m_stream->setDelay(delay);
+    
+    if (delayActiveWillChange)
+        emit delayActiveChanged(delayActive());
+    
+    if (delayDurationWillChange)
+        emit delayDurationChanged(delayDuration());
+    
+    if (accessTimeoutWillChange)
+        emit accessTimeoutChanged(accessTimeout());
 }
 
 void StreamModel::write(stromx::runtime::FileOutput & output, const QString& basename) const
@@ -888,7 +915,8 @@ void StreamModel::setDelayActive(bool active)
     {
         QMap<QString, QVariant> settings;
         settings["delayActive"] = active;
-        doSetSettings(settings);
+        QUndoCommand* cmd = new SetStreamSettingsCmd(this, settings);
+        m_undoStack->push(cmd);
     }
 }
 
@@ -900,7 +928,8 @@ void StreamModel::setDelayDuration(int delay)
     {
         QMap<QString, QVariant> settings;
         settings["delayDuration"] = truncatedDelay;
-        doSetSettings(settings);
+        QUndoCommand* cmd = new SetStreamSettingsCmd(this, settings);
+        m_undoStack->push(cmd);
     }
 }
 
@@ -912,7 +941,8 @@ void StreamModel::setAccessTimeout(int timeout)
     {
         QMap<QString, QVariant> settings;
         settings["accessTimeout"] = truncatedTimeout;
-        doSetSettings(settings);
+        QUndoCommand* cmd = new SetStreamSettingsCmd(this, settings);
+        m_undoStack->push(cmd);
     }
 }
 

@@ -55,10 +55,11 @@ set(stromxstudiotest_SOURCES
     ../cmd/RenameObserverCmd.cpp
     ../cmd/RenameOperatorCmd.cpp
     ../cmd/RenameThreadCmd.cpp
-    ../cmd/SetVisualizationPropertiesCmd.cpp
     ../cmd/SetParameterCmd.cpp
+    ../cmd/SetStreamSettings.cpp
     ../cmd/SetThreadCmd.cpp
     ../cmd/SetThreadColorCmd.cpp
+    ../cmd/SetVisualizationPropertiesCmd.cpp
     ../data/ErrorData.cpp
     ../data/InputData.cpp
     ../data/OperatorData.cpp

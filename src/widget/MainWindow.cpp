@@ -185,7 +185,8 @@ void MainWindow::setModel(StreamModel* model)
     connect(m_model, SIGNAL(streamJoined()), this, SLOT(join()));
     connect(m_model->observerModel(), SIGNAL(observerAdded(ObserverModel*)), this, SLOT(createObserverWindow(ObserverModel*)));
     connect(m_model->observerModel(), SIGNAL(observerRemoved(ObserverModel*)), this, SLOT(destroyObserverWindow(ObserverModel*)));
-
+    connect(m_model, SIGNAL(delayActiveChanged(bool)), m_slowAction, SLOT(setChecked(bool)));
+    
     // update the state of the slow action
     m_slowAction->setChecked(m_model->delayActive());
 }
