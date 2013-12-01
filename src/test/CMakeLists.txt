@@ -86,6 +86,7 @@ set(stromxstudiotest_SOURCES
     ../Matrix.cpp
     ../ObserverScheduler.cpp
     ../ParameterServer.cpp
+    ../VisualizationState.cpp
 )
 
 include_directories(

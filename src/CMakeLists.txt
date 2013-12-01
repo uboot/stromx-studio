@@ -87,6 +87,7 @@ set(stromxstudio_SOURCES
     ParameterServer.cpp
     StreamEditorScene.cpp
     UndoStackAction.cpp
+    VisualizationState.cpp
 )
 
 set(stromxstudio_HEADERS
