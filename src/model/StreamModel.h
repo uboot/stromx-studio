@@ -183,10 +183,10 @@ public:
     bool delayActive() const;
     
     /** Returns the length of the delay for slow processing in milliseconds. */ 
-    int delayDuration() const { return m_delayDuration; }
+    int delayDuration() const;
     
     /** Returns the maximal time to wait when accessing the stromx stream in milliseconds. */
-    int accessTimeout() const { return m_accessTimeout; }
+    int accessTimeout() const;
 
 public slots:
     /** Starts the stromx stream. Returns true if successful. */
@@ -252,6 +252,9 @@ signals:
     /** An operation accessing data or parameters of the stream timed out. */
     void accessTimedOut();
     
+    /** The active state of the stream delay changed. */
+    void delayActiveChanged(bool active);
+    
     /** The duration of the delay in slow processing mode changed. */
     void delayDurationChanged(int delay);
     
@@ -261,6 +264,9 @@ signals:
 private:
     /** The default slow processing delay in milliseconds. */
     static const int DEFAULT_DELAY;
+    
+    /** The default state of the stream delay. */
+    static const bool DEFAULT_DELAY_ACTIVE;
     
     /** The default access time out in milliseconds. */
     static const int DEFAULT_ACCESS_TIMEOUT;
@@ -308,6 +314,9 @@ private:
      */
     void doRemoveThread(ThreadModel* threadModel);
     
+    /** Sets the current stream configuration. */
+    void doSetSettings(const QMap<QString, QVariant> & settings);
+    
     /** 
      * Serializes all data of the stream which is not stored in the stromx XML,
      * as e.g. operator positions.
@@ -328,18 +337,6 @@ private:
     
     /** Deletes the stromx stream and all models. */ 
     void deleteAllData();
-    
-    /** 
-     * Outputs the current configuration options (such as delay, time out)
-     * as key-value dictionary.
-     */
-    QMap<QString, QVariant> writeConfiguration() const;
-    
-    /**
-     * Reads configuration options from the input key-value dictionary
-     * and sets the according values of the stream model.
-     */
-    void readConfiguration(const QMap<QString, QVariant> & configuration);
     
     /** Finds the operator model which wraps \c op. Returns 0 if no such model exists. */
     OperatorModel* findOperatorModel(const stromx::runtime::Operator* op) const;
@@ -368,8 +365,7 @@ private:
     QList<ConnectionModel*> m_connections;
     QFutureWatcher<void>* m_joinStreamWatcher;
     ExceptionObserver* m_exceptionObserver;
-    int m_delayDuration;
-    int m_accessTimeout;
+    QMap<QString, QVariant> m_settings;
 };
 
 #endif // STREAMMODEL_H

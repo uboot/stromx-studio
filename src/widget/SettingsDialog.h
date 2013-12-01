@@ -35,9 +35,14 @@ public:
     
     void setModel(StreamModel* stream);
     
+private slots:
+    void setDelayDuration();
+    void setAccessTimeout();
+    
 private:
     QSpinBox* m_delayDurationSpinBox;
     QSpinBox* m_accessTimeoutSpinBox;
+    StreamModel* m_stream;
 };
 
 #endif // SETTINGSDIALOG_H

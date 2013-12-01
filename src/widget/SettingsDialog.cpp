@@ -9,7 +9,8 @@
 SettingsDialog::SettingsDialog(QWidget* parent)
   : QDialog(parent),
     m_delayDurationSpinBox(0),
-    m_accessTimeoutSpinBox(0)
+    m_accessTimeoutSpinBox(0),
+    m_stream(0)
 {
     QGroupBox* box = 0;
     QLabel* label = 0;
@@ -71,6 +72,11 @@ very fast. The length of the delay is defined here."));
 
 void SettingsDialog::setModel(StreamModel* stream)
 {
+    Q_ASSERT(stream);
+    
+    // remember the stream
+    m_stream = stream;
+    
     // get the current values from the stream
     m_delayDurationSpinBox->setValue(stream->delayDuration());
     m_accessTimeoutSpinBox->setValue(stream->accessTimeout());
@@ -78,8 +84,21 @@ void SettingsDialog::setModel(StreamModel* stream)
     // synchronize the dialog with the stream settings
     connect(stream, SIGNAL(delayDurationChanged(int)), m_delayDurationSpinBox, SLOT(setValue(int)));
     connect(stream, SIGNAL(accessTimeoutChanged(int)), m_accessTimeoutSpinBox, SLOT(setValue(int)));
-    connect(m_delayDurationSpinBox, SIGNAL(valueChanged(int)), stream, SLOT(setDelayDuration(int)));
-    connect(m_accessTimeoutSpinBox, SIGNAL(valueChanged(int)), stream, SLOT(setAccessTimeout(int)));
+    connect(m_delayDurationSpinBox, SIGNAL(editingFinished()), this, SLOT(setDelayDuration()));
+    connect(m_accessTimeoutSpinBox, SIGNAL(editingFinished()), this, SLOT(setAccessTimeout()));
 }
+
+void SettingsDialog::setAccessTimeout()
+{
+    Q_ASSERT(m_stream);
+    m_stream->setAccessTimeout(m_accessTimeoutSpinBox->value());
+}
+
+void SettingsDialog::setDelayDuration()
+{
+    Q_ASSERT(m_stream);
+    m_stream->setDelayDuration(m_delayDurationSpinBox->value());
+}
+
 
 
