@@ -24,19 +24,20 @@ QWidget* InputDelegate::createEditor(QWidget* parent,
     return editor;
 }
 
-void InputDelegate::setEditorData(QWidget* editor, const QModelIndex& /*index*/) const
+void InputDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
     InputEditWidget* widget = qobject_cast<InputEditWidget*>(editor);
-    widget->updateFromModel();
+    QVariant data = index.data(VisualizationStateRole);
+    
+    if (data.canConvert<VisualizationState>())
+        widget->setState(data.value<VisualizationState>());
 }
 
 void InputDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
     InputEditWidget* widget = qobject_cast<InputEditWidget*>(editor);
     
-    VisualizationState state;
-    state.setIsActive(widget->inputActive());
-    state.setCurrentVisualization(""); // TODO: set real visualization
+    VisualizationState state = widget->state();
     model->setData(index, QVariant::fromValue(state), VisualizationStateRole);
 }
 

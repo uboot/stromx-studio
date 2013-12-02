@@ -21,11 +21,13 @@
 #define INPUTEDITWIDGET_H
 
 #include <QAbstractItemModel>
-
-#include "delegate/InputWidget.h"
+#include <QGroupBox>
+#include "visualization/VisualizationState.h"
 
 class QCheckBox;
 class QComboBox;
+class QFormLayout;
+class VisualizationWidget;
 
 /** 
  * \brief Widget for the properties of an observed input
@@ -34,35 +36,32 @@ class QComboBox;
  * observer list view. It is used by the item delegate of the observer list
  * view (InputDelegate).
  */
-class InputEditWidget : public InputWidget
+class InputEditWidget : public QGroupBox
 {
     Q_OBJECT
     
 public:
     InputEditWidget(const QModelIndex & index, QWidget* parent = 0);
     
-    const QColor inputColor() const;
-    bool inputActive() const;
-    int visualizationType() const;
-    
-    void updateFromModel();
-    
+    const VisualizationState & state() const { return m_state; }
+    void setState(const VisualizationState & state);
     void setInputTitle(const QString & title);
-    void setInputColor(const QColor & color);
-    void setInputActive(const bool isActive);
-    void setVisualizationType(const int type);
     
 signals:
     void dataChanged();
     
 private slots:
-    void handleDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    void handleModelChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+    void updateState();
+    void updateWidget();
     
 private:    
     QModelIndex m_index;
+    VisualizationState m_state;
+    VisualizationWidget* m_widget;
     QCheckBox* m_activeCheckBox;
-    QComboBox* m_colorComboBox;
-    QComboBox* m_visualizationTypeComboBox;
+    QComboBox* m_visualizationMenu;
+    QFormLayout* m_layout;
 };
 
 #endif // INPUTEDITWIDGET_H

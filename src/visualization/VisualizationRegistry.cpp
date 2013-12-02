@@ -1,5 +1,6 @@
 #include "visualization/VisualizationRegistry.h"
 
+#include "visualization/DefaultVisualization.h"
 #include "visualization/LineSegments.h"
 #include "visualization/Visualization.h"
 
@@ -18,6 +19,7 @@ void VisualizationRegistry::registerVisualization(Visualization*const visualizat
 
 VisualizationRegistry::VisualizationRegistry()
 {
+    m_registry.registerVisualization(new DefaultVisualization);
     m_registry.registerVisualization(new LineSegments);
 }
 

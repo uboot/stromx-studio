@@ -60,6 +60,7 @@ set(stromxstudio_SOURCES
     task/SetParameterTask.cpp
     task/Task.cpp
     visualization/ColorChooser.cpp
+    visualization/DefaultVisualization.cpp
     visualization/LineSegments.cpp
     visualization/VisualizationRegistry.cpp
     visualization/VisualizationState.cpp
