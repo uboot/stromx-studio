@@ -20,9 +20,8 @@
 #ifndef INPUTPAINTWIDGET_H
 #define INPUTPAINTWIDGET_H
 
-#include "delegate/InputWidget.h"
+#include <QGroupBox>
 
-class QCheckBox;
 class QLabel;
 
 /** 
@@ -32,7 +31,7 @@ class QLabel;
  * observer list view. It is used by the item delegate of the observer list
  * view (InputDelegate).
  */
-class InputPaintWidget : public InputWidget
+class InputPaintWidget : public QGroupBox
 {
     Q_OBJECT
     
@@ -40,13 +39,11 @@ public:
     InputPaintWidget(QWidget* parent = 0);
     
     void setInputTitle(const QString & title);
-    void setInputColor(const QColor & color);
     void setInputActive(const bool isActive);
-    void setVisualizationType(const int type);
+    void setVisualizationType(const QString & type);
     
 private:
     QLabel* m_activeLabel;
-    QLabel* m_colorLabel;
     QLabel* m_visualizationTypeLabel;
 };
 

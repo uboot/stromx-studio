@@ -42,9 +42,6 @@ public:
     
 private slots:
     void emitCommitData();
-    
-private:
-    static void setInputWidgetData(InputWidget* widget, const QModelIndex & index);
 };
 
 #endif // INPUTDELEGATE_H

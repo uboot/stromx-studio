@@ -6,6 +6,8 @@
 #include "Common.h"
 #include "delegate/InputEditWidget.h"
 #include "delegate/InputPaintWidget.h"
+#include <visualization/Visualization.h>
+#include <visualization/VisualizationRegistry.h>
 
 const int InputDelegate::ROW_HEIGHT = 100;
 const int InputDelegate::BORDER_OFFSET = 5;
@@ -50,10 +52,19 @@ void InputDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
     }
     
     InputPaintWidget box;
-    setInputWidgetData(&box, index);
     QRect widgetRect(0, 0, option.rect.width(), option.rect.height());
     box.setGeometry(widgetRect);
     box.setInputTitle(index.data(Qt::DisplayRole).toString());
+    QVariant stateVariant = index.data(VisualizationStateRole);
+    if (stateVariant.canConvert<VisualizationState>())
+    {
+        VisualizationState state = stateVariant.value<VisualizationState>();
+        box.setInputActive(state.isActive());
+        const Visualization* visualization = VisualizationRegistry::registry().visualization(state.currentVisualization());
+        if (visualization)
+            box.setVisualizationType(visualization->name());
+    }
+    
     QPixmap pixmap(option.rect.size());
     QPainter widgetPainter;
  
@@ -70,21 +81,6 @@ QSize InputDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIn
     size.setHeight(ROW_HEIGHT);
     
     return size;
-}
-
-void InputDelegate::setInputWidgetData(InputWidget* widget, const QModelIndex& index)
-{
-    widget->setInputTitle(index.data(Qt::DisplayRole).toString());
-    
-    QVariant stateVariant = index.data(VisualizationStateRole);
-        
-    if (stateVariant.canConvert<VisualizationState>())
-    {
-        VisualizationState state = stateVariant.value<VisualizationState>();
-        
-        widget->setInputActive(state.isActive());
-        widget->setVisualizationType(0); // TODO: convert visualization string to item number
-    }
 }
 
 void InputDelegate::emitCommitData()
