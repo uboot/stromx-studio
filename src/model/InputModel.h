@@ -27,7 +27,7 @@ class QUndoStack;
 class ObserverTreeModel;
 class OperatorModel;
 
-#include "VisualizationState.h"
+#include "visualization/VisualizationState.h"
 
 /** 
  * \brief Model of an input observer

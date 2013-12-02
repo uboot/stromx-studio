@@ -466,6 +466,43 @@ QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
 }
 
 
+QDataStream& readVersion01(QDataStream& stream, ObserverTreeModel* model)
+{
+    qint32 observerCount = 0;
+    stream >> observerCount;
+    
+    for(int i = 0; i < observerCount; ++i)
+    {
+        ObserverModel* observer = new ObserverModel(model->m_undoStack, model);
+        QObject::connect(observer, SIGNAL(changed(ObserverModel*)), model, SLOT(updateObserver(ObserverModel*)));
+        QString str;
+        stream >> str;
+        observer->setName(str);
+        qint32 inputCount = 0;
+        stream >> inputCount;
+        
+        for(int j = 0; j < inputCount; ++j)
+        {
+            qint32 opId;
+            qint32 inputId;
+            
+            stream >> opId;
+            stream >> inputId;
+            
+            OperatorModel* op = model->m_stream->operators()[opId];
+            InputModel* input = new InputModel(op, inputId, model->m_undoStack, model);
+            readVersion01(stream, input);
+            
+            observer->insertInput(observer->numInputs(), input);
+            model->connect(input, SIGNAL(changed(InputModel*)), model, SLOT(updateInput(InputModel*)));
+        }
+        
+        model->m_observers.append(observer);
+    }
+    
+    return stream;
+}
+
 
 
 

@@ -61,6 +61,8 @@ set(stromxstudio_SOURCES
     task/Task.cpp
     visualization/ColorChooser.cpp
     visualization/LineSegments.cpp
+    visualization/VisualizationRegistry.cpp
+    visualization/VisualizationState.cpp
     widget/DataVisualizer.cpp
     widget/DataVisualizerUtilities.cpp
     widget/DocumentationWindow.cpp
@@ -89,7 +91,6 @@ set(stromxstudio_SOURCES
     ParameterServer.cpp
     StreamEditorScene.cpp
     UndoStackAction.cpp
-    VisualizationState.cpp
 )
 
 set(stromxstudio_HEADERS

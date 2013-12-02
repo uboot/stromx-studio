@@ -829,7 +829,14 @@ void StreamModel::deserializeModel(const QByteArray& data)
             throw ReadStudioDataFailed(tr("Number of threads must be 0."));
     }
     
-    dataStream >> m_observerModel;
+    if (streamFormatVersion < STREAM_FORMAT_V2)
+    {
+        readVersion01(dataStream, m_observerModel);
+    }
+    else
+    {
+        dataStream >> m_observerModel;
+    }
     
     QMap<QString, QVariant> settings;
     dataStream >> settings;

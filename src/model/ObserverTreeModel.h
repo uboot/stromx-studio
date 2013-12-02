@@ -48,6 +48,7 @@ class ObserverTreeModel : public QAbstractItemModel
     friend class RemoveInputCmd;
     friend QDataStream & operator<< (QDataStream & stream, const ObserverTreeModel * op);
     friend QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * op);
+    friend QDataStream & readVersion01 (QDataStream & stream, ObserverTreeModel * op);
     
 public:
     /** Constructs an observer tree model. */
@@ -155,5 +156,6 @@ private:
 
 QDataStream & operator<< (QDataStream & stream, const ObserverTreeModel * model);
 QDataStream & operator>> (QDataStream & stream, ObserverTreeModel * model);
+QDataStream & readVersion01 (QDataStream & stream, ObserverTreeModel * model);
 
 #endif // OBSERVERTREEMODEL_H

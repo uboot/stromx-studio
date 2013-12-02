@@ -78,6 +78,7 @@ set(stromxstudiotest_SOURCES
     ../task/GetParameterTask.cpp
     ../task/SetParameterTask.cpp
     ../task/Task.cpp
+    ../visualization/VisualizationState.cpp
     ../Common.cpp
     ../ConnectorObserver.cpp
     ../DataConverter.cpp
@@ -86,7 +87,6 @@ set(stromxstudiotest_SOURCES
     ../Matrix.cpp
     ../ObserverScheduler.cpp
     ../ParameterServer.cpp
-    ../VisualizationState.cpp
 )
 
 include_directories(

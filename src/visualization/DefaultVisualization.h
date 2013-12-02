@@ -18,44 +18,22 @@
 */
 
 
-#ifndef VISUALIZATION_H
-#define VISUALIZATION_H
+#ifndef DEFAULTVISUALIZATION_H
+#define DEFAULTVISUALIZATION_H
 
-#include <QList>
-#include <QString>
+#include <QObject>
+#include "visualization/Visualization.h"
 
-#include "VisualizationState.h"
+class QComboBox;
 
-namespace stromx
-{
-    namespace runtime
-    {
-        class Data;
-    }
-}
-
-class QGraphicsItem;
-class VisualizationWidget;
-
-class Visualization
+class DefaultVisualization : public Visualization
 {
 public:
-    Visualization(const QString & visualization, const QString & name)
-      : m_visualization(visualization),
-        m_name(name)
-    {}
-    virtual ~Visualization() {}
+    DefaultVisualization() : Visualization("default", QObject::tr("Default")) {}
 
-    const QString & name() const { return m_name; }
-    const QString & visualization() const { return m_visualization; }
-
-    virtual VisualizationWidget* createEditor() const = 0;
+    virtual VisualizationWidget* createEditor() const;
     virtual QList<QGraphicsItem*> createItems(const stromx::runtime::Data & data,
-        const VisualizationState::Properties & properties) const = 0;
-    
-private:
-    QString m_visualization;
-    QString m_name;
+        const VisualizationState::Properties & properties) const;
 };
 
-#endif // VISUALIZATION_H
+#endif // DEFAULTVISUALIZATION_H

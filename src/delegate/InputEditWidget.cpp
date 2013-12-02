@@ -6,7 +6,7 @@
 #include <QLabel>
 
 #include "Common.h"
-#include <VisualizationState.h>
+#include "visualization/VisualizationState.h"
 
 InputEditWidget::InputEditWidget(const QModelIndex & index, QWidget* parent)
   : InputWidget(parent),

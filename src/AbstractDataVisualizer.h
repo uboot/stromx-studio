@@ -23,7 +23,7 @@
 #include <QMap>
 #include <QVariant>
 
-#include "VisualizationState.h"
+#include "visualization/VisualizationState.h"
 
 namespace stromx
 {

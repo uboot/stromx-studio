@@ -85,7 +85,7 @@ QDataStream& readVersion01(QDataStream& stream, InputModel* model)
             state.setCurrentVisualization("histogram");
             break;
         default:
-            state.setCurrentVisualization("image");
+            state.setCurrentVisualization("default");
             break;
         }
     }

@@ -22,7 +22,7 @@
 
 #include <QUndoCommand>
 
-#include "VisualizationState.h"
+#include "visualization/VisualizationState.h"
 
 class InputModel;
 
