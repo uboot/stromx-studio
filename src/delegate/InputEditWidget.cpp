@@ -6,6 +6,7 @@
 #include <QLabel>
 
 #include "Common.h"
+#include <VisualizationState.h>
 
 InputEditWidget::InputEditWidget(const QModelIndex & index, QWidget* parent)
   : InputWidget(parent),
@@ -87,18 +88,13 @@ void InputEditWidget::updateFromModel()
 {
     setTitle(m_index.data(Qt::DisplayRole).toString());
     
-    AbstractDataVisualizer::VisualizationProperties properties
-        = m_index.data(VisualizationPropertiesRole).toMap();
-        
-    QColor color = properties.value("color", Qt::black).value<QColor>();
-    int index = m_colorComboBox->findData(color, int(Qt::DecorationRole));
-    m_colorComboBox->setCurrentIndex(index);
-    
-    bool isActive = properties.value("active", true).toBool();
-    m_activeCheckBox->setChecked(isActive);
-    
-    int visualizationType = properties.value("visualization", 0).toInt();
-    m_visualizationTypeComboBox->setCurrentIndex(visualizationType);
+    QVariant stateVariant = m_index.data(VisualizationStateRole);
+    if (stateVariant.canConvert<VisualizationState>())
+    {
+        VisualizationState state = stateVariant.value<VisualizationState>();
+        m_activeCheckBox->setChecked(state.isActive());
+        m_visualizationTypeComboBox->setCurrentIndex(0); // TODO: set index
+    }
 }
 
 void InputEditWidget::handleDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)

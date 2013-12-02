@@ -12,7 +12,7 @@ namespace
 {
     template <class data_t>
     static QList<QGraphicsItem*> createPrimitiveItemsTemplate(const stromx::runtime::Data & data,
-        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+        const VisualizationState::Properties & visualizationProperties)
     {
         QList<QGraphicsItem*> items;
         QVariant colorVariant = visualizationProperties.value("color", Qt::black);
@@ -42,7 +42,7 @@ namespace
     
     template <class data_t>
     QList< QGraphicsItem* > createLineSegmentItemsTemplate(const stromx::runtime::Data& data, 
-        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+        const VisualizationState::Properties & visualizationProperties)
     {
         using namespace stromx::runtime;
         QVariant colorVariant = visualizationProperties.value("color", Qt::black);
@@ -81,7 +81,7 @@ namespace
     }
     
     QList< QGraphicsItem* > createLineSegments(const stromx::runtime::Data& data, 
-        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+        const VisualizationState::Properties & visualizationProperties)
     {
         using namespace stromx::runtime;
         
@@ -107,7 +107,7 @@ namespace
 
     template <class data_t>
     QList< QGraphicsItem* > createPointItemsTemplate(const stromx::runtime::Data& data,
-        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+        const VisualizationState::Properties & visualizationProperties)
     {
         using namespace stromx::runtime;
         QVariant colorVariant = visualizationProperties.value("color", Qt::black);
@@ -144,7 +144,7 @@ namespace
     }
 
     QList< QGraphicsItem* > createPoints(const stromx::runtime::Data& data,
-        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+        const VisualizationState::Properties & visualizationProperties)
     {
         using namespace stromx::runtime;
         
@@ -170,7 +170,7 @@ namespace
 
     template <class data_t>
     QList< QGraphicsItem* > createHistogramItemsTemplate(const stromx::runtime::Data& data,
-        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+        const VisualizationState::Properties & visualizationProperties)
     {
         const int WIDTH = 400;
         const int HEIGHT = 400;
@@ -234,7 +234,7 @@ namespace
     }
 
     QList< QGraphicsItem* > createHistogram(const stromx::runtime::Data& data,
-        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+        const VisualizationState::Properties & visualizationProperties)
     {
         using namespace stromx::runtime;
         
@@ -260,7 +260,7 @@ namespace
     
     template <class data_t>
     QList< QGraphicsItem* > createImageFromMatrixTemplate(const stromx::runtime::Data& data,
-                                                          const AbstractDataVisualizer::VisualizationProperties & /*visualizationProperties*/)
+                                                          const VisualizationState::Properties & /*visualizationProperties*/)
     {
         using namespace stromx::runtime;
         
@@ -348,7 +348,7 @@ namespace
     }
     
     QList< QGraphicsItem* > createImageFromMatrix(const stromx::runtime::Data& data,
-                                                  const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+                                                  const VisualizationState::Properties & visualizationProperties)
     {
         using namespace stromx::runtime;
         
@@ -374,7 +374,7 @@ namespace
 }
 
 QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::runtime::Data& data,
-    const AbstractDataVisualizer::VisualizationProperties & /*visualizationProperties*/)
+    const VisualizationState::Properties & /*visualizationProperties*/)
 {
     using namespace stromx::runtime;
     
@@ -475,7 +475,7 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createImageItems(const stromx::ru
 }
    
 QList<QGraphicsItem*> DataVisualizerUtilities::createStringItems(const stromx::runtime::Data & data,
-    const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+    const VisualizationState::Properties & visualizationProperties)
 {
     using namespace stromx::runtime;
     QVariant colorVariant = visualizationProperties.value("color", Qt::black);
@@ -499,7 +499,7 @@ QList<QGraphicsItem*> DataVisualizerUtilities::createStringItems(const stromx::r
 }
 
 QList< QGraphicsItem* > DataVisualizerUtilities::createMatrixItems(const stromx::runtime::Data& data,
-    const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+    const VisualizationState::Properties & visualizationProperties)
 {
     const QVariant visualizationVariant = 
         visualizationProperties.value(QString("visualization"), AbstractDataVisualizer::AUTOMATIC);
@@ -521,7 +521,7 @@ QList< QGraphicsItem* > DataVisualizerUtilities::createMatrixItems(const stromx:
 }
 
 QList<QGraphicsItem*> DataVisualizerUtilities::createPrimitiveItems(const stromx::runtime::Data & data,
-    const AbstractDataVisualizer::VisualizationProperties & visualizationProperties)
+    const VisualizationState::Properties & visualizationProperties)
 {    
     using namespace stromx::runtime;
     

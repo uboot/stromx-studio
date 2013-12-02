@@ -37,25 +37,25 @@ class DataVisualizerUtilities
 public:    
     /** Casts \c data to an stromx image and returns an image item. */
     static QList<QGraphicsItem*> createImageItems(const stromx::runtime::Data & data,
-        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties);
+        const VisualizationState::Properties & visualizationProperties);
     
     /** Casts \c data to a string and returns it as an text item. */
     static QList<QGraphicsItem*> createStringItems(const stromx::runtime::Data & data,
-        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties);
+        const VisualizationState::Properties & visualizationProperties);
     
     /** 
      * Casts \c data to an stromx matrix and returns the data defined
      * by the matrix.
      */
     static QList<QGraphicsItem*> createMatrixItems(const stromx::runtime::Data & data,
-        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties);
+        const VisualizationState::Properties & visualizationProperties);
     
     /** 
      * Casts \c data to an stromx primitive and returns its text representation as a
      * text item. 
      */
     static QList<QGraphicsItem*> createPrimitiveItems(const stromx::runtime::Data & data,
-        const AbstractDataVisualizer::VisualizationProperties & visualizationProperties);
+        const VisualizationState::Properties & visualizationProperties);
     
 private:
     typedef QList<QGraphicsItem*> ItemList;

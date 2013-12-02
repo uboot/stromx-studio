@@ -44,7 +44,7 @@ public:
     virtual void removeLayer(int pos);
     virtual void setColor(int pos, const QColor & color);
     virtual void setData(int pos, const stromx::runtime::Data& data,
-                         const VisualizationProperties & visualizationProperties);
+                         const VisualizationState & state);
     virtual void setActive(int pos, bool active);
     
 private:

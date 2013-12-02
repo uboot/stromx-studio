@@ -23,6 +23,8 @@
 #include <QMap>
 #include <QVariant>
 
+#include "VisualizationState.h"
+
 namespace stromx
 {
     namespace runtime
@@ -44,13 +46,6 @@ class QColor;
 class AbstractDataVisualizer
 {
 public:
-    /** 
-     * List of properties of the visualization of data, e.g.
-     * the color of the painted primitives or the scaling of floating point
-     * image data.
-     */
-    typedef QMap<QString, QVariant> VisualizationProperties;
-    
     /** Determines how data is interpreted for visualization. */
     enum VisualizationType
     {
@@ -99,7 +94,7 @@ public:
      * this function and must be set again for the new data object.
      */
     virtual void setData(int pos, const stromx::runtime::Data& data,
-                         const VisualizationProperties & visualizationProperties) = 0;
+                         const VisualizationState & visualizationState) = 0;
     
 private:
     

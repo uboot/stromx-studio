@@ -17,29 +17,29 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SETINPUTVISUALIZATIONPROPERTIESCMD_H
-#define SETINPUTVISUALIZATIONPROPERTIESCMD_H
+#ifndef SETINPUTVISUALIZATIONSTATECMD_H
+#define SETINPUTVISUALIZATIONSTATECMD_H
 
-#include <QColor>
 #include <QUndoCommand>
 
-#include "AbstractDataVisualizer.h"
-#include "model/InputModel.h"
+#include "VisualizationState.h"
 
-/** \brief Sets the visualization properties of an input model. */
-class SetVisualizationPropertiesCmd : public QUndoCommand
+class InputModel;
+
+/** \brief Sets the visualization state of an input model. */
+class SetVisualizationStateCmd : public QUndoCommand
 {
 public:
-    SetVisualizationPropertiesCmd(InputModel* model, 
-        const InputModel::VisualizationProperties & newProperties, QUndoCommand* parent = 0);
+    SetVisualizationStateCmd(InputModel* model, 
+        const VisualizationState & newState, QUndoCommand* parent = 0);
     
     virtual void undo();
     virtual void redo();
     
 private:
     InputModel* m_model;
-    InputModel::VisualizationProperties m_oldProperties;
-    InputModel::VisualizationProperties m_newProperties;
+    VisualizationState m_oldState;
+    VisualizationState m_newState;
 };
 
-#endif // SETINPUTVISUALIZATIONPROPERTIESCMD_H
+#endif // SETINPUTVISUALIZATIONSTATECMD_H

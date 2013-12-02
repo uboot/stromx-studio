@@ -33,13 +33,11 @@ void InputDelegate::setEditorData(QWidget* editor, const QModelIndex& /*index*/)
 void InputDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
     InputEditWidget* widget = qobject_cast<InputEditWidget*>(editor);
-    AbstractDataVisualizer::VisualizationProperties properties;
     
-    properties["color"] = widget->inputColor();
-    properties["active"] = widget->inputActive();
-    properties["visualization"] = widget->visualizationType();
-    
-    model->setData(index, properties, VisualizationPropertiesRole);
+    VisualizationState state;
+    state.setIsActive(widget->inputActive());
+    state.setCurrentVisualization(""); // TODO: set real visualization
+    model->setData(index, QVariant::fromValue(state), VisualizationStateRole);
 }
 
 void InputDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
@@ -77,17 +75,15 @@ void InputDelegate::setInputWidgetData(InputWidget* widget, const QModelIndex& i
 {
     widget->setInputTitle(index.data(Qt::DisplayRole).toString());
     
-    AbstractDataVisualizer::VisualizationProperties properties
-        = index.data(VisualizationPropertiesRole).toMap();
+    QVariant stateVariant = index.data(VisualizationStateRole);
         
-    QColor color = properties.value("color", Qt::black).value<QColor>();
-    widget->setInputColor(color);
-    
-    bool isActive = properties.value("active", true).toBool();
-    widget->setInputActive(isActive);
-    
-    int visualizationType = properties.value("visualization", 0).toInt();
-    widget->setVisualizationType(visualizationType);
+    if (stateVariant.canConvert<VisualizationState>())
+    {
+        VisualizationState state = stateVariant.value<VisualizationState>();
+        
+        widget->setInputActive(state.isActive());
+        widget->setVisualizationType(0); // TODO: convert visualization string to item number
+    }
 }
 
 void InputDelegate::emitCommitData()

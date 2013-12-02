@@ -180,8 +180,8 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole:
         return tr("%1 at %2").arg(input->docTitle())
                              .arg(input->op()->name());
-    case VisualizationPropertiesRole:
-        return input->visualizationProperties();
+    case VisualizationStateRole:
+        return QVariant::fromValue(input->visualizationState());
     default:
         return QVariant();
     }
@@ -202,7 +202,7 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
     }
     
     // the index points to an input 
-    if(index.isValid() && index.internalPointer() && role == VisualizationPropertiesRole)
+    if(index.isValid() && index.internalPointer() && role == VisualizationStateRole)
     {
         // get the input
         ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
@@ -213,11 +213,14 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         // visualization objects (i.e. the graphic items). In case the input is inactive
         // it would be preferrable to additionally suppress the obervation of data at the
         // input connector to avoid waiting for the read access there.
-        AbstractDataVisualizer::VisualizationProperties properties(value.toMap());
-        input->setVisualizationProperties(properties);
-        
-        emit dataChanged(index, index);
+        if (value.canConvert<VisualizationState>())
+        {
+            VisualizationState state(value.value<VisualizationState>());
+            input->setVisualizationState(state);
+            
+            emit dataChanged(index, index);
         return true;
+        }
     }
     
     return false;

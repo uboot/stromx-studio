@@ -2,8 +2,9 @@
 
 #include <stromx/runtime/Operator.h>
 
+#include "AbstractDataVisualizer.h"
 #include "Common.h"
-#include "cmd/SetVisualizationPropertiesCmd.h"
+#include "cmd/SetVisualizationStateCmd.h"
 #include "model/OperatorModel.h"
 #include "model/StreamModel.h"
 
@@ -13,10 +14,6 @@ InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack
     m_id(id),
     m_undoStack(undoStack) 
 {
-    m_visualizationProperties["color"] = Colors::RED;
-    m_visualizationProperties["visualization"] = AbstractDataVisualizer::AUTOMATIC;
-    m_visualizationProperties["active"] = true;
-    
     connect(op, SIGNAL(nameChanged(QString)), this, SLOT(updateOperatorName(QString)));
 }
 
@@ -30,46 +27,81 @@ QString InputModel::docTitle() const
     return QString::fromStdString(m_op->op()->info().input(m_id).title());
 }
 
-void InputModel::setVisualizationProperties(const VisualizationProperties & properties)
+void InputModel::setVisualizationState(const VisualizationState& state)
 {
-    if(properties != m_visualizationProperties)
+    if (state != m_visualizationState)
     {
-        QUndoCommand* cmd = new SetVisualizationPropertiesCmd(this, properties);
+        QUndoCommand* cmd = new SetVisualizationStateCmd(this, state);
         m_undoStack->push(cmd);
     }
+
 }
 
-void InputModel::doSetVisualizationProperties(const VisualizationProperties & properties)
+void InputModel::doSetVisualizationState(const VisualizationState& state)
 {
-    m_visualizationProperties = properties;
-    emit visualizationPropertiesChanged(m_visualizationProperties);
+    m_visualizationState = state;
     emit changed(this);
+    emit visualizationStateChanged(m_visualizationState);
 }
 
 QDataStream& operator<<(QDataStream& stream, const InputModel* model)
 {
-    stream << model->visualizationProperties();
+    stream << model->visualizationState();
     
     return stream;
 }
 
 QDataStream& operator>>(QDataStream& stream, InputModel* model)
 {
-    QMap<QString, QVariant> properties;
+    VisualizationState state;
     
-    stream >> properties;
-    
-    if (! properties.keys().contains("color"))
-        properties["color"] = Colors::RED;
-    if (! properties.keys().contains("visualization"))
-        properties["visualization"] = AbstractDataVisualizer::AUTOMATIC;
-    if (! properties.keys().contains("active"))
-        properties["active"] = true;
-    
-    model->doSetVisualizationProperties(properties);
+    stream >> state;
+    model->doSetVisualizationState(state);
     
     return stream;
 }
+
+
+QDataStream& readVersion01(QDataStream& stream, InputModel* model)
+{
+    QMap<QString, QVariant> properties;
+    stream >> properties;
+    
+    VisualizationState state;
+    state.setIsActive(properties.value("active", true).toBool());
+    
+    if (properties.keys().contains("visualization"))
+    {
+        int visualization = properties["visualization"].toInt();
+        switch (visualization)
+        {
+        case AbstractDataVisualizer::POINTS:
+            state.setCurrentVisualization("points");
+            break;
+        case AbstractDataVisualizer::LINES:
+            state.setCurrentVisualization("line_segments");
+            break;
+        case AbstractDataVisualizer::HISTOGRAM:
+            state.setCurrentVisualization("histogram");
+            break;
+        default:
+            state.setCurrentVisualization("image");
+            break;
+        }
+    }
+    
+    if (state.currentVisualization() != "image" && properties.keys().contains("color"))
+    {
+        QVariant color = properties["color"];
+        state.currentProperties()["color"] = color;
+    }
+    
+    model->doSetVisualizationState(state);
+    
+    return stream;
+}
+
+
 
 
 

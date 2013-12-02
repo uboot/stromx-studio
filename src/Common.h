@@ -25,8 +25,6 @@
 #include <QColor>
 #include <QMap>
 
-#include "AbstractDataVisualizer.h"
-
 /** Custom roles of stromx-studio. */
 enum Roles
 {
@@ -81,7 +79,7 @@ enum Roles
     MatrixRole,
     
     /** The visualization properties of an observed input. */
-    VisualizationPropertiesRole,
+    VisualizationStateRole,
     
     /** The number of rows of a matrix parameter. */
     NumRowsRole,

@@ -21,17 +21,20 @@
 #ifndef VISUALIZATIONSTATE_H
 #define VISUALIZATIONSTATE_H
 
-#include <QMap>
 #include <QVariant>
 
 class VisualizationState
 {
-    friend QDataStream & operator<< (QDataStream & stream, const VisualizationState * state);
-    friend QDataStream & operator>> (QDataStream & stream, VisualizationState * state);
+    friend QDataStream & operator<< (QDataStream & stream, const VisualizationState & state);
+    friend QDataStream & operator>> (QDataStream & stream, VisualizationState & state);
+    friend bool operator==(const VisualizationState & lhs, const VisualizationState & rhs);
 
 public:
+    typedef QMap<QString, QVariant> Properties;
+    
     VisualizationState();
     VisualizationState(const VisualizationState & state);
+    virtual ~VisualizationState() {}
     
     bool isActive() const { return m_active; }
     QString currentVisualization() const { return m_visualization; }
@@ -39,19 +42,24 @@ public:
     void setIsActive(const bool active);
     void setCurrentVisualization(const QString & visualization);
     
-    QMap<QString, QVariant> & properties(const QString & visualization);
+    Properties & properties(const QString & visualization);
+    const Properties properties(const QString & visualization) const;
+    Properties & currentProperties();
+    const Properties currentProperties() const;
     
     const VisualizationState & operator=(const VisualizationState & state);
     
 private:
     bool m_active;
     QString m_visualization;
-    QMap<QString, QMap<QString, QVariant> > m_properties;
+    QMap<QString, Properties > m_properties;
 };
 
 Q_DECLARE_METATYPE(VisualizationState)
 
-QDataStream & operator<< (QDataStream & stream, const VisualizationState * state);
-QDataStream & operator>> (QDataStream & stream, VisualizationState * state);
+QDataStream & operator<< (QDataStream & stream, const VisualizationState & state);
+QDataStream & operator>> (QDataStream & stream, VisualizationState & state);
+bool operator==(const VisualizationState & lhs, const VisualizationState & rhs);
+bool operator!=(const VisualizationState & lhs, const VisualizationState & rhs);
 
 #endif // VISUALIZATIONSTATE_H

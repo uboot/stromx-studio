@@ -32,7 +32,8 @@ public:
     LineSegments() : Visualization("line_segments", QObject::tr("Line segments")) {}
 
     virtual VisualizationWidget* createEditor() const;
-    virtual QList<QGraphicsItem*> createItems() const;
+    virtual QList<QGraphicsItem*> createItems(const stromx::runtime::Data & data,
+        const VisualizationState::Properties & properties) const;
 };
 
 #endif // LINESEGMENTS_H

@@ -59,7 +59,7 @@ set(stromxstudiotest_SOURCES
     ../cmd/SetStreamSettings.cpp
     ../cmd/SetThreadCmd.cpp
     ../cmd/SetThreadColorCmd.cpp
-    ../cmd/SetVisualizationPropertiesCmd.cpp
+    ../cmd/SetVisualizationStateCmd.cpp
     ../data/ErrorData.cpp
     ../data/InputData.cpp
     ../data/OperatorData.cpp

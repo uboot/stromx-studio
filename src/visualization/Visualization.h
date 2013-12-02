@@ -24,6 +24,16 @@
 #include <QList>
 #include <QString>
 
+#include "VisualizationState.h"
+
+namespace stromx
+{
+    namespace runtime
+    {
+        class Data;
+    }
+}
+
 class QGraphicsItem;
 class VisualizationWidget;
 
@@ -39,7 +49,8 @@ public:
     const QString & visualization() const { return m_visualization; }
 
     virtual VisualizationWidget* createEditor() const = 0;
-    virtual QList<QGraphicsItem*> createItems() const = 0;
+    virtual QList<QGraphicsItem*> createItems(const stromx::runtime::Data & data,
+        const VisualizationState::Properties & properties) const = 0;
     
 private:
     QString m_visualization;

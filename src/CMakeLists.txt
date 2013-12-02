@@ -27,7 +27,7 @@ set(stromxstudio_SOURCES
     cmd/SetStreamSettings.cpp
     cmd/SetThreadCmd.cpp
     cmd/SetThreadColorCmd.cpp
-    cmd/SetVisualizationPropertiesCmd.cpp
+    cmd/SetVisualizationStateCmd.cpp
     event/ConnectorDataEvent.cpp
     event/ConnectorOccupyEvent.cpp
     data/ErrorData.cpp
