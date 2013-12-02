@@ -33,13 +33,13 @@ public:
     Visualization(const QString & visualization, const QString & name)
       : m_visualization(visualization),
         m_name(name)
-     {}
-     
-     const QString & name() const { return m_name; }
-     const QString & visualization() const { return m_visualization; }
-     
-     virtual VisualizationWidget* createEditor() const = 0;
-     virtual QList<QGraphicsItem*> createItems() const = 0;
+    {}
+
+    const QString & name() const { return m_name; }
+    const QString & visualization() const { return m_visualization; }
+
+    virtual VisualizationWidget* createEditor() const = 0;
+    virtual QList<QGraphicsItem*> createItems() const = 0;
     
 private:
     QString m_visualization;

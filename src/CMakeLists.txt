@@ -59,6 +59,8 @@ set(stromxstudio_SOURCES
     task/GetParameterTask.cpp
     task/SetParameterTask.cpp
     task/Task.cpp
+    visualization/ColorChooser.cpp
+    visualization/LineSegments.cpp
     widget/DataVisualizer.cpp
     widget/DataVisualizerUtilities.cpp
     widget/DocumentationWindow.cpp
@@ -118,6 +120,7 @@ set(stromxstudio_HEADERS
     task/GetParameterTask.h
     task/SetParameterTask.h
     task/Task.h
+    visualization/VisualizationWidget.h
     widget/DocumentationWindow.h
     widget/ErrorListView.h
     widget/GraphicsView.h

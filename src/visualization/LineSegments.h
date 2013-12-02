@@ -18,24 +18,21 @@
 */
 
 
-#ifndef VISUALIZATIONWIDGET_H
-#define VISUALIZATIONWIDGET_H
+#ifndef LINESEGMENTS_H
+#define LINESEGMENTS_H
 
-#include <QWidget>
+#include <QObject>
+#include "visualization/Visualization.h"
 
-class VisualizationWidget : public QWidget
+class QComboBox;
+
+class LineSegments : public Visualization
 {
-    Q_OBJECT
-    
 public:
-    explicit VisualizationWidget(QWidget* parent = 0) : QWidget(parent) {}
-    
-    virtual QMap<QString, QVariant> getProperties() const = 0;
-    virtual void setProperties(const QMap<QString, QVariant> & properties) = 0;
-     
-signals:
-    void valueChanged();
+    LineSegments() : Visualization("line_segments", QObject::tr("Line segments")) {}
+
+    virtual VisualizationWidget* createEditor() const;
+    virtual QList<QGraphicsItem*> createItems() const;
 };
 
-
-#endif // VISUALIZATIONWIDGET_H
+#endif // LINESEGMENTS_H

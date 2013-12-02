@@ -18,24 +18,23 @@
 */
 
 
-#ifndef VISUALIZATIONWIDGET_H
-#define VISUALIZATIONWIDGET_H
+#ifndef COLORCHOOSER_H
+#define COLORCHOOSER_H
 
-#include <QWidget>
+#include "visualization/VisualizationWidget.h"
 
-class VisualizationWidget : public QWidget
+class QComboBox;
+
+class ColorChooser : public VisualizationWidget
 {
-    Q_OBJECT
-    
 public:
-    explicit VisualizationWidget(QWidget* parent = 0) : QWidget(parent) {}
+    ColorChooser(QWidget* parent = 0);
     
-    virtual QMap<QString, QVariant> getProperties() const = 0;
-    virtual void setProperties(const QMap<QString, QVariant> & properties) = 0;
-     
-signals:
-    void valueChanged();
+    QMap<QString, QVariant> getProperties() const;
+    void setProperties(const QMap<QString, QVariant> & properties);
+    
+private:
+    QComboBox* m_colorComboBox;
 };
 
-
-#endif // VISUALIZATIONWIDGET_H
+#endif // COLORCHOOSER_H
