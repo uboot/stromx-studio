@@ -62,6 +62,7 @@ private:
     QCheckBox* m_activeCheckBox;
     QComboBox* m_visualizationMenu;
     QFormLayout* m_layout;
+    bool m_isSettingState;
 };
 
 #endif // INPUTEDITWIDGET_H

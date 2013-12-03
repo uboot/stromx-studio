@@ -16,7 +16,8 @@ InputEditWidget::InputEditWidget(const QModelIndex & index, QWidget* parent)
     m_index(index),
     m_widget(0),
     m_activeCheckBox(0),
-    m_layout(0)
+    m_layout(0),
+    m_isSettingState(false)
 {
     m_layout = new QFormLayout();
 
@@ -44,6 +45,11 @@ void InputEditWidget::setInputTitle(const QString& title)
 
 void InputEditWidget::updateState()
 {
+    // if the state is currently being set by the model its change must not
+    // be propagated back to model
+    if (m_isSettingState)
+        return; 
+    
     m_state.setIsActive(m_activeCheckBox->isChecked());
     if (m_widget)
         m_state.currentProperties() = m_widget->getProperties();
@@ -57,14 +63,17 @@ void InputEditWidget::updateState()
 
 void InputEditWidget::setState(const VisualizationState& state)
 {
+    m_isSettingState = true;
+    
     m_state = state;
-        
     m_activeCheckBox->setChecked(state.isActive());
     QString identifier = state.currentVisualization();
     int index = VisualizationRegistry::identifierToIndex(identifier);
     m_visualizationMenu->setCurrentIndex(index);
     if (m_widget)
         m_widget->setProperties(state.currentProperties());
+    
+    m_isSettingState = false;
 }
 
 void InputEditWidget::updateWidget()
