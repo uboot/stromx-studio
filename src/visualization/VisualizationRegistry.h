@@ -29,14 +29,13 @@ class Visualization;
 class VisualizationRegistry
 {
 public:
-    static VisualizationRegistry & registry();
     ~VisualizationRegistry();
     
-    void registerVisualization(Visualization* const visualization);
-    const QList<QString> & visualizationNameList();
-    int identifierToIndex(const QString & visualization);
-    const Visualization* visualization(const int index);
-    const Visualization* visualization(const QString & identifier);
+    static void registerVisualization(Visualization* const visualization);
+    static const QList<QString> & visualizationNameList();
+    static int identifierToIndex(const QString & visualization);
+    static const Visualization* visualization(const int index);
+    static const Visualization* visualization(const QString & identifier);
     
 private:
     VisualizationRegistry();

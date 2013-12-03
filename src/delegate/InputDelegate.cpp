@@ -38,8 +38,8 @@ void InputDelegate::setEditorData(QWidget* editor, const QModelIndex& index) con
 void InputDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
     InputEditWidget* widget = qobject_cast<InputEditWidget*>(editor);
-    
     VisualizationState state = widget->state();
+    
     model->setData(index, QVariant::fromValue(state), VisualizationStateRole);
 }
 
@@ -60,7 +60,7 @@ void InputDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
     {
         VisualizationState state = stateVariant.value<VisualizationState>();
         box.setInputActive(state.isActive());
-        const Visualization* visualization = VisualizationRegistry::registry().visualization(state.currentVisualization());
+        const Visualization* visualization = VisualizationRegistry::visualization(state.currentVisualization());
         if (visualization)
             box.setVisualizationType(visualization->name());
     }

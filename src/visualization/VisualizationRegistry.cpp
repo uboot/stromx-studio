@@ -9,12 +9,12 @@ VisualizationRegistry VisualizationRegistry::m_registry;
 void VisualizationRegistry::registerVisualization(Visualization*const visualization)
 {
     Q_ASSERT(visualization);
-    Q_ASSERT(! m_identifierList.contains(visualization->visualization()));
+    Q_ASSERT(! m_registry.m_identifierList.contains(visualization->visualization()));
         
-    m_visualizations.append(visualization);
-    m_nameList.append(visualization->name());
-    m_identifierList.append(visualization->visualization());
-    m_visualizationMap[visualization->visualization()] = visualization;
+    m_registry.m_visualizations.append(visualization);
+    m_registry.m_nameList.append(visualization->name());
+    m_registry.m_identifierList.append(visualization->visualization());
+    m_registry.m_visualizationMap[visualization->visualization()] = visualization;
 }
 
 VisualizationRegistry::VisualizationRegistry()
@@ -29,33 +29,28 @@ VisualizationRegistry::~VisualizationRegistry()
         delete visualization;
 }
 
-VisualizationRegistry& VisualizationRegistry::registry()
-{
-    return m_registry;
-}
-
 const QList<QString> & VisualizationRegistry::visualizationNameList()
 {
-    return m_nameList;
+    return m_registry.m_nameList;
 }
 
 int VisualizationRegistry::identifierToIndex(const QString& visualization)
 {
-    return m_identifierList.indexOf(visualization);
+    return m_registry.m_identifierList.indexOf(visualization);
 }
 
 const Visualization* VisualizationRegistry::visualization(const int index)
 {
-    if (index >= 0 && index < m_visualizations.count())
-        return m_visualizations[index];
+    if (index >= 0 && index < m_registry.m_visualizations.count())
+        return m_registry.m_visualizations[index];
     else
         return 0;
 }
 
 const Visualization* VisualizationRegistry::visualization(const QString& identifier)
 {
-    if (m_visualizationMap.keys().contains(identifier))
-        return m_visualizationMap[identifier];
+    if (m_registry.m_visualizationMap.keys().contains(identifier))
+        return m_registry.m_visualizationMap[identifier];
     else
         return 0;
 }

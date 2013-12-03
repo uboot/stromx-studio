@@ -25,7 +25,8 @@ InputEditWidget::InputEditWidget(const QModelIndex & index, QWidget* parent)
     m_layout->addRow(m_activeCheckBox);
     
     m_visualizationMenu = new QComboBox();
-    m_visualizationMenu->addItems(VisualizationRegistry::registry().visualizationNameList());
+    m_visualizationMenu->addItems(VisualizationRegistry::visualizationNameList());
+    m_visualizationMenu->setCurrentIndex(-1);
     connect(m_visualizationMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(updateState()));
     connect(m_visualizationMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(updateWidget()));
     m_layout->addRow(tr("Visualization"), m_visualizationMenu);
@@ -47,7 +48,7 @@ void InputEditWidget::updateState()
     if (m_widget)
         m_state.currentProperties() = m_widget->getProperties();
     
-    const Visualization* visualization = VisualizationRegistry::registry().visualization(m_visualizationMenu->currentIndex());
+    const Visualization* visualization = VisualizationRegistry::visualization(m_visualizationMenu->currentIndex());
     QString identifier = visualization ? visualization->visualization() : "";
     m_state.setCurrentVisualization(identifier);
     
@@ -60,13 +61,15 @@ void InputEditWidget::setState(const VisualizationState& state)
         
     m_activeCheckBox->setChecked(state.isActive());
     QString identifier = state.currentVisualization();
-    int index = VisualizationRegistry::registry().identifierToIndex(identifier);
+    int index = VisualizationRegistry::identifierToIndex(identifier);
     m_visualizationMenu->setCurrentIndex(index);
+    if (m_widget)
+        m_widget->setProperties(state.currentProperties());
 }
 
 void InputEditWidget::updateWidget()
 {
-    const Visualization* visualization = VisualizationRegistry::registry().visualization(m_state.currentVisualization());
+    const Visualization* visualization = VisualizationRegistry::visualization(m_state.currentVisualization());
     if (visualization)
     {
         delete m_widget;

@@ -34,7 +34,8 @@ QMap< QString, QVariant > ColorChooser::getProperties() const
 
 void ColorChooser::setProperties(const QMap< QString, QVariant >& properties)
 {
-    QVariant colorVariant = properties.value("color", Qt::black);
+    QColor defaultColor = Colors::BLUE;
+    QVariant colorVariant = properties.value("color", defaultColor);
     if (colorVariant.canConvert<QColor>())
     {
         QColor color = colorVariant.value<QColor>();
