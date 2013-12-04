@@ -1,6 +1,8 @@
 #include "widget/DataVisualizer.h"
 
 #include "model/InputModel.h"
+#include "visualization/Visualization.h"
+#include "visualization/VisualizationRegistry.h"
 #include "widget/DataVisualizerUtilities.h"
 #include <QGraphicsItem>
 #include <stromx/runtime/Primitive.h>
@@ -126,21 +128,11 @@ void DataVisualizer::setData(int pos, const stromx::runtime::Data& data,
         return;
     
     // create the graphic items representing the stromx data
-    if(data.isVariant(DataVariant::IMAGE))
+    QString identifier = state.currentVisualization();
+    const Visualization* visualization = VisualizationRegistry::visualization(identifier);
+    if (visualization)
     {
-        m_items[pos] = DataVisualizerUtilities::createImageItems(data, state.currentProperties());
-    }
-    else if(data.isVariant(DataVariant::PRIMITIVE))
-    {
-        m_items[pos] = DataVisualizerUtilities::createPrimitiveItems(data, state.currentProperties());
-    } 
-    else if(data.isVariant(DataVariant::STRING))
-    {
-        m_items[pos] = DataVisualizerUtilities::createStringItems(data, state.currentProperties());
-    }
-    else if(data.isVariant(DataVariant::MATRIX))
-    {
-        m_items[pos] = DataVisualizerUtilities::createMatrixItems(data, state.currentProperties());
+        m_items[pos] = visualization->createItems(data, state.currentProperties());
     }
     
     // add the items and set their z-value
