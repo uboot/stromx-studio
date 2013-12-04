@@ -1,4 +1,3 @@
-#include "visualization/ColorChooser.h"
 #include "visualization/LineSegments.h"
 
 #include <stromx/runtime/Matrix.h>
@@ -7,6 +6,8 @@
 #include <QBrush>
 #include <QGraphicsLineItem>
 #include <QPen>
+
+#include "visualization/ColorChooser.h"
 
 namespace
 {

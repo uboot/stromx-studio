@@ -33,7 +33,22 @@ public:
 
     virtual VisualizationWidget* createEditor() const;
     virtual QList<QGraphicsItem*> createItems(const stromx::runtime::Data & data,
-        const VisualizationState::Properties & properties) const;
+        const VisualizationState::Properties & properties) const;   
+        
+    /** Casts \c data to an stromx image and returns an image item. */
+    static QList<QGraphicsItem*> createImageItems(const stromx::runtime::Data & data,
+        const VisualizationState::Properties & properties);
+    
+    /** Casts \c data to a string and returns it as an text item. */
+    static QList<QGraphicsItem*> createStringItems(const stromx::runtime::Data & data,
+        const VisualizationState::Properties & properties);
+  
+    /** 
+     * Casts \c data to an stromx primitive and returns its text representation as a
+     * text item. 
+     */
+    static QList<QGraphicsItem*> createPrimitiveItems(const stromx::runtime::Data & data,
+        const VisualizationState::Properties & properties);
 };
 
 #endif // DEFAULTVISUALIZATION_H
