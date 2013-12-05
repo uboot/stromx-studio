@@ -18,19 +18,19 @@
 */
 
 
-#ifndef LINESEGMENTS_H
-#define LINESEGMENTS_H
+#ifndef POINTS_H
+#define POINTS_H
 
 #include "visualization/Visualization.h"
 
-class LineSegments : public Visualization
+class Points : public Visualization
 {
 public:
-    LineSegments() : Visualization("line_segments", QObject::tr("Line segments")) {}
+    Points() : Visualization("points_2d", QObject::tr("Points")) {}
 
     virtual VisualizationWidget* createEditor() const;
     virtual QList<QGraphicsItem*> createItems(const stromx::runtime::Data & data,
         const VisualizationState::Properties & properties) const;
 };
 
-#endif // LINESEGMENTS_H
+#endif // POINTS_H

@@ -1,9 +1,9 @@
-#include "visualization/LineSegments.h"
+#include "visualization/Points.h"
 
 #include <stromx/runtime/Matrix.h>
 
 #include <QBrush>
-#include <QGraphicsLineItem>
+#include <QGraphicsEllipseItem>
 #include <QPen>
 
 #include "visualization/ColorChooser.h"
@@ -11,7 +11,7 @@
 namespace
 {
     template <class data_t>
-    QList< QGraphicsItem* > createLineSegmentItemsTemplate(const stromx::runtime::Data& data, 
+    QList< QGraphicsItem* > createPointItemsTemplate(const stromx::runtime::Data& data,
         const VisualizationState::Properties & properties)
     {
         using namespace stromx::runtime;
@@ -25,20 +25,18 @@ namespace
             const Matrix & matrix = data_cast<Matrix>(data);
             
             // check if the value size of the matrix matches the size of the template
-            // parameter and make sure the matrix has 4 columns
-            if(matrix.valueSize() == sizeof(data_t) && matrix.cols() == 4)
+            // parameter and make sure the matrix has 2 columns
+            if(matrix.valueSize() == sizeof(data_t) && matrix.cols() == 2)
             {
-                // loop over the rows of the matrix and construct a line item from each row
+                // loop over the rows of the matrix and construct a point item from each row
                 const uint8_t* rowPtr = matrix.data();
                 for(unsigned int i = 0; i < matrix.rows(); ++i)
                 {
                     const data_t* rowData = reinterpret_cast<const data_t*>(rowPtr);
-                    QGraphicsLineItem* lineItem = 
-                        new QGraphicsLineItem(rowData[0], rowData[1], rowData[2], rowData[3]);
-                    QPen pen = lineItem->pen();
-                    pen.setColor(color);
-                    lineItem->setPen(pen);
-                    items.append(lineItem);
+                    QGraphicsEllipseItem* newItem = new QGraphicsEllipseItem(rowData[0]-2, rowData[1]-2, 4, 4);
+                    newItem->setPen(QPen(Qt::NoPen));
+                    newItem->setBrush(QBrush(color));
+                    items.append(newItem);
                     rowPtr += matrix.stride();
                 }
             }
@@ -51,32 +49,32 @@ namespace
     }
 }
 
-VisualizationWidget* LineSegments::createEditor() const
+VisualizationWidget* Points::createEditor() const
 {
     return new ColorChooser;
 }
 
-QList< QGraphicsItem* > LineSegments::createItems(const stromx::runtime::Data & data,
+QList< QGraphicsItem* > Points::createItems(const stromx::runtime::Data & data,
         const VisualizationState::Properties & properties) const
 {
     using namespace stromx::runtime;
-    
+        
     if(data.isVariant(DataVariant::INT_8_MATRIX))
-        return createLineSegmentItemsTemplate<int8_t>(data, properties);
+        return createPointItemsTemplate<int8_t>(data, properties);
     else if(data.isVariant(DataVariant::UINT_8_MATRIX))
-        return createLineSegmentItemsTemplate<uint8_t>(data, properties);
+        return createPointItemsTemplate<uint8_t>(data, properties);
     else if(data.isVariant(DataVariant::INT_16_MATRIX))
-        return createLineSegmentItemsTemplate<int16_t>(data, properties);
+        return createPointItemsTemplate<int16_t>(data, properties);
     else if(data.isVariant(DataVariant::UINT_16_MATRIX))
-        return createLineSegmentItemsTemplate<uint16_t>(data, properties);
+        return createPointItemsTemplate<uint16_t>(data, properties);
     else if(data.isVariant(DataVariant::INT_32_MATRIX))
-        return createLineSegmentItemsTemplate<int32_t>(data, properties);
+        return createPointItemsTemplate<int32_t>(data, properties);
     else if(data.isVariant(DataVariant::UINT_32_MATRIX))
-        return createLineSegmentItemsTemplate<uint32_t>(data, properties);
+        return createPointItemsTemplate<uint32_t>(data, properties);
     else if(data.isVariant(DataVariant::FLOAT_32_MATRIX))
-        return createLineSegmentItemsTemplate<float>(data, properties);
+        return createPointItemsTemplate<float>(data, properties);
     else if(data.isVariant(DataVariant::FLOAT_64_MATRIX))
-        return createLineSegmentItemsTemplate<double>(data, properties);
+        return createPointItemsTemplate<double>(data, properties);
     else
         return QList<QGraphicsItem*>();
 }

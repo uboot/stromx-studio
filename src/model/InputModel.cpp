@@ -76,7 +76,7 @@ QDataStream& readVersion01(QDataStream& stream, InputModel* model)
         switch (visualization)
         {
         case AbstractDataVisualizer::POINTS:
-            state.setCurrentVisualization("points");
+            state.setCurrentVisualization("points_2d");
             break;
         case AbstractDataVisualizer::LINES:
             state.setCurrentVisualization("line_segments");

@@ -21,10 +21,7 @@
 #ifndef DEFAULTVISUALIZATION_H
 #define DEFAULTVISUALIZATION_H
 
-#include <QObject>
 #include "visualization/Visualization.h"
-
-class QComboBox;
 
 class DefaultVisualization : public Visualization
 {

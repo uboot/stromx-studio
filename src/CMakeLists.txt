@@ -62,6 +62,7 @@ set(stromxstudio_SOURCES
     visualization/ColorChooser.cpp
     visualization/DefaultVisualization.cpp
     visualization/LineSegments.cpp
+    visualization/Points.cpp
     visualization/VisualizationRegistry.cpp
     visualization/VisualizationState.cpp
     widget/DataVisualizer.cpp

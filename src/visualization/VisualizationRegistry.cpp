@@ -2,6 +2,7 @@
 
 #include "visualization/DefaultVisualization.h"
 #include "visualization/LineSegments.h"
+#include "visualization/Points.h"
 #include "visualization/Visualization.h"
 
 VisualizationRegistry VisualizationRegistry::m_registry;
@@ -21,6 +22,7 @@ VisualizationRegistry::VisualizationRegistry()
 {
     m_registry.registerVisualization(new DefaultVisualization);
     m_registry.registerVisualization(new LineSegments);
+    m_registry.registerVisualization(new Points);
 }
 
 VisualizationRegistry::~VisualizationRegistry()
