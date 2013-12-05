@@ -84,6 +84,9 @@ QDataStream& readVersion01(QDataStream& stream, InputModel* model)
         case AbstractDataVisualizer::HISTOGRAM:
             state.setCurrentVisualization("histogram");
             break;
+        case AbstractDataVisualizer::IMAGE:
+            state.setCurrentVisualization("image_2d");
+            break;
         default:
             state.setCurrentVisualization("default");
             break;
