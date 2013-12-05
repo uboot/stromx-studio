@@ -3,6 +3,7 @@
 #include "visualization/DefaultVisualization.h"
 #include "visualization/LineSegments.h"
 #include "visualization/Points.h"
+#include "visualization/Histogram.h"
 #include "visualization/Visualization.h"
 
 VisualizationRegistry VisualizationRegistry::m_registry;
@@ -21,6 +22,7 @@ void VisualizationRegistry::registerVisualization(Visualization*const visualizat
 VisualizationRegistry::VisualizationRegistry()
 {
     m_registry.registerVisualization(new DefaultVisualization);
+    m_registry.registerVisualization(new Histogram);
     m_registry.registerVisualization(new LineSegments);
     m_registry.registerVisualization(new Points);
 }
