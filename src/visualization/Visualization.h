@@ -37,19 +37,37 @@ namespace stromx
 class QGraphicsItem;
 class VisualizationWidget;
 
+/** 
+ * \brief Abstract visualization
+ * 
+ * Classes derived from this class represent a \em visualization of the certain
+ * stromx data types. A visualization converts stromx data to QGraphicsItem objects.
+ * A visualization has properties which control the conversion. It must provide
+ * a visualization widget which allows the user to set these properties.
+ */
 class Visualization
 {
 public:
+    /** Constructs a visualization. */
     Visualization(const QString & visualization, const QString & name)
       : m_visualization(visualization),
         m_name(name)
     {}
     virtual ~Visualization() {}
 
+    /** Returns the user-readable name of the visualization. */
     const QString & name() const { return m_name; }
+    
+    /** Returns the unique identfier of the visualization. */
     const QString & visualization() const { return m_visualization; }
 
+    /** Returns the editor to be displayed in the input list. */
     virtual VisualizationWidget* createEditor() const = 0;
+    
+    /** 
+     * Creates graphics items for the given input data and the given 
+     * visualization properties.
+     */
     virtual QList<QGraphicsItem*> createItems(const stromx::runtime::Data & data,
         const VisualizationState::Properties & properties) const = 0;
     

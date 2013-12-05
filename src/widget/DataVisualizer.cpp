@@ -3,7 +3,6 @@
 #include "model/InputModel.h"
 #include "visualization/Visualization.h"
 #include "visualization/VisualizationRegistry.h"
-#include "widget/DataVisualizerUtilities.h"
 #include <QGraphicsItem>
 #include <stromx/runtime/Primitive.h>
 

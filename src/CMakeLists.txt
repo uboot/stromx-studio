@@ -68,7 +68,6 @@ set(stromxstudio_SOURCES
     visualization/VisualizationRegistry.cpp
     visualization/VisualizationState.cpp
     widget/DataVisualizer.cpp
-    widget/DataVisualizerUtilities.cpp
     widget/DocumentationWindow.cpp
     widget/ErrorListView.cpp
     widget/GraphicsView.cpp

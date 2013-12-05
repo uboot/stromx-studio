@@ -23,17 +23,35 @@
 
 #include <QWidget>
 
+/**
+ * \brief Abstract base class of widget to set visualization properties
+ * 
+ * Visualization widgets are displayed as editors in the list of input models
+ * in an observer window.
+ */
 class VisualizationWidget : public QWidget
 {
     Q_OBJECT
     
 public:
+    /** Constructs a visualization widget. */
     explicit VisualizationWidget(QWidget* parent = 0) : QWidget(parent) {}
     
+    /**
+     * Queries the current settings from the controls in the widget and returns 
+     * them as property map.
+     */
     virtual QMap<QString, QVariant> getProperties() const = 0;
+    
+    /** Sets the controls of widget to the input properties. */
     virtual void setProperties(const QMap<QString, QVariant> & properties) = 0;
      
 signals:
+    /** 
+     * A value of a control in the widget has changed. This results in an undo
+     * stack command which sets the current visualization properties of the input
+     * model.
+     */
     void valueChanged();
 };
 
