@@ -9,7 +9,7 @@
 #include <visualization/Visualization.h>
 #include <visualization/VisualizationRegistry.h>
 
-const int InputDelegate::ROW_HEIGHT = 100;
+const int InputDelegate::ROW_HEIGHT = 150;
 const int InputDelegate::BORDER_OFFSET = 5;
 
 InputDelegate::InputDelegate(QObject* parent)
@@ -31,6 +31,8 @@ void InputDelegate::setEditorData(QWidget* editor, const QModelIndex& index) con
     InputEditWidget* widget = qobject_cast<InputEditWidget*>(editor);
     QVariant data = index.data(VisualizationStateRole);
     
+    widget->setInputTitle(index.data(Qt::DisplayRole).toString());
+    
     if (data.canConvert<VisualizationState>())
         widget->setState(data.value<VisualizationState>());
 }
@@ -43,36 +45,10 @@ void InputDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, con
     model->setData(index, QVariant::fromValue(state), VisualizationStateRole);
 }
 
-void InputDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void InputDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
 {
-    if (option.state & QStyle::State_Selected)
-    {
-        painter->fillRect(option.rect, option.palette.background());
-        return;
-    }
-    
-    InputPaintWidget box;
-    QRect widgetRect(0, 0, option.rect.width(), option.rect.height());
-    box.setGeometry(widgetRect);
-    box.setInputTitle(index.data(Qt::DisplayRole).toString());
-    QVariant stateVariant = index.data(VisualizationStateRole);
-    if (stateVariant.canConvert<VisualizationState>())
-    {
-        VisualizationState state = stateVariant.value<VisualizationState>();
-        box.setInputActive(state.isActive());
-        const Visualization* visualization = VisualizationRegistry::visualization(state.currentVisualization());
-        if (visualization)
-            box.setVisualizationType(visualization->name());
-    }
-    
-    QPixmap pixmap(option.rect.size());
-    QPainter widgetPainter;
- 
-    widgetPainter.begin(&pixmap);
-    box.render(&widgetPainter);
-    widgetPainter.end();
-    
-    painter->drawPixmap(option.rect, pixmap, widgetRect);
+    painter->fillRect(option.rect, option.palette.background());
+    return;
 }
 
 QSize InputDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const

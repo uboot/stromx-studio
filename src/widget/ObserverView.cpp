@@ -22,6 +22,10 @@ ObserverView::ObserverView(ObserverModel* observer, QWidget* parent)
     setItemDelegate(new InputDelegate(this));
     
     m_removeInputAct = createRemoveInputAction(this);
+    
+    for (int row = 0; row < observer->rowCount(); ++row)
+        openPersistentEditor(model()->index(row, 0, QModelIndex()));
+        
 }
 
 void ObserverView::contextMenuEvent(QContextMenuEvent* event)
@@ -53,6 +57,14 @@ void ObserverView::removeInput()
         if(index.isValid())
             model()->parentModel()->removeInput(model(), index.row());
     }
+}
+
+void ObserverView::rowsInserted(const QModelIndex& parent, int start, int end)
+{
+    QListView::rowsInserted(parent, start, end);
+    
+    for (int row = start; row <= end; ++row)
+        openPersistentEditor(model()->index(row, 0, parent));
 }
 
 

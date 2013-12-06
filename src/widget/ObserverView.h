@@ -45,6 +45,7 @@ public:
     
 protected:
     void contextMenuEvent(QContextMenuEvent* event);
+    void rowsInserted(const QModelIndex & parent, int start, int end);
     
 private slots:
     void removeInput();
