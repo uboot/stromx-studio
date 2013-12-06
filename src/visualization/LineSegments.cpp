@@ -6,6 +6,7 @@
 #include <QGraphicsLineItem>
 #include <QPen>
 
+#include "Common.h"
 #include "visualization/ColorChooser.h"
 
 namespace
@@ -15,7 +16,7 @@ namespace
         const VisualizationState::Properties & properties)
     {
         using namespace stromx::runtime;
-        QVariant colorVariant = properties.value("color", Qt::black);
+        QVariant colorVariant = properties.value("color", Colors::DEFAULT);
         QColor color = colorVariant.value<QColor>();
         
         QList<QGraphicsItem*> items;

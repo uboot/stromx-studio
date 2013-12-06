@@ -111,6 +111,7 @@ enum EventTypes
 class Colors
 {
 public:
+    static const QColor DEFAULT;
     static const QColor RED;
     static const QColor GREEN;
     static const QColor BLUE;

@@ -8,6 +8,7 @@ namespace
     static QStringList gVisualizationLabels;
 }
 
+const QColor Colors::DEFAULT(QColor(0x20, 0x75, 0xbc));
 const QColor Colors::RED(QColor(0xbe, 0x20, 0x2e));
 const QColor Colors::GREEN(QColor(0x01, 0x95, 0x47));
 const QColor Colors::BLUE(QColor(0x20, 0x75, 0xbc));
