@@ -5,9 +5,8 @@
 
 #include "Common.h"
 #include "delegate/InputEditWidget.h"
-#include "delegate/InputPaintWidget.h"
-#include <visualization/Visualization.h>
-#include <visualization/VisualizationRegistry.h>
+#include "visualization/Visualization.h"
+#include "visualization/VisualizationRegistry.h"
 
 const int InputDelegate::ROW_HEIGHT = 150;
 const int InputDelegate::BORDER_OFFSET = 5;
@@ -15,6 +14,12 @@ const int InputDelegate::BORDER_OFFSET = 5;
 InputDelegate::InputDelegate(QObject* parent)
   : QStyledItemDelegate(parent)
 {
+    m_prototype = new InputEditWidget(QModelIndex(), 0);
+}
+
+InputDelegate::~InputDelegate()
+{
+    delete m_prototype;
 }
 
 QWidget* InputDelegate::createEditor(QWidget* parent,
@@ -54,7 +59,11 @@ void InputDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
 QSize InputDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     QSize size = QStyledItemDelegate::sizeHint(option, index);
-    size.setHeight(ROW_HEIGHT);
+    
+    QVariant data = index.data(VisualizationStateRole);
+    if (data.canConvert<VisualizationState>())
+        m_prototype->setState(data.value<VisualizationState>());
+    size.setHeight(m_prototype->sizeHint().height());
     
     return size;
 }

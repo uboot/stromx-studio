@@ -17,6 +17,7 @@ InputEditWidget::InputEditWidget(const QModelIndex & index, QWidget* parent)
     m_widget(0),
     m_activeCheckBox(0),
     m_layout(0),
+    m_propertiesGroupBox(0),
     m_isSettingState(false)
 {
     m_layout = new QFormLayout();
@@ -32,8 +33,11 @@ InputEditWidget::InputEditWidget(const QModelIndex & index, QWidget* parent)
     connect(m_visualizationMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(updateWidget()));
     m_layout->addRow(tr("Visualization"), m_visualizationMenu);
     
-    connect(index.model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(handleModelChanged(QModelIndex,QModelIndex)));
+    if (index.model())
+    {
+        connect(index.model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                this, SLOT(handleModelChanged(QModelIndex,QModelIndex)));
+    }
     
     setLayout(m_layout);
 }
@@ -81,11 +85,17 @@ void InputEditWidget::updateWidget()
     const Visualization* visualization = VisualizationRegistry::visualization(m_state.currentVisualization());
     if (visualization)
     {
-        delete m_widget;
+        delete m_propertiesGroupBox;
+        m_propertiesGroupBox = 0;
         m_widget = visualization->createEditor();
         if (m_widget)
         {
-            m_layout->addRow(m_widget);
+            QVBoxLayout* layout = new QVBoxLayout();
+            layout->addWidget(m_widget);
+            m_propertiesGroupBox = new QGroupBox(tr("Properties"));
+            m_propertiesGroupBox->setLayout(layout);
+            m_layout->addRow(m_propertiesGroupBox);
+            
             m_widget->setProperties(m_state.currentProperties());
             connect(m_widget, SIGNAL(valueChanged()), this, SLOT(updateState()));
         }

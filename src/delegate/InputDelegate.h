@@ -22,7 +22,7 @@
 
 #include <QStyledItemDelegate>
 
-class InputWidget;
+class InputEditWidget;
 
 class InputDelegate : public QStyledItemDelegate
 {
@@ -33,6 +33,7 @@ public:
     static const int BORDER_OFFSET;
     
     explicit InputDelegate(QObject* parent = 0);
+    virtual ~InputDelegate();
     
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const;
@@ -42,6 +43,9 @@ public:
     
 private slots:
     void emitCommitData();
+    
+private:
+    InputEditWidget* m_prototype;
 };
 
 #endif // INPUTDELEGATE_H
