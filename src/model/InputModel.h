@@ -24,6 +24,7 @@
 #include <QObject>
 
 class QUndoStack;
+class ObserverModel;
 class ObserverTreeModel;
 class OperatorModel;
 
@@ -48,6 +49,12 @@ class InputModel : public QObject
 public:    
     /** Constructs an input model for the input \c id of the operator \c op. */
     InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack, QObject * parent);
+    
+    /** Returns the observer model this input currently belongs to. */
+    ObserverModel* parentModel() const { return m_parentModel; }
+    
+    /** Sets the observer model this input currently belongs to. */
+    void setParentModel(ObserverModel* const parentModel) { m_parentModel = parentModel; }
     
     /** Returns the visualization state. */
     VisualizationState visualizationState() const { return m_visualizationState; }
@@ -83,6 +90,7 @@ private:
     unsigned int m_id;
     VisualizationState m_visualizationState;
     QUndoStack* m_undoStack;
+    ObserverModel* m_parentModel;
 };
 
 QDataStream & operator<<(QDataStream & stream, const InputModel * model);

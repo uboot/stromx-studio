@@ -106,6 +106,17 @@ public:
     /** Returns the undo stack. */
     QUndoStack* undoStack() const { return m_undoStack; }
     
+    /** 
+     * Returns the model index for the input at position \c inputPos of
+     * \c observer.
+     */
+    QModelIndex inputIndex(const ObserverModel* observer, const int inputPos);
+    
+    /** 
+     * Returns the model index for the observer at position \c observerPos.
+     */
+    QModelIndex observerIndex(const int observerPos);
+    
 signals:
     /** An observer was added to the model. */
     void observerAdded(ObserverModel* observer);
@@ -132,6 +143,9 @@ private slots:
     
     /** Updates the displayed data of \c input. */
     void updateInput(InputModel* input);
+    
+    /** Distributes the \c dataChanged signal to the observer models. */
+    void handleDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
     
 private:
     /** 

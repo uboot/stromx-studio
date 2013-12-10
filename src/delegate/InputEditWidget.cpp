@@ -33,11 +33,11 @@ InputEditWidget::InputEditWidget(const QModelIndex & index, QWidget* parent)
     connect(m_visualizationMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(updateWidget()));
     m_layout->addRow(tr("Visualization"), m_visualizationMenu);
     
-    if (index.model())
-    {
-        connect(index.model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                this, SLOT(handleModelChanged(QModelIndex,QModelIndex)));
-    }
+//     if (index.model())
+//     {
+//         connect(index.model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+//                 this, SLOT(handleModelChanged(QModelIndex,QModelIndex)));
+//     }
     
     setLayout(m_layout);
 }

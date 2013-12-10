@@ -37,7 +37,6 @@ set(stromxstudio_SOURCES
     delegate/EditMatrixButton.cpp
     delegate/InputDelegate.cpp
     delegate/InputEditWidget.cpp
-    delegate/InputPaintWidget.cpp
     delegate/ItemDelegate.cpp
     delegate/TriggerButton.cpp
     item/ArrowItem.cpp
@@ -103,7 +102,6 @@ set(stromxstudio_HEADERS
     delegate/EditMatrixButton.h
     delegate/InputDelegate.h
     delegate/InputEditWidget.h
-    delegate/InputPaintWidget.h
     delegate/ItemDelegate.h
     delegate/TriggerButton.h
     item/ArrowItem.h

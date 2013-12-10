@@ -12,7 +12,8 @@ InputModel::InputModel(OperatorModel* op, unsigned int id, QUndoStack* undoStack
   : QObject(parent),
     m_op(op),
     m_id(id),
-    m_undoStack(undoStack) 
+    m_undoStack(undoStack),
+    m_parentModel(0)
 {
     m_visualizationState.setCurrentVisualization("default");
     connect(op, SIGNAL(nameChanged(QString)), this, SLOT(updateOperatorName(QString)));

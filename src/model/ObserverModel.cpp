@@ -24,9 +24,6 @@ ObserverModel::ObserverModel(QUndoStack* undoStack, ObserverTreeModel* parent)
     connect(m_parent, SIGNAL(rowsRemoved(QModelIndex, int, int)),
             this, SLOT(handleRowsRemoved(QModelIndex, int, int)));
     
-    connect(m_parent, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(handleDataChanged(QModelIndex,QModelIndex)));
-    
     connect(m_parent, SIGNAL(inputAdded(InputModel*,ObserverModel*,int)),
             this, SLOT(handleInputAdded(InputModel*,ObserverModel*,int)));
     connect(m_parent, SIGNAL(inputMoved(InputModel*,ObserverModel*,int,ObserverModel*,int)),
@@ -61,7 +58,7 @@ void ObserverModel::removeInput(int position)
     m_inputs.removeAt(position);
 }
 
-InputModel* ObserverModel::input(int position)
+InputModel* ObserverModel::input(int position) const
 {
     if(position < 0 || position >= m_inputs.size())
         return 0;
@@ -84,17 +81,19 @@ int ObserverModel::rowCount(const QModelIndex& parent) const
 
 QModelIndex ObserverModel::index(int row, int column, const QModelIndex& /*parent*/) const
 {
-    return createIndex(row, column, const_cast<ObserverModel*>(this));
+    return createIndex(row, column, m_inputs[row]);
 }
 
 QVariant ObserverModel::data(const QModelIndex& index, int role) const
 {
-    return m_parent->data(index, role);
+    QModelIndex parentIndex = m_parent->inputIndex(this, index.row());
+    return m_parent->data(parentIndex, role);
 }
 
 bool ObserverModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    return m_parent->setData(index, value, role);
+    QModelIndex parentIndex = m_parent->inputIndex(this, index.row());
+    return m_parent->setData(parentIndex, value, role);
 }
 
 void ObserverModel::handleRowsAboutToBeInserted(const QModelIndex& parent, int start, int end)
@@ -121,10 +120,11 @@ void ObserverModel::handleRowsRemoved(const QModelIndex& parent, int /*start*/, 
         endRemoveRows();
 }
 
-void ObserverModel::handleDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+void ObserverModel::emitDataChanged(const int topRow, const int bottomRow)
 {
-    if(topLeft.internalPointer() == this && bottomRight.internalPointer() == this)
-        emit dataChanged(topLeft, bottomRight);
+    QModelIndex topLeft = createIndex(topRow, 0, m_inputs[topRow]);
+    QModelIndex bottomRight = createIndex(bottomRow, 0, m_inputs[bottomRow]);
+    emit dataChanged(topLeft, bottomRight);
 }
 
 void ObserverModel::handleInputAdded(InputModel* input, ObserverModel* observer, int pos)
@@ -151,8 +151,7 @@ void ObserverModel::handleInputRemoved(InputModel* input, ObserverModel* observe
 
 bool ObserverModel::concernsThisObserver(const QModelIndex & parentModelIndex) const
 {
-    int observerPos = m_parent->observers().indexOf(const_cast<ObserverModel*>(this));
-    return parentModelIndex.isValid() && parentModelIndex.row() == observerPos;
+    return this == parentModelIndex.internalPointer();
 }
 
 QStringList ObserverModel::mimeTypes() const
@@ -172,7 +171,8 @@ bool ObserverModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
     if(observerPos >= 0)
     {
         int insertAt = parent.row() >= 0 ? parent.row() : numInputs();
-        return m_parent->dropMimeData(data, action, insertAt, 0, createIndex(observerPos, 0));
+        QModelIndex observerIndex = m_parent->observerIndex(observerPos);
+        return m_parent->dropMimeData(data, action, insertAt, 0, observerIndex);
     }
     
     return false;

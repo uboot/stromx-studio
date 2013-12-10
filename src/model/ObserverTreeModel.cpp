@@ -1,6 +1,7 @@
 #include "model/ObserverTreeModel.h"
 
 #include <QStringList>
+#include <boost/concept_check.hpp>
 #include "Common.h"
 #include "cmd/InsertInputCmd.h"
 #include "cmd/InsertObserverCmd.h"
@@ -22,6 +23,7 @@ ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent
     setSupportedDragActions(Qt::MoveAction);
     
     connect(m_stream, SIGNAL(connectionRemoved(ConnectionModel*)), this, SLOT(removeConnectedInputs(ConnectionModel*)));
+    connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(handleDataChanged(QModelIndex,QModelIndex)));
 }
 
 int ObserverTreeModel::rowCount(const QModelIndex& parent) const
@@ -31,8 +33,11 @@ int ObserverTreeModel::rowCount(const QModelIndex& parent) const
         return m_observers.count();
     
     // parent is an observer
-    if(! parent.internalPointer())
-        return m_observers[parent.row()]->numInputs();
+    if(! parent.parent().isValid())
+    {
+        ObserverModel* observer = static_cast<ObserverModel*>(parent.internalPointer());
+        return observer->numInputs();
+    }
     
     // parent is an input
     return 0;
@@ -45,6 +50,7 @@ int ObserverTreeModel::columnCount(const QModelIndex& /*parent*/) const
 
 bool ObserverTreeModel::insertRows(int row, int count, const QModelIndex & parent)
 {
+    // can only insert observers but not inputs
     if(parent.isValid())
         return false;
     
@@ -123,8 +129,8 @@ void ObserverTreeModel::doRemoveObserver(int pos)
 
 void ObserverTreeModel::doRemoveInput(int observerPos, int inputPos)
 {
-    beginRemoveRows(createIndex(observerPos, 0), inputPos, inputPos);
     ObserverModel* observer = m_observers[observerPos]; 
+    beginRemoveRows(createIndex(observerPos, 0, observer), inputPos, inputPos);
     InputModel* input = observer->input(inputPos);
     m_observers[observerPos]->removeInput(inputPos);
     // Note that the input is still connected to this tree
@@ -139,42 +145,53 @@ QModelIndex ObserverTreeModel::index(int row, int column, const QModelIndex& par
 {
     // this is an observer list
     if(! parent.isValid())
-        return createIndex(row, column);
+        return createIndex(row, column, m_observers[row]);
     
     // this is an input
-    return createIndex(row, column, m_observers[parent.row()]);
+    return createIndex(row, column, m_observers[parent.row()]->input(row));
 }
 
 QModelIndex ObserverTreeModel::parent(const QModelIndex& child) const
 {    
     // child is an observer
-    if(! child.internalPointer())
+    if(m_observers.contains(static_cast<ObserverModel*>(child.internalPointer())))
         return QModelIndex();
     
-    // child is an input
-    ObserverModel* observer = reinterpret_cast<ObserverModel*>(child.internalPointer());
-    int observerId = m_observers.indexOf(observer);
-    return createIndex(observerId, 0);
+    // otherwise, child is an input
+    InputModel* input = static_cast<InputModel*>(child.internalPointer());
+    ObserverModel* parentObserver = 0;
+    foreach (ObserverModel* observer, m_observers)
+    {
+        if (observer->inputs().contains(input))
+        {
+            parentObserver = observer;
+            break;
+        }
+    }
+    
+    Q_ASSERT(parentObserver);
+    int observerId = m_observers.indexOf(parentObserver);
+    return createIndex(observerId, 0, parentObserver);
 }
 
 QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
 {
     // this is an observer
-    if(! index.internalPointer())
+    if(! index.parent().isValid())
     {
+        const ObserverModel* observer = static_cast<ObserverModel*>(index.internalPointer());
         switch(role)
         {
         case Qt::DisplayRole:
         case Qt::EditRole:
-            return m_observers[index.row()]->name();
+            return observer->name();
         default: 
             return QVariant();
         }
     }
     
     // this is an input
-    ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
-    const InputModel* input = observer->input(index.row());
+    const InputModel* input = static_cast<InputModel*>(index.internalPointer());
     switch(role)
     {
     case Qt::DisplayRole:
@@ -190,7 +207,7 @@ QVariant ObserverTreeModel::data(const QModelIndex& index, int role) const
 bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     // the index points to an observer name
-    if(index.isValid() && ! index.internalPointer() && role == Qt::EditRole)
+    if(! index.parent().isValid() && role == Qt::EditRole)
     {
         QString newName = value.toString();
         
@@ -199,14 +216,14 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         
         m_observers[index.row()]->setName(newName);
         emit dataChanged(index, index);
+        return true;
     }
     
     // the index points to an input 
-    if(index.isValid() && index.internalPointer() && role == VisualizationStateRole)
+    if(role == VisualizationStateRole)
     {
         // get the input
-        ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
-        InputModel* input = observer->input(index.row());
+        InputModel* input = static_cast<InputModel*>(index.internalPointer());
         
         // Set the visualization properties
         // TODO: Setting an input active or inactive only switches the visibility of the 
@@ -235,7 +252,7 @@ Qt::ItemFlags ObserverTreeModel::flags(const QModelIndex& index) const
         return flags;
     
     // observer names are editable
-    if(! index.internalPointer())
+    if(! index.parent().isValid())
         return flags |= Qt::ItemIsEditable | Qt::ItemIsDropEnabled;
     
     return flags |= Qt::ItemIsDragEnabled;
@@ -318,8 +335,8 @@ bool ObserverTreeModel::dropMimeData(const QMimeData *data,
 
 void ObserverTreeModel::doInsertInput(int observerPos, int inputPos, InputModel* input)
 {
-    beginInsertRows(createIndex(observerPos, 0), inputPos, inputPos);
     ObserverModel* observer = m_observers[observerPos]; 
+    beginInsertRows(createIndex(observerPos, 0, observer), inputPos, inputPos);
     m_observers[observerPos]->insertInput(inputPos, input);
     connect(input, SIGNAL(changed(InputModel*)), this, SLOT(updateInput(InputModel*)));
     endInsertRows();
@@ -340,11 +357,11 @@ QMimeData* ObserverTreeModel::mimeData(const QModelIndexList& indexes) const
     const QModelIndex & index = indexes[0];
     
     // this is an observer
-    if(! index.internalPointer())
+    if(! index.parent().isValid())
         return 0;
     
-    ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.internalPointer());
-    InputModel* input = observer->input(index.row());
+    ObserverModel* observer = reinterpret_cast<ObserverModel*>(index.parent().internalPointer());
+    InputModel* input = reinterpret_cast<InputModel*>(index.internalPointer());
     return new InputData(input, observer, index.row(), InputData::TREE_MODEL);
 }
 
@@ -403,8 +420,28 @@ void ObserverTreeModel::updateInput(InputModel* input)
     {
         int pos = observer->inputs().indexOf(input);
         if(pos >= 0)
-            emit dataChanged(createIndex(pos, 0, observer), createIndex(pos, 0, observer));
+            emit dataChanged(createIndex(pos, 0, input), createIndex(pos, 0, input));
     }
+}
+
+void ObserverTreeModel::handleDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+{
+    // no need to propagate observer level changes
+    if (! (topLeft.parent().isValid() && (bottomRight.parent().isValid())))
+        return;
+    
+    ObserverModel* observer = static_cast<ObserverModel*>(topLeft.parent().internalPointer());
+    observer->emitDataChanged(topLeft.row(), bottomRight.row());
+}
+
+QModelIndex ObserverTreeModel::inputIndex(const ObserverModel* observer, const int inputPos)
+{
+    return createIndex(inputPos, 0, observer->input(inputPos));
+}
+
+QModelIndex ObserverTreeModel::observerIndex(const int observerPos)
+{
+    return createIndex(observerPos, 0, m_observers[observerPos]);
 }
 
 QDataStream& operator<<(QDataStream& stream, const ObserverTreeModel* model)

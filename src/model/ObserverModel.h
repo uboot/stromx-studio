@@ -60,7 +60,7 @@ public:
      * Returns the input model at \c position. Returns 0 if there is no input model
      * at the requested position.
      */
-    InputModel* input(int position);
+    InputModel* input(int position) const;
     
     /** Returns the list of inputs of the observer. */
     const QList<InputModel*> inputs() const { return m_inputs; }
@@ -79,6 +79,9 @@ public:
     
     /** Returns the undo stack. */
     QUndoStack* undoStack() const { return m_undoStack; }
+    
+    /** Emits data changed. This function is called by the parent model. */
+    void emitDataChanged(const int topRow, const int bottomRow);
     
     virtual QModelIndex index(int row, int column, const QModelIndex& parent) const;
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
@@ -131,12 +134,6 @@ private slots:
      * of the parent model. 
      */
     void handleRowsRemoved(const QModelIndex & parent, int start, int end);
-    
-    /**
-     * Emits data changed. This slot is connected to the respective signal
-     * of the parent model.
-     */
-    void handleDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
     
     /**
      * Emits input added. This slot is connected to the respective signal
