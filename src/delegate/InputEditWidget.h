@@ -41,7 +41,7 @@ class InputEditWidget : public QGroupBox
     Q_OBJECT
     
 public:
-    InputEditWidget(const QModelIndex & index, QWidget* parent = 0);
+    InputEditWidget(QWidget* parent = 0);
     
     const VisualizationState & state() const { return m_state; }
     void setState(const VisualizationState & state);
@@ -51,12 +51,10 @@ signals:
     void dataChanged();
     
 private slots:
-    void handleModelChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
     void updateState();
     void updateWidget();
     
 private:    
-    QModelIndex m_index;
     VisualizationState m_state;
     VisualizationWidget* m_widget;
     QCheckBox* m_activeCheckBox;

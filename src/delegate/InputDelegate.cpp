@@ -14,7 +14,7 @@ const int InputDelegate::BORDER_OFFSET = 5;
 InputDelegate::InputDelegate(QObject* parent)
   : QStyledItemDelegate(parent)
 {
-    m_prototype = new InputEditWidget(QModelIndex(), 0);
+    m_prototype = new InputEditWidget();
 }
 
 InputDelegate::~InputDelegate()
@@ -24,9 +24,9 @@ InputDelegate::~InputDelegate()
 
 QWidget* InputDelegate::createEditor(QWidget* parent,
                                      const QStyleOptionViewItem& /*option*/,
-                                     const QModelIndex& index) const
+                                     const QModelIndex& /*index*/) const
 {
-    InputEditWidget* editor = new InputEditWidget(index, parent);
+    InputEditWidget* editor = new InputEditWidget(parent);
     connect(editor, SIGNAL(dataChanged()), this, SLOT(emitCommitData()));
     return editor;
 }

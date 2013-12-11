@@ -132,7 +132,7 @@ void ObserverTreeModel::doRemoveInput(int observerPos, int inputPos)
     ObserverModel* observer = m_observers[observerPos]; 
     beginRemoveRows(createIndex(observerPos, 0, observer), inputPos, inputPos);
     InputModel* input = observer->input(inputPos);
-    m_observers[observerPos]->removeInput(inputPos);
+    observer->removeInput(inputPos);
     // Note that the input is still connected to this tree
     // view model. If the input is not observed at any other place it could
     // be disconnected.
@@ -145,9 +145,18 @@ QModelIndex ObserverTreeModel::index(int row, int column, const QModelIndex& par
 {
     // this is an observer list
     if(! parent.isValid())
+    {
+        if (row >= m_observers.count())
+            return QModelIndex();
+        
         return createIndex(row, column, m_observers[row]);
+    }
     
     // this is an input
+    Q_ASSERT(parent.row() < m_observers.count());
+    if (row >= m_observers[parent.row()]->inputs().count())
+        return QModelIndex();
+    
     return createIndex(row, column, m_observers[parent.row()]->input(row));
 }
 
@@ -381,7 +390,7 @@ void ObserverTreeModel::removeConnectedInputs(ConnectionModel* connection)
             if(observer->input(j)->op() == connection->targetOp()
                 && observer->input(j)->id() == connection->inputId())
             {
-                removeRows(j, 1, createIndex(i, 0));
+                removeRows(j, 1, createIndex(i, 0, observer->input(j)));
             }
             else
             {
@@ -395,7 +404,7 @@ void ObserverTreeModel::updateObserver(ObserverModel *observer)
 {
     int pos = m_observers.indexOf(observer);
     if(pos >= 0)
-        emit dataChanged(createIndex(pos, 0), createIndex(pos, 0));
+        emit dataChanged(createIndex(pos, 0, observer), createIndex(pos, 0, observer));
 }
 
 void ObserverTreeModel::doMoveInput(int srcObserverPos, int srcInputPos, int destObserverPos, int destInputPos, InputModel* input)
@@ -403,11 +412,11 @@ void ObserverTreeModel::doMoveInput(int srcObserverPos, int srcInputPos, int des
     ObserverModel* srcObserver = m_observers[srcObserverPos]; 
     ObserverModel* destObserver = m_observers[destObserverPos];
     
-    beginRemoveRows(createIndex(srcObserverPos, 0), srcInputPos, srcInputPos);
+    beginRemoveRows(createIndex(srcObserverPos, 0, srcObserver), srcInputPos, srcInputPos);
     m_observers[srcObserverPos]->removeInput(srcInputPos);
     endRemoveRows();
     
-    beginInsertRows(createIndex(destObserverPos, 0), destInputPos, destInputPos);
+    beginInsertRows(createIndex(destObserverPos, 0, destObserver), destInputPos, destInputPos);
     m_observers[destObserverPos]->insertInput(destInputPos, input);
     endInsertRows();
     

@@ -509,7 +509,7 @@ void OperatorModel::handleParameterChanged(unsigned int id)
     Q_ASSERT(row >= 0);
     
     // emit the signal
-    emit dataChanged(createIndex(row, 1), createIndex(row, 1));
+    emit dataChanged(createIndex(row, 1, (void*)(&param)), createIndex(row, 1, (void*)(&param)));
 }
 
 void OperatorModel::setActiveFalse()

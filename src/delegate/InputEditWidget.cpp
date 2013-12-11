@@ -11,9 +11,8 @@
 #include "visualization/VisualizationState.h"
 #include "visualization/VisualizationWidget.h"
 
-InputEditWidget::InputEditWidget(const QModelIndex & index, QWidget* parent)
+InputEditWidget::InputEditWidget(QWidget* parent)
   : QGroupBox(parent),
-    m_index(index),
     m_widget(0),
     m_activeCheckBox(0),
     m_layout(0),
@@ -32,12 +31,6 @@ InputEditWidget::InputEditWidget(const QModelIndex & index, QWidget* parent)
     connect(m_visualizationMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(updateState()));
     connect(m_visualizationMenu, SIGNAL(currentIndexChanged(int)), this, SLOT(updateWidget()));
     m_layout->addRow(tr("Visualization"), m_visualizationMenu);
-    
-//     if (index.model())
-//     {
-//         connect(index.model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-//                 this, SLOT(handleModelChanged(QModelIndex,QModelIndex)));
-//     }
     
     setLayout(m_layout);
 }
@@ -102,18 +95,5 @@ void InputEditWidget::updateWidget()
     }
 }
 
-void InputEditWidget::handleModelChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
-{
-    if (topLeft.row() >= m_index.row() && bottomRight.row() <= m_index.row())
-    {
-        QVariant stateVariant = m_index.data(VisualizationStateRole);
-        if (stateVariant.canConvert<VisualizationState>())
-        {
-            VisualizationState state = stateVariant.value<VisualizationState>();
-            if (state != m_state)
-                setState(state);
-        }
-    }
-}
 
 
