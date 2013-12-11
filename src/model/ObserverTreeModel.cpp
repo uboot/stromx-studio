@@ -168,15 +168,7 @@ QModelIndex ObserverTreeModel::parent(const QModelIndex& child) const
     
     // otherwise, child is an input
     InputModel* input = static_cast<InputModel*>(child.internalPointer());
-    ObserverModel* parentObserver = 0;
-    foreach (ObserverModel* observer, m_observers)
-    {
-        if (observer->inputs().contains(input))
-        {
-            parentObserver = observer;
-            break;
-        }
-    }
+    ObserverModel* parentObserver = input->parentModel();
     
     Q_ASSERT(parentObserver);
     int observerId = m_observers.indexOf(parentObserver);
@@ -499,6 +491,7 @@ QDataStream& operator>>(QDataStream& stream, ObserverTreeModel* model)
             
             OperatorModel* op = model->m_stream->operators()[opId];
             InputModel* input = new InputModel(op, inputId, model->m_undoStack, model);
+            input->setParentModel(observer);
             stream >> input;
             
             observer->insertInput(observer->numInputs(), input);

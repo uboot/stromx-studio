@@ -51,10 +51,12 @@ void ObserverModel::doSetName(const QString& name)
 void ObserverModel::insertInput(int position, InputModel* input)
 {
     m_inputs.insert(position, input);
+    input->setParentModel(this);
 }
 
 void ObserverModel::removeInput(int position)
 {
+    m_inputs[position]->setParentModel(0);
     m_inputs.removeAt(position);
 }
 
