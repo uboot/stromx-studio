@@ -236,7 +236,7 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
             input->setVisualizationState(state);
             
             emit dataChanged(index, index);
-        return true;
+            return true;
         }
     }
     
