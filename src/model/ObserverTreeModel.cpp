@@ -1,7 +1,6 @@
 #include "model/ObserverTreeModel.h"
 
 #include <QStringList>
-#include <boost/concept_check.hpp>
 #include "Common.h"
 #include "cmd/InsertInputCmd.h"
 #include "cmd/InsertObserverCmd.h"
