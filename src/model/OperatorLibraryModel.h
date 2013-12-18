@@ -119,19 +119,21 @@ public:
     stromx::runtime::Factory& factory() const { return *m_factory; }
     
 private:
-    struct Package
+    struct Item
     {
-        Package(const QString & package, const int id) : package(package), id(id) {}
+        Item() : op(0), parent(0) {}
+        ~Item();
         
         QString package;
-        int id;
-        QList<const stromx::runtime::OperatorKernel*> operators;
+        const stromx::runtime::OperatorKernel* op;
+        Item* parent;
+        QList<Item*> children;
     };
     
     void updateOperators();
     void setupFactory();
     
-    QList<Package> m_packages;
+    Item* m_root;
     QStringList m_loadedPackages;
     stromx::runtime::Factory* m_factory;
 };

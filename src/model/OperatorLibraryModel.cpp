@@ -13,13 +13,22 @@
 #include <stromx/runtime/Operator.h>
 #include <stromx/runtime/OperatorKernel.h>
 #include <iostream>
+#include <boost/graph/graph_concepts.hpp>
 #include "Exception.h"
 #include "data/OperatorData.h"
 
 using namespace stromx::runtime;
+
+OperatorLibraryModel::Item::~Item()
+{
+    foreach (Item* item, children)
+        delete item;
+    children.clear();
+}
     
 OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
   : QAbstractItemModel(parent),
+    m_root(new Item),
     m_factory(0)
 {
     setupFactory();
@@ -48,6 +57,7 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
 
 OperatorLibraryModel::~OperatorLibraryModel()
 {
+    delete m_root;
     delete m_factory;
 }
 
@@ -56,21 +66,25 @@ QModelIndex OperatorLibraryModel::index(int row, int column, const QModelIndex& 
 {
     // no parent
     if(! parent.isValid())
-        return createIndex(row, column);
+        return createIndex(row, column, m_root->children[row]);
     
     // parent is a package
-    return createIndex(row, column, (void*)(&m_packages[parent.row()]));
+    Item* parentItem = static_cast<Item*>(parent.internalPointer());
+    return createIndex(row, column, parentItem->children[row]);
 }
 
 QModelIndex OperatorLibraryModel::parent(const QModelIndex& child) const
 {
+    Item* item = static_cast<Item*>(child.internalPointer());
+    
     // child is a package
-    if(! child.internalPointer())
+    if (item->parent == 0)
         return QModelIndex();
     
     // child is an operator
-    const Package* package = reinterpret_cast<const Package*>(child.internalPointer());
-    return createIndex(package->id, 0);
+    Item* parentItem = item->parent;
+    int parentRow = m_root->children.indexOf(parentItem);
+    return createIndex(parentRow, 0, parentItem);
 }
 
 QVariant OperatorLibraryModel::data(const QModelIndex& index, int role) const
@@ -78,29 +92,28 @@ QVariant OperatorLibraryModel::data(const QModelIndex& index, int role) const
     if(role != Qt::DisplayRole)
         return QVariant();
         
+    Item* item = static_cast<Item*>(index.internalPointer());
+    
     // index is a package
-    if(! index.internalPointer())
+    if (item->op == 0)
     {
         if(index.column() == 0)
-            return m_packages[index.row()].package;
+            return item->package;
         else
             return QVariant();
     }
     
     // index is an operator
-    const Package* package = reinterpret_cast<const Package*>(index.internalPointer());
-    const OperatorKernel* op = package->operators[index.row()];
-       
     if(index.column() == 0)
     {
-        return QString::fromStdString(op->type());
+        return QString::fromStdString(item->op->type());
     }
     else
     {
         QString version = QString("%1.%2.%3")
-                          .arg(op->version().major())
-                          .arg(op->version().minor())
-                          .arg(op->version().revision());
+                          .arg(item->op->version().major())
+                          .arg(item->op->version().minor())
+                          .arg(item->op->version().revision());
         return version;
     }
 }
@@ -112,16 +125,11 @@ int OperatorLibraryModel::columnCount(const QModelIndex& /*parent*/) const
 
 int OperatorLibraryModel::rowCount(const QModelIndex& parent) const
 {
-    // parent is invalid
-    if(! parent.isValid())
-        return m_packages.size();
+    if (! parent.isValid())
+        return m_root->children.count();
     
-    // parent is a package
-    if(! parent.internalPointer())
-        return m_packages[parent.row()].operators.count();
-    
-    // parent is an operator type
-    return 0;
+    Item* item = static_cast<Item*>(parent.internalPointer());
+    return item->children.count();
 }
 
 void OperatorLibraryModel::loadPackage(const QString& packagePath)
@@ -210,9 +218,10 @@ void OperatorLibraryModel::updateOperators()
 {
     beginResetModel();
     
-    m_packages.clear();
+    delete m_root;
+    m_root = new Item;
     
-    QMap<QString, int> package2IdMap;
+    QMap<QString, Item*> package2ItemMap;
     
     typedef std::vector<const stromx::runtime::OperatorKernel*> OperatorKernelList;
     for(OperatorKernelList::const_iterator iter = m_factory->availableOperators().begin();
@@ -221,18 +230,19 @@ void OperatorLibraryModel::updateOperators()
     {
         QString package = QString::fromStdString((*iter)->package());
         
-        // package has already been allocated
-        if(package2IdMap.contains(package))
+        // package has not been allocated
+        if (! package2ItemMap.contains(package))
         {
-            m_packages[package2IdMap[package]].operators.append(*iter);
+            Item* packageItem = new Item;
+            packageItem->package = package;
+            m_root->children.append(packageItem);
+            package2ItemMap[package] = packageItem;
         }
-        else
-        {
-            int packageId = m_packages.count();
-            package2IdMap[package] = packageId;
-            m_packages.append(Package(package, packageId));
-            m_packages.back().operators.append(*iter);
-        }
+        
+        Item* opItem = new Item;
+        opItem->op = *iter;
+        opItem->parent = package2ItemMap[package];
+        opItem->parent->children.append(opItem);
     }
     
     endResetModel();
@@ -253,17 +263,18 @@ QVariant OperatorLibraryModel::headerData(int section, Qt::Orientation orientati
 
 bool OperatorLibraryModel::isOperator(const QModelIndex& index) const
 {
-    return index.parent().isValid();
+    Item* item = static_cast<Item*>(index.internalPointer());
+    return item->op != 0;
 }
 
 OperatorData* OperatorLibraryModel::newOperatorData(const QModelIndex& index) const
 {
-    if(! isOperator(index))
+    Item* item = static_cast<Item*>(index.internalPointer());
+    
+    if (! item->op)
         return 0;
     
-    const Package* package = reinterpret_cast<const Package*>(index.internalPointer());
-    const stromx::runtime::OperatorKernel* op = package->operators[index.row()];
-    
+    const stromx::runtime::OperatorKernel* op = item->op;
     return new OperatorData(QString::fromStdString(op->package()), QString::fromStdString(op->type()));
 }
 
