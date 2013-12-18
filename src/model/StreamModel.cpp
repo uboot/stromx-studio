@@ -535,7 +535,7 @@ void StreamModel::doSetSettings(const QMap< QString, QVariant >& settings)
 {
     bool delayActiveWillChange = settings.value("delayActive", DEFAULT_DELAY_ACTIVE).toBool() != delayActive();
     bool delayDurationWillChange = settings.value("delayDuration", DEFAULT_DELAY).toInt() != delayDuration();
-    bool accessTimeoutWillChange = settings.value("accessTimeout", DEFAULT_ACCESS_TIMEOUT).toBool() != accessTimeout();
+    bool accessTimeoutWillChange = settings.value("accessTimeout", DEFAULT_ACCESS_TIMEOUT).toInt() != accessTimeout();
     
     m_settings = settings;
     
