@@ -1,5 +1,6 @@
 #include "model/OperatorLibraryModel.h"
 
+#include <QDebug>
 #include <QFileInfo>
 #include <QLibrary>
 #include <QSettings>
@@ -77,13 +78,23 @@ QModelIndex OperatorLibraryModel::parent(const QModelIndex& child) const
 {
     Item* item = static_cast<Item*>(child.internalPointer());
     
-    // child is a package
+    // child is a top-level package
     if (item->parent == 0)
         return QModelIndex();
     
-    // child is an operator
+    // parent is a child of root
     Item* parentItem = item->parent;
-    int parentRow = m_root->children.indexOf(parentItem);
+    int parentRow = 0;
+    if (parentItem->parent == 0)
+    {
+        parentRow = m_root->children.indexOf(parentItem);
+    }
+    else
+    {
+        Item* parentOfParent = parentItem->parent;
+        parentRow = parentOfParent->children.indexOf(parentItem);
+    }
+        
     return createIndex(parentRow, 0, parentItem);
 }
 
@@ -230,19 +241,36 @@ void OperatorLibraryModel::updateOperators()
     {
         QString package = QString::fromStdString((*iter)->package());
         
-        // package has not been allocated
-        if (! package2ItemMap.contains(package))
+        QStringList parts = package.split("::");
+        Item* root = m_root;
+        foreach (QString part, parts)
         {
-            Item* packageItem = new Item;
-            packageItem->package = package;
-            m_root->children.append(packageItem);
-            package2ItemMap[package] = packageItem;
+            // find the item
+            Item* partItem = 0;
+            foreach (Item* item, root->children)
+            {
+                if (item->package == part)
+                {
+                    partItem = item;
+                    break;
+                }
+            }
+            
+            if (partItem == 0)
+            {
+                partItem = new Item;
+                partItem->package = part;
+                partItem->parent = root;
+                root->children.append(partItem);
+            }
+            
+            root = partItem;
         }
         
         Item* opItem = new Item;
         opItem->op = *iter;
-        opItem->parent = package2ItemMap[package];
-        opItem->parent->children.append(opItem);
+        opItem->parent = root;
+        root->children.append(opItem);
     }
     
     endResetModel();
