@@ -14,7 +14,6 @@
 #include <stromx/runtime/Operator.h>
 #include <stromx/runtime/OperatorKernel.h>
 #include <iostream>
-#include <boost/graph/graph_concepts.hpp>
 #include "Exception.h"
 #include "data/OperatorData.h"
 
