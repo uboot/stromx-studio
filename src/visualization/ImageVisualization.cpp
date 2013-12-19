@@ -1,4 +1,4 @@
-#include "visualization/Image.h"
+#include "visualization/ImageVisualization.h"
 
 #include <stromx/runtime/Matrix.h>
 
@@ -99,12 +99,12 @@ template <class data_t>
     }
 }
 
-VisualizationWidget* Image::createEditor() const
+VisualizationWidget* ImageVisualization::createEditor() const
 {
     return 0;
 }
 
-QList< QGraphicsItem* > Image::createItems(const stromx::runtime::Data & data,
+QList< QGraphicsItem* > ImageVisualization::createItems(const stromx::runtime::Data & data,
         const VisualizationState::Properties & properties) const
 {
     using namespace stromx::runtime;

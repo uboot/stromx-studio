@@ -60,7 +60,7 @@ set(stromxstudio_SOURCES
     task/Task.cpp
     visualization/ColorChooser.cpp
     visualization/Histogram.cpp
-    visualization/Image.cpp
+    visualization/ImageVisualization.cpp
     visualization/DefaultVisualization.cpp
     visualization/LineSegments.cpp
     visualization/Points.cpp

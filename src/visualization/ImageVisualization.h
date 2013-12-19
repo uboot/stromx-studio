@@ -18,19 +18,19 @@
 */
 
 
-#ifndef IMAGE_H
-#define IMAGE_H
+#ifndef IMAGEVISUALIZATION_H
+#define IMAGEVISUALIZATION_H
 
 #include "visualization/Visualization.h"
 
-class Image : public Visualization
+class ImageVisualization : public Visualization
 {
 public:
-    Image() : Visualization("image_2d", QObject::tr("Image")) {}
+    ImageVisualization() : Visualization("image_2d", QObject::tr("Image")) {}
 
     virtual VisualizationWidget* createEditor() const;
     virtual QList<QGraphicsItem*> createItems(const stromx::runtime::Data & data,
         const VisualizationState::Properties & properties) const;
 };
 
-#endif // IMAGE_H
+#endif // IMAGEVISUALIZATION_H
