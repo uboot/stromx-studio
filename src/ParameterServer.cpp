@@ -28,12 +28,15 @@ const QVariant ParameterServer::getParameter(unsigned int id, int role)
     
     if(value.state == CURRENT)
     {
+        // if the value is up-to-date return it
         return DataConverter::toQVariant(m_cache[id].value, param, role);
     }
     else
     {
         if(role == Qt::DisplayRole)
         {
+            // if the value is not up-to-date display the current parameter
+            // state
             switch(value.state)
             {
                 case GETTING:
@@ -47,6 +50,13 @@ const QVariant ParameterServer::getParameter(unsigned int id, int role)
                 default:
                     Q_ASSERT(false);
             }
+        }
+        else if (role == Qt::EditRole)
+        {
+            // If the parameter should be edited it is important to return  a
+            // QVariant of the correct type to make sure the appropriate editor
+            // is opened. Here we simply return the most recently cached value.
+            return DataConverter::toQVariant(m_cache[id].value, param, role);
         }
     }
     
@@ -86,7 +96,7 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
         }
             
         // any other parameters are set via an undo stack command
-        // obtain the current parameter value
+        // first obtain the current parameter value
         stromx::runtime::DataRef currentValue = m_cache[id].value;
         
         // if the new value is different from the old one
