@@ -179,7 +179,6 @@ target_link_libraries(stromx-studio
     ${QT_LIBRARIES}
     ${CMAKE_DL_LIBS}
     ${stromx_RUNTIME_LIB}
-    ${stromx_EXAMPLE_LIB}
     ${stromx_CVCORE_LIB}
     ${stromx_CVIMGPROC_LIB}
     ${stromx_CVSUPPORT_LIB}

@@ -8,7 +8,6 @@
 #include <stromx/cvcore/Cvcore.h>
 #include <stromx/cvimgproc/Cvimgproc.h>
 #include <stromx/cvsupport/Cvsupport.h>
-#include <stromx/example/Example.h>
 #include <stromx/runtime/Runtime.h>
 #include <stromx/runtime/Factory.h>
 #include <stromx/runtime/Operator.h>
@@ -218,7 +217,6 @@ void OperatorLibraryModel::setupFactory()
     
     m_factory = new stromx::runtime::Factory();
     stromxRuntimeRegister(*m_factory);
-    stromxExampleRegister(*m_factory);
     stromxCvcoreRegister(*m_factory);
     stromxCvimgprocRegister(*m_factory);
     stromxCvsupportRegister(*m_factory);
