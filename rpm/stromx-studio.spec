@@ -51,6 +51,10 @@ cmake -DCMAKE_SKIP_RPATH=ON \
       ..
 
 make %{?_smp_mflags}
+
+
+%check
+cd build
 make test ARGS="-V"
 
 
