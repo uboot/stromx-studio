@@ -20,12 +20,12 @@
 #ifndef ERRORLISTVIEW_H
 #define ERRORLISTVIEW_H
 
-#include <QTableView>
+#include <QWidget>
 
 class ErrorListModel;
 
 /** \brief View which displays a list of errors. */
-class ErrorListView : public QTableView
+class ErrorListView : public QWidget
 {
     Q_OBJECT
 
