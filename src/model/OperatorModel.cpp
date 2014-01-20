@@ -235,7 +235,8 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     case STRING_TYPE:
         return tr("Type");
     case TYPE:
-        return QString::fromStdString(m_op->info().type());
+        return tr("%1::%2").arg(QString::fromStdString(m_op->info().package()))
+                          .arg(QString::fromStdString(m_op->info().type()));
     case STRING_STATUS:
         return tr("Status");
     case STATUS:
