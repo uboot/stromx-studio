@@ -181,6 +181,7 @@ target_link_libraries(stromx-studio
     ${stromx_RUNTIME_LIB}
     ${stromx_CVCORE_LIB}
     ${stromx_CVIMGPROC_LIB}
+    ${stromx_CVHIGHGUI_LIB}
     ${stromx_CVSUPPORT_LIB}
 )
 

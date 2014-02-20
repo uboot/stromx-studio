@@ -110,6 +110,7 @@ target_link_libraries(stromx_studio_test
     ${QT_LIBRARIES}
     ${stromx_RUNTIME_LIB}
     ${stromx_CVCORE_LIB}
+    ${stromx_CVHIGHGUI_LIB}
     ${stromx_CVIMGPROC_LIB}
     ${stromx_CVSUPPORT_LIB}
 )

@@ -7,6 +7,7 @@
 #include <QtDebug>
 #include <stromx/cvcore/Cvcore.h>
 #include <stromx/cvimgproc/Cvimgproc.h>
+#include <stromx/cvhighgui/Cvhighgui.h>
 #include <stromx/cvsupport/Cvsupport.h>
 #include <stromx/runtime/Runtime.h>
 #include <stromx/runtime/Factory.h>
@@ -218,6 +219,7 @@ void OperatorLibraryModel::setupFactory()
     m_factory = new stromx::runtime::Factory();
     stromxRuntimeRegister(*m_factory);
     stromxCvcoreRegister(*m_factory);
+    stromxCvhighguiRegister(*m_factory);
     stromxCvimgprocRegister(*m_factory);
     stromxCvsupportRegister(*m_factory);
 }
