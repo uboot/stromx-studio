@@ -157,33 +157,54 @@ if(WIN32)
     set(QT_USE_QTMAIN TRUE)
 endif(WIN32)
 
-include(${QT_USE_FILE})
-add_definitions(${QT_DEFINITIONS})
-
-qt4_wrap_cpp(stromxstudio_HEADERS_MOC ${stromxstudio_HEADERS})
-#qt4_wrap_ui(stromxstudio_FORMS_HEADERS ${stromxstudio_FORMS})
-qt4_add_resources(stromxstudio_RESOURCES_RCC ${stromxstudio_RESOURCES})
-
-add_executable(stromx-studio WIN32
-    ${stromxstudio_SOURCES} 
-    ${stromxstudio_HEADERS_MOC} 
-#    ${stromxstudio_FORMS_HEADERS} 
-    ${stromxstudio_RESOURCES_RCC}
-)
-
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
 )
 
-target_link_libraries(stromx-studio
-    ${QT_LIBRARIES}
-    ${CMAKE_DL_LIBS}
-    ${stromx_RUNTIME_LIB}
-    ${stromx_CVCORE_LIB}
-    ${stromx_CVIMGPROC_LIB}
-    ${stromx_CVHIGHGUI_LIB}
-    ${stromx_CVSUPPORT_LIB}
-)
+if(USE_QT5)
+    qt5_add_resources(stromxstudio_RESOURCES_RCC ${stromxstudio_RESOURCES})
+
+    add_executable(stromx-studio WIN32
+        ${stromxstudio_SOURCES}
+        ${stromxstudio_RESOURCES_RCC}
+    )
+
+    target_link_libraries(stromx-studio
+        ${CMAKE_DL_LIBS}
+        ${stromx_RUNTIME_LIB}
+        ${stromx_CVCORE_LIB}
+        ${stromx_CVIMGPROC_LIB}
+        ${stromx_CVHIGHGUI_LIB}
+        ${stromx_CVSUPPORT_LIB}
+    )
+
+    qt5_use_modules(stromx-studio Widgets)
+else()
+    include(${QT_USE_FILE})
+    add_definitions(${QT_DEFINITIONS})
+
+    qt4_wrap_cpp(stromxstudio_HEADERS_MOC ${stromxstudio_HEADERS})
+    #qt4_wrap_ui(stromxstudio_FORMS_HEADERS ${stromxstudio_FORMS})
+    qt4_add_resources(stromxstudio_RESOURCES_RCC ${stromxstudio_RESOURCES})
+
+    add_executable(stromx-studio WIN32
+        ${stromxstudio_SOURCES} 
+        ${stromxstudio_HEADERS_MOC} 
+    #    ${stromxstudio_FORMS_HEADERS} 
+        ${stromxstudio_RESOURCES_RCC}
+    )
+
+
+    target_link_libraries(stromx-studio
+        ${QT_LIBRARIES}
+        ${CMAKE_DL_LIBS}
+        ${stromx_RUNTIME_LIB}
+        ${stromx_CVCORE_LIB}
+        ${stromx_CVIMGPROC_LIB}
+        ${stromx_CVHIGHGUI_LIB}
+        ${stromx_CVSUPPORT_LIB}
+    )
+endif()
 
 if(WIN32)
     install (TARGETS stromx-studio 

@@ -28,7 +28,7 @@ class Exception : public std::exception
 public:
     Exception(const QString & message) : m_message(message) {}
     
-    virtual const char* what() const throw() { return m_message.toAscii(); }
+    virtual const char* what() const throw() { return m_message.toUtf8(); }
     virtual ~Exception() throw() {}
     
 private:

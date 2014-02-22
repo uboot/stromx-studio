@@ -25,7 +25,18 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 include(UseDoxygen OPTIONAL)
 
-find_package(Qt4 REQUIRED)
+
+find_package(Qt4)
+find_package(Qt5Widgets)
+
+if(Qt5Widgets_FOUND)
+    set(USE_QT5 true)
+elseif(QT4_FOUND)
+    set(USE_QT5 false)
+else()
+    message(FATAL_ERROR "Qt was not found.")
+endif()
+
 find_package(stromx REQUIRED)
 
 if(UNIX)
