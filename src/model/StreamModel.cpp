@@ -143,20 +143,18 @@ Use <b>File -> Load Libraries...</b> to load additional libraries.")
     catch(stromx::runtime::ParameterError& e)
     {
         qWarning() << e.what();
-        const stromx::runtime::OperatorInfo& op = e.op();
         QString error = tr("Failed to set parameter <i>%1</i> ('%2') of operator of type <i>%3</i> in package <i>%4</i>.")
-                        .arg(QString("%1").arg(e.parameter().id()),
-                             QString::fromStdString(e.parameter().title()),
-                             QString::fromStdString(op.type()),
-                             QString::fromStdString(op.package()));
+                        .arg(QString("%1").arg(e.id()),
+                             QString::fromStdString(e.title()),
+                             QString::fromStdString(e.type()),
+                             QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);
     }
     catch(stromx::runtime::OperatorError& e)
     {
         qWarning() << e.what();
-        const stromx::runtime::OperatorInfo& op = e.op();
         QString error = tr("Unknown error related to operator of type <i>%1</i> in package <i>%2</i>: %3")
-                        .arg(QString::fromStdString(op.type()), QString::fromStdString(op.package()),
+                        .arg(QString::fromStdString(e.type()), QString::fromStdString(e.package()),
                              QString::fromStdString(e.what()));
         throw ReadStreamFailed(error);
     }
