@@ -15,8 +15,8 @@ ErrorData::ErrorData(const stromx::runtime::OperatorError& exception, Type type)
   : m_time(QDateTime::currentDateTime()),
     m_type(type)
 {
-    QString opType = QString("%1/%2").arg(QString::fromStdString(exception.op().type()))
-                                     .arg(QString::fromStdString(exception.op().package()));
+    QString opType = QString("%1/%2").arg(QString::fromStdString(exception.type()))
+                                     .arg(QString::fromStdString(exception.package()));
                                      
     QString errorType;
     switch(type)
