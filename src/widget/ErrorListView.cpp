@@ -23,8 +23,14 @@ ErrorListView::ErrorListView(QWidget* parent)
     tableView->verticalHeader()->hide();
     
     tableView->setModel(m_model);
+    
+#ifdef STROMX_STUDIO_QT4
+    tableView->horizontalHeader()->setResizeMode(ErrorListModel::TIME, QHeaderView::Interactive);
+    tableView->horizontalHeader()->setResizeMode(ErrorListModel::DESCRIPTION, QHeaderView::Stretch);
+#else
     tableView->horizontalHeader()->setSectionResizeMode(ErrorListModel::TIME, QHeaderView::Interactive);
     tableView->horizontalHeader()->setSectionResizeMode(ErrorListModel::DESCRIPTION, QHeaderView::Stretch);
+#endif // STROMX_STUDIO_QT4
     
     QPushButton* clearButton = new QPushButton(tr("Clear error log"));
     connect(clearButton, SIGNAL(clicked()), m_model, SLOT(clear()));

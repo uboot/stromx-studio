@@ -16,8 +16,15 @@ OperatorLibraryView::OperatorLibraryView(QWidget* parent)
     
     setModel(m_model);
     setItemDelegate(new ItemDelegate(this));
+    
+#ifdef STROMX_STUDIO_QT4
+    header()->setResizeMode(OperatorLibraryModel::OPERATOR, QHeaderView::Interactive);
+    header()->setResizeMode(OperatorLibraryModel::VERSION, QHeaderView::Stretch);
+#else
     header()->setSectionResizeMode(OperatorLibraryModel::OPERATOR, QHeaderView::Interactive);
     header()->setSectionResizeMode(OperatorLibraryModel::VERSION, QHeaderView::Stretch);
+#endif // STROMX_STUDIO_QT4
+    
     setAlternatingRowColors(true);
 }
 
