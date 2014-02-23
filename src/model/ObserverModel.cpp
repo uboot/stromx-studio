@@ -12,8 +12,6 @@ ObserverModel::ObserverModel(QUndoStack* undoStack, ObserverTreeModel* parent)
 {
     m_name = "New observer";
     
-    setSupportedDragActions(Qt::MoveAction);
-    
     connect(m_parent, SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)),
             this, SLOT(handleRowsAboutToBeInserted(QModelIndex, int, int)));
     connect(m_parent, SIGNAL(rowsInserted(QModelIndex, int, int)),
@@ -164,6 +162,11 @@ QStringList ObserverModel::mimeTypes() const
 Qt::DropActions ObserverModel::supportedDropActions() const
 {
     return Qt::MoveAction | Qt::CopyAction;
+}
+
+Qt::DropActions ObserverModel::supportedDragActions() const
+{
+    return Qt::MoveAction;
 }
 
 bool ObserverModel::dropMimeData(const QMimeData* data, Qt::DropAction action,

@@ -95,25 +95,41 @@ include_directories(
 
 set(QT_USE_QTTEST TRUE) 
 
-include(${QT_USE_FILE})
-add_definitions(${QT_DEFINITIONS})
-qt4_wrap_cpp(stromxstudiotest_HEADERS_MOC ${stromxstudiotest_HEADERS})
+if(USE_QT5)
+    add_executable(stromx_studio_test
+        ${stromxstudiotest_SOURCES} 
+    )
 
-add_executable(stromx_studio_test
-    ${stromxstudiotest_SOURCES} 
-    ${stromxstudiotest_HEADERS_MOC} 
-)
+    target_link_libraries(stromx_studio_test
+        ${stromx_RUNTIME_LIB}
+        ${stromx_CVCORE_LIB}
+        ${stromx_CVHIGHGUI_LIB}
+        ${stromx_CVIMGPROC_LIB}
+        ${stromx_CVSUPPORT_LIB}
+    )
+
+    qt5_use_modules(stromx_studio_test Widgets Concurrent Test)
+else()
+    include(${QT_USE_FILE})
+    add_definitions(${QT_DEFINITIONS})
+    qt4_wrap_cpp(stromxstudiotest_HEADERS_MOC ${stromxstudiotest_HEADERS})
+
+    add_executable(stromx_studio_test
+        ${stromxstudiotest_SOURCES} 
+        ${stromxstudiotest_HEADERS_MOC} 
+    )
+
+    target_link_libraries(stromx_studio_test
+        ${QT_LIBRARIES}
+        ${stromx_RUNTIME_LIB}
+        ${stromx_CVCORE_LIB}
+        ${stromx_CVHIGHGUI_LIB}
+        ${stromx_CVIMGPROC_LIB}
+        ${stromx_CVSUPPORT_LIB}
+    )
+endif()
 
 add_dependencies(stromx_studio_test stromx-studio)
-
-target_link_libraries(stromx_studio_test
-    ${QT_LIBRARIES}
-    ${stromx_RUNTIME_LIB}
-    ${stromx_CVCORE_LIB}
-    ${stromx_CVHIGHGUI_LIB}
-    ${stromx_CVIMGPROC_LIB}
-    ${stromx_CVSUPPORT_LIB}
-)
 
 add_library(stromx_test SHARED
     DeadlockOperator.cpp

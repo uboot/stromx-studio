@@ -102,6 +102,7 @@ public:
      */
     virtual bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
     virtual Qt::DropActions supportedDropActions () const;
+    virtual Qt::DropActions supportedDragActions () const;
     
     /** Returns the undo stack. */
     QUndoStack* undoStack() const { return m_undoStack; }

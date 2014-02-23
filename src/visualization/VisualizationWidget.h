@@ -35,7 +35,7 @@ class VisualizationWidget : public QWidget
     
 public:
     /** Constructs a visualization widget. */
-    explicit VisualizationWidget(QWidget* parent = 0) : QWidget(parent) {}
+    explicit VisualizationWidget(QWidget* parent = 0);
     
     /**
      * Queries the current settings from the controls in the widget and returns 

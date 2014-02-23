@@ -1,4 +1,6 @@
-add_subdirectory(test)
+if(BUILD_TESTS)
+    add_subdirectory(test)
+endif()
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/src/Config.h.in"
@@ -66,6 +68,7 @@ set(stromxstudio_SOURCES
     visualization/Points.cpp
     visualization/VisualizationRegistry.cpp
     visualization/VisualizationState.cpp
+    visualization/VisualizationWidget.cpp
     widget/DataVisualizer.cpp
     widget/DocumentationWindow.cpp
     widget/ErrorListView.cpp
@@ -178,7 +181,7 @@ if(USE_QT5)
         ${stromx_CVSUPPORT_LIB}
     )
 
-    qt5_use_modules(stromx-studio Widgets)
+    qt5_use_modules(stromx-studio Widgets Concurrent)
 else()
     include(${QT_USE_FILE})
     add_definitions(${QT_DEFINITIONS})

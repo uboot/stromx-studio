@@ -1,5 +1,7 @@
 #include "VisualizationState.h"
 
+#include <QDataStream>
+
 VisualizationState::VisualizationState()
   : m_active(true)
 {

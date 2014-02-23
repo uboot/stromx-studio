@@ -515,13 +515,17 @@ void OperatorModel::handleParameterChanged(unsigned int id)
 
 void OperatorModel::setActiveFalse()
 {
-    reset();
+    // trigger the reset model signal (reset() is deprecated in Qt5)
+    beginResetModel();
+    endResetModel();
     emit activeChanged(false);
 }
 
 void OperatorModel::setActiveTrue()
 {
-    reset();
+    // trigger the reset model signal (reset() is deprecated in Qt5)
+    beginResetModel();
+    endResetModel();
     emit activeChanged(true);
 }
 

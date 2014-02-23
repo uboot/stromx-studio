@@ -30,7 +30,7 @@ void ThreadListView::setStreamModel(StreamModel* model)
     m_model = model;
     
     setModel(m_model->threadListModel());
-    horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     connect(selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), 
             this, SLOT(updateThreadSelected(QModelIndex,QModelIndex)));
     connect(m_model, SIGNAL(streamStarted()), this, SLOT(updateStreamActive()));

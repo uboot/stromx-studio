@@ -91,7 +91,8 @@ void ErrorListModel::customEvent(QEvent* event)
 
 void ErrorListModel::clear()
 {
+    beginResetModel();
     m_errorList.clear();
-    reset();
+    endResetModel();
 }
 

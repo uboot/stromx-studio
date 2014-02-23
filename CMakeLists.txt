@@ -25,16 +25,23 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 include(UseDoxygen OPTIONAL)
 
-
 find_package(Qt4)
 find_package(Qt5Widgets)
+find_package(Qt5Concurrent)
+find_package(Qt5Test)
 
-if(Qt5Widgets_FOUND)
+if(Qt5Widgets_FOUND AND Qt5Concurrent_FOUND)
     set(USE_QT5 true)
+    set(CMAKE_AUTOMOC ON)
+
+    if(Qt5Test_FOUND)
+        option(BUILD_TESTS "Build unit tests" ON)
+    endif()
 elseif(QT4_FOUND)
     set(USE_QT5 false)
 else()
     message(FATAL_ERROR "Qt was not found.")
+    option(BUILD_TESTS "Build unit tests" ON)
 endif()
 
 find_package(stromx REQUIRED)

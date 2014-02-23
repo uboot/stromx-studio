@@ -18,9 +18,7 @@ ObserverTreeModel::ObserverTreeModel(QUndoStack* undoStack, StreamModel * parent
     m_undoStack(undoStack),
     m_stream(parent),
     m_suppressRemoveRows(false)
-{
-    setSupportedDragActions(Qt::MoveAction);
-    
+{    
     connect(m_stream, SIGNAL(connectionRemoved(ConnectionModel*)), this, SLOT(removeConnectedInputs(ConnectionModel*)));
     connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(handleDataChanged(QModelIndex,QModelIndex)));
 }
@@ -368,6 +366,11 @@ QMimeData* ObserverTreeModel::mimeData(const QModelIndexList& indexes) const
 Qt::DropActions ObserverTreeModel::supportedDropActions() const
 {
     return Qt::MoveAction | Qt::CopyAction;
+}
+
+Qt::DropActions ObserverTreeModel::supportedDragActions() const
+{
+    return Qt::MoveAction;
 }
 
 void ObserverTreeModel::removeConnectedInputs(ConnectionModel* connection)

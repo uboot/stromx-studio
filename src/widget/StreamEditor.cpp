@@ -2,6 +2,7 @@
 
 // #include <cmath>
 #include <QApplication>
+#include <QDrag>
 #include <QGraphicsView>
 #include <QMouseEvent>
 #include "StreamEditorScene.h"
@@ -48,7 +49,7 @@ void StreamEditor::mousePressEvent(QMouseEvent* event)
     if(event->button() == Qt::LeftButton)
     {
         QPointF scenePos = mapToScene(event->pos());
-        QGraphicsItem* item = scene()->itemAt(scenePos);
+        QGraphicsItem* item = scene()->itemAt(scenePos, QTransform());
         
         if(item)
         {    

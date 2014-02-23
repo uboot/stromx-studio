@@ -1,6 +1,7 @@
 #include "widget/OperatorLibraryView.h"
 
 #include <QApplication>
+#include <QDrag>
 #include <QHeaderView>
 #include <QMouseEvent>
 #include "data/OperatorData.h"
@@ -15,8 +16,8 @@ OperatorLibraryView::OperatorLibraryView(QWidget* parent)
     
     setModel(m_model);
     setItemDelegate(new ItemDelegate(this));
-    header()->setResizeMode(OperatorLibraryModel::OPERATOR, QHeaderView::Interactive);
-    header()->setResizeMode(OperatorLibraryModel::VERSION, QHeaderView::Stretch);
+    header()->setSectionResizeMode(OperatorLibraryModel::OPERATOR, QHeaderView::Interactive);
+    header()->setSectionResizeMode(OperatorLibraryModel::VERSION, QHeaderView::Stretch);
     setAlternatingRowColors(true);
 }
 
