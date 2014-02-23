@@ -93,8 +93,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src
 )
 
-set(QT_USE_QTTEST TRUE) 
-
 if(USE_QT5)
     add_executable(stromx_studio_test
         ${stromxstudiotest_SOURCES} 
@@ -110,6 +108,7 @@ if(USE_QT5)
 
     qt5_use_modules(stromx_studio_test Widgets Concurrent Test)
 else()
+    set(QT_USE_QTTEST TRUE) 
     include(${QT_USE_FILE})
     add_definitions(${QT_DEFINITIONS})
     qt4_wrap_cpp(stromxstudiotest_HEADERS_MOC ${stromxstudiotest_HEADERS})
