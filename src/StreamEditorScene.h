@@ -29,6 +29,7 @@ class QGraphicsSceneDragDropEvent;
 class QUndoStack;
 class ConnectionModel;
 class OperatorModel;
+class PropertyModel;
 class SelectionModel;
 class StreamModel;
 class ThreadModel;
@@ -69,7 +70,7 @@ signals:
     void initializeEnabledChanged(bool enabled);
     void deinitializeEnabledChanged(bool enabled);
     void removeEnabledChanged(bool enabled);
-    void selectedModelChanged(QAbstractItemModel* model);
+    void selectedModelChanged(PropertyModel* model);
     
     /** The model of the stream editor was reset, i.e. setModel() was called. */
     void modelWasReset(StreamModel* model);

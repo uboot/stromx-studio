@@ -10,19 +10,22 @@ PropertyView::PropertyView(QWidget* parent)
     setEditTriggers(QAbstractItemView::AllEditTriggers);
     setAlternatingRowColors(true);
     
-#ifdef STROMX_STUDIO_QT4
-    header()->setResizeMode(PropertyModel::PROPERTY, QHeaderView::Interactive);
-    header()->setResizeMode(PropertyModel::VALUE, QHeaderView::Stretch);
-#else
-    header()->setSectionResizeMode(PropertyModel::PROPERTY, QHeaderView::Interactive);
-    header()->setSectionResizeMode(PropertyModel::VALUE, QHeaderView::Stretch);
-#endif // STROMX_STUDIO_QT4
-    
     setItemDelegate(new ItemDelegate(this));
 }
 
-void PropertyView::setModel(QAbstractItemModel* model)
+void PropertyView::setModel(PropertyModel* model)
 {
     QTreeView::setModel(model);
+    
+    if (model)
+    {
+#ifdef STROMX_STUDIO_QT4
+        header()->setResizeMode(PropertyModel::PROPERTY, QHeaderView::Interactive);
+        header()->setResizeMode(PropertyModel::VALUE, QHeaderView::Stretch);
+#else
+        header()->setSectionResizeMode(PropertyModel::PROPERTY, QHeaderView::Interactive);
+        header()->setSectionResizeMode(PropertyModel::VALUE, QHeaderView::Stretch);
+#endif // STROMX_STUDIO_QT4
+    }
 }
 

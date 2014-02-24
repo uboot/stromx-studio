@@ -91,8 +91,8 @@ MainWindow::MainWindow(QWidget *parent)
     updateCurrentFile("");
     readSettings();
     
-    connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(QAbstractItemModel*)),
-            m_propertyView, SLOT(setModel(QAbstractItemModel*)));
+    connect(m_streamEditor->scene(), SIGNAL(selectedModelChanged(PropertyModel*)),
+            m_propertyView, SLOT(setModel(PropertyModel*)));
     connect(m_streamEditor->scene(), SIGNAL(modelWasReset(StreamModel*)),
             this, SLOT(resetObserverWindows(StreamModel*)));
     connect(m_undoStack, SIGNAL(cleanChanged(bool)), this, SLOT(updateWindowTitle(bool)));

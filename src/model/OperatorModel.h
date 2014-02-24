@@ -159,8 +159,14 @@ signals:
     
 protected:
     virtual void customEvent(QEvent* event);
+    
+#ifdef STROMX_STUDIO_QT4
     virtual void connectNotify(const char * signal);
     virtual void disconnectNotify(const char * signal);
+#else
+    virtual void connectNotify(const QMetaMethod & signal);
+    virtual void disconnectNotify(const QMetaMethod & signal);
+#endif // STROMX_STUDIO_QT4
 
 private slots:
     /** Resets the model and emits <tt>activeChanged(true)</tt>. */

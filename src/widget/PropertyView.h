@@ -22,7 +22,7 @@
 
 #include <QTreeView>
 
-class QAbstractItemModel;
+class PropertyModel;
 class QTreeView;
 
 /** 
@@ -40,7 +40,7 @@ public:
     explicit PropertyView(QWidget *parent = 0);
     
 public slots:
-    virtual void setModel(QAbstractItemModel* model);
+    virtual void setModel(PropertyModel* model);
 };
 
 #endif // PROPERTYVIEW_H
