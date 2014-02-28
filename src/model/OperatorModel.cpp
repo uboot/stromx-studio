@@ -56,11 +56,6 @@ OperatorModel::OperatorModel(stromx::runtime::Operator* op, StreamModel* stream)
     connect(m_server, SIGNAL(parameterChanged(uint)), this, SLOT(handleParameterChanged(uint)));
 }
 
-OperatorModel::~OperatorModel()
-{
-    m_op->removeObserver(&m_observer);
-}
-
 int OperatorModel::rowCount(const QModelIndex& index) const
 {
     if(index.isValid())

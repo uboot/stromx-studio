@@ -68,7 +68,6 @@ public:
     };
     
     explicit OperatorModel(stromx::runtime::Operator* op, StreamModel *stream);
-    virtual ~OperatorModel();
     
     /** Returns the stromx operator of this model. */
     stromx::runtime::Operator* op() const { return m_op; }

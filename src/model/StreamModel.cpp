@@ -283,7 +283,10 @@ void StreamModel::addOperator(const OperatorData* opData, const QPointF& pos)
 {
     m_undoStack->beginMacro(tr("add operator"));
     
-    OperatorModel* opModel = new OperatorModel(m_operatorLibrary->newOperator(opData), this);
+    stromx::runtime::OperatorKernel* kernel = m_operatorLibrary->newOperator(opData);
+    stromx::runtime::Operator* op = m_stream->addOperator(kernel);
+    m_stream->hideOperator(op);
+    OperatorModel* opModel = new OperatorModel(op, this);
     opModel->setPos(pos);
     opModel->setName(opData->type());
     
@@ -404,7 +407,7 @@ void StreamModel::doAddOperator(OperatorModel* op)
 {
     Q_ASSERT(! op->isInitialized());
     
-    m_stream->addOperator(op->op());
+    m_stream->showOperator(op->op());
     m_operators.append(op);
     connect(op, SIGNAL(parameterErrorOccurred(ErrorData)), this, SLOT(handleParameterError(ErrorData)));
     
@@ -417,7 +420,7 @@ void StreamModel::doRemoveOperator(OperatorModel* op)
     
     disconnect(op, SIGNAL(parameterErrorOccurred(ErrorData)));
     m_operators.removeAll(op);
-    m_stream->removeOperator(op->op());
+    m_stream->hideOperator(op->op());
     
     emit operatorRemoved(op);
 }
@@ -768,7 +771,7 @@ void StreamModel::deserializeModel(const QByteArray& data)
     dataStream.setVersion(QDataStream::Qt_4_7);
 
     dataStream >> count;
-    stromx::runtime::Factory& factory = m_operatorLibrary->factory();
+    stromx::runtime::Factory* factory = m_operatorLibrary->factory();
     for(int i = 0; i < count; ++i)
     {
         QString package, type;
@@ -781,8 +784,8 @@ void StreamModel::deserializeModel(const QByteArray& data)
         dataStream >> version;
         
         OperatorModel* opModel = 0;
-        stromx::runtime::Operator* op = factory.newOperator(package.toStdString(), type.toStdString());
-        m_stream->addOperator(op);
+        stromx::runtime::OperatorKernel* kernel = factory->newOperator(package.toStdString(), type.toStdString());
+        stromx::runtime::Operator* op = m_stream->addOperator(kernel);
         opModel = new OperatorModel(op, this);
         m_operators.append(opModel);
         stromxStudioOperators.append(opModel);

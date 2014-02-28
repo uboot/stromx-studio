@@ -30,7 +30,6 @@ namespace stromx
     namespace runtime 
     {
         class Factory;
-        class Operator;
         class OperatorKernel;
     }
 }
@@ -113,10 +112,10 @@ public:
      * can not be allocated (e.g. \c data does not refer to an operator contained
      * in the library) 0 is returned.
      */
-    stromx::runtime::Operator* newOperator(const OperatorData* data) const;
+    stromx::runtime::OperatorKernel* newOperator(const OperatorData* data) const;
     
     /**  Returns a reference to the stromx factory of the operator library. */
-    stromx::runtime::Factory& factory() const { return *m_factory; }
+    stromx::runtime::Factory* factory() const { return m_factory; }
     
 private:
     struct Item

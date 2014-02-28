@@ -305,7 +305,7 @@ OperatorData* OperatorLibraryModel::newOperatorData(const QModelIndex& index) co
     return new OperatorData(QString::fromStdString(op->package()), QString::fromStdString(op->type()));
 }
 
-stromx::runtime::Operator* OperatorLibraryModel::newOperator(const OperatorData* data) const
+stromx::runtime::OperatorKernel* OperatorLibraryModel::newOperator(const OperatorData* data) const
 {
     try
     {
