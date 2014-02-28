@@ -15,6 +15,7 @@
 #include <stromx/runtime/XmlReader.h>
 #include <stromx/runtime/XmlWriter.h>
 #include <stromx/runtime/Factory.h>
+#include "Common.h"
 #include "Config.h"
 #include "Exception.h"
 #include "ExceptionObserver.h"
@@ -346,6 +347,8 @@ void StreamModel::addThread()
 {
     stromx::runtime::Thread* thread = m_stream->addThread();
     ThreadModel* threadModel = new ThreadModel(thread, this);
+    threadModel->setName(tr("New thread"));
+    threadModel->setColor(*(colorTable().begin()));
     m_stream->hideThread(threadModel->thread());
     
     AddThreadCmd* cmd = new AddThreadCmd(this, threadModel);
@@ -979,6 +982,8 @@ void StreamModel::createTemplate()
     stromx::runtime::Thread* thread = m_stream->addThread();
     m_stream->hideThread(thread);
     ThreadModel* threadModel = new ThreadModel(thread, this);
+    threadModel->setName(tr("New thread"));
+    threadModel->setColor(*(colorTable().begin()));
     doAddThread(threadModel);
     
     // add one observer

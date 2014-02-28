@@ -1,7 +1,6 @@
 #include "model/ThreadModel.h"
 
 #include <stromx/runtime/Thread.h>
-#include "Common.h"
 #include "cmd/RenameThreadCmd.h"
 #include "cmd/SetThreadColorCmd.h"
 #include "model/StreamModel.h"
