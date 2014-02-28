@@ -51,26 +51,16 @@ public:
      */
     explicit ThreadModel(stromx::runtime::Thread* thread, StreamModel *stream = 0);
     
-    /** Constructs a thread model. */
-    explicit ThreadModel(StreamModel *stream = 0);
-    
     /** 
-     * Returns the stromx thread of this model. Returns 0 if no
-     * stromx thread is currently assigned to the model.
+     * Returns the stromx thread of this model.
      */
     stromx::runtime::Thread* thread() const { return m_thread; }
-    
-    /**
-     * Sets the stromx thread of the model. If \c thread is not 0 the current name of the 
-     * thread model is assigned to \c thread.
-     */
-    void setThread(stromx::runtime::Thread* thread);
     
     /**
      * Returns the name of the thread. The thread model stores the thread name even if
      * no stromx thread is currently assigned to it.
      */
-    const QString & name() const { return m_name; }
+    const QString name() const;
     
     /**
      * Sets the name of thread. The thread model stores the thread name even if
@@ -78,7 +68,7 @@ public:
      */
     void setName(const QString & name);
     
-    const QColor & color() const { return m_color; }
+    const QColor color() const;
     void setColor(const QColor & color);
     
 signals:
@@ -94,12 +84,10 @@ signals:
 private:
     void doSetColor(const QColor & color);
     void doSetName(const QString & name);
-    void updateStromxColor();
+    void updateStromxColor(const QColor & color);
     
     stromx::runtime::Thread* m_thread;
     StreamModel* m_stream;
-    QString m_name;
-    QColor m_color;
 };
 
 QDataStream & operator<< (QDataStream & stream, const ThreadModel * thread);

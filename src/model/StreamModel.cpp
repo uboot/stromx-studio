@@ -344,7 +344,9 @@ void StreamModel::removeConnection(ConnectionModel* connection)
 
 void StreamModel::addThread()
 {
-    ThreadModel* threadModel = new ThreadModel(this);
+    stromx::runtime::Thread* thread = m_stream->addThread();
+    ThreadModel* threadModel = new ThreadModel(thread, this);
+    m_stream->hideThread(threadModel->thread());
     
     AddThreadCmd* cmd = new AddThreadCmd(this, threadModel);
     m_undoStack->push(cmd);
@@ -486,17 +488,15 @@ void StreamModel::doRemoveConnection(ConnectionModel* connection)
 
 void StreamModel::doAddThread(ThreadModel* threadModel)
 {
-    stromx::runtime::Thread* thread = m_stream->addThread();
-    threadModel->setThread(thread);
+    m_stream->showThread(threadModel->thread());
     m_threadListModel->addThread(threadModel);
     emit threadAdded(threadModel);
 }
 
 void StreamModel::doRemoveThread(ThreadModel* threadModel)
 {
+    m_stream->hideThread(threadModel->thread());
     m_threadListModel->removeThread(threadModel);
-    m_stream->removeThread(threadModel->thread());
-    threadModel->setThread(0);
     emit threadRemoved(threadModel);
 }
 
@@ -976,8 +976,10 @@ void StreamModel::handleParameterError(const ErrorData& data)
 void StreamModel::createTemplate()
 {
     // add one thread
-    ThreadModel* thread = new ThreadModel(this);
-    doAddThread(thread);
+    stromx::runtime::Thread* thread = m_stream->addThread();
+    m_stream->hideThread(thread);
+    ThreadModel* threadModel = new ThreadModel(thread, this);
+    doAddThread(threadModel);
     
     // add one observer
     m_observerModel->insertRow(m_observerModel->rowCount());
