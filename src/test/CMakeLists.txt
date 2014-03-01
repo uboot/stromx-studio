@@ -100,10 +100,10 @@ if(USE_QT5)
 
     target_link_libraries(stromx_studio_test
         ${stromx_RUNTIME_LIB}
-#         ${stromx_CVCORE_LIB}
-#         ${stromx_CVHIGHGUI_LIB}
-#         ${stromx_CVIMGPROC_LIB}
-#         ${stromx_CVSUPPORT_LIB}
+        ${stromx_CVCORE_LIB}
+        ${stromx_CVHIGHGUI_LIB}
+        ${stromx_CVIMGPROC_LIB}
+        ${stromx_CVSUPPORT_LIB}
     )
 
     qt5_use_modules(stromx_studio_test Widgets Concurrent Test)
