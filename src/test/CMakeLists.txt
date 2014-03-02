@@ -35,7 +35,6 @@ set(stromxstudiotest_SOURCES
     DataConverterTest.cpp
     ImageTest.cpp
     ObserverSchedulerTest.cpp
-    ParameterOperator.cpp
     ParameterServerTest.cpp
     StreamModelTest.cpp
     ../cmd/AddConnectionCmd.cpp
@@ -104,6 +103,7 @@ if(USE_QT5)
         ${stromx_CVHIGHGUI_LIB}
         ${stromx_CVIMGPROC_LIB}
         ${stromx_CVSUPPORT_LIB}
+        ${stromx_TEST_LIB}
     )
 
     qt5_use_modules(stromx_studio_test Widgets Concurrent Test)
@@ -125,21 +125,8 @@ else()
         ${stromx_CVHIGHGUI_LIB}
         ${stromx_CVIMGPROC_LIB}
         ${stromx_CVSUPPORT_LIB}
+        ${stromx_TEST_LIB}
     )
 endif()
 
 add_dependencies(stromx_studio_test stromx-studio)
-
-add_library(stromx_test SHARED
-    DeadlockOperator.cpp
-    ExceptionOperator.cpp
-    ParameterOperator.cpp
-    RandomDataOperator.cpp
-    TestDataOperator.cpp
-    Test.cpp
-)
-
-target_link_libraries(stromx_test
-    ${stromx_RUNTIME_LIB}
-    ${stromx_CVSUPPORT_LIB}
-)

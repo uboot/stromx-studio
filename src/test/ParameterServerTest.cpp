@@ -3,8 +3,8 @@
 #include <QUndoStack>
 #include <QtTest/QtTest>
 #include <stromx/runtime/OperatorTester.h>
+#include <stromx/test/ParameterOperator.h>
 #include "ParameterServer.h"
-#include "test/ParameterOperator.h"
 
 ParameterServerTest::ParameterServerTest()
   : m_op(new stromx::runtime::OperatorTester(new ParameterOperator())),
