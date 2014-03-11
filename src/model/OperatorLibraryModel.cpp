@@ -1,10 +1,10 @@
 #include "model/OperatorLibraryModel.h"
 
 #include <QDebug>
+#include <QDirIterator>
 #include <QFileInfo>
 #include <QLibrary>
 #include <QSettings>
-#include <QtDebug>
 #include <stromx/cvcore/Cvcore.h>
 #include <stromx/cvimgproc/Cvimgproc.h>
 #include <stromx/cvhighgui/Cvhighgui.h>
@@ -14,6 +14,7 @@
 #include <stromx/runtime/Operator.h>
 #include <stromx/runtime/OperatorKernel.h>
 #include <iostream>
+#include "Config.h"
 #include "Exception.h"
 #include "data/OperatorData.h"
 
@@ -319,7 +320,12 @@ stromx::runtime::OperatorKernel* OperatorLibraryModel::newOperator(const Operato
 
 QStringList OperatorLibraryModel::findInstalledPackages()
 {
-    return QStringList();
+    QStringList packages;
+    QDirIterator it(STROMX_PACKAGE_DIR);
+    while (it.hasNext())
+        packages << it.next();
+       
+    return packages;
 }
 
 
