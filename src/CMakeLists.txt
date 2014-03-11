@@ -1,11 +1,11 @@
+configure_file (
+  "${CMAKE_CURRENT_SOURCE_DIR}/Config.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/Config.h"
+)
+
 if(BUILD_TESTS)
     add_subdirectory(test)
 endif()
-
-configure_file (
-  "${PROJECT_SOURCE_DIR}/src/Config.h.in"
-  "${PROJECT_SOURCE_DIR}/src/Config.h"
-)
 
 set(stromxstudio_SOURCES
     cmd/AddConnectionCmd.cpp
@@ -162,6 +162,7 @@ endif(WIN32)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_BINARY_DIR}/src
 )
 
 if(USE_QT5)

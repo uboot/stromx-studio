@@ -90,6 +90,7 @@ set(stromxstudiotest_SOURCES
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_BINARY_DIR}/src
 )
 
 if(USE_QT5)
