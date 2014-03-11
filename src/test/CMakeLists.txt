@@ -10,6 +10,7 @@ set(stromxstudiotest_HEADERS
     DataConverterTest.h
     ImageTest.h
     ObserverSchedulerTest.h
+    OperatorLibraryModelTest.h
     ParameterServerTest.h
     StreamModelTest.h
     ../ParameterServer.h
@@ -35,6 +36,7 @@ set(stromxstudiotest_SOURCES
     DataConverterTest.cpp
     ImageTest.cpp
     ObserverSchedulerTest.cpp
+    OperatorLibraryModelTest.cpp
     ParameterServerTest.cpp
     StreamModelTest.cpp
     ../cmd/AddConnectionCmd.cpp

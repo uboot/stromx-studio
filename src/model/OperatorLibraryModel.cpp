@@ -317,6 +317,12 @@ stromx::runtime::OperatorKernel* OperatorLibraryModel::newOperator(const Operato
     }
 }
 
+QStringList OperatorLibraryModel::findInstalledPackages()
+{
+    return QStringList();
+}
+
+
 
 
 

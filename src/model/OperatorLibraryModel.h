@@ -114,8 +114,14 @@ public:
      */
     stromx::runtime::OperatorKernel* newOperator(const OperatorData* data) const;
     
-    /**  Returns a reference to the stromx factory of the operator library. */
+    /** Returns a reference to the stromx factory of the operator library. */
     stromx::runtime::Factory* factory() const { return m_factory; }
+    
+    /** 
+     * Searches for stromx packages on the host and returns a list of the paths
+     * to the found package files.
+     */  
+    static QStringList findInstalledPackages();
     
 private:
     struct Item
