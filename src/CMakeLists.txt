@@ -72,6 +72,7 @@ set(stromxstudio_SOURCES
     widget/DataVisualizer.cpp
     widget/DocumentationWindow.cpp
     widget/ErrorListView.cpp
+    widget/FindPackagesDialog.cpp
     widget/GraphicsView.cpp
     widget/MainWindow.cpp
     widget/MatrixEditor.cpp
@@ -128,6 +129,7 @@ set(stromxstudio_HEADERS
     visualization/VisualizationWidget.h
     widget/DocumentationWindow.h
     widget/ErrorListView.h
+    widget/FindPackagesDialog.h
     widget/GraphicsView.h
     widget/MainWindow.h
     widget/MatrixEditor.h

@@ -49,6 +49,8 @@
 #include "model/ObserverTreeModel.h"
 #include "model/OperatorLibraryModel.h"
 #include "model/StreamModel.h"
+#include "widget/ErrorListView.h"
+#include "widget/FindPackagesDialog.h"
 #include "widget/MainWindow.h"
 #include "widget/ObserverTreeView.h"
 #include "widget/ObserverView.h"
@@ -60,7 +62,6 @@
 #include "widget/ThreadListView.h"
 #include "widget/DataVisualizer.h"
 #include "widget/DocumentationWindow.h"
-#include "widget/ErrorListView.h"
 
 MainWindow::MainWindow(QWidget *parent)
   : QMainWindow(parent),
@@ -244,6 +245,10 @@ void MainWindow::createActions()
     m_resetPackagesAct->setStatusTip(tr("Reset operator packages"));
     connect(m_resetPackagesAct, SIGNAL(triggered()), this, SLOT(resetPackages()));
 
+    m_findPackagesAct = new QAction(tr("&Find packages..."), this);
+    m_findPackagesAct->setStatusTip(tr("Find operator packages"));
+    connect(m_findPackagesAct, SIGNAL(triggered()), this, SLOT(findPackages()));
+
     m_quitAct = new QAction(tr("&Quit"), this);
     m_quitAct->setShortcuts(QKeySequence::Quit);
     m_quitAct->setStatusTip(tr("Quit the application"));
@@ -330,6 +335,7 @@ void MainWindow::createMenus()
     m_fileMenu->addAction(m_emptyRecentFilesAct);
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_loadPackagesAct);
+    m_fileMenu->addAction(m_findPackagesAct);
     m_fileMenu->addAction(m_resetPackagesAct);
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_quitAct);
@@ -1063,4 +1069,13 @@ void MainWindow::customEvent(QEvent* event)
         m_timeoutMessageIsActive = false;
     }
 }
+
+void MainWindow::findPackages()
+{
+    QFileInfoList packages = m_operatorLibraryView->operatorLibraryModel()->findInstalledPackages();
+    FindPackagesDialog dialog(packages, this);
+    
+    dialog.exec();
+}
+
 

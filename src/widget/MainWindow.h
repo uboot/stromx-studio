@@ -99,6 +99,9 @@ private slots:
     /** Unloads all dynamically loaded operator packages. */
     void resetPackages();
     
+    /** Displays a window with packages found on the system. */
+    void findPackages();
+    
     /** Displays a window containing information about this application. */
     void about();
     
@@ -224,6 +227,7 @@ private:
     QAction* m_closeAct;
     QAction* m_loadPackagesAct;
     QAction* m_resetPackagesAct;
+    QAction* m_findPackagesAct;
     QAction* m_undoAct;
     QAction* m_redoAct;
     QAction* m_quitAct;

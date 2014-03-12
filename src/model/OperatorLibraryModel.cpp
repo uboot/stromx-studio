@@ -321,7 +321,8 @@ stromx::runtime::OperatorKernel* OperatorLibraryModel::newOperator(const Operato
 
 QFileInfoList OperatorLibraryModel::findInstalledPackages()
 {
-
+    QStringList packages;
+    
 #ifdef UNIX
     QDir dir(STROMX_PACKAGE_DIR);
 #endif // UNIX
