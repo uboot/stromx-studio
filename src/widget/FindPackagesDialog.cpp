@@ -1,6 +1,13 @@
 #include "widget/FindPackagesDialog.h"
 
-FindPackagesDialog::FindPackagesDialog(const QFileInfoList & files, QWidget* parent): QDialog(parent)
+#include <QListWidget>
+
+FindPackagesDialog::FindPackagesDialog(QWidget* parent): QDialog(parent)
+{
+    QListWidget* listWidget = new QListWidget(this);
+}
+
+void FindPackagesDialog::setPackages(const QFileInfoList& packages)
 {
 
 }

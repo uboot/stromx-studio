@@ -43,6 +43,7 @@ class QAction;
 class QMenu;
 class DocumentationWindow;
 class ErrorListView;
+class FindPackagesDialog;
 class LimitUndoStack;
 class ObserverTreeView;
 class ObserverModel;
@@ -286,6 +287,7 @@ private:
     QList<ObserverWindow*> m_observerWindows;
     DocumentationWindow* m_docWindow;
     SettingsDialog* m_settingsDialog;
+    FindPackagesDialog* m_findPackagesDialog;
 };
 
 #endif // MAINWINDOW_H

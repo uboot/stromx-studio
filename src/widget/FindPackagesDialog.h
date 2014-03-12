@@ -31,8 +31,9 @@ class FindPackagesDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit FindPackagesDialog(const QFileInfoList & files, QWidget* parent = 0);
+    explicit FindPackagesDialog(QWidget* parent = 0);
     
+    void setPackages(const QFileInfoList & packages);
     const QFileInfoList & selectedPackages() const { return m_selectedPackages; }
     
 private:

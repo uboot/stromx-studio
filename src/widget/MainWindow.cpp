@@ -73,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_threadListView = new ThreadListView(this);
     m_docWindow = new DocumentationWindow(this);
     m_settingsDialog = new SettingsDialog(this);
+    m_findPackagesDialog = new FindPackagesDialog(this);
     
     QHBoxLayout* layout = new QHBoxLayout;
     layout->addWidget(m_threadListView);
@@ -1073,9 +1074,8 @@ void MainWindow::customEvent(QEvent* event)
 void MainWindow::findPackages()
 {
     QFileInfoList packages = m_operatorLibraryView->operatorLibraryModel()->findInstalledPackages();
-    FindPackagesDialog dialog(packages, this);
-    
-    dialog.exec();
+    m_findPackagesDialog->setPackages(packages);
+    m_findPackagesDialog->exec();
 }
 
 
