@@ -1,5 +1,6 @@
 #include "model/OperatorLibraryModel.h"
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QDirIterator>
 #include <QFileInfo>
@@ -318,14 +319,27 @@ stromx::runtime::OperatorKernel* OperatorLibraryModel::newOperator(const Operato
     }
 }
 
-QStringList OperatorLibraryModel::findInstalledPackages()
+QFileInfoList OperatorLibraryModel::findInstalledPackages()
 {
-    QStringList packages;
-    QDirIterator it(STROMX_PACKAGE_DIR);
-    while (it.hasNext())
-        packages << it.next();
-       
-    return packages;
+
+#ifdef UNIX
+    QDir dir(STROMX_PACKAGE_DIR);
+#endif // UNIX
+    
+#ifdef WIN32
+    QDir dir(QCoreApplication::applicationDirPath());
+#endif // WIN32
+    
+    QStringList filters;
+#ifdef UNIX
+    filters << "libstromx_*.so";
+#endif // UNIX
+    
+#ifdef WIN32
+    filters << "stromx_*.dll";
+#endif // WIN32
+    
+    return dir.entryInfoList(filters);
 }
 
 

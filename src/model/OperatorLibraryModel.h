@@ -21,6 +21,7 @@
 #define OPERATORLIBRARYMODEL_H
 
 #include <QAbstractItemModel>
+#include <QFileInfoList>
 #include <QMap>
 #include <QVector>
 #include <QStringList>
@@ -118,10 +119,10 @@ public:
     stromx::runtime::Factory* factory() const { return m_factory; }
     
     /** 
-     * Searches for stromx packages on the host and returns a list of the paths
-     * to the found package files.
+     * Searches for stromx packages on the host and returns a list of the found 
+     * package files.
      */  
-    static QStringList findInstalledPackages();
+    static QFileInfoList findInstalledPackages();
     
 private:
     struct Item

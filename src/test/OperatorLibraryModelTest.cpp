@@ -23,7 +23,9 @@
 
 void OperatorLibraryModelTest::testFindInstalledPackages()
 {
-    QStringList packages = OperatorLibraryModel::findInstalledPackages();
-    qDebug() << packages;
+    QFileInfoList packages = OperatorLibraryModel::findInstalledPackages();
+    
+    foreach(const QFileInfo & info, packages)
+        qDebug() << info.fileName();
 }
 
