@@ -34,10 +34,13 @@ public:
     explicit FindPackagesDialog(QWidget* parent = 0);
     
     void setPackages(const QFileInfoList & packages);
-    const QFileInfoList & selectedPackages() const { return m_selectedPackages; }
+    const QFileInfoList & selectedPackages() const;
+    
+    bool showOnStartup() const;
+    void setShowOnStartup();
     
 private:
-    QFileInfoList m_selectedPackages;
+    QFileInfoList m_packages;
 };
 
 #endif // FINDPACKAGESDIALOG_H
