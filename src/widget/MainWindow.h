@@ -68,6 +68,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     
+public slots:
+    /** Displays a window with packages found on the system. */
+    void findPackages();
+    
 protected:
     virtual void closeEvent(QCloseEvent* event);
     virtual void customEvent(QEvent* event);
@@ -99,9 +103,6 @@ private slots:
     
     /** Unloads all dynamically loaded operator packages. */
     void resetPackages();
-    
-    /** Displays a window with packages found on the system. */
-    void findPackages();
     
     /** Displays a window containing information about this application. */
     void about();

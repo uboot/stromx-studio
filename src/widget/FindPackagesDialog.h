@@ -23,6 +23,9 @@
 #include <QDialog>
 #include <QFileInfoList>
 
+class QCheckBox;
+class QListWidget;
+
 /**
  * \brief Dialog which displays a list of packages.
  */
@@ -34,13 +37,18 @@ public:
     explicit FindPackagesDialog(QWidget* parent = 0);
     
     void setPackages(const QFileInfoList & packages);
-    const QFileInfoList & selectedPackages() const;
+    const QFileInfoList selectedPackages() const;
     
     bool showOnStartup() const;
-    void setShowOnStartup();
+    void setShowOnStartup(const bool value);
+    
+private slots:
+    void selectAll();
     
 private:
     QFileInfoList m_packages;
+    QListWidget* m_packageListWidget;
+    QCheckBox* m_showOnStartupCheckbox;
 };
 
 #endif // FINDPACKAGESDIALOG_H

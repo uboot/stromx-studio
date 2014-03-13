@@ -17,8 +17,9 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QtGui/QApplication>
-#include <QtGui/QSplashScreen>
+#include <QApplication>
+#include <QSplashScreen>
+#include <QSettings>
 #include <stromx/runtime/Exception.h>
 #include <fstream>
 #include "widget/MainWindow.h"
@@ -37,6 +38,11 @@ int main(int argc, char *argv[])
     
     MainWindow w;
     w.show();
+    
+    QSettings settings("stromx", "stromx-studio");
+    bool showOnStartup = settings.value("showFindPackagesOnStartup", true).toBool();
+    if (showOnStartup)
+        w.findPackages();
 
     try
     {

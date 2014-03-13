@@ -178,10 +178,6 @@ if(USE_QT5)
     target_link_libraries(stromx-studio
         ${CMAKE_DL_LIBS}
         ${stromx_RUNTIME_LIB}
-        ${stromx_CVCORE_LIB}
-        ${stromx_CVIMGPROC_LIB}
-        ${stromx_CVHIGHGUI_LIB}
-        ${stromx_CVSUPPORT_LIB}
     )
 
     qt5_use_modules(stromx-studio Widgets Concurrent)

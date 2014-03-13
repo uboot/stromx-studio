@@ -35,6 +35,7 @@
 #include <QtGlobal>
 #include <iostream>
 #include <memory>
+#include <boost/concept_check.hpp>
 #include <stromx/runtime/DirectoryFileInput.h>
 #include <stromx/runtime/DirectoryFileOutput.h>
 #include <stromx/runtime/Exception.h>
@@ -1075,7 +1076,25 @@ void MainWindow::findPackages()
 {
     QFileInfoList packages = m_operatorLibraryView->operatorLibraryModel()->findInstalledPackages();
     m_findPackagesDialog->setPackages(packages);
-    m_findPackagesDialog->exec();
+    QSettings settings("stromx", "stromx-studio");
+    bool showOnStartup = settings.value("showFindPackagesOnStartup", true).toBool();
+    m_findPackagesDialog->setShowOnStartup(showOnStartup);
+    if (m_findPackagesDialog->exec() == QDialog::Accepted)
+    {
+        foreach (const QFileInfo & info, m_findPackagesDialog->selectedPackages())
+        {
+            QString file = info.absoluteFilePath();
+            try
+            {
+                m_operatorLibraryView->operatorLibraryModel()->loadPackage(file);
+            }
+            catch(LoadPackageFailed&)
+            {
+                std::cout << "Failed to load '" << file.toStdString() << "'" << std::endl;
+            }
+        }
+    }
+    settings.setValue("showFindPackagesOnStartup", m_findPackagesDialog->showOnStartup());
 }
 
 
