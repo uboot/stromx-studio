@@ -35,7 +35,6 @@
 #include <QtGlobal>
 #include <iostream>
 #include <memory>
-#include <boost/concept_check.hpp>
 #include <stromx/runtime/DirectoryFileInput.h>
 #include <stromx/runtime/DirectoryFileOutput.h>
 #include <stromx/runtime/Exception.h>
