@@ -14,79 +14,79 @@
         </Directory>
 
         <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
-            <Component Id="boost_date_time" Guid="">
+            <Component Id="boost_date_time" Guid="25c058ce-fe44-4b97-807f-17b9f76a972a">
                 <File Id="boost_date_time" Source="boost_date_time-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="boost_filesystem" Guid="">
+            <Component Id="boost_filesystem" Guid="bf248d01-9c2e-4187-aba4-8640f057c473">
                 <File Id="boost_filesystem" Source="boost_filesystem-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="boost_regex" Guid="">
+            <Component Id="boost_regex" Guid="4581a2e9-70b5-461d-9a75-21f929fca21c">
                 <File Id="boost_regex" Source="boost_regex-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="boost_system" Guid="">
+            <Component Id="boost_system" Guid="705329ad-aabc-4859-a464-54f366a577b9">
                 <File Id="boost_system" Source="boost_system-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="boost_thread" Guid="">
+            <Component Id="boost_thread" Guid="9b01f8c3-4161-4fa6-b659-f6fcc04b1753">
                 <File Id="boost_thread" Source="boost_thread-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="msvcp100" Guid="">
+            <Component Id="msvcp100" Guid="7feea3bb-67e0-49c8-ae0e-b83dffb88e15">
                 <File Id="msvcp100" Source="msvcp100.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="msvcr100" Guid="">
+            <Component Id="msvcr100" Guid="4b8027e2-6820-47ac-b17b-097f0e3d9ea1">
                 <File Id="msvcr100" Source="msvcr100.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="opencv_core" Guid="">
+            <Component Id="opencv_core" Guid="e674967b-3a00-4b12-850b-5676697c4af0">
                 <File Id="opencv_core" Source="opencv_core231.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="opencv_highgui" Guid="">
+            <Component Id="opencv_highgui" Guid="0583129c-3e8b-4222-96e8-00cd209020a9">
                 <File Id="opencv_highgui" Source="opencv_highgui231.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="opencv_imgproc" Guid="">
+            <Component Id="opencv_imgproc" Guid="a35412c7-5742-42ec-a4c1-04efecdb3c00">
                 <File Id="opencv_imgproc" Source="opencv_imgproc231.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="QtCore4" Guid="">
+            <Component Id="QtCore4" Guid="a71e7074-dc4c-4b90-a9d3-4e06ac985fbe">
                 <File Id="QtCore4" Source="QtCore4.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="QtGui4" Guid="">
+            <Component Id="QtGui4" Guid="212eb6f4-351c-4775-a0dd-90f6561494cc">
                 <File Id="QtGui4" Source="QtGui4.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="stromx_cvcore" Guid="">
+            <Component Id="stromx_cvcore" Guid="bd48db77-b657-4873-850c-9a7a523477a3">
                 <File Id="stromx_cvcore" Source="stromx_cvcore.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="stromx_cvimgproc" Guid="">
+            <Component Id="stromx_cvimgproc" Guid="a5a427df-4908-4458-90e3-ef8cb2388a34">
                 <File Id="stromx_cvimgproc" Source="stromx_cvimgproc.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="stromx_cvsupport" Guid="">
+            <Component Id="stromx_cvsupport" Guid="dc24d7b6-47b1-49fe-8191-b6fbd67fa573">
                 <File Id="stromx_cvsupport" Source="stromx_cvsupport.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="stromx_test" Guid="">
+            <Component Id="stromx_test" Guid="228b64f0-185c-48ea-887c-53342dc6c3fc">
                 <File Id="stromx_test" Source="stromx_test.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="stromx_runtime" Guid="">
+            <Component Id="stromx_runtime" Guid="c2992278-69b8-4c9a-9586-8021227f0c88">
                 <File Id="stromx_runtime" Source="stromx_runtime.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="camera" Guid="">
+            <Component Id="camera" Guid="32931bc4-f424-452f-84d6-821c1775992b">
                 <File Id="camera" Source="camera.stromx" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="parallel" Guid="">
+            <Component Id="parallel" Guid="615445b2-aa2d-4a82-aae5-98dacee58d31">
                 <File Id="parallel" Source="parallel.stromx" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="hough" Guid="">
+            <Component Id="hough" Guid="2617138b-5066-407c-8184-99b1178ee73b">
                 <File Id="hough" Source="hough.stromx" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="webcamera" Guid="">
+            <Component Id="webcamera" Guid="dad764fd-4afc-4795-a0bb-13e03dd5a3c3">
                 <File Id="webcamera" Source="webcamera.stromx" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="stromx_studio" Guid="">
+            <Component Id="stromx_studio" Guid="5e6974ab-a8cc-43c0-a1a8-354d4d886301">
                 <File Id="stromx_studio" Source="stromx-studio.exe" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="xerces_c" Guid="">
+            <Component Id="xerces_c" Guid="1e691a60-994a-4c0c-be95-8b54e2cd1509">
                 <File Id="xerces_c" Source="xerces-c_3_1.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="zip" Guid="">
+            <Component Id="zip" Guid="f5569c83-52ad-41b9-a3cc-f6193c5ea203">
                 <File Id="zip" Source="zip.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="zlib" Guid="">
+            <Component Id="zlib" Guid="53db0bde-f0ca-40f1-8efc-a00a44ffe369">
                 <File Id="zlib" Source="zlib1.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
         </DirectoryRef>
@@ -102,6 +102,7 @@
                           Target="[System64Folder]msiexec.exe"
                           Arguments="/x [ProductCode]"/>
                 <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+                <RemoveFolder Id="APPLICATIONROOTDIRECTORY" On="uninstall"/>
                 <RegistryValue Root="HKCU" Key="Software\Microsoft\stromx" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
             </Component>
         </DirectoryRef>
