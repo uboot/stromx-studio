@@ -59,8 +59,8 @@
             <Component Id="stromx_cvsupport" Guid="">
                 <File Id="stromx_cvsupport" Source="stromx_cvsupport.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
-            <Component Id="stromx_example" Guid="">
-                <File Id="stromx_example" Source="stromx_example.dll" KeyPath="yes" Checksum="yes"/>
+            <Component Id="stromx_test" Guid="">
+                <File Id="stromx_test" Source="stromx_test.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="stromx_runtime" Guid="">
                 <File Id="stromx_runtime" Source="stromx_runtime.dll" KeyPath="yes" Checksum="yes"/>
@@ -122,7 +122,7 @@
             <ComponentRef Id="stromx_cvcore" />
             <ComponentRef Id="stromx_cvimgproc" />
             <ComponentRef Id="stromx_cvsupport" />
-            <ComponentRef Id="stromx_example" />
+            <ComponentRef Id="stromx_test" />
             <ComponentRef Id="stromx_runtime" />
             <ComponentRef Id="stromx_studio" />
             <ComponentRef Id="camera" />
