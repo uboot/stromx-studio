@@ -262,6 +262,20 @@ stromx::runtime::DataRef DataConverter::toStromxData(const QVariant& variant, co
             return stromx::runtime::DataRef(new stromx::runtime::TriggerData());
     }
     
+    if(param.variant().isVariant(stromx::runtime::DataVariant::ENUM))
+    {
+        if(variant.type() == QVariant::Int)
+        {  
+            // find the description whose value equals the input data
+            int index = variant.toInt();
+            if((unsigned int)(index) < param.descriptions().size())
+            {    
+                unsigned int value = param.descriptions()[index].value();
+                return stromx::runtime::DataRef(new stromx::runtime::Enum(value));
+            }
+        }
+    }
+    
     if(param.variant().isVariant(stromx::runtime::DataVariant::BOOL))
     {
         if(variant.type() == QVariant::Int)
@@ -304,20 +318,6 @@ stromx::runtime::DataRef DataConverter::toStromxData(const QVariant& variant, co
             return stromx::runtime::DataRef(new stromx::runtime::UInt32(variant.toInt()));
     }
     
-    if(param.variant().isVariant(stromx::runtime::DataVariant::ENUM))
-    {
-        if(variant.type() == QVariant::Int)
-        {  
-            // find the description whose value equals the input data
-            int index = variant.toInt();
-            if((unsigned int)(index) < param.descriptions().size())
-            {    
-                unsigned int value = param.descriptions()[index].value();
-                return stromx::runtime::DataRef(new stromx::runtime::Enum(value));
-            }
-        }
-    }
-    
     if(param.variant().isVariant(stromx::runtime::DataVariant::FLOAT_32))
     {
         if(variant.type() == QVariant::Double)
@@ -328,6 +328,12 @@ stromx::runtime::DataRef DataConverter::toStromxData(const QVariant& variant, co
     {
         if(variant.type() == QVariant::Double)
             return stromx::runtime::DataRef(new stromx::runtime::Float64(variant.toDouble()));
+    }
+    
+    if(param.variant().isVariant(stromx::runtime::DataVariant::STRING))
+    {
+        if(variant.type() == QVariant::String)
+            return stromx::runtime::DataRef(new stromx::runtime::String(variant.toString().toStdString()));
     }
     
     if(param.variant().isVariant(stromx::runtime::DataVariant::IMAGE))
