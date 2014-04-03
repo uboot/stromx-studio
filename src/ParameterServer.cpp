@@ -56,7 +56,9 @@ const QVariant ParameterServer::getParameter(unsigned int id, int role)
             // If the parameter should be edited it is important to return  a
             // QVariant of the correct type to make sure the appropriate editor
             // is opened. Here we simply return the most recently cached value.
-            return DataConverter::toQVariant(m_cache[id].value, param, role);
+            stromx::runtime::DataRef value = m_cache[id].value;
+            if (! value.isNull())
+                return DataConverter::toQVariant(value, param, role);
         }
     }
     
