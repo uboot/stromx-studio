@@ -15,8 +15,8 @@ ErrorData::ErrorData(const stromx::runtime::OperatorError& exception, Type type)
   : m_time(QDateTime::currentDateTime()),
     m_type(type)
 {
-    QString opType = QString("%1/%2").arg(QString::fromStdString(exception.type()))
-                                     .arg(QString::fromStdString(exception.package()));
+    QString opType = QString("%1::%2").arg(QString::fromStdString(exception.package()))
+                                      .arg(QString::fromStdString(exception.type()));
                                      
     QString errorType;
     switch(type)
@@ -47,7 +47,7 @@ ErrorData::ErrorData(const stromx::runtime::OperatorError& exception, Type type)
     QString opName = exception.name().empty() ? QString("") :
                      QApplication::tr("\"%1\" ").arg(QString::fromStdString(exception.name()));
     
-    m_title = QApplication::tr("%1 in operator %2of type %3").arg(errorType).arg(opName).arg(opType);
+    m_title = QApplication::tr("%1 in operator %2 of type %3").arg(errorType).arg(opName).arg(opType);
     
     m_description = QString::fromStdString(exception.message());
 }
