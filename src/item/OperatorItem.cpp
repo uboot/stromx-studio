@@ -255,6 +255,7 @@ void OperatorItem::setConnectorOccupied(OperatorModel::ConnectorType type, unsig
 void OperatorItem::setName(const QString& value)
 {
     m_label->setPlainText(value);
+    m_label->setPos(-m_label->boundingRect().width()/2, SIZE/2 + LABEL_OFFSET);
 }
 
 void OperatorItem::resetAllConnectors()
