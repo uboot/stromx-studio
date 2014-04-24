@@ -128,4 +128,3 @@ else()
     )
 endif()
 
-add_dependencies(stromx_studio_test stromx-studio)
