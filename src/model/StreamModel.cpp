@@ -244,7 +244,7 @@ void StreamModel::initializeSubModels()
     m_threadListModel = new ThreadListModel(this);
     m_observerModel = new ObserverTreeModel(m_undoStack, this);
     
-    connect(m_joinStreamWatcher, SIGNAL(finished()), this, SLOT(join()));
+    connect(m_joinStreamWatcher, SIGNAL(finished()), this, SIGNAL(streamJoined()));
 }
 
 StreamModel::~StreamModel()
@@ -909,10 +909,9 @@ bool StreamModel::stop()
     return true;
 }
 
-void StreamModel::join()
+bool StreamModel::join()
 {
-    // inform others that the stream has finished
-    emit streamJoined();
+    m_joinStreamWatcher->waitForFinished();
 }
 
 bool StreamModel::isActive() const

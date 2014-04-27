@@ -157,6 +157,11 @@ void MainWindow::setModel(StreamModel* model)
         // stop the old stream
         stop();
         
+        // Wait for the stream to finish. This is important because otherwise
+        // the asynchronous operation which waits for the join would be still 
+        // active when deleting the model below.
+        m_model->join();
+        
         // call join to update the stream controls
         join();
     }

@@ -199,6 +199,9 @@ public slots:
     /** Stops the stromx stream. Returns true if successful. */
     bool stop();
     
+    /** Waits for the stream to join. Returns true if successful. */
+    bool join();
+    
     /** 
      * Activates or deactivates the slow processing mode. If slow processing
      * is activated the execution of the stream is delayed at each operator
@@ -213,9 +216,6 @@ public slots:
     void setAccessTimeout(int timeout);
     
 private slots:
-    /** Joins the stromx stream. */
-    void join();
-    
     /** Sends the parameter error to the error observer. */
     void handleParameterError(const ErrorData & data);
     
