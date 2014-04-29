@@ -912,6 +912,7 @@ bool StreamModel::stop()
 bool StreamModel::join()
 {
     m_joinStreamWatcher->waitForFinished();
+    return true;
 }
 
 bool StreamModel::isActive() const

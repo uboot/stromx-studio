@@ -158,10 +158,6 @@ endif(WIN32)
 #set(stromxgui_FORMS mainwindow.ui)
 set(stromxstudio_RESOURCES stromx-studio.qrc)
 
-if(WIN32)
-    set(QT_USE_QTMAIN TRUE)
-endif(WIN32)
-
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_BINARY_DIR}/src
@@ -178,6 +174,7 @@ if(USE_QT5)
     target_link_libraries(stromx-studio
         ${CMAKE_DL_LIBS}
         ${stromx_RUNTIME_LIB}
+        ${Qt5Core_QTMAIN_LIBRARIES} 
     )
 
     qt5_use_modules(stromx-studio Widgets Concurrent)
@@ -196,12 +193,15 @@ else()
         ${stromxstudio_RESOURCES_RCC}
     )
 
-
     target_link_libraries(stromx-studio
         ${QT_LIBRARIES}
         ${CMAKE_DL_LIBS}
         ${stromx_RUNTIME_LIB}
     )
+
+    if(WIN32)
+        set(QT_USE_QTMAIN TRUE)
+    endif(WIN32)
 endif()
 
 if(WIN32)

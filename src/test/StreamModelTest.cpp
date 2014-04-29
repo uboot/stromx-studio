@@ -2,7 +2,10 @@
 
 #include <QtTest/QtTest>
 #include <QUndoStack>
+#include <stromx/cvsupport/Cvsupport.h>
+#include <stromx/cvimgproc/Cvimgproc.h>
 #include <stromx/runtime/DirectoryFileInput.h>
+#include <stromx/runtime/Factory.h>
 #include <stromx/runtime/ZipFileInput.h>
 
 #include "Exception.h"
@@ -26,6 +29,10 @@ StreamModelTest::StreamModelTest()
     catch(LoadPackageFailed&)
     {
     }
+    
+    stromxCvsupportRegister(*(m_operatorLibraryModel->factory()));
+    stromxCvimgprocRegister(*(m_operatorLibraryModel->factory()));
+    
 }
 
 void StreamModelTest::testDefaultConstructor()
