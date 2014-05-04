@@ -5,7 +5,7 @@
 #include <stromx/runtime/Operator.h>
 #include <stromx/runtime/OperatorException.h>
 #include <stromx/runtime/Parameter.h>
-#include <stromx/runtime/Trigger.h>
+#include <stromx/runtime/TriggerData.h>
 #include "Common.h"
 #include "ConnectorObserver.h"
 #include "DataConverter.h"

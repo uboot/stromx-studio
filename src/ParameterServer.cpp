@@ -5,7 +5,7 @@
 #include "task/GetParameterTask.h"
 #include "task/SetParameterTask.h"
 #include <stromx/runtime/Operator.h>
-#include <stromx/runtime/Trigger.h>
+#include <stromx/runtime/TriggerData.h>
 #include <stromx/runtime/OperatorException.h>
 
 ParameterServer::ParameterServer(stromx::runtime::Operator* op, QUndoStack* undoStack, QObject* parent)
@@ -79,7 +79,7 @@ bool ParameterServer::setParameter(unsigned int id, const QVariant& value)
         // test if this data is trigger data
         try
         {
-            stromx::runtime::data_cast<stromx::runtime::Trigger>(stromxData);
+            stromx::runtime::data_cast<stromx::runtime::TriggerData>(stromxData);
             
             // triggers are set without informing the undo stack (they can not 
             // be undone)
