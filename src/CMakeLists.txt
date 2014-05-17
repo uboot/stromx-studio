@@ -155,7 +155,6 @@ if(WIN32)
     )
 endif(WIN32)
 
-#set(stromxgui_FORMS mainwindow.ui)
 set(stromxstudio_RESOURCES stromx-studio.qrc)
 
 include_directories(
