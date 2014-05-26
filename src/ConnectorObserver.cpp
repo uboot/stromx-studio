@@ -18,7 +18,9 @@ ConnectorObserver::ConnectorObserver(QObject* receiver)
 {
 }
 
-void ConnectorObserver::observe(const stromx::runtime::Connector& connector, const stromx::runtime::DataContainer& data) const
+void ConnectorObserver::observe(const stromx::runtime::Connector& connector,
+                                const stromx::runtime::DataContainer& data,
+                                const stromx::runtime::Thread* const /*thread*/) const
 {
     // First check if there have been too many events recently. If this is the
     // case return and give the GUI the chance to handle the remaining events.

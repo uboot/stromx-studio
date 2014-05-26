@@ -43,7 +43,8 @@ public:
     ConnectorObserver(QObject* receiver);
         
     virtual void observe(const stromx::runtime::Connector &connector,
-                         const stromx::runtime::DataContainer &data) const;
+                         const stromx::runtime::DataContainer &data,
+                         const stromx::runtime::Thread* const thread) const;
                          
     void setObserveData(bool observe);
                          
