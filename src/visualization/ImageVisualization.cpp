@@ -23,8 +23,8 @@ template <class data_t>
             
             // check if the value size of the matrix matches the size of the template
             // parameter
-            data_t maximum;
-            data_t minimum;
+            data_t maximum = 0;
+            data_t minimum = 0;
             if(matrix.valueSize() == sizeof(data_t))
             {
                 // loop over the rows of the matrix and search for maximum value

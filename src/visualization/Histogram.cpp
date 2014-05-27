@@ -31,7 +31,7 @@ namespace
             if(! (matrix.valueSize() == sizeof(data_t) && matrix.cols() == 1))
                 return items;
             
-            data_t maximum;
+            data_t maximum = 0;
             const uint8_t* rowPtr = matrix.data();
             for(unsigned int i = 0; i < matrix.rows(); ++i)
             {
