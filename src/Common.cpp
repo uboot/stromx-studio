@@ -38,3 +38,8 @@ QStringList & visualizationLabels()
     
     return gVisualizationLabels;
 }
+
+QString fromStromxTitle(const std::string& str)
+{
+    return QString::fromUtf8(str.c_str());
+}

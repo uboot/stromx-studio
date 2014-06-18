@@ -130,4 +130,10 @@ const QMap<QString, QColor> & colorTable();
 */
 QStringList & visualizationLabels();
 
+/** 
+ * Stromx title members (title of parameters, connectors, etc.) are encoded as
+ * unicode. This function converts \c str from UTF-8 to QString.
+ */
+QString fromStromxTitle(const std::string & str);
+
 #endif // COMMON_H

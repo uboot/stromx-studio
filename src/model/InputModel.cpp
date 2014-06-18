@@ -26,7 +26,7 @@ void InputModel::updateOperatorName(const QString&)
 
 QString InputModel::docTitle() const
 {
-    return QString::fromStdString(m_op->op()->info().input(m_id).title());
+    return fromStromxTitle(m_op->op()->info().input(m_id).title());
 }
 
 void InputModel::setVisualizationState(const VisualizationState& state)

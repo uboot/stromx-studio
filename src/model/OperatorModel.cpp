@@ -241,7 +241,7 @@ QVariant OperatorModel::data(const QModelIndex& index, int role) const
     case NAME:
         return QString::fromStdString(m_op->name());
     case PARAMETER_NAME:
-        return QVariant(QString::fromStdString(param->title()));
+        return QVariant(fromStromxTitle(param->title()));
     case PARAMETER_VALUE:
         return m_server->getParameter(param->id(), role);
     case PARAMETER_SETTING:

@@ -146,7 +146,7 @@ Use <b>File -> Load Libraries...</b> to load additional libraries.")
         qWarning() << e.what();
         QString error = tr("Failed to set parameter <i>%1</i> ('%2') of operator of type <i>%3</i> in package <i>%4</i>.")
                         .arg(QString("%1").arg(e.id()),
-                             QString::fromStdString(e.title()),
+                             fromStromxTitle(e.title()),
                              QString::fromStdString(e.type()),
                              QString::fromStdString(e.package()));
         throw ReadStreamFailed(error);

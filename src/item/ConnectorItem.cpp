@@ -4,6 +4,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QToolTip>
 #include <stromx/runtime/Operator.h>
+#include "Common.h"
 #include "StreamEditorScene.h"
 #include "item/ArrowItem.h"
 #include "item/ConnectionItem.h"
@@ -174,13 +175,13 @@ QString ConnectorItem::connectorToolTip() const
     QString variantTitle;
     if(connectorType() == INPUT)
     {
-        connectorTitle = QString::fromStdString(info.input(m_id).title());
-        variantTitle = QString::fromStdString(info.input(m_id).variant().title());
+        connectorTitle = fromStromxTitle(info.input(m_id).title());
+        variantTitle = fromStromxTitle(info.input(m_id).variant().title());
     }
     else
     {
-        connectorTitle = QString::fromStdString(info.output(m_id).title());
-        variantTitle = QString::fromStdString(info.output(m_id).variant().title());
+        connectorTitle = fromStromxTitle(info.output(m_id).title());
+        variantTitle = fromStromxTitle(info.output(m_id).variant().title());
     }
     
     return QString("%1 (%2)").arg(connectorTitle).arg(variantTitle);
