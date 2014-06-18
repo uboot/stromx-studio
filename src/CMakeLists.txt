@@ -178,6 +178,9 @@ if(USE_QT5)
 
     qt5_use_modules(stromx-studio Widgets Concurrent)
 else()
+    if(WIN32)
+        set(QT_USE_QTMAIN TRUE)
+    endif(WIN32)
     include(${QT_USE_FILE})
     add_definitions(${QT_DEFINITIONS})
 
@@ -197,10 +200,6 @@ else()
         ${CMAKE_DL_LIBS}
         ${stromx_RUNTIME_LIB}
     )
-
-    if(WIN32)
-        set(QT_USE_QTMAIN TRUE)
-    endif(WIN32)
 endif()
 
 if(WIN32)

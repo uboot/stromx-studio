@@ -14,20 +14,29 @@
         </Directory>
 
         <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
+            <Component Id="boost_chrono" Guid="37C8EA94-BDAE-40F2-8D16-85BF3B063283">
+                <File Id="boost_chrono" Source="boost_chrono-vc100-mt-1_55.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
             <Component Id="boost_date_time" Guid="25c058ce-fe44-4b97-807f-17b9f76a972a">
-                <File Id="boost_date_time" Source="boost_date_time-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="boost_date_time" Source="boost_date_time-vc100-mt-1_55.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="boost_filesystem" Guid="bf248d01-9c2e-4187-aba4-8640f057c473">
-                <File Id="boost_filesystem" Source="boost_filesystem-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="boost_filesystem" Source="boost_filesystem-vc100-mt-1_55.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="boost_locale" Guid="45C8881B-0E29-4030-BC2A-3FC6A7565A39">
+                <File Id="boost_locale" Source="boost_locale-vc100-mt-1_55.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="boost_regex" Guid="4581a2e9-70b5-461d-9a75-21f929fca21c">
-                <File Id="boost_regex" Source="boost_regex-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="boost_regex" Source="boost_regex-vc100-mt-1_55.dll" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="boost_serialization" Guid="85F0612A-7CF7-42F9-9B1C-E166B2024305">
+                <File Id="boost_serialization" Source="boost_serialization-vc100-mt-1_55.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="boost_system" Guid="705329ad-aabc-4859-a464-54f366a577b9">
-                <File Id="boost_system" Source="boost_system-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="boost_system" Source="boost_system-vc100-mt-1_55.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="boost_thread" Guid="9b01f8c3-4161-4fa6-b659-f6fcc04b1753">
-                <File Id="boost_thread" Source="boost_thread-vc100-mt-1_47.dll" KeyPath="yes" Checksum="yes"/>
+                <File Id="boost_thread" Source="boost_thread-vc100-mt-1_55.dll" KeyPath="yes" Checksum="yes"/>
             </Component>
             <Component Id="msvcp100" Guid="7feea3bb-67e0-49c8-ae0e-b83dffb88e15">
                 <File Id="msvcp100" Source="msvcp100.dll" KeyPath="yes" Checksum="yes"/>
@@ -108,9 +117,12 @@
         </DirectoryRef>
 
         <Feature Id="stromx_studio" Title="stromx-studio" Level="1">
+            <ComponentRef Id="boost_chrono" />
             <ComponentRef Id="boost_date_time" />
             <ComponentRef Id="boost_filesystem" />
+            <ComponentRef Id="boost_locale" />
             <ComponentRef Id="boost_regex" />
+            <ComponentRef Id="boost_serialization" />
             <ComponentRef Id="boost_system" />
             <ComponentRef Id="boost_thread" />
             <ComponentRef Id="msvcp100" />
