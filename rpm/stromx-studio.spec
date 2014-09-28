@@ -17,7 +17,7 @@
 # norootforbuild
 
 Name:           stromx-studio
-Version:
+Version:        0.3.1
 Release:
 Summary:        A graphical user interface to edit stromx streams
 Group:          Development/Tools/Other
