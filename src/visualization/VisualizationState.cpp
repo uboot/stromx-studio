@@ -1,5 +1,9 @@
 #include "VisualizationState.h"
 
+#ifndef STROMX_STUDIO_QT4
+#include <QJsonObject>
+#endif
+
 #include <QDataStream>
 
 VisualizationState::VisualizationState()
@@ -72,6 +76,41 @@ QDataStream& operator>>(QDataStream& stream, VisualizationState & state)
     
     return stream;
 }
+
+#ifndef STROMX_STUDIO_QT4
+void VisualizationState::write(QJsonObject & json) const
+{    
+    json["active"] = m_active;
+    json["visualization"] = m_visualization;
+    
+    // loop over all visualizations
+    QJsonObject properties;
+    QMapIterator<QString, QVariant> i(m_properties[m_visualization]);
+    while (i.hasNext())
+    {
+        i.next();
+        properties[i.key()] = QJsonValue::fromVariant(i.value());
+    }
+    
+    json["properties"] = properties;
+}
+
+void VisualizationState::read(const QJsonObject & json)
+{
+    m_active = json["active"].toBool();
+    m_visualization = json["visualization"].toString();
+    m_properties.clear();
+    m_properties[m_visualization] = Properties();
+    
+    QVariantMap properties = json["properties"].toObject().toVariantMap();
+    QMapIterator<QString, QVariant> i(properties);
+    QVariantMap& inputProperties = m_properties[m_visualization];
+    while (i.hasNext())
+    {
+        inputProperties[i.key()] = i.value();
+    }
+}
+#endif
 
 bool operator==(const VisualizationState& lhs, const VisualizationState& rhs)
 {

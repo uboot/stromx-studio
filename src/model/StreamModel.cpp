@@ -1,5 +1,10 @@
 #include "model/StreamModel.h"
 
+#ifndef STROMX_STUDIO_QT4
+#include <QJsonArray>
+#include <QJsonDocument>
+#endif
+
 #include <QDir>
 #include <QFileInfo>
 #include <QFutureWatcher>
@@ -236,6 +241,42 @@ void StreamModel::readStudioData(stromx::runtime::FileInput & input, const QStri
         throw ReadStudioDataFailed(error);
     }
 }
+
+void StreamModel::readObserverData(stromx::runtime::FileInput & input)
+{ 
+    try
+    {
+        input.initialize("", "views.json");
+        input.openFile(stromx::runtime::InputProvider::TEXT);
+        
+        // read all data from the input stream
+        QByteArray viewData;
+        int dataSize = 0;
+        const int CHUNK_SIZE = 10;
+        while(! input.file().eof())
+        {
+            viewData.resize(viewData.size() + CHUNK_SIZE);
+            char* dataPtr = viewData.data() + dataSize;
+            input.file().read(dataPtr, CHUNK_SIZE);
+            dataSize += (int)(input.file().gcount());
+        }
+        viewData.resize(dataSize);
+        
+#ifndef STROMX_STUDIO_QT4
+        QJsonDocument document = QJsonDocument::fromJson(viewData);
+        m_observerModel->read(document.array());
+#endif
+    }
+    catch(stromx::runtime::FileAccessFailed& e)
+    {
+        qWarning() << e.what();
+        QString error = e.container().empty() 
+                        ? tr("The file %1 could not be opened for reading.").arg(QString::fromStdString(e.filename()))
+                        : tr("The file %1 in %2 could not be opened for reading.").arg(QString::fromStdString(e.filename()),
+                                                                                      QString::fromStdString(e.container()));
+        throw ReadObserverDataFailed(error);
+    }
+} 
 
 void StreamModel::initializeSubModels()
 {
@@ -576,6 +617,17 @@ void StreamModel::write(stromx::runtime::FileOutput & output, const QString& bas
         output.initialize(basename.toStdString());
         output.openFile("studio", stromx::runtime::OutputProvider::BINARY);
         output.file().write(modelData.data(), modelData.size());
+        
+#ifndef STROMX_STUDIO_QT4
+        QJsonArray views;
+        m_observerModel->write(views);
+        QJsonDocument document(views);
+        
+        QByteArray viewData = document.toJson();
+        output.initialize("views");
+        output.openFile("json", stromx::runtime::OutputProvider::TEXT);
+        output.file().write(viewData.data(), viewData.size());
+#endif
     }
     catch(stromx::runtime::FileAccessFailed& e)
     {

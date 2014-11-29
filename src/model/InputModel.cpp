@@ -1,5 +1,9 @@
 #include "model/InputModel.h"
 
+#ifndef STROMX_STUDIO_QT4
+#include <QJsonObject>
+#endif
+
 #include <stromx/runtime/Operator.h>
 
 #include "AbstractDataVisualizer.h"
@@ -106,6 +110,17 @@ QDataStream& readVersion01(QDataStream& stream, InputModel* model)
     return stream;
 }
 
+#ifndef STROMX_STUDIO_QT4
+void InputModel::write(QJsonObject & json) const
+{
+    m_visualizationState.write(json);
+}
+
+void InputModel::read(const QJsonObject & json)
+{
+    m_visualizationState.read(json);
+}
+#endif
 
 
 

@@ -47,6 +47,12 @@ public:
     ReadStreamFailed(const QString & message = "") : Exception(message) {}
 };
 
+class ReadObserverDataFailed : public Exception
+{
+public:
+    ReadObserverDataFailed(const QString & message = "") : Exception(message) {}
+};
+
 class ReadStudioDataFailed : public Exception
 {
 public:

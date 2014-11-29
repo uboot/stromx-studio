@@ -43,7 +43,7 @@ OperatorLibraryModel::OperatorLibraryModel(QObject* parent)
         // try to load the package and ignore any failures
         try
         {
-            loadPackage(file);
+            //loadPackage(file);
         }
         catch(LoadPackageFailed & e)
         {

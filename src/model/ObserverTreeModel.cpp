@@ -1,5 +1,10 @@
 #include "model/ObserverTreeModel.h"
 
+#ifndef STROMX_STUDIO_QT4
+#include <QJsonArray>
+#include <QJsonObject>
+#endif
+
 #include <QStringList>
 #include "Common.h"
 #include "cmd/InsertInputCmd.h"
@@ -226,7 +231,7 @@ bool ObserverTreeModel::setData(const QModelIndex& index, const QVariant& value,
         // Set the visualization properties
         // TODO: Setting an input active or inactive only switches the visibility of the 
         // visualization objects (i.e. the graphic items). In case the input is inactive
-        // it would be preferrable to additionally suppress the obervation of data at the
+        // it would be preferrable to additionally suppress the observation of data at the
         // input connector to avoid waiting for the read access there.
         if (value.canConvert<VisualizationState>())
         {
@@ -544,6 +549,76 @@ QDataStream& readVersion01(QDataStream& stream, ObserverTreeModel* model)
     return stream;
 }
 
+#ifndef STROMX_STUDIO_QT4
+void ObserverTreeModel::write(QJsonArray & json) const
+{
+    foreach(ObserverModel* observer, m_observers)
+    {
+        QJsonObject viewData;
+        viewData["name"] = observer->name();
+        
+        QJsonArray inputs;
+        for (int i = 0; i < observer->inputs().count(); ++i)
+        {
+            InputModel* inputModel = observer->inputs()[i];
+            QJsonObject inputData;
+            inputData["op"] = m_stream->operatorId(inputModel->op());
+            inputData["connector"] = static_cast<int>(inputModel->id());
+            inputData["type"] = 1; // input
+            inputData["zvalue"] = i;
+            inputModel->write(inputData);
+            
+            QJsonObject input;
+            input["ConnectorObserver"] = inputData;
+            
+            inputs.append(input);
+        }
+        viewData["observers"] = inputs;
+        
+        QJsonObject view;
+        view["View"] = viewData;
+        json.append(view);
+    }
+}
+
+void ObserverTreeModel::read(const QJsonArray & json)
+{
+    foreach(QJsonValue view, json)
+    {
+        QJsonObject viewData = view.toObject()["View"].toObject();
+        
+        ObserverModel* observer = new ObserverModel(m_undoStack, this);
+        QObject::connect(observer, SIGNAL(changed(ObserverModel*)), this, SLOT(updateObserver(ObserverModel*)));
+        
+        observer->setName(viewData["name"].toString());
+        
+        QJsonArray inputs = view.toObject()["observers"].toArray();
+        foreach(QJsonValue input, inputs)
+        {            
+            // skip parameter observers
+            if (! input.toObject().contains("ConnectorObserver"))
+                continue;
+                
+            QJsonObject inputData = input.toObject()["ConnectorObserver"].toObject();
+            
+            // skip output observers
+            if (inputData["type"] != 1)
+                continue;
+                
+            qint32 opId = inputData["op"].toDouble();
+            qint32 inputId = inputData["connector"].toDouble();
+            
+            OperatorModel* op = m_stream->operators()[opId];
+            InputModel* inputModel = new InputModel(op, inputId, m_undoStack, this);
+            inputModel->setParentModel(observer);
+            inputModel->read(inputData);
+            
+            observer->insertInput(observer->numInputs(), inputModel);
+            this->connect(inputModel, SIGNAL(changed(InputModel*)), this, SLOT(updateInput(InputModel*)));
+        }
+    }
+}
+#endif
 
 
 

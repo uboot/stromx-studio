@@ -98,9 +98,16 @@ public:
      * Reads the studios specific data (operator positions, uninitialized operators...)
      * of the stream from a file input.
      * 
-     * \throws ReadStreamFailed
+     * \throws ReadStudioDataFailed
      */
     void readStudioData(stromx::runtime::FileInput & input, const QString & basename);
+    
+    /**
+     * Reads the observer data of the stream from the file 'views.json' in the file input.
+     * 
+     * \throws ReadObserverDataFailed
+     */
+    void readObserverData(stromx::runtime::FileInput & input);
     
     /** 
      * Returns the operators of the stream model. The position of each operator

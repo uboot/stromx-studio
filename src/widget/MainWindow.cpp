@@ -585,6 +585,19 @@ bool MainWindow::readFile(const QString& filepath)
     
     try
     {
+        if(extension == "zip" || extension == "stromx")
+        {
+            stream->readObserverData(*input);
+        }
+    }
+    catch(ReadObserverDataFailed& e)
+    {
+        QMessageBox::warning(this, tr("Loaded only part of file"), e.what(),
+                             QMessageBox::Ok, QMessageBox::Ok);
+    }
+    
+    try
+    {
         if(extension == "xml")
         {
             stream->readStudioData(*input, basename);
@@ -593,7 +606,6 @@ bool MainWindow::readFile(const QString& filepath)
         {
             stream->readStudioData(*input, "stream");
         }
-        
     }
     catch(ReadStudioDataFailed& e)
     {

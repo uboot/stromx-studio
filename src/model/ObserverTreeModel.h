@@ -24,6 +24,7 @@
 #include "StreamModel.h"
 #include "InputModel.h"
 
+class QJsonArray;
 class QUndoStack;
 class InputModel;
 class ObserverModel;
@@ -113,10 +114,16 @@ public:
      */
     QModelIndex inputIndex(const ObserverModel* observer, const int inputPos);
     
-    /** 
-     * Returns the model index for the observer at position \c observerPos.
-     */
+    /** Returns the model index for the observer at position \c observerPos. */
     QModelIndex observerIndex(const int observerPos);
+    
+#ifndef STROMX_STUDIO_QT4
+    /** Writes the observer tree to \c json. */
+    void write(QJsonArray & json) const;
+    
+    /** Appends the content of \c json to the content of the observer tree. */
+    void read(const QJsonArray & json);
+#endif
     
 signals:
     /** An observer was added to the model. */

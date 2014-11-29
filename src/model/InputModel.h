@@ -23,6 +23,7 @@
 #include <QColor>
 #include <QObject>
 
+class QJsonObject;
 class QUndoStack;
 class ObserverModel;
 class ObserverTreeModel;
@@ -70,6 +71,14 @@ public:
     
     /** Returns the documentation title of the operator input associated with this model. */
     QString docTitle() const;
+    
+#ifndef STROMX_STUDIO_QT4
+    /** Writes the input to \c json. */
+    void write(QJsonObject & json) const;
+    
+    /** Replaces the content of the input by the data in \c json. */
+    void read(const QJsonObject & json);
+#endif
     
 public slots:
     /** Triggers an update of the operator name in all connected views. */

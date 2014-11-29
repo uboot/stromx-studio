@@ -17,11 +17,12 @@
 *  along with stromx-studio.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef VISUALIZATIONSTATE_H
 #define VISUALIZATIONSTATE_H
 
 #include <QVariant>
+
+class QJsonObject;
 
 class VisualizationState
 {
@@ -48,6 +49,14 @@ public:
     const Properties currentProperties() const;
     
     const VisualizationState & operator=(const VisualizationState & state);
+    
+#ifndef STROMX_STUDIO_QT4
+    /** Writes the state to \c json. */
+    void write(QJsonObject & json) const;
+    
+    /** Replaces the content of the state by the data in \c json. */
+    void read(const QJsonObject & json);
+#endif
     
 private:
     bool m_active;
