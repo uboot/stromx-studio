@@ -592,7 +592,7 @@ void ObserverTreeModel::read(const QJsonArray & json)
         
         observer->setName(viewData["name"].toString());
         
-        QJsonArray inputs = view.toObject()["observers"].toArray();
+        QJsonArray inputs = viewData["observers"].toArray();
         foreach(QJsonValue input, inputs)
         {            
             // skip parameter observers
@@ -616,6 +616,8 @@ void ObserverTreeModel::read(const QJsonArray & json)
             observer->insertInput(observer->numInputs(), inputModel);
             this->connect(inputModel, SIGNAL(changed(InputModel*)), this, SLOT(updateInput(InputModel*)));
         }
+        
+        m_observers.append(observer);
     }
 }
 #endif

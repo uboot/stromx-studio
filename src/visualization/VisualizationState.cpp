@@ -83,7 +83,6 @@ void VisualizationState::write(QJsonObject & json) const
     json["active"] = m_active;
     json["visualization"] = m_visualization;
     
-    // loop over all visualizations
     QJsonObject properties;
     QMapIterator<QString, QVariant> i(m_properties[m_visualization]);
     while (i.hasNext())
@@ -104,11 +103,13 @@ void VisualizationState::read(const QJsonObject & json)
     
     QVariantMap properties = json["properties"].toObject().toVariantMap();
     QMapIterator<QString, QVariant> i(properties);
-    QVariantMap& inputProperties = m_properties[m_visualization];
+    QVariantMap inputProperties;
     while (i.hasNext())
     {
+        i.next();
         inputProperties[i.key()] = i.value();
     }
+    m_properties[m_visualization] = inputProperties;
 }
 #endif
 

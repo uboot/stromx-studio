@@ -623,7 +623,7 @@ void StreamModel::write(stromx::runtime::FileOutput & output, const QString& bas
         m_observerModel->write(views);
         QJsonDocument document(views);
         
-        QByteArray viewData = document.toJson();
+        QByteArray viewData = document.toJson(QJsonDocument::Compact);
         output.initialize("views");
         output.openFile("json", stromx::runtime::OutputProvider::TEXT);
         output.file().write(viewData.data(), viewData.size());
