@@ -611,14 +611,14 @@ void StreamModel::write(stromx::runtime::FileOutput & output, const QString& bas
     {
         stromx::runtime::XmlWriter writer;
         writer.writeStream(output, basename.toStdString(), *m_stream);
-        
+
+#ifdef STROMX_STUDIO_QT4        
         QByteArray modelData;
         serializeModel(modelData);
         output.initialize(basename.toStdString());
         output.openFile("studio", stromx::runtime::OutputProvider::BINARY);
         output.file().write(modelData.data(), modelData.size());
-        
-#ifndef STROMX_STUDIO_QT4
+#else        
         QJsonArray views;
         m_observerModel->write(views);
         QJsonDocument document(views);

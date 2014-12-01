@@ -583,6 +583,7 @@ bool MainWindow::readFile(const QString& filepath)
         return false;
     }
     
+    // try to read observer data from views.json in zip archive
     try
     {
         if(extension == "zip" || extension == "stromx")
@@ -592,10 +593,10 @@ bool MainWindow::readFile(const QString& filepath)
     }
     catch(ReadObserverDataFailed& e)
     {
-        QMessageBox::warning(this, tr("Loaded only part of file"), e.what(),
-                             QMessageBox::Ok, QMessageBox::Ok);
+        // ignore
     }
     
+    // try to read observer data from *.studio binary file
     try
     {
         if(extension == "xml")
@@ -609,8 +610,7 @@ bool MainWindow::readFile(const QString& filepath)
     }
     catch(ReadStudioDataFailed& e)
     {
-        QMessageBox::warning(this, tr("Loaded only part of file"), e.what(),
-                             QMessageBox::Ok, QMessageBox::Ok);
+        // ignore
     }
     
     // reading was successful
