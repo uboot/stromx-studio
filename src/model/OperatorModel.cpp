@@ -257,17 +257,17 @@ QVariant OperatorModel::getParameterSetting(const stromx::runtime::Parameter & p
     switch(role)
     {
         case MinRole:
-            if(param.min().isVariant(stromx::runtime::DataVariant::NONE))
+            if(param.min().isVariant(stromx::runtime::Variant::NONE))
                 return QVariant();
             return DataConverter::toQVariant(param.min(), param, Qt::EditRole);
             
         case MaxRole:
-            if(param.max().isVariant(stromx::runtime::DataVariant::NONE))
+            if(param.max().isVariant(stromx::runtime::Variant::NONE))
                 return QVariant();
             return DataConverter::toQVariant(param.max(), param, Qt::EditRole);
             
         case StepRole:
-            if(param.step().isVariant(stromx::runtime::DataVariant::NONE))
+            if(param.step().isVariant(stromx::runtime::Variant::NONE))
                 return QVariant();
             return DataConverter::toQVariant(param.step(), param, Qt::EditRole);
             

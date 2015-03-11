@@ -109,21 +109,21 @@ QList< QGraphicsItem* > ImageVisualization::createItems(const stromx::runtime::D
 {
     using namespace stromx::runtime;
     
-    if(data.isVariant(DataVariant::INT_8_MATRIX))
+    if(data.isVariant(Variant::INT_8_MATRIX))
         return createImageFromMatrixTemplate<int8_t>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_8_MATRIX))
+    else if(data.isVariant(Variant::UINT_8_MATRIX))
         return createImageFromMatrixTemplate<uint8_t>(data, properties);
-    else if(data.isVariant(DataVariant::INT_16_MATRIX))
+    else if(data.isVariant(Variant::INT_16_MATRIX))
         return createImageFromMatrixTemplate<int16_t>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_16_MATRIX))
+    else if(data.isVariant(Variant::UINT_16_MATRIX))
         return createImageFromMatrixTemplate<uint16_t>(data, properties);
-    else if(data.isVariant(DataVariant::INT_32_MATRIX))
+    else if(data.isVariant(Variant::INT_32_MATRIX))
         return createImageFromMatrixTemplate<int32_t>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_32_MATRIX))
+    else if(data.isVariant(Variant::UINT_32_MATRIX))
         return createImageFromMatrixTemplate<uint32_t>(data, properties);
-    else if(data.isVariant(DataVariant::FLOAT_32_MATRIX))
+    else if(data.isVariant(Variant::FLOAT_32_MATRIX))
         return createImageFromMatrixTemplate<float>(data, properties);
-    else if(data.isVariant(DataVariant::FLOAT_64_MATRIX))
+    else if(data.isVariant(Variant::FLOAT_64_MATRIX))
         return createImageFromMatrixTemplate<double>(data, properties);
     else
         return QList<QGraphicsItem*>();

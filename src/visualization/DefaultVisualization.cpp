@@ -56,15 +56,15 @@ QList< QGraphicsItem* > DefaultVisualization::createItems(const stromx::runtime:
     
     QList<QGraphicsItem*> items;
     
-    if(data.isVariant(DataVariant::IMAGE))
+    if(data.isVariant(Variant::IMAGE))
     {
         items = createImageItems(data, properties);
     }
-    else if(data.isVariant(DataVariant::PRIMITIVE))
+    else if(data.isVariant(Variant::PRIMITIVE))
     {
         items = createPrimitiveItems(data, properties);
     } 
-    else if(data.isVariant(DataVariant::STRING))
+    else if(data.isVariant(Variant::STRING))
     {
         items = createStringItems(data, properties);
     }
@@ -202,23 +202,23 @@ QList<QGraphicsItem*> DefaultVisualization::createPrimitiveItems(const stromx::r
 {    
     using namespace stromx::runtime;
     
-    if(data.isVariant(DataVariant::BOOL))
+    if(data.isVariant(Variant::BOOL))
         return createPrimitiveItemsTemplate<Bool>(data, properties);
-    else if(data.isVariant(DataVariant::INT_8))
+    else if(data.isVariant(Variant::INT_8))
         return createPrimitiveItemsTemplate<Int8>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_8))
+    else if(data.isVariant(Variant::UINT_8))
         return createPrimitiveItemsTemplate<UInt8>(data, properties);
-    else if(data.isVariant(DataVariant::INT_16))
+    else if(data.isVariant(Variant::INT_16))
         return createPrimitiveItemsTemplate<Int16>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_16))
+    else if(data.isVariant(Variant::UINT_16))
         return createPrimitiveItemsTemplate<UInt16>(data, properties);
-    else if(data.isVariant(DataVariant::INT_32))
+    else if(data.isVariant(Variant::INT_32))
         return createPrimitiveItemsTemplate<Int32>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_32))
+    else if(data.isVariant(Variant::UINT_32))
         return createPrimitiveItemsTemplate<UInt32>(data, properties);
-    else if(data.isVariant(DataVariant::FLOAT_32))
+    else if(data.isVariant(Variant::FLOAT_32))
         return createPrimitiveItemsTemplate<Float32>(data, properties);
-    else if(data.isVariant(DataVariant::FLOAT_64))
+    else if(data.isVariant(Variant::FLOAT_64))
         return createPrimitiveItemsTemplate<Float64>(data, properties);
     else
         return QList<QGraphicsItem*>();

@@ -60,21 +60,21 @@ QList< QGraphicsItem* > Points::createItems(const stromx::runtime::Data & data,
 {
     using namespace stromx::runtime;
         
-    if(data.isVariant(DataVariant::INT_8_MATRIX))
+    if(data.isVariant(Variant::INT_8_MATRIX))
         return createPointItemsTemplate<int8_t>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_8_MATRIX))
+    else if(data.isVariant(Variant::UINT_8_MATRIX))
         return createPointItemsTemplate<uint8_t>(data, properties);
-    else if(data.isVariant(DataVariant::INT_16_MATRIX))
+    else if(data.isVariant(Variant::INT_16_MATRIX))
         return createPointItemsTemplate<int16_t>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_16_MATRIX))
+    else if(data.isVariant(Variant::UINT_16_MATRIX))
         return createPointItemsTemplate<uint16_t>(data, properties);
-    else if(data.isVariant(DataVariant::INT_32_MATRIX))
+    else if(data.isVariant(Variant::INT_32_MATRIX))
         return createPointItemsTemplate<int32_t>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_32_MATRIX))
+    else if(data.isVariant(Variant::UINT_32_MATRIX))
         return createPointItemsTemplate<uint32_t>(data, properties);
-    else if(data.isVariant(DataVariant::FLOAT_32_MATRIX))
+    else if(data.isVariant(Variant::FLOAT_32_MATRIX))
         return createPointItemsTemplate<float>(data, properties);
-    else if(data.isVariant(DataVariant::FLOAT_64_MATRIX))
+    else if(data.isVariant(Variant::FLOAT_64_MATRIX))
         return createPointItemsTemplate<double>(data, properties);
     else
         return QList<QGraphicsItem*>();

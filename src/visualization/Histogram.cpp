@@ -87,21 +87,21 @@ QList< QGraphicsItem* > Histogram::createItems(const stromx::runtime::Data & dat
 {
     using namespace stromx::runtime;
     
-    if(data.isVariant(DataVariant::INT_8_MATRIX))
+    if(data.isVariant(Variant::INT_8_MATRIX))
         return createHistogramItemsTemplate<int8_t>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_8_MATRIX))
+    else if(data.isVariant(Variant::UINT_8_MATRIX))
         return createHistogramItemsTemplate<uint8_t>(data, properties);
-    else if(data.isVariant(DataVariant::INT_16_MATRIX))
+    else if(data.isVariant(Variant::INT_16_MATRIX))
         return createHistogramItemsTemplate<int16_t>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_16_MATRIX))
+    else if(data.isVariant(Variant::UINT_16_MATRIX))
         return createHistogramItemsTemplate<uint16_t>(data, properties);
-    else if(data.isVariant(DataVariant::INT_32_MATRIX))
+    else if(data.isVariant(Variant::INT_32_MATRIX))
         return createHistogramItemsTemplate<int32_t>(data, properties);
-    else if(data.isVariant(DataVariant::UINT_32_MATRIX))
+    else if(data.isVariant(Variant::UINT_32_MATRIX))
         return createHistogramItemsTemplate<uint32_t>(data, properties);
-    else if(data.isVariant(DataVariant::FLOAT_32_MATRIX))
+    else if(data.isVariant(Variant::FLOAT_32_MATRIX))
         return createHistogramItemsTemplate<float>(data, properties);
-    else if(data.isVariant(DataVariant::FLOAT_64_MATRIX))
+    else if(data.isVariant(Variant::FLOAT_64_MATRIX))
         return createHistogramItemsTemplate<double>(data, properties);
     else
         return QList<QGraphicsItem*>();
