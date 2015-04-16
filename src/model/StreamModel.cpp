@@ -616,7 +616,7 @@ void StreamModel::write(stromx::runtime::FileOutput & output, const QString& bas
         QByteArray modelData;
         serializeModel(modelData);
         output.initialize(basename.toStdString());
-        output.openFile("studio", stromx::runtime::OutputProvider::BINARY);
+        output.openFile(".studio", stromx::runtime::OutputProvider::BINARY);
         output.file().write(modelData.data(), modelData.size());
 #else        
         QJsonArray views;
@@ -625,7 +625,7 @@ void StreamModel::write(stromx::runtime::FileOutput & output, const QString& bas
         
         QByteArray viewData = document.toJson(QJsonDocument::Compact);
         output.initialize("views");
-        output.openFile("json", stromx::runtime::OutputProvider::TEXT);
+        output.openFile(".json", stromx::runtime::OutputProvider::TEXT);
         output.file().write(viewData.data(), viewData.size());
 #endif
     }
