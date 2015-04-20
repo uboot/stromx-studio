@@ -22,7 +22,7 @@ Release:
 Summary:        A graphical user interface to edit stromx streams
 Group:          Development/Tools/Other
 
-License:        GNU Public License 3
+License:        GNU GPL version 3
 URL:            http://www.stromx.org
 Source0:        %{name}-%{version}.tar.bz2
 
