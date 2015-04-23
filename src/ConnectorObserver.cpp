@@ -19,13 +19,17 @@ ConnectorObserver::ConnectorObserver(QObject* receiver)
 }
 
 void ConnectorObserver::observe(const stromx::runtime::Connector& connector,
-                                const stromx::runtime::DataContainer& data,
+                                const stromx::runtime::DataContainer & /*oldData*/,
+                                const stromx::runtime::DataContainer & newData,
                                 const stromx::runtime::Thread* const /*thread*/) const
 {
     // First check if there have been too many events recently. If this is the
     // case return and give the GUI the chance to handle the remaining events.
     if (! gScheduler.schedule())
         return;
+        
+    // consider only the new (= current) connector value
+    const stromx::runtime::DataContainer & data = newData;
         
     QCoreApplication* application = QCoreApplication::instance();
     OperatorModel::ConnectorType type = connector.type() == stromx::runtime::Connector::INPUT ? 
