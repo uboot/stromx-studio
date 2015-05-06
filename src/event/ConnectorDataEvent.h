@@ -32,16 +32,16 @@ public:
     static const unsigned int TYPE = QEvent::User + ConnectorData;
     
     ConnectorDataEvent(OperatorModel::ConnectorType type, unsigned int id,
-                       const stromx::runtime::ReadAccess<> & access);
+                       const stromx::runtime::ReadAccess & access);
     
     OperatorModel::ConnectorType type() const { return m_type; }
     unsigned int id() const { return m_id; }
-    const stromx::runtime::ReadAccess<> & access() const { return m_access; }
+    const stromx::runtime::ReadAccess & access() const { return m_access; }
     
 private:
     OperatorModel::ConnectorType m_type;
     unsigned int m_id;
-    stromx::runtime::ReadAccess<> m_access;
+    stromx::runtime::ReadAccess m_access;
 };
 
 #endif // CONNECTORDATAEVENT_H

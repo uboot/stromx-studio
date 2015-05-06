@@ -82,7 +82,7 @@ private slots:
      * The input is specified by its type, ID and operator (the sender of the signal).
      */
     void updateLayerData(OperatorModel::ConnectorType type, unsigned int id,
-                         stromx::runtime::ReadAccess<> access);
+                         stromx::runtime::ReadAccess access);
     
 private:
     /** 

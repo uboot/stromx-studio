@@ -145,7 +145,7 @@ signals:
     
     /** The connector specified by \c type and \c id was set to \c data. */
     void connectorDataChanged(OperatorModel::ConnectorType type, unsigned int id,
-                              stromx::runtime::ReadAccess<> access);
+                              stromx::runtime::ReadAccess access);
       
     /** 
      * An operation accessing a parameter of the operator or data at an operator

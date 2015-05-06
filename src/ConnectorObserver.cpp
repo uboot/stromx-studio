@@ -57,7 +57,7 @@ void ConnectorObserver::observe(const stromx::runtime::Connector& connector,
     if(observeData && type == OperatorModel::INPUT)
     {
         // get a read access to the data (this might take a while)
-        stromx::runtime::ReadAccess<> access(data);
+        stromx::runtime::ReadAccess access(data);
         
         // send an event with the data and the access to the Qt GUI loop
         ConnectorDataEvent* dataEvent = new ConnectorDataEvent(type, connector.id(), access);

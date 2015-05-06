@@ -531,7 +531,7 @@ void OperatorModel::connectNotify(const QMetaMethod & /*signal*/)
 #endif // STROMX_STUDIO_QT4
 {
     // if there are receivers for data change signals the according events must be sent
-    if(receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::runtime::ReadAccess<>))))
+    if(receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::runtime::ReadAccess))))
         m_observer.setObserveData(true);  
 }
 
@@ -542,7 +542,7 @@ void OperatorModel::disconnectNotify(const QMetaMethod & /*signal*/)
 #endif // STROMX_STUDIO_QT4
 {
     // if there are no receivers for data change signals do not send the events
-    if(! receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::runtime::ReadAccess<>))))
+    if(! receivers(SIGNAL(connectorDataChanged(OperatorModel::ConnectorType,uint,stromx::runtime::ReadAccess))))
         m_observer.setObserveData(false); 
 }
 

@@ -38,6 +38,7 @@
 #include <stromx/runtime/DirectoryFileInput.h>
 #include <stromx/runtime/DirectoryFileOutput.h>
 #include <stromx/runtime/Exception.h>
+#include <stromx/runtime/Runtime.h>
 #include <stromx/runtime/ZipFileInput.h>
 #include <stromx/runtime/ZipFileOutput.h>
 #include "Common.h"
