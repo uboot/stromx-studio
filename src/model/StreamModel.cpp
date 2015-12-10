@@ -5,6 +5,7 @@
 #include <QJsonDocument>
 #endif
 
+#include <QDataStream>
 #include <QDir>
 #include <QFileInfo>
 #include <QFutureWatcher>

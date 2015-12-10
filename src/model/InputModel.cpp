@@ -3,6 +3,7 @@
 #ifndef STROMX_STUDIO_QT4
 #include <QJsonObject>
 #endif
+#include <QDataStream>
 
 #include <stromx/runtime/Operator.h>
 

@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #endif
 
+#include <QDataStream>
 #include <QStringList>
 #include "Common.h"
 #include "cmd/InsertInputCmd.h"
