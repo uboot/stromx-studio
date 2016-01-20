@@ -164,8 +164,8 @@ void OperatorLibraryModel::loadPackage(const QString& packagePath)
     QLibrary* lib = new QLibrary(packagePath, this);
     
     // resolve the registration function
-    void (*registrationFunction)(stromx::runtime::Registry& registry);
-    registrationFunction = reinterpret_cast<void (*)(stromx::runtime::Registry& registry)>
+    void (*registrationFunction)(stromx::runtime::Registry* registry);
+    registrationFunction = reinterpret_cast<void (*)(stromx::runtime::Registry* registry)>
         (lib->resolve(registrationFunctionName.toStdString().c_str()));
         
     if(! registrationFunction)
@@ -177,7 +177,7 @@ void OperatorLibraryModel::loadPackage(const QString& packagePath)
     // try to register the library
     try
     {
-        (*registrationFunction)(*m_factory);
+        (*registrationFunction)(m_factory);
     }
     catch(stromx::runtime::Exception&)
     {
@@ -215,7 +215,7 @@ void OperatorLibraryModel::setupFactory()
     Q_ASSERT(m_factory == 0);
     
     m_factory = new stromx::runtime::Factory();
-    stromxRuntimeRegister(*m_factory);
+    stromxRuntimeRegister(m_factory);
 }
 
 void OperatorLibraryModel::updateOperators()
