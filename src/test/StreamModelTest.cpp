@@ -30,9 +30,8 @@ StreamModelTest::StreamModelTest()
     {
     }
     
-    stromxCvsupportRegister(*(m_operatorLibraryModel->factory()));
-    stromxCvimgprocRegister(*(m_operatorLibraryModel->factory()));
-    
+    stromxRegisterCvsupport(m_operatorLibraryModel->factory());
+    stromxRegisterCvimgproc(m_operatorLibraryModel->factory());
 }
 
 void StreamModelTest::testDefaultConstructor()
