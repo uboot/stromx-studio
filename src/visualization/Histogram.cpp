@@ -1,6 +1,7 @@
 #include "visualization/Histogram.h"
 
 #include <stromx/runtime/Matrix.h>
+#include <stromx/runtime/Variant.h>
 
 #include <QBrush>
 #include <QGraphicsLineItem>

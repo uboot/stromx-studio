@@ -28,6 +28,7 @@
 #include <stromx/runtime/Parameter.h>
 #include <stromx/runtime/String.h>
 #include <stromx/runtime/TriggerData.h>
+#include <stromx/runtime/Variant.h>
 
 #include "Common.h"
 #include "Image.h"

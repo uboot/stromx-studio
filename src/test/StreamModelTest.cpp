@@ -3,7 +3,6 @@
 #include <QtTest/QtTest>
 #include <QUndoStack>
 #include <stromx/cvsupport/Cvsupport.h>
-#include <stromx/cvimgproc/Cvimgproc.h>
 #include <stromx/runtime/DirectoryFileInput.h>
 #include <stromx/runtime/Factory.h>
 #include <stromx/runtime/ZipFileInput.h>
@@ -31,7 +30,6 @@ StreamModelTest::StreamModelTest()
     }
     
     stromxRegisterCvsupport(m_operatorLibraryModel->factory());
-    stromxRegisterCvimgproc(m_operatorLibraryModel->factory());
 }
 
 void StreamModelTest::testDefaultConstructor()
@@ -43,7 +41,7 @@ void StreamModelTest::testFileConstructorCamera()
 {
     stromx::runtime::ZipFileInput input("camera.stromx");
     StreamModel* model = new StreamModel(input, "stream", m_undoStack, m_operatorLibraryModel, this);
-    model->readStudioData(input, "stream");
+    model->readObserverData(input);
 }
 
 void StreamModelTest::testFileConstructorConnector()

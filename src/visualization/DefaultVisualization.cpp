@@ -3,6 +3,7 @@
 #include <stromx/runtime/Image.h>
 #include <stromx/runtime/Primitive.h>
 #include <stromx/runtime/String.h>
+#include <stromx/runtime/Variant.h>
 
 #include <QBrush>
 #include <QGraphicsLineItem>

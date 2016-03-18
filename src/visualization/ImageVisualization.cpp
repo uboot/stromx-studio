@@ -1,6 +1,7 @@
 #include "visualization/ImageVisualization.h"
 
 #include <stromx/runtime/Matrix.h>
+#include <stromx/runtime/Variant.h>
 
 #include <qmath.h>
 #include <QBrush>
