@@ -1,142 +1,64 @@
-# 2011-05-29
-# Copied from http://tobias.rautenkranz.ch/cmake/doxygen/
+project(stromx-studio)
 
-# - Run Doxygen
-#
-# Adds a doxygen target that runs doxygen to generate the html
-# and optionally the LaTeX API documentation.
-# The doxygen target is added to the doc target as a dependency.
-# i.e.: the API documentation is built with:
-#  make doc
-#
-# USAGE: GLOBAL INSTALL
-#
-# Install it with:
-#  cmake ./ && sudo make install
-# Add the following to the CMakeLists.txt of your project:
-#  include(UseDoxygen OPTIONAL)
-# Optionally copy Doxyfile.in in the directory of CMakeLists.txt and edit it.
-#
-# USAGE: INCLUDE IN PROJECT
-#
-#  set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
-#  include(UseDoxygen)
-# Add the Doxyfile.in and UseDoxygen.cmake files to the projects source directory.
-#
-#
-# CONFIGURATION
-#
-# To configure Doxygen you can edit Doxyfile.in and set some variables in cmake.
-# Variables you may define are:
-#  DOXYFILE_SOURCE_DIR - Path where the Doxygen input files are.
-#       Defaults to the current source directory.
-#  DOXYFILE_EXTRA_SOURCES - Additional source diretories/files for Doxygen to scan.
-#       The Paths should be in double quotes and separated by space. e.g.:
-#        "${CMAKE_CURRENT_BINARY_DIR}/foo.c" "${CMAKE_CURRENT_BINARY_DIR}/bar/"
-#  
-#  DOXYFILE_OUTPUT_DIR - Path where the Doxygen output is stored.
-#       Defaults to "${CMAKE_CURRENT_BINARY_DIR}/doc".
-#  
-#  DOXYFILE_LATEX - ON/OFF; Set to "ON" if you want the LaTeX documentation
-#       to be built.
-#  DOXYFILE_LATEX_DIR - Directory relative to DOXYFILE_OUTPUT_DIR where
-#       the Doxygen LaTeX output is stored. Defaults to "latex".
-#  
-#  DOXYFILE_HTML_DIR - Directory relative to DOXYFILE_OUTPUT_DIR where
-#       the Doxygen html output is stored. Defaults to "html".
-#
+cmake_minimum_required(VERSION 2.8)
+enable_testing()
 
-#
-#  Copyright (c) 2009, 2010, 2011 Tobias Rautenkranz <tobias@rautenkranz.ch>
-#
-#  Redistribution and use is allowed according to the terms of the New
-#  BSD license.
-#  For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-#
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
-macro(usedoxygen_set_default name value type docstring)
-        if(NOT DEFINED "${name}")
-                set("${name}" "${value}" CACHE "${type}" "${docstring}")
-        endif()
-endmacro()
+set (STROMX_STUDIO_VERSION_MAJOR 0)
+set (STROMX_STUDIO_VERSION_MINOR 6)
+set (STROMX_STUDIO_VERSION_PATCH 0)
 
-find_package(Doxygen)
-
-if(DOXYGEN_FOUND)
-        find_file(DOXYFILE_IN "Doxyfile.in"
-                        PATHS "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_ROOT}/Modules/"
-                        NO_DEFAULT_PATH
-                        DOC "Path to the doxygen configuration template file")
-        set(DOXYFILE "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile")
-        include(FindPackageHandleStandardArgs)
-        find_package_handle_standard_args(DOXYFILE_IN DEFAULT_MSG "DOXYFILE_IN")
+if(NOT DOC_INSTALL_DIR)
+    set(DOC_INSTALL_DIR "" CACHE FILEPATH "Documentation install directory")
 endif()
 
-if(DOXYGEN_FOUND AND DOXYFILE_IN_FOUND)
-        usedoxygen_set_default(DOXYFILE_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/doc"
-                PATH "Doxygen output directory")
-        usedoxygen_set_default(DOXYFILE_HTML_DIR "html"
-                STRING "Doxygen HTML output directory")
-        usedoxygen_set_default(DOXYFILE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}"
-                PATH "Input files source directory")
-        usedoxygen_set_default(DOXYFILE_EXTRA_SOURCE_DIRS ""
-                STRING "Additional source files/directories separated by space")
-        set(DOXYFILE_SOURE_DIRS "\"${DOXYFILE_SOURCE_DIR}\" ${DOXYFILE_EXTRA_SOURCES}")
+if(MSVC)
+    add_definitions(/DBOOST_ALL_DYN_LINK)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4275")
+endif(MSVC)
 
-        usedoxygen_set_default(DOXYFILE_LATEX YES BOOL "Generate LaTeX API documentation" OFF)
-        usedoxygen_set_default(DOXYFILE_LATEX_DIR "latex" STRING "LaTex output directory")
+if(CMAKE_COMPILER_IS_GNUCXX)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra")
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -Werror")
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
-        mark_as_advanced(DOXYFILE_OUTPUT_DIR DOXYFILE_HTML_DIR DOXYFILE_LATEX_DIR
-                DOXYFILE_SOURCE_DIR DOXYFILE_EXTRA_SOURCE_DIRS DOXYFILE_IN)
+include(UseDoxygen OPTIONAL)
 
+find_package(Qt4)
+find_package(Qt5Widgets)
+find_package(Qt5Concurrent)
+find_package(Qt5Test)
 
-        set_property(DIRECTORY 
-                APPEND PROPERTY
-                ADDITIONAL_MAKE_CLEAN_FILES
-                "${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_HTML_DIR}")
+if(Qt5Widgets_FOUND AND Qt5Concurrent_FOUND)
+    set(USE_QT5 true)
+    set(CMAKE_AUTOMOC ON)
 
-        add_custom_target(doxygen
-                COMMAND "${DOXYGEN_EXECUTABLE}"
-                        "${DOXYFILE}" 
-                COMMENT "Writing documentation to ${DOXYFILE_OUTPUT_DIR}..."
-                WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
-
-        ## LaTeX
-        set(DOXYFILE_PDFLATEX "NO")
-        set(DOXYFILE_DOT "NO")
-
-        set_property(DIRECTORY APPEND PROPERTY
-                ADDITIONAL_MAKE_CLEAN_FILES
-                "${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_LATEX_DIR}")
-
-        if(DOXYFILE_LATEX STREQUAL "ON")
-                set(DOXYFILE_GENERATE_LATEX "YES")
-                find_package(LATEX)
-                find_program(DOXYFILE_MAKE make)
-                mark_as_advanced(DOXYFILE_MAKE)
-                if(LATEX_COMPILER AND MAKEINDEX_COMPILER AND DOXYFILE_MAKE)
-                        if(PDFLATEX_COMPILER)
-                                set(DOXYFILE_PDFLATEX "YES")
-                        endif()
-                        if(DOXYGEN_DOT_EXECUTABLE)
-                                set(DOXYFILE_DOT "YES")
-                        endif()
-
-                        add_custom_command(TARGET doxygen
-                                POST_BUILD
-                                COMMAND "${DOXYFILE_MAKE}"
-                                COMMENT "Running LaTeX for Doxygen documentation in ${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_LATEX_DIR}..."
-                                WORKING_DIRECTORY "${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_LATEX_DIR}")
-                else()
-                        set(DOXYGEN_LATEX "NO")
-                endif()
-        else()
-                set(DOXYFILE_GENERATE_LATEX "NO")
-        endif()
-
-
-        configure_file("${DOXYFILE_IN}" "${DOXYFILE}" @ONLY)
-
-        add_custom_target(doc)
-        add_dependencies(doc doxygen)
+    if(Qt5Test_FOUND)
+        option(BUILD_TESTS "Build unit tests" ON)
+    endif()
+elseif(QT4_FOUND)
+    set(USE_QT5 false)
+    add_definitions(-DSTROMX_STUDIO_QT4)
+    option(BUILD_TESTS "Build unit tests" ON)
+else()
+    message(FATAL_ERROR "Qt was not found.")
 endif()
+
+find_package(stromx REQUIRED)
+
+if(UNIX)
+    add_definitions(-DUNIX)
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DDEBUG)
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+add_subdirectory(src)
+add_subdirectory(example)
+add_subdirectory(desktop)
+
+if(WIN32)
+    install (FILES ${PROJECT_SOURCE_DIR}/wix/stromx-studio.wxs DESTINATION .)
+endif(WIN32)
