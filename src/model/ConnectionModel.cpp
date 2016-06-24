@@ -173,9 +173,9 @@ void ConnectionModel::doSetThread(ThreadModel* thread)
         if(thread)
         {
             // look if the input is part the input sequence of the thread
-            const std::vector<stromx::runtime::Input> & inputs = thread->thread()->inputSequence();
-            stromx::runtime::Input input(m_targetOp->op(), m_inputId);
-            std::vector<stromx::runtime::Input>::const_iterator result = std::find(inputs.begin(), inputs.end(), input); 
+            const std::vector<stromx::runtime::InputConnector> & inputs = thread->thread()->inputSequence();
+            stromx::runtime::InputConnector input(m_targetOp->op(), m_inputId);
+            std::vector<stromx::runtime::InputConnector>::const_iterator result = std::find(inputs.begin(), inputs.end(), input); 
                 
             // add input only if has not already been added to the thread
             if(result == inputs.end())

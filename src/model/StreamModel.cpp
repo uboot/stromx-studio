@@ -698,11 +698,11 @@ void StreamModel::allocateObjects(stromx::runtime::Stream* stream)
         
         stromx::runtime::Operator* op = opModel->op();
         
-        for(std::vector<const stromx::runtime::Description*>::const_iterator inputIter = op->info().inputs().begin();
+        for(std::vector<const stromx::runtime::Input*>::const_iterator inputIter = op->info().inputs().begin();
             inputIter != op->info().inputs().end();
             ++inputIter)
         {
-            stromx::runtime::Output output = m_stream->connectionSource(op, (*inputIter)->id());
+            stromx::runtime::OutputConnector output = m_stream->connectionSource(op, (*inputIter)->id());
             
             if(output.valid())
             {
@@ -728,9 +728,9 @@ void StreamModel::allocateObjects(stromx::runtime::Stream* stream)
         ++threadIter)
     {
         ThreadModel* threadModel = findThreadModel(*threadIter);
-        std::vector<stromx::runtime::Input>::const_iterator start = (*threadIter)->inputSequence().begin();
-        std::vector<stromx::runtime::Input>::const_iterator end = (*threadIter)->inputSequence().end();
-        for(std::vector<stromx::runtime::Input>::const_iterator inputIter = start; inputIter != end; ++inputIter)
+        std::vector<stromx::runtime::InputConnector>::const_iterator start = (*threadIter)->inputSequence().begin();
+        std::vector<stromx::runtime::InputConnector>::const_iterator end = (*threadIter)->inputSequence().end();
+        for(std::vector<stromx::runtime::InputConnector>::const_iterator inputIter = start; inputIter != end; ++inputIter)
         {
             ConnectionModel* connectionModel = findConnectionModel(*inputIter);
             if(connectionModel)
@@ -750,7 +750,7 @@ OperatorModel* StreamModel::findOperatorModel(const stromx::runtime::Operator* o
     return 0;
 }
 
-ConnectionModel* StreamModel::findConnectionModel(const stromx::runtime::Input& input) const
+ConnectionModel* StreamModel::findConnectionModel(const stromx::runtime::InputConnector& input) const
 {
     foreach(ConnectionModel* connectionModel, m_connections)
     {

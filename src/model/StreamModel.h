@@ -33,7 +33,7 @@ namespace stromx
     { 
         class FileInput;
         class FileOutput;
-        class Input;
+        class InputConnector;
         class Operator;
         class ParameterError;
         class Stream;
@@ -361,7 +361,7 @@ private:
     OperatorModel* findOperatorModel(const stromx::runtime::Operator* op) const;
     
     /** Finds the connection model which connects to \c input. Returns 0 if no such model exists. */
-    ConnectionModel* findConnectionModel(const stromx::runtime::Input & input) const;
+    ConnectionModel* findConnectionModel(const stromx::runtime::InputConnector & input) const;
     
     /** Finds the thread model which wraps \c thread. Returns 0 if no such model exists. */
     ThreadModel* findThreadModel(const stromx::runtime::Thread* thread) const;

@@ -113,15 +113,16 @@ void OperatorItem::setInitialized(bool value)
 
 void OperatorItem::initialize()
 {
-    typedef std::vector<const stromx::runtime::Description*> DescriptionVector;
+    typedef std::vector<const stromx::runtime::Input*> InputVector;
+    typedef std::vector<const stromx::runtime::Output*> OutputVector;
     
-    DescriptionVector inputs = m_model->op()->info().inputs();
+    InputVector inputs = m_model->op()->info().inputs();
     qreal firstInputYPos = computeFirstYPos(inputs.size());
     qreal yOffset = ConnectorItem::SIZE + CONNECTOR_OFFSET;
     qreal inputXPos = -SIZE/2 - ConnectorItem::SIZE/2;
     
     unsigned int i = 0;
-    for(DescriptionVector::iterator iter = inputs.begin();
+    for(InputVector::iterator iter = inputs.begin();
         iter != inputs.end();
         ++iter, ++i)
     {
@@ -131,12 +132,12 @@ void OperatorItem::initialize()
         m_inputs[(*iter)->id()] = inputItem;
     }
     
-    DescriptionVector outputs = m_model->op()->info().outputs();
+    OutputVector outputs = m_model->op()->info().outputs();
     qreal firstOutputYPos = computeFirstYPos(outputs.size());
     qreal outputXPos = SIZE/2 + ConnectorItem::SIZE/2;
     
     i = 0;
-    for(DescriptionVector::iterator iter = outputs.begin();
+    for(OutputVector::iterator iter = outputs.begin();
         iter != outputs.end();
         ++iter, ++i)
     {
