@@ -27,9 +27,11 @@ Image::Image(const Image& image)
 
 void Image::constructFromImage(const QImage& image)
 {
+    QImage::Format format = image.format();
     switch(image.format())
     {
     case QImage::Format_Indexed8:
+    case QImage::Format_Grayscale8:
         m_image = image;
         break;
     case QImage::Format_RGB32:

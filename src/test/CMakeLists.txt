@@ -1,10 +1,10 @@
 add_test(NAME stromx_studio_test COMMAND stromx_studio_test)
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/camera.stromx DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/extra_parameter.stromx DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/connector.xml DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lenna.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lenna_bw.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/camera.stromx ${CMAKE_CURRENT_BINARY_DIR}/camera.stromx COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/extra_parameter.stromx ${CMAKE_CURRENT_BINARY_DIR}/extra_parameter.stromx COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/connector.xml ${CMAKE_CURRENT_BINARY_DIR}/connector.xml COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lenna.jpg ${CMAKE_CURRENT_BINARY_DIR}/lenna.jpg COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lenna_bw.jpg ${CMAKE_CURRENT_BINARY_DIR}/lenna_bw.jpg COPYONLY)
 
 set(stromxstudiotest_HEADERS
     DataConverterTest.h
