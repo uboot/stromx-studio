@@ -27,11 +27,13 @@ Image::Image(const Image& image)
 
 void Image::constructFromImage(const QImage& image)
 {
-    QImage::Format format = image.format();
     switch(image.format())
     {
     case QImage::Format_Indexed8:
+#ifdef STROMX_STUDIO_QT4
+#else // STROMX_STUDIO_QT4
     case QImage::Format_Grayscale8:
+#endif // STROMX_STUDIO_QT4
         m_image = image;
         break;
     case QImage::Format_RGB32:
